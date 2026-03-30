@@ -1,0 +1,52 @@
+.hero {
+  height: 100vh;
+  background: url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6') center/cover
+    no-repeat;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* dark overlay */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  color: white;
+}
+
+.hero-content h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+/* SEARCH */
+.search-box {
+  background: white;
+  border-radius: 40px;
+  display: inline-flex;
+  overflow: hidden;
+}
+
+.search-box input {
+  border: none;
+  padding: 15px 20px;
+  width: 350px;
+  outline: none;
+}
+
+.search-box button {
+  background: var(--furnora-main);
+  border: none;
+  color: white;
+  padding: 0 25px;
+  font-weight: 600;
+}
