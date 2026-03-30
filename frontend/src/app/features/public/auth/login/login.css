@@ -1,0 +1,35 @@
+.login-page {
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.brand {
+  color: var(--furnora-green);
+  font-weight: bold;
+}
+
+.input {
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.btn-main {
+  background-color: var(--furnora-green);
+  color: white;
+  padding: 12px;
+  border-radius: 30px;
+}
+
+.link {
+  color: var(--furnora-green);
+  text-decoration: none;
+}
+
+.right {
+  background-color: #f8f8f8;
+}
+
+.square {
+  width: 80px;
+  height: 80px;
+  background-color: var(--furnora-green);
+}
