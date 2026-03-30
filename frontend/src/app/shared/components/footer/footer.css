@@ -1,0 +1,23 @@
+.footer {
+  background-color: var(--furnora-green);
+  color: white;
+}
+
+.footer h5 {
+  margin-bottom: 15px;
+}
+
+.footer a {
+  color: #555;
+  text-decoration: none;
+  margin-bottom: 8px;
+  display: inline-block;
+  transition: 0.3s;
+  color: white;
+}
+
+.footer i {
+  font-size: 20px;
+  color: white;
+  transition: 0.3s;
+}

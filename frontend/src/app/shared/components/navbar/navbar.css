@@ -1,0 +1,17 @@
+.navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+
+  background: transparent;
+  box-shadow: none;
+}
+.navbar .links a {
+  color: white;
+  font-weight: 600;
+}
+.logo {
+  color: var(--furnora-main);
+}

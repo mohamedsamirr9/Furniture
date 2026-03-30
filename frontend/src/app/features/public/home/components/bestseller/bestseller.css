@@ -1,0 +1,23 @@
+.best-sellers {
+  background: #fafafa;
+}
+
+.seller-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.seller-card img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+}
+
+.view-btn {
+  background: var(--furnora-main);
+  margin-top: 20px;
+  color: white;
+  border-radius: 25px;
+  padding: 8px 30px;
+}

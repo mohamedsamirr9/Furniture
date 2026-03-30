@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --furnora-main: #d9ad1e;
+  --furnora-main-transparent: #d9ad1eb8;
+  --furnora-dark: #a67c00;
+  --furnora-light: #f5e3a3;
+  --furnora-green: #6e7359;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.customer-container {
+  padding: 20px;
+}
+.btn-main {
+  background-color: #d9ad1e;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 4px 24px;
+  text-decoration: none;
+  cursor: pointer;
+}

@@ -1,0 +1,82 @@
+.special-offers {
+  background: #fff;
+}
+
+/* CARD */
+.offer-card {
+  position: relative;
+  background: #f8f8f8;
+  border-radius: 12px;
+  overflow: hidden;
+  padding-bottom: 20px;
+  transition: 0.3s;
+  text-align: center;
+}
+
+.offer-card:hover {
+  transform: translateY(-8px);
+}
+
+/* IMAGE WRAPPER */
+.img-wrapper {
+  position: relative;
+}
+
+.offer-card img {
+  width: 100%;
+  height: 460px;
+  object-fit: cover;
+  display: block;
+}
+
+/* TEXT OVER IMAGE */
+.offer-info {
+  position: absolute;
+  bottom: 15px;
+  left: 20px;
+  color: white;
+  z-index: 2;
+  text-align: left;
+}
+
+.offer-info h6 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.price {
+  font-weight: bold;
+  margin: 0;
+}
+
+.price span {
+  text-decoration: line-through;
+  color: #ddd;
+  margin-left: 8px;
+}
+
+/* DISCOUNT BADGE */
+.badge-off {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--furnora-main);
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  z-index: 3;
+}
+
+/* BUTTON */
+.shop-btn {
+  background: var(--furnora-green);
+  color: white;
+  border-radius: 25px;
+  width: 80%;
+}
+
+.shop-btn:hover {
+  background: var(--furnora-green);
+  color: white;
+}
