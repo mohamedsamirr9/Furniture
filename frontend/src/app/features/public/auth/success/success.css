@@ -1,0 +1,66 @@
+.success-wrapper {
+  background-color: #ffffff;
+}
+
+.success-content {
+  max-width: 500px;
+  padding: 20px;
+}
+
+.check-box {
+  width: 60px;
+  height: 60px;
+  border: 3px solid var(--furnora-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  border-radius: 4px; 
+}
+
+.check-box i {
+  font-size: 2.5rem;
+  color: var(--furnora-green);
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #000;
+}
+
+.description {
+  color: #333;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.btn {
+  border-radius: 50px; 
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.btn-home {
+  background-color: var(--furnora-green);
+  color: white;
+  border: none;
+}
+
+.btn-home:hover {
+  background-color: #6a9b6b;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(124, 175, 125, 0.3);
+}
+
+.btn-dashboard {
+  background-color: transparent;
+  color: var(--furnora-dark);
+  border: 1.5px solid var(--furnora-dark);
+}
+
+.btn-dashboard:hover {
+  background-color: #f8fcf8;
+  color: var(--furnora-dark);
+  border-color: var(--furnora-dark);
+}

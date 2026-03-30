@@ -1,0 +1,36 @@
+.brand {
+  color: var(--furnora-green);
+}
+
+.otp-input {
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.otp-input:focus {
+  border-color: #a3a380;
+  box-shadow: 0 0 0 0.25rem rgba(163, 163, 128, 0.25);
+  outline: none;
+}
+
+.btn-verify {
+  background-color: var(--furnora-green);
+  border: none;
+  border-radius: 25px;
+  font-size: 1.1rem;
+}
+
+.btn-verify:hover {
+  background-color: #7a7d65;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

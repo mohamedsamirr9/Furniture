@@ -1,0 +1,29 @@
+.brand {
+  color: var(--furnora-green);
+}
+
+.selection-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  border: 1px solid #eee;
+}
+
+.selection-card:hover {
+  transform: translateY(-5px);
+  border-color: #a3a380;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+.icon-box {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.icon-box i {
+  font-size: 2rem;
+}
