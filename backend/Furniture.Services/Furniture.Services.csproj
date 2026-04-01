@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Furniture.Domain\Furniture.Domain.csproj" />
     <ProjectReference Include="..\Furniture.Servises Abstraction\Furniture.Servises Abstraction.csproj" />
   </ItemGroup>

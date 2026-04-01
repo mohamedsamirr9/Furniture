@@ -1,27 +1,27 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36623.8 d17.14
+VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furniture.web", "Furniture.web\Furniture.web.csproj", "{E2B38323-7CF8-4E96-9964-302CADCC65B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furniture.web", "Furniture.web\Furniture.web.csproj", "{E2B38323-7CF8-4E96-9964-302CADCC65B7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApplicationCoreLayer", "ApplicationCoreLayer", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furniture.Domain", "Furniture.Domain\Furniture.Domain.csproj", "{EC22C7B6-4D02-485F-AC1D-999B920A53BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furniture.Domain", "Furniture.Domain\Furniture.Domain.csproj", "{EC22C7B6-4D02-485F-AC1D-999B920A53BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furniture.Services", "Furniture.Services\Furniture.Services.csproj", "{5FDFB0EE-77A2-43BD-9F2B-8CCF88F0E5B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furniture.Services", "Furniture.Services\Furniture.Services.csproj", "{5FDFB0EE-77A2-43BD-9F2B-8CCF88F0E5B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furniture.Servises Abstraction", "Furniture.Servises Abstraction\Furniture.Servises Abstraction.csproj", "{EE85432E-6C8B-4CBA-BAC6-950A3D8145E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furniture.Servises Abstraction", "Furniture.Servises Abstraction\Furniture.Servises Abstraction.csproj", "{EE85432E-6C8B-4CBA-BAC6-950A3D8145E3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InfrastructureLayer", "InfrastructureLayer", "{F13C9BB1-E528-4F51-B5AB-71B665FDE095}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furniture.Persistence", "Furniture.Persistence\Furniture.Persistence.csproj", "{55971461-A63E-4E37-BBF0-BE3E87502752}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furniture.Persistence", "Furniture.Persistence\Furniture.Persistence.csproj", "{55971461-A63E-4E37-BBF0-BE3E87502752}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PresentationLayer", "PresentationLayer", "{E20342BE-463F-4706-8A70-A9629AF70347}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furniture.presentation", "Furniture.presentation\Furniture.presentation.csproj", "{604E415F-3916-4847-8B91-27D63FD79B44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furniture.presentation", "Furniture.presentation\Furniture.presentation.csproj", "{604E415F-3916-4847-8B91-27D63FD79B44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furniture.shared", "Furniture.shared\Furniture.shared.csproj", "{9145746C-3F08-4EF8-B477-4E8E467946E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furniture.shared", "Furniture.shared\Furniture.shared.csproj", "{9145746C-3F08-4EF8-B477-4E8E467946E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
