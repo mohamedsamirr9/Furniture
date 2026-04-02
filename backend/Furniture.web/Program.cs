@@ -29,9 +29,14 @@ namespace Furniture.web
             });
        
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddAutoMapper(x => x.AddProfile<MappingCategory>());
-          
+            builder.Services.AddAutoMapper(x =>
+            {
+                x.AddProfile<MappingCategory>();
+                x.AddProfile<MappingReview>();
+            });
+
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
