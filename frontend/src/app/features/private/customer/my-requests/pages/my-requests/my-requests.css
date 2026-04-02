@@ -1,0 +1,93 @@
+.page {
+  max-width: 1100px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.card p {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.card h2 {
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.card span {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.recent-orders {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.recent-orders h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.order {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.order img {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.order div {
+  flex: 1;
+}
+
+.order div p {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.order div span {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.price {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 14px;
+  font-weight: 500;
+}

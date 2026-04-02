@@ -9,4 +9,9 @@ export const routes: Routes = [
     path: '',
     loadChildren: () => import('./features/public/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
+{
+  path: '',
+  loadChildren: () =>
+    import('./features/private/customer/customer.routes').then((m) => m.CUSTOMER_ROUTES),
+},
 ];
