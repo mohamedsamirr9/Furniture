@@ -1,4 +1,4 @@
-﻿using Furniture.shared.Dtos;
+﻿using Furniture.shared.Dtos.CategoryDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;

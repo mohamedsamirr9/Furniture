@@ -30,8 +30,11 @@ namespace Furniture.web
        
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingCategory>());
-          
+            builder.Services.AddAutoMapper(x => x.AddProfile<MappingProduct>());
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IProductImageService, ProductImageService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
