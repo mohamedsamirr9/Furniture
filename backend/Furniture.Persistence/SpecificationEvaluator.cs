@@ -34,6 +34,14 @@ namespace Furniture.Persistence
               
                 Query = specifications.IncludeExpressions.Aggregate(Query, (CurrentQuery, IncludeExp) => CurrentQuery.Include(IncludeExp));
             }
+            
+            if (specifications.IncludeStrings is not null && specifications.IncludeStrings.Count > 0)
+            {
+                foreach (var includeString in specifications.IncludeStrings)
+                {
+                    Query = Query.Include(includeString);
+                }
+            }
 
             if (specifications.IsPaginated)
             {

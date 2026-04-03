@@ -14,6 +14,7 @@ namespace Furniture.Domain.InterfacesRepositories
 
         // Includes
         List<Expression<Func<TEntity, object>>> IncludeExpressions { get; }
+        List<string> IncludeStrings { get; }
 
         // Sorting
         Expression<Func<TEntity, object>>? OrderBy { get; }

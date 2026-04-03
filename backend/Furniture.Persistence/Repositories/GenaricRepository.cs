@@ -56,5 +56,11 @@ namespace Furniture.Persistence.Repositories
         {
             _dbContext.Set<TEntity>().Update(entity);
         }
+        
+        public void RemoveRange(IEnumerable<TEntity> entities)
+        {
+            _dbContext.Set<TEntity>().RemoveRange(entities);
+        }
+
     }
 }
