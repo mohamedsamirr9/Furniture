@@ -7,18 +7,14 @@ using System.Threading.Tasks;
 
 namespace Furniture.Domain.Models
 {
-    public class Payment
+    public class Delivery
     {
         public int Id { get; set; }
-        //public string? PaymentMethod { get; set; }
-        public PaymentType Type { get; set; }
-        public decimal Amount { get; set; }
 
-        public PaymentStatus Status { get; set; }
-        public DateTime PaymentDate { get; set; }
-
-        //rel
         public int OrderId { get; set; }
+        public string ShipperId { get; set; } = null!;
+        public ApplicationUser Shipper { get; set; } = null!;
+        public DeliveryStatus Status { get; set; }
         public Order Order { get; set; } = null!;
     }
 }

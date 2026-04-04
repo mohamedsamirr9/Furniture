@@ -1,19 +1,23 @@
 
 using Furniture.Domain.InterfacesRepositories;
+using Furniture.Domain.Models;
+using Furniture.Persistence.Data.DataSeed;
 using Furniture.Persistence.Data.DbContexts;
 using Furniture.Persistence.Repositories;
 using Furniture.Services;
 using Furniture.Services.Mapping;
 using Furniture.Servises_Abstraction;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace Furniture.web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +32,12 @@ namespace Furniture.web
                 Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+             .AddEntityFrameworkStores<FurnitureDbContext>()
+             .AddDefaultTokenProviders();
+
+
+            // CORS
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
@@ -42,7 +52,13 @@ namespace Furniture.web
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingCategory>());
           
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IDataSeeding, DataSeeding>();
             var app = builder.Build();
+
+            // Data Seeding
+            await using var scope= app.Services.CreateAsyncScope();
+            var DataSeedingService = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
+           await DataSeedingService.InitializeAsync();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

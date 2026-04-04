@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Furniture.Domain.Models.Enum
+namespace Furniture.Domain.InterfacesRepositories
 {
-    public enum ComplaintStatus
+    public interface IDataSeeding
     {
-         Open, UnderReview, Resolved
+        Task InitializeAsync();
     }
 }

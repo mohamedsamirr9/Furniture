@@ -6,14 +6,10 @@ using System.Threading.Tasks;
 
 namespace Furniture.Domain.Models.Enum
 {
-    public enum OrderStatus
+    public enum PaymentType
     {
-        Pending,
-        Paid,
-        InProgress,
-        Shipped,
-        Delivered,
-        Completed,
-        Cancelled
+         Deposit=1 ,
+         Final
+
     }
 }

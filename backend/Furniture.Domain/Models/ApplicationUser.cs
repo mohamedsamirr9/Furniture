@@ -18,7 +18,6 @@ namespace Furniture.Domain.Models
         public string? OTP { get; set; }
         public DateTime? OTPExpiry { get; set; } 
         public bool IsConfirmed { get; set; } = false;
-        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
         public DateTime? DeletedAt { get; set; }
         public bool IsDeleted { get; set; }
@@ -26,6 +25,7 @@ namespace Furniture.Domain.Models
 
         //rel
         public ICollection<Product> Products { get; set; }=new List<Product>();
+        public ICollection<CustomRequest> CustomRequests { get; set; } = new List<CustomRequest>();
         public ICollection<Offer> Offers { get; set; } = new List<Offer>();
         public ICollection<Order> Orders { get; set; } = new List<Order>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();

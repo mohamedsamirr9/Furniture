@@ -15,6 +15,9 @@ namespace Furniture.Domain.Models
         public DateTime CreatedAt { get; set; }
         public ComplaintStatus Status { get; set; }
 
+        //rel
+        public int OrderId { get; set; }
+        public Order Order { get; set; }
         public string UserId { get; set; } = null!;
         public ApplicationUser User { get; set; } = null!;
 

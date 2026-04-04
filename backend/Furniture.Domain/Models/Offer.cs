@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Furniture.Domain.Models.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,13 +13,17 @@ namespace Furniture.Domain.Models
         public decimal Price { get; set; }
         public int DeliveryDays { get; set; }
 
-        public bool IsAccepted { get; set; }
+        public OfferStatus Status { get; set; } 
 
         //rel
-        public int OrderRequestId { get; set; }
+        public int CustomRequestId { get; set; }
+        public CustomRequest CustomRequest { get; set; }
 
         public string SellerId { get; set; } = null!;
         public ApplicationUser Seller { get; set; } = null!;
+
+        public int? OrderId { get; set; }
+        public Order? Order { get; set; }
 
     }
 }
