@@ -29,10 +29,22 @@ namespace Furniture.Persistence
             }
 
 
+            //if (specifications.IncludeExpressions is not null && specifications.IncludeExpressions.Count > 0)
+            //{
+
+            //    Query = specifications.IncludeExpressions.Aggregate(Query, (CurrentQuery, IncludeExp) => CurrentQuery.Include(IncludeExp));
+            //}
+
             if (specifications.IncludeExpressions is not null && specifications.IncludeExpressions.Count > 0)
             {
-              
-                Query = specifications.IncludeExpressions.Aggregate(Query, (CurrentQuery, IncludeExp) => CurrentQuery.Include(IncludeExp));
+                Query = specifications.IncludeExpressions
+                    .Aggregate(Query, (current, include) => current.Include(include));
+            }
+
+            if (specifications.IncludeStrings is not null && specifications.IncludeStrings.Count > 0)
+            {
+                Query = specifications.IncludeStrings
+                    .Aggregate(Query, (current, include) => include(current));
             }
 
             if (specifications.IsPaginated)

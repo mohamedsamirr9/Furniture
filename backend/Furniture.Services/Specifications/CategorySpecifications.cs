@@ -13,7 +13,7 @@ namespace Furniture.Services.Specifications
         (c => string.IsNullOrWhiteSpace(search) || c.Name.Contains(search))
         {
             AddOrderBy(c => c.Name);
-
+         
             ApplyPagination(pageSize, pageIndex);
         }
     }

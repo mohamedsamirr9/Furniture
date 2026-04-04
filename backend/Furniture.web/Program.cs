@@ -58,6 +58,12 @@ namespace Furniture.web
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
             builder.Services.AddScoped<IReviewService, ReviewService>();
+            builder.Services.AddAutoMapper(x => x.AddProfile<MappingCategory>());
+            builder.Services.AddAutoMapper(x => x.AddProfile<MappingProduct>());
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IProductImageService, ProductImageService>();
+
             var app = builder.Build();
 
             // Data Seeding
