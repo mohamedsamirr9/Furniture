@@ -1,5 +1,6 @@
 ﻿using Furniture.Domain.InterfacesRepositories;
 using Furniture.Domain.Models;
+using Furniture.Domain.Models.Enum;
 using Furniture.Persistence.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -24,6 +25,44 @@ namespace Furniture.Persistence.Data.DataSeed
         {
             try
             {
+                if (!await _dbContext.Users.AnyAsync())
+                {
+                    var seller = new ApplicationUser
+                    {
+                        Id = "seller-1", 
+                        UserName = "seller@test.com",
+                        NormalizedUserName = "SELLER@TEST.COM",
+                        Email = "seller@test.com",
+                        NormalizedEmail = "SELLER@TEST.COM",
+                        EmailConfirmed = true,
+                        Name = "Main Seller",
+                        Role = Roles.seller,
+                        Address = "Cairo",
+                        IsConfirmed = true,
+
+                        SecurityStamp = Guid.NewGuid().ToString("D"),
+                        PasswordHash = "AQAAAAEAACcQAAAAE" 
+                    };
+
+                    await _dbContext.Users.AddAsync(seller);
+                    await _dbContext.SaveChangesAsync();
+                }
+                var HasProductsImages = await _dbContext.ProductImages.AnyAsync();
+                if (HasProductsImages) return;
+                if (!HasProductsImages)
+                {
+                    Console.WriteLine("Seeding Products started...");
+                    await SeedDataFromJsonAsync<ProductImage>("ProductImages.json", _dbContext.ProductImages);
+                    await _dbContext.SaveChangesAsync();
+                }
+                var HasProducts = await _dbContext.Products.AnyAsync();
+                if (HasProducts) return;
+                if (!HasProducts)
+                {
+                    Console.WriteLine("Seeding Products started...");
+                    await SeedDataFromJsonAsync<Product>("Product.json", _dbContext.Products);
+                    await _dbContext.SaveChangesAsync();
+                }
                 var HasCategories =await _dbContext.Categories.AnyAsync();
                 if (HasCategories) return;
                 if (!HasCategories)
@@ -31,6 +70,7 @@ namespace Furniture.Persistence.Data.DataSeed
                     await SeedDataFromJsonAsync<Category>("Category.json", _dbContext.Categories);
                     await _dbContext.SaveChangesAsync();
                 }
+                
             }
             catch (Exception ex) { Console.WriteLine($"Data Seeding Failed: {ex}"); }
 
