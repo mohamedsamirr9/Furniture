@@ -15,7 +15,7 @@ namespace Furniture.Domain.Models
         public decimal Price { get; set; }
         public int StockQuantity { get; set; }
         public bool IsAvailable { get; set; }
-        public bool IsCustomized { get; set; }
+        //public bool IsCustomized { get; set; }
         public DateTime CreatedAt { get; set; }
 
         //rel
