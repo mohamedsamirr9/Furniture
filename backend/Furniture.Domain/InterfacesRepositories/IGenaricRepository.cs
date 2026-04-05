@@ -13,6 +13,7 @@ namespace Furniture.Domain.InterfacesRepositories
         Task AddAsync(TEntity entity);
         void Update(TEntity entity);
         void Remove(TEntity entity);
+        void RemoveRange(IEnumerable<TEntity> entities);
 
         #region with Specifications
         Task<IEnumerable<TEntity>> GetAllAsync(ISpecifications<TEntity, TKey> specifications);

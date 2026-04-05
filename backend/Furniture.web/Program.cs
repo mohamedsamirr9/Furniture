@@ -60,13 +60,18 @@ namespace Furniture.web
             builder.Services.AddScoped<IReviewService, ReviewService>();
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingCategory>());
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingOffer>());
+            builder.Services.AddAutoMapper(x => x.AddProfile<MappingCart>());
 
+  
   builder.Services.AddAutoMapper(x => x.AddProfile<MappingProduct>());
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IProductImageService, ProductImageService>();
 
             builder.Services.AddScoped<IOfferService, OfferService>();
+            builder.Services.AddScoped<ICartService, CartService>();
+
+            
             var app = builder.Build();
 
             // Data Seeding

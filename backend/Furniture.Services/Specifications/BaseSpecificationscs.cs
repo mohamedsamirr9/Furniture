@@ -51,6 +51,9 @@ namespace Furniture.Services.Specifications
 
             => IncludeExpressions.Add(includeExpression);
 
+        public List<string> IncludeStrings { get; } = new();
+        protected void AddInclude(string includeString)
+            => IncludeStrings.Add(includeString);
 
 
         public List<Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>> IncludeStrings { get; } = new();
