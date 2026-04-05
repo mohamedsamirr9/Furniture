@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Furniture.Domain.InterfacesRepositories;
 using Furniture.Domain.Models;
+using Furniture.Domain.Models.Enum;
 using Furniture.Services.Specifications;
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos;
@@ -49,10 +50,13 @@ namespace Furniture.Services
             var offer = await repo.GetByIdAsync(offerId);
             if (offer == null) throw new Exception("Offer not found");
 
-            var otherOffers = await repo.GetAllAsync(new OffersByRequestSpecification(offer.OrderRequestId));
+            var otherOffers = await repo.GetAllAsync(new OffersByRequestSpecification(offer.CustomRequestId));
             foreach (var o in otherOffers)
             {
-                o.IsAccepted = o.Id == offerId;
+                if (o.Id == offerId)
+                    o.Status = OfferStatus.Accepted;
+                else
+                    o.Status = OfferStatus.Rejected;
             }
 
             await _unitOfWork.SaveChangesAsync();

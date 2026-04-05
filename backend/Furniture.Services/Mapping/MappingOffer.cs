@@ -14,7 +14,7 @@ namespace Furniture.Services.Mapping
         public MappingOffer()
         {
             CreateMap<OfferCreateDto, Offer>()
-                .ForMember(dest => dest.IsAccepted, opt => opt.MapFrom(src => false));
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => false));
 
             CreateMap<Offer, OfferDto>();
         }

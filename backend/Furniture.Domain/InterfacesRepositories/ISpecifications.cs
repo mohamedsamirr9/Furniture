@@ -14,6 +14,7 @@ namespace Furniture.Domain.InterfacesRepositories
         Expression<Func<TEntity, bool>>? Criteria { get; }
 
         // Includes
+        List<string> IncludeStringsExpressions { get; }
         List<Expression<Func<TEntity, object>>> IncludeExpressions { get; }
         List<Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>> IncludeStrings { get; }
 
