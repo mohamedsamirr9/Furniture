@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Furniture.Domain.Models.Enum
+namespace Furniture.shared.Dtos.ProductDtos
 {
-    public enum ComplaintStatus
+    public class ProductImageCreateDto
     {
-         Open, UnderReview, Resolved
+        public string ImageUrl { get; set; }
     }
 }

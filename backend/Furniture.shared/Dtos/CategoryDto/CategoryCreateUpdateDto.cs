@@ -4,14 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Furniture.shared.Dtos
+namespace Furniture.shared.Dtos.CategoryDto
 {
-    public class CategoryDto
+    public class CategoryCreateUpdateDto
     {
-        public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
         public string? Image { get; set; }
-        public DateTime Created_At { get; set; }
     }
 }

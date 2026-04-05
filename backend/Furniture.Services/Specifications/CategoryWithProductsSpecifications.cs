@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Furniture.Services.Specifications
 {
@@ -11,7 +12,13 @@ namespace Furniture.Services.Specifications
     {
         public CategoryWithProductsSpecifications(int id) : base(c => c.Id == id)
         {
-            AddInclude(c => c.Products);
+            AddInclude(q => q.Include(c => c.Products)
+                            .ThenInclude(p => p.Seller));
+
+            AddInclude(q => q.Include(c => c.Products)
+                             .ThenInclude(p => p.Images));
+
+
         }
     }
 }

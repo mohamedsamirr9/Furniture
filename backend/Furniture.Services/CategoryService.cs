@@ -3,7 +3,7 @@ using Furniture.Domain.InterfacesRepositories;
 using Furniture.Domain.Models;
 using Furniture.Services.Specifications;
 using Furniture.Servises_Abstraction;
-using Furniture.shared.Dtos;
+using Furniture.shared.Dtos.CategoryDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;

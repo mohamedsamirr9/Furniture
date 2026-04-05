@@ -1,5 +1,5 @@
 ﻿using Furniture.Servises_Abstraction;
-using Furniture.shared.Dtos;
+using Furniture.shared.Dtos.CategoryDto;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
