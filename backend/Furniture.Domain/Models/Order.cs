@@ -15,6 +15,7 @@ namespace Furniture.Domain.Models
         public OrderStatus Status { get; set; }
         public string? ShippingAddress { get; set; }
         public DateTime CreatedAt { get; set; }
+        public bool IsCustom { get; set; }
 
         //rel
 
@@ -24,6 +25,9 @@ namespace Furniture.Domain.Models
 
 
         public ICollection<OrderItem>? OrderItems { get; set; }
-        public Payment? Payment { get; set; }
+        public ICollection<Payment> Payments { get; set; } = new List<Payment>();
+        public ShippingRequest? ShippingRequest { get; set; }
+        public Delivery? Delivery { get; set; }
+
     }
 }

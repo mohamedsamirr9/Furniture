@@ -8,7 +8,6 @@ namespace Furniture.Domain.Models.Enum
 {
     public enum ComplaintStatus
     {
-        pending,
-        resolved
+         Open, UnderReview, Resolved
     }
 }

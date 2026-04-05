@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -14,7 +15,7 @@ namespace Furniture.Domain.InterfacesRepositories
 
         // Includes
         List<Expression<Func<TEntity, object>>> IncludeExpressions { get; }
-        List<string> IncludeStrings { get; }
+        List<Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>> IncludeStrings { get; }
 
         // Sorting
         Expression<Func<TEntity, object>>? OrderBy { get; }

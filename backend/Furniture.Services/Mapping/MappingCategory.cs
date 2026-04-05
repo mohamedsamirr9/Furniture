@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Furniture.Domain.Models;
-using Furniture.shared.Dtos;
+using Furniture.shared.Dtos.CategoryDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +14,11 @@ namespace Furniture.Services.Mapping
         public MappingCategory()
         {
 
-            CreateMap<Category, CategoryDto>();
+            CreateMap<Category, CategoryDto>().ForMember(d => d.Products, o => o.MapFrom(s => s.Products)); ;
             CreateMap<Category, CategoryListDto>();
-            CreateMap<CategoryCreateUpdateDto, Category>()
-                .ForMember(dest => dest.Created_At, opt => opt.MapFrom(d=> DateTime.UtcNow));
+            CreateMap<CategoryCreateUpdateDto, Category>().ForMember(dest => dest.Created_At, opt => opt.MapFrom(d=> DateTime.UtcNow));
             CreateMap<Category, CategoryCreateUpdateDto>();
+         
         }
     }
 }

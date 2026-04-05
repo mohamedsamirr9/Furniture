@@ -1,4 +1,5 @@
 ﻿using Furniture.Domain.InterfacesRepositories;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,8 @@ namespace Furniture.Services.Specifications
         #region Includes
         public List<Expression<Func<TEntity, object>>> IncludeExpressions { get; } = new();
 
+      
+
         protected void AddInclude(Expression<Func<TEntity, object>> includeExpression)
 
             => IncludeExpressions.Add(includeExpression);
@@ -52,6 +55,11 @@ namespace Furniture.Services.Specifications
         protected void AddInclude(string includeString)
             => IncludeStrings.Add(includeString);
 
+
+        public List<Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>> IncludeStrings { get; } = new();
+
+        protected void AddInclude(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression)
+            => IncludeStrings.Add(includeExpression);
         #endregion
 
     }
