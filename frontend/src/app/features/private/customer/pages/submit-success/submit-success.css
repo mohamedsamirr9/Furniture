@@ -1,0 +1,47 @@
+.success-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 73px);
+  text-align: center;
+  padding: 40px 24px;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background: #c8ddd0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.success-title {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.success-desc {
+  color: #6b7280;
+  font-size: 16px;
+  max-width: 440px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.submit-another {
+  background: none;
+  border: none;
+  color: #3d6b4f;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.submit-another:hover { opacity: 0.7; }
