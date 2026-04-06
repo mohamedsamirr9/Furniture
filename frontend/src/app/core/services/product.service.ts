@@ -6,16 +6,16 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ProductService {
-  private baseUrl = 'https://api.escuelajs.co/api/v1';
+  private baseUrl = 'http://localhost:5227/api';
 
   constructor(private http: HttpClient) {}
 
   getProducts(params: any): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/products`, { params });
+    return this.http.get<any>(`${this.baseUrl}/Product`, { params });
   }
 
   getProductById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/products/${id}`);
+    return this.http.get<any>(`${this.baseUrl}/Product/${id}`);
   }
 
   getCategories(): Observable<any> {
@@ -24,11 +24,9 @@ export class ProductService {
 
   getProductsByCategory(
     categoryId: number,
-    offset: number = 0,
-    limit: number = 10,
   ): Observable<any> {
     return this.http.get<any>(
-      `${this.baseUrl}/categories/${categoryId}/products?offset=${offset}&limit=${limit}`,
+      `${this.baseUrl}/categories/${categoryId}`,
     );
   }
 

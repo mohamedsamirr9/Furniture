@@ -12,11 +12,46 @@
 
   <div class="links collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav w-100 d-flex justify-content-between text-center">
-      <a class="nav-item nav-link flex-fill" href="#">Home</a>
-      <a class="nav-item nav-link flex-fill" href="#">About Us</a>
-      <a class="nav-item nav-link flex-fill" href="#">Categories</a>
-      <a class="nav-item nav-link flex-fill" href="#">Contact Us</a>
-      <a class="nav-item nav-link flex-fill" href="#">Complaints</a>
+      <a
+        class="nav-item nav-link flex-fill"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        routerLink="/"
+      >
+        Home
+      </a>
+
+      <a
+        class="nav-item nav-link flex-fill"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        routerLink="/about"
+      >
+        About Us
+      </a>
+
+      <a
+        class="nav-item nav-link flex-fill"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        routerLink="/categories"
+      >
+        Categories
+      </a>
+
+      <a
+        class="nav-item nav-link flex-fill"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        routerLink="/contact"
+      >
+        Contact Us
+      </a>
+
+      <a
+        class="nav-item nav-link flex-fill"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        routerLink="/complaints"
+      >
+        Complaints
+      </a>
+
       <a class="nav-item btn-main" routerLink="/login">Log In</a>
     </div>
   </div>

@@ -19,7 +19,7 @@ namespace Furniture.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOffer([FromBody] OfferCreateDto dto)
         {
-            var sellerId = "example-seller-id"; 
+            var sellerId = "seller-1"; 
             var offer = await _offerService.CreateOfferAsync(dto, sellerId);
             return Ok(offer);
         }
@@ -34,7 +34,7 @@ namespace Furniture.API.Controllers
         [HttpGet("my")]
         public async Task<IActionResult> GetMyOffers()
         {
-            var sellerId = "example-seller-id"; 
+            var sellerId = "seller-1"; 
             var offers = await _offerService.GetMyOffersAsync(sellerId);
             return Ok(offers);
         }

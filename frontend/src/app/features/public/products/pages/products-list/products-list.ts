@@ -13,12 +13,13 @@ import { CommonModule } from '@angular/common';
 export class ProductsList implements OnInit {
   products: any[] = [];
   categories: any[] = [];
-  page = 1;
+  pageIndex = 1;
   offset = 0;
-  limit = 10;
+  pageSize = 10;
   searchTerm: string = '';
   selectedCategory: string = '';
-
+  selectedCategoryId: number | null = null;
+  loading = false;
   constructor(
     private productService: ProductService,
     private router: Router,
@@ -26,39 +27,43 @@ export class ProductsList implements OnInit {
   ) {}
   ngOnInit() {
     this.loadCategories();
+
+    this.route.paramMap.subscribe((params) => {
+      const categoryId = params.get('id');
+
+      this.selectedCategoryId = categoryId ? +categoryId : null;
+
+      this.loadCategoryProducts(Number(this.selectedCategoryId));
+    });
+
     this.route.queryParams.subscribe((params) => {
-      if (!params['page']) {
-        this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: { page: 1, limit: 10 },
-          queryParamsHandling: 'merge',
-        });
-        return;
-      }
-      this.page = Number(params['page']) || 1;
-      this.limit = Number(params['limit']) || 10;
-      const title = params['title'] || '';
-      const categorySlug = params['categorySlug'] || '';
+      this.pageIndex = +params['pageIndex'] || 1;
+      this.pageSize = +params['pageSize'] || 10;
+      this.searchTerm = params['title'] || '';
 
-      this.offset = (this.page - 1) * this.limit;
-
-      this.loadProducts(title, categorySlug);
+      this.loadProducts();
     });
   }
 
-  loadProducts(title: string = '', categorySlug: string = '') {
+  loadProducts() {
+    this.loading = true;
+
     this.productService
       .getProducts({
-        offset: this.offset,
-        limit: this.limit,
-        title: title,
-        categorySlug: categorySlug,
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize,
+        search: this.searchTerm,
+        categoryId: this.selectedCategory ? Number(this.selectedCategory) : null,
       })
       .subscribe({
         next: (res: any) => {
           this.products = res;
+          this.loading = false;
         },
-        error: (err) => console.log(err),
+        error: (err) => {
+          console.log(err);
+          this.loading = false;
+        },
       });
   }
   loadCategories() {
@@ -76,19 +81,19 @@ export class ProductsList implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        page: this.page + 1,
-        limit: this.limit,
+        pageIndex: this.pageIndex + 1,
+        pageSize: this.pageSize,
       },
       queryParamsHandling: 'merge',
     });
   }
   prevPage() {
-    if (this.page > 1) {
+    if (this.pageIndex > 1) {
       this.router.navigate([], {
         relativeTo: this.route,
         queryParams: {
-          page: this.page - 1,
-          limit: this.limit,
+          pageIndex: this.pageIndex - 1,
+          pageSize: this.pageSize,
         },
         queryParamsHandling: 'merge',
       });
@@ -98,30 +103,34 @@ export class ProductsList implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        title: this.searchTerm,
         page: 1,
+        limit: this.pageSize,
+        title: this.searchTerm,
       },
       queryParamsHandling: 'merge',
     });
   }
-  filterByCategory(slug: string) {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        categorySlug: slug,
-        page: 1,
+  filterByCategory(id: number) {
+    this.router.navigate(['/categories', id, 'products']);
+  }
+  loadCategoryProducts(id: number) {
+    this.loading = true;
+
+    this.productService.getProductsByCategory(id).subscribe({
+      next: (res: any) => {
+        this.products = res.products;
+        this.loading = false;
       },
-      queryParamsHandling: 'merge',
+      error: (err) => {
+        console.log(err);
+        this.loading = false;
+      },
     });
   }
   clearCategory() {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        categorySlug: null,
-        page: 1,
-      },
-      queryParamsHandling: 'merge',
-    });
+    this.selectedCategoryId = null;
+    this.router.navigate(['/products']);
+
+    this.loadProducts();
   }
 }

@@ -53,10 +53,14 @@ namespace Furniture.Services
             var otherOffers = await repo.GetAllAsync(new OffersByRequestSpecification(offer.CustomRequestId));
             foreach (var o in otherOffers)
             {
-                if (o.Id == offerId)
-                    o.Status = OfferStatus.Accepted;
-                else
-                    o.Status = OfferStatus.Rejected;
+                var alreadyAccepted = otherOffers.Any(o => o.Status == OfferStatus.Accepted);
+                if (alreadyAccepted)
+                {
+                    throw new Exception("There is already an accepted offer");
+
+                }
+                if (offer.Status != OfferStatus.Pending)
+                    throw new Exception("Offer already processed");
             }
 
             await _unitOfWork.SaveChangesAsync();

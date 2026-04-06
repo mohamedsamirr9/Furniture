@@ -15,3 +15,7 @@
 .logo {
   color: var(--furnora-main);
 }
+.dark-nav {
+  color: black !important;
+  font-weight: 600;
+}
