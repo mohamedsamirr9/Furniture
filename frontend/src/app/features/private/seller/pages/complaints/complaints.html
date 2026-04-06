@@ -1,0 +1,36 @@
+<div class="page-header">
+  <h1>Complaints</h1>
+</div>
+<hr class="divider" />
+
+<div class="table-card">
+  <h2 class="card-title">Complaints</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Customer</th>
+        <th>Order</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let complaint of complaints">
+        <td>{{ complaint.id }}</td>
+        <td>{{ complaint.customer }}</td>
+        <td>{{ complaint.order }}</td>
+        <td><strong>{{ complaint.description }}</strong></td>
+        <td>
+          <span class="badge" [ngClass]="{
+            'badge-red': complaint.status === 'Open',
+            'badge-outline': complaint.status === 'In Progress',
+            'badge-gray': complaint.status === 'Resolved'
+          }">{{ complaint.status }}</span>
+        </td>
+        <td>{{ complaint.date }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
