@@ -1,0 +1,98 @@
+<div class="container py-5">
+  <div class="row mb-5">
+    <div class="col-12">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/cart" class="text-decoration-none text-muted">Cart</a></li>
+          <li class="breadcrumb-item active fw-bold" aria-current="page">Checkout</li>
+        </ol>
+      </nav>
+      <h1 class="display-5 fw-bold mt-3">Checkout</h1>
+      <p class="text-muted">Complete your purchase securely</p>
+    </div>
+  </div>
+
+  <div class="row g-5">
+    <!-- Left: Form -->
+    <div class="col-lg-7">
+      <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+        <h4 class="fw-bold mb-4 d-flex justify-content-between align-items-center">
+          Shipping Information
+          <i class="bi bi-truck text-muted"></i>
+        </h4>
+        <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+          
+          <div class="mb-4">
+            <label for="shippingAddress" class="form-label fw-bold">Shipping Address <span class="text-danger">*</span></label>
+            <textarea class="form-control form-control-lg bg-light" id="shippingAddress" rows="3" formControlName="shippingAddress" 
+                      [ngClass]="{'is-invalid': checkoutForm.get('shippingAddress')?.invalid && checkoutForm.get('shippingAddress')?.touched}"
+                      placeholder="Enter your full delivery address (e.g. 123 Main St, Apt 4B, City, Country)"></textarea>
+            <div class="invalid-feedback mt-2" *ngIf="checkoutForm.get('shippingAddress')?.hasError('required')">
+              Shipping address is required.
+            </div>
+            <div class="invalid-feedback mt-2" *ngIf="checkoutForm.get('shippingAddress')?.hasError('minlength')">
+              Address must be at least 10 characters long.
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="notes" class="form-label fw-bold">Order Notes (Optional)</label>
+            <textarea class="form-control bg-light" id="notes" rows="2" formControlName="notes" 
+                      placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-dark w-100 py-3 rounded-pill fw-bold shadow mt-4 d-flex justify-content-center align-items-center gap-2" 
+                  [disabled]="isLoading">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            {{ isLoading ? 'Processing...' : 'Place Order' }}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right: Order Summary -->
+    <div class="col-lg-5" *ngIf="cart$ | async as cart">
+      <div class="card border-0 shadow-sm rounded-4 bg-light">
+        <div class="card-body p-4 p-md-5">
+          <h4 class="fw-bold mb-4">Order Summary</h4>
+          
+          <div *ngIf="!cart.items?.length" class="alert alert-warning">
+            Your cart is empty. Return to store.
+          </div>
+
+          <!-- Items List -->
+          <div class="checkout-items-wrapper mb-4 pe-2" style="max-height: 400px; overflow-y: auto;" *ngIf="cart.items?.length">
+            <div class="d-flex align-items-center mb-4 pb-4 border-bottom border-light" *ngFor="let item of cart.items">
+              <img [src]="item.productImage || 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=80&auto=format&fit=crop'" 
+                   alt="{{ item.productName }}" class="rounded-4 me-3 shadow-sm" style="width: 70px; height: 70px; object-fit: cover;">
+              <div class="flex-grow-1">
+                <h6 class="mb-1 fw-bold text-dark">{{ item.productName }}</h6>
+                <div class="text-muted small">Qty: {{ item.quantity }} &times; ${{ item.unitPrice | number:'1.2-2' }}</div>
+              </div>
+              <div class="fw-bold text-end fs-6">
+                ${{ (item.unitPrice * item.quantity) | number:'1.2-2' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Totals -->
+          <div class="d-flex justify-content-between mb-3 text-muted">
+            <span>Subtotal</span>
+            <span class="fw-bold text-dark">${{ cart.totalPrice | number:'1.2-2' }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-3 text-muted">
+            <span>Shipping Estimate</span>
+            <span class="fw-bold text-success">Free</span>
+          </div>
+          
+          <hr class="my-4">
+          
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="text-uppercase fw-bold text-muted small">Total</span>
+            <span class="fs-3 fw-bold text-dark">${{ cart.totalPrice | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -23,8 +23,7 @@ namespace Furniture.API.Controllers
 
         #region User 
 
-        var userId = "seller-1"; 
-        
+        private readonly string userId = "seller-1";        
         [HttpGet]
         public async Task<IActionResult> GetMyOrders()
         {

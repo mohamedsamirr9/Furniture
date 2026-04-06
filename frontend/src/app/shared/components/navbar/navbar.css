@@ -19,3 +19,42 @@
   color: black !important;
   font-weight: 600;
 }
+.navbar-nav {
+  align-items: center;
+}
+.cart-link {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: white !important;
+  text-decoration: none;
+  padding: 0.5rem 1rem !important;
+}
+.cart-link.dark-nav {
+  color: black !important;
+}
+.cart-link i {
+  font-size: 1.4rem;
+}
+.cart-link .badge {
+  font-size: 0.7rem;
+  padding: 0.35em 0.5em;
+}
+.navbar .btn-main {
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 991.98px) {
+  .navbar-nav {
+    padding: 1rem 0;
+  }
+  .cart-link {
+    margin: 10px auto !important;
+  }
+  .navbar .btn-main {
+    margin: 10px auto !important;
+    display: block;
+    width: fit-content;
+  }
+}

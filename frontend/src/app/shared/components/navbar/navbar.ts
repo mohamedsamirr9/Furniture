@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,10 +9,14 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class Navbar {
-  constructor(private router: Router) {}
+export class Navbar implements OnInit {
+  constructor(private router: Router, public cartService: CartService) {}
+
+  ngOnInit(): void {
+    this.cartService.loadCart().subscribe();
+  }
 
   get isDarkPage(): boolean {
-    return this.router.url.includes('products') || this.router.url.includes('categories');
+    return this.router.url !== '/';
   }
 }

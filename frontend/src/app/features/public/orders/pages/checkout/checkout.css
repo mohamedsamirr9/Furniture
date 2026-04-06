@@ -1,0 +1,74 @@
+/* ===== Checkout Page Responsive Styles ===== */
+
+/* Mobile-first: tighten up spacing on small screens */
+@media (max-width: 575.98px) {
+  .container.py-5 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  h1.display-5 {
+    font-size: 1.75rem;
+  }
+
+  .card.rounded-4 {
+    border-radius: 1rem !important;
+  }
+
+  .card .p-4 {
+    padding: 1.25rem !important;
+  }
+
+  /* Order summary items - stack image above text */
+  .checkout-items-wrapper .d-flex {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .checkout-items-wrapper img {
+    width: 60px !important;
+    height: 60px !important;
+    margin-bottom: 0.5rem;
+  }
+
+  .checkout-items-wrapper .text-end {
+    text-align: left !important;
+    margin-top: 0.25rem;
+  }
+
+  /* Full-width total text */
+  .fs-3 {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* Tablets */
+@media (min-width: 576px) and (max-width: 991.98px) {
+  h1.display-5 {
+    font-size: 2rem;
+  }
+
+  .checkout-items-wrapper {
+    max-height: 300px !important;
+  }
+}
+
+/* Smooth scrollbar for order summary */
+.checkout-items-wrapper::-webkit-scrollbar {
+  width: 4px;
+}
+
+.checkout-items-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.checkout-items-wrapper::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+/* Form field focus states */
+textarea.form-control:focus {
+  border-color: #212529;
+  box-shadow: 0 0 0 0.15rem rgba(33, 37, 41, 0.15);
+}
