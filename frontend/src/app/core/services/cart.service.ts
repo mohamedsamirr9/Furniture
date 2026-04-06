@@ -12,21 +12,18 @@ export class CartService {
   private cartSubject = new BehaviorSubject<Cart | null>(null);
   public cart$ = this.cartSubject.asObservable();
 
-  // Observable for cart item count
   public cartCount$: Observable<number> = this.cart$.pipe(
     map((cart) => (cart && cart.items ? cart.items.reduce((total, item) => total + item.quantity, 0) : 0))
   );
 
   constructor(private http: HttpClient) {}
 
-  // Get current user cart and update subject
   loadCart(): Observable<Cart> {
     return this.http.get<Cart>(this.baseUrl).pipe(
       tap((cart) => this.cartSubject.next(cart))
     );
   }
 
-  // Add item to cart
   addToCart(productId: number, quantity: number): Observable<Cart> {
     const payload = { productId, quantity };
     return this.http.post<Cart>(`${this.baseUrl}/items`, payload).pipe(
@@ -34,7 +31,6 @@ export class CartService {
     );
   }
 
-  // Update quantity of an item
   updateQuantity(productId: number, quantity: number): Observable<Cart> {
     const payload = { quantity };
     return this.http.put<Cart>(`${this.baseUrl}/items/${productId}`, payload).pipe(
@@ -42,17 +38,15 @@ export class CartService {
     );
   }
 
-  // Remove an item from the cart
   removeCartItem(productId: number): Observable<Cart> {
     return this.http.delete<Cart>(`${this.baseUrl}/items/${productId}`).pipe(
       tap((updatedCart) => this.cartSubject.next(updatedCart))
     );
   }
 
-  // Clear the whole cart
   clearCart(): Observable<any> {
     return this.http.delete(`${this.baseUrl}`).pipe(
-      tap(() => this.cartSubject.next({ items: [], totalAmount: 0 }))
+      tap(() => this.cartSubject.next({ items: [], totalPrice: 0 }))
     );
   }
 }

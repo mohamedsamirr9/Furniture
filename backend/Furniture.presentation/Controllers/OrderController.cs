@@ -9,7 +9,7 @@ namespace Furniture.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    // [Authorize]
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
@@ -23,12 +23,12 @@ namespace Furniture.API.Controllers
 
         #region User 
 
-        
+        var userId = "seller-1"; 
         
         [HttpGet]
         public async Task<IActionResult> GetMyOrders()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
@@ -57,7 +57,7 @@ namespace Furniture.API.Controllers
         [HttpGet("{orderId:int}")]
         public async Task<IActionResult> GetOrderById(int orderId)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
@@ -77,7 +77,7 @@ namespace Furniture.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
@@ -97,7 +97,7 @@ namespace Furniture.API.Controllers
         [HttpDelete("{orderId:int}")]
         public async Task<IActionResult> CancelOrder(int orderId)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 

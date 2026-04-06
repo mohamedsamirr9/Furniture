@@ -30,7 +30,7 @@
     <div class="row g-5 align-items-center">
     <div class="col-md-6">
       <div class="product-image-wrapper rounded-4 overflow-hidden shadow-sm">
-        <img [src]="product.mainImage || product.image || product.imageUrl || 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=800&auto=format&fit=crop'" class="img-fluid w-100" [alt]="product.name" />
+        <img [src]="product.images[0]" class="img-fluid w-100" [alt]="product.name" />
       </div>
       <div class="mt-3 d-flex justify-content-center gap-3">
         <h5 class="text-muted fw-normal" *ngIf="product.workshopName || product.shopName || product.brand">{{ product.workshopName || product.shopName || product.brand }}</h5>

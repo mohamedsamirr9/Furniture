@@ -1,9 +1,9 @@
 export interface CartItem {
   productId: number;
   productName: string;
-  price: number;
+  unitPrice: number;
   quantity: number;
-  imageUrl?: string;
+  productImage?: string;
   totalPrice?: number;
 }
 
@@ -11,5 +11,5 @@ export interface Cart {
   id?: number | string;
   userId?: string;
   items: CartItem[];
-  totalAmount: number;
+  totalPrice: number;
 }
