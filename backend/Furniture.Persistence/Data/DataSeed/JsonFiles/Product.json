@@ -1,0 +1,305 @@
+[
+  {
+    "Name": "Modern Sofa 1",
+    "Description": "Comfortable sofa",
+    "Price": 5000,
+    "StockQuantity": 10,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 1,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Modern Sofa 2",
+    "Description": "Comfortable sofa",
+    "Price": 5200,
+    "StockQuantity": 8,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 1,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Modern Sofa 3",
+    "Description": "Comfortable sofa",
+    "Price": 5300,
+    "StockQuantity": 6,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 1,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "TV Stand 1",
+    "Description": "Wooden TV unit",
+    "Price": 3000,
+    "StockQuantity": 7,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 1,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Coffee Table 1",
+    "Description": "Elegant coffee table",
+    "Price": 2000,
+    "StockQuantity": 12,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 1,
+    "SellerId": "seller-1"
+  },
+
+  {
+    "Name": "Armchair 1",
+    "Description": "Relax chair",
+    "Price": 1800,
+    "StockQuantity": 9,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 1,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Bookshelf 1",
+    "Description": "Wood bookshelf",
+    "Price": 2500,
+    "StockQuantity": 5,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 1,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Side Table 1",
+    "Description": "Small table",
+    "Price": 1200,
+    "StockQuantity": 15,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 1,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Decor Shelf 1",
+    "Description": "Wall shelf",
+    "Price": 900,
+    "StockQuantity": 20,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 1,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Lounge Chair 1",
+    "Description": "Comfort chair",
+    "Price": 2200,
+    "StockQuantity": 6,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 1,
+    "SellerId": "seller-1"
+  },
+
+  {
+    "Name": "King Bed 1",
+    "Description": "Large bed",
+    "Price": 8000,
+    "StockQuantity": 4,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 2,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "King Bed 2",
+    "Description": "Luxury bed",
+    "Price": 8500,
+    "StockQuantity": 3,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 2,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Wardrobe 1",
+    "Description": "3 door wardrobe",
+    "Price": 6000,
+    "StockQuantity": 5,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 2,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Wardrobe 2",
+    "Description": "Sliding wardrobe",
+    "Price": 6500,
+    "StockQuantity": 4,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 2,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Night Stand 1",
+    "Description": "Bed side table",
+    "Price": 1000,
+    "StockQuantity": 12,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 2,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Night Stand 2",
+    "Description": "Wood night stand",
+    "Price": 1100,
+    "StockQuantity": 10,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 2,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Dresser 1",
+    "Description": "Bedroom dresser",
+    "Price": 3000,
+    "StockQuantity": 6,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 2,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Dresser 2",
+    "Description": "Modern dresser",
+    "Price": 3200,
+    "StockQuantity": 5,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 2,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Mattress 1",
+    "Description": "Comfort mattress",
+    "Price": 4000,
+    "StockQuantity": 8,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 2,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Mattress 2",
+    "Description": "Soft mattress",
+    "Price": 4200,
+    "StockQuantity": 7,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 2,
+    "SellerId": "seller-1"
+  },
+
+  {
+    "Name": "Dining Table 1",
+    "Description": "6 seater table",
+    "Price": 7000,
+    "StockQuantity": 5,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 3,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Dining Table 2",
+    "Description": "Wood dining table",
+    "Price": 7200,
+    "StockQuantity": 4,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 3,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Dining Chair Set 1",
+    "Description": "6 chairs set",
+    "Price": 3500,
+    "StockQuantity": 6,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 3,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Dining Chair Set 2",
+    "Description": "Modern chairs",
+    "Price": 3600,
+    "StockQuantity": 5,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 3,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Buffet 1",
+    "Description": "Storage buffet",
+    "Price": 2800,
+    "StockQuantity": 7,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 3,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Buffet 2",
+    "Description": "Luxury buffet",
+    "Price": 3000,
+    "StockQuantity": 6,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 3,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Cabinet 1",
+    "Description": "Kitchen cabinet",
+    "Price": 2500,
+    "StockQuantity": 10,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 3,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Cabinet 2",
+    "Description": "Wood cabinet",
+    "Price": 2600,
+    "StockQuantity": 8,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 3,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Bar Table 1",
+    "Description": "Modern bar table",
+    "Price": 3200,
+    "StockQuantity": 5,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 3,
+    "SellerId": "seller-1"
+  },
+  {
+    "Name": "Bar Table 2",
+    "Description": "Stylish bar table",
+    "Price": 3300,
+    "StockQuantity": 4,
+    "IsAvailable": true,
+    "CreatedAt": "2026-01-01T00:00:00",
+    "CategoryId": 3,
+    "SellerId": "seller-1"
+  }
+]

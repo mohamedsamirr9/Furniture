@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Furniture.Domain\Furniture.Domain.csproj" />
     <ProjectReference Include="..\Furniture.shared\Furniture.shared.csproj" />
   </ItemGroup>
 
