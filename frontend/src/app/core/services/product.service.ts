@@ -35,4 +35,16 @@ export class ProductService {
       `${this.baseUrl}/products/?title=${query}&offset=${offset}&limit=${limit}`,
     );
   }
+
+  createProduct(data: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/Product`, data);
+  }
+
+  updateProduct(id: number, data: any): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/Product/${id}`, data);
+  }
+
+  deleteProduct(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/Product/${id}`);
+  }
 }
