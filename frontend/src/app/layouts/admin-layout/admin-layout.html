@@ -1,0 +1,34 @@
+<div class="admin-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">Furnora</div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/admin/dashboard" routerLinkActive="active">
+  ⊞ Dashboard
+</a>
+<a class="nav-item" routerLink="/admin/products" routerLinkActive="active">
+  🪑 Products
+</a>
+<a class="nav-item" routerLink="/admin/orders" routerLinkActive="active">
+  📦 Orders
+</a>
+<a class="nav-item" routerLink="/admin/complaints" routerLinkActive="active">
+  💬 Complaints
+</a>
+<a class="nav-item" routerLink="/admin/users" routerLinkActive="active">
+  👥 Users
+</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="collapse-btn">› Collapse</div>
+      <div class="signout-btn" (click)="signOut()">→ Sign Out</div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <router-outlet />
+  </main>
+
+</div>

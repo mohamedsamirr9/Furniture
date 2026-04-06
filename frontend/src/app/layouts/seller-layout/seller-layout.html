@@ -1,0 +1,40 @@
+<div class="seller-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">Furnora</div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/seller/dashboard" routerLinkActive="active">
+  ⊞ Dashboard
+</a>
+<a class="nav-item" routerLink="/seller/categories" routerLinkActive="active">
+  🗂️ Categories
+</a>
+<a class="nav-item" routerLink="/seller/product" routerLinkActive="active">
+  🪑 Product
+</a>
+<a class="nav-item" routerLink="/seller/orders" routerLinkActive="active">
+  📦 order
+</a>
+<a class="nav-item" routerLink="/seller/offers" routerLinkActive="active">
+  💼 Offers
+</a>
+<a class="nav-item" routerLink="/seller/payment" routerLinkActive="active">
+  💳 Payment
+</a>
+<a class="nav-item" routerLink="/seller/complaints" routerLinkActive="active">
+  💬 Complaints
+</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="collapse-btn">› Collapse</div>
+      <div class="signout-btn" (click)="signOut()">→ Sign Out</div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <router-outlet />
+  </main>
+
+</div>

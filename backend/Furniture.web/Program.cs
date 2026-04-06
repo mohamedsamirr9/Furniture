@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
+using Furniture.Services.Implementations;
+using Furniture.Services.Mappings;
 
 namespace Furniture.web
 {
@@ -63,6 +65,8 @@ namespace Furniture.web
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingCart>());
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingCustomRequest>());
 
+            builder.Services.AddAutoMapper(x => x.AddProfile<MappingOrder>());
+            
   
   builder.Services.AddAutoMapper(x => x.AddProfile<MappingProduct>());
             builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -73,6 +77,7 @@ namespace Furniture.web
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<ICustomRequestService, CustomRequestService>();
             
+            builder.Services.AddScoped<IOrderService, OrderService>();
             
             var app = builder.Build();
 

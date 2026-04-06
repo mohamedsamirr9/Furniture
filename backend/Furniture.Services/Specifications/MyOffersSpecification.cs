@@ -12,7 +12,9 @@ namespace Furniture.Services.Specifications
         public MyOffersSpecification(string sellerId)
        : base(o => o.SellerId == sellerId)
         {
-            AddOrderByDescending(o => o.Price);
+            AddInclude(o => o.Seller);
+            AddInclude(o => o.CustomRequest);
+            AddOrderBy(o => o.Price);
         }
     }
 }

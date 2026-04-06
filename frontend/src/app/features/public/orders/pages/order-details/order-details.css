@@ -1,0 +1,58 @@
+/* ===== Order Details Page Responsive Styles ===== */
+
+@media (max-width: 575.98px) {
+  .container.py-5 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  h1.display-6 {
+    font-size: 1.5rem;
+  }
+
+  /* Stack header elements vertically */
+  .row.align-items-center.border-bottom .col-md-6 {
+    text-align: center !important;
+  }
+
+  .row.align-items-center.border-bottom .text-md-end {
+    text-align: center !important;
+    margin-top: 1rem;
+  }
+
+  /* Make item images smaller */
+  .card-body img {
+    width: 70px !important;
+    height: 70px !important;
+  }
+
+  /* Tighten card padding */
+  .card .p-4 {
+    padding: 1rem !important;
+  }
+
+  .card .p-md-5 {
+    padding: 1rem !important;
+  }
+
+  /* Total font size */
+  .fs-3 {
+    font-size: 1.5rem !important;
+  }
+
+  .fs-5 {
+    font-size: 1rem !important;
+  }
+}
+
+/* Tablets */
+@media (min-width: 576px) and (max-width: 991.98px) {
+  h1.display-6 {
+    font-size: 1.75rem;
+  }
+
+  .card-body img {
+    width: 80px !important;
+    height: 80px !important;
+  }
+}

@@ -19,8 +19,7 @@ namespace Furniture.presentation.Controllers
             _cartService = cartService;
         }
 
-        private string GetUserId() =>
-            User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+       private string GetUserId() => "seller-1"; 
 
 
         [HttpGet]

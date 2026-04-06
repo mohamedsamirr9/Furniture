@@ -1,0 +1,31 @@
+/* ===== Order Confirmed Page Responsive Styles ===== */
+
+@media (max-width: 575.98px) {
+  .container.py-5 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  h1.display-6 {
+    font-size: 1.5rem;
+  }
+
+  .bi-check-circle-fill {
+    font-size: 4rem !important;
+  }
+
+  .card.rounded-4 {
+    border-radius: 1rem !important;
+    padding: 1.25rem !important;
+  }
+
+  .fs-3 {
+    font-size: 1.5rem !important;
+  }
+
+  .btn.py-3 {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+    font-size: 0.95rem;
+  }
+}

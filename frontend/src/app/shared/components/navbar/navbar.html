@@ -12,11 +12,60 @@
 
   <div class="links collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav w-100 d-flex justify-content-between text-center">
-      <a class="nav-item nav-link flex-fill" href="#">Home</a>
-      <a class="nav-item nav-link flex-fill" href="#">About Us</a>
-      <a class="nav-item nav-link flex-fill" href="#">Categories</a>
-      <a class="nav-item nav-link flex-fill" href="#">Contact Us</a>
-      <a class="nav-item nav-link flex-fill" href="#">Complaints</a>
+      <a
+        class="nav-item nav-link flex-fill"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        routerLink="/"
+      >
+        Home
+      </a>
+
+      <a
+        class="nav-item nav-link flex-fill"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        routerLink="/about"
+      >
+        About Us
+      </a>
+
+      <a
+        class="nav-item nav-link flex-fill"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        routerLink="/categories"
+      >
+        Categories
+      </a>
+
+      <a
+        class="nav-item nav-link flex-fill"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        routerLink="/contact"
+      >
+        Contact Us
+      </a>
+
+      <a
+        class="nav-item nav-link flex-fill"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        routerLink="/complaints"
+      >
+        Complaints
+      </a>
+
+      <a
+        class="nav-item nav-link position-relative cart-link ms-auto me-3"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        routerLink="/cart"
+      >
+        <i class="bi bi-cart3 fs-5"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="(cartService.cartCount$ | async) || 0 > 0">
+          {{ cartService.cartCount$ | async }}
+        </span>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="(cartService.cartCount$ | async) === 0">
+          0
+        </span>
+      </a>
+
       <a class="nav-item btn-main" routerLink="/login">Log In</a>
     </div>
   </div>
