@@ -1,0 +1,35 @@
+<div class="page-header">
+  <h1>Product</h1>
+  <button class="add-btn">+ Add Product</button>
+</div>
+<hr class="divider" />
+
+<div class="table-card">
+  <h2 class="card-title">Your Products</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Stock</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td class="product-cell">
+        <img class="product-img" src="assets/images/{{product.image}}" alt="{{product.name}}" />
+          {{ product.name }}
+        </td>
+        <td>{{ product.stock }}</td>
+        <td><strong>{{ product.price }}</strong></td>
+        <td><span class="badge-green">{{ product.status }}</span></td>
+        <td class="actions">
+        <span class="edit-btn">🖊</span>
+  <span class="delete-btn">🗑</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

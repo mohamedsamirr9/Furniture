@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { PrivateLayoutComponent } from './layouts/private-layout/private-layout';
 import { AdminLayout } from './layouts/admin-layout/admin-layout';
+import { SellerLayout } from './layouts/seller-layout/seller-layout';
 
 export const routes: Routes = [
   {
@@ -28,6 +29,16 @@ export const routes: Routes = [
       {
         path: '',
         loadChildren: () => import('./features/private/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
+      }
+    ]
+  },
+  {
+    path: 'seller',
+    component: SellerLayout,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./features/private/seller/seller.routes').then((m) => m.SELLER_ROUTES),
       }
     ]
   },

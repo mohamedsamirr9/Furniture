@@ -1,0 +1,35 @@
+<div class="page-header">
+  <h1>Orders</h1>
+</div>
+<hr class="divider" />
+
+<div class="table-card">
+  <h2 class="card-title">Orders</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Order</th>
+        <th>Customer</th>
+        <th>Items</th>
+        <th>Shipping</th>
+        <th>Status</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td><strong>{{ order.id }}</strong></td>
+        <td>{{ order.customer }}</td>
+        <td>{{ order.items }}</td>
+        <td>{{ order.shipping }}</td>
+        <td>
+          <span class="badge" [ngClass]="{
+            'badge-outline': order.status === 'Processing' || order.status === 'Shipped' || order.status === 'Delivered',
+            'badge-red': order.status === 'Cancelled'
+          }">{{ order.status }}</span>
+        </td>
+        <td><strong>{{ order.total }}</strong></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

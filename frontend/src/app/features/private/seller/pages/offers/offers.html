@@ -1,0 +1,26 @@
+<div class="page-header">
+  <h1>Offers</h1>
+</div>
+<hr class="divider" />
+
+<h2 class="section-title">Customer Requests & Your Offers</h2>
+
+<div class="request-card" *ngFor="let request of requests">
+  <h3 class="request-title">{{ request.title }}</h3>
+  <p class="request-desc">{{ request.description }}</p>
+  <p class="request-meta">
+    Category: {{ request.category }} &nbsp;&nbsp;
+    Budget: {{ request.budget }} &nbsp;&nbsp;
+    Date: {{ request.date }}
+  </p>
+
+  <div class="offer-row" *ngFor="let offer of request.offers">
+    <span class="offer-info">
+      <strong>{{ offer.seller }}</strong>
+      &nbsp; ${{ offer.price }} &nbsp; {{ offer.days }}
+    </span>
+    <span class="badge-outline">{{ offer.status }}</span>
+  </div>
+
+  <button class="send-btn">✈ Send Offer</button>
+</div>
