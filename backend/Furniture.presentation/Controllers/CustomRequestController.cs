@@ -22,7 +22,8 @@ namespace Furniture.web
         [HttpGet("my")]
         public async Task<ActionResult<IEnumerable<CustomRequestDto>>> GetMyRequests()
         {
-             var buyerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //var buyerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var buyerId = "seller-1";
             var requests= await _customRequestService.GetMyRequestsAsync(buyerId!);
 
             return Ok(requests);
@@ -40,7 +41,8 @@ namespace Furniture.web
         [HttpPost]
         public async Task<ActionResult<CustomRequestDto>> CreateRequest(CustomRequestCreateDto dto)
         {
-            var buyerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //var buyerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var buyerId = "seller-1";
             var request= await _customRequestService.CreateAsync(buyerId!, dto);
 
             return CreatedAtAction(nameof(GetRequest), new { id=request.Id},  request);
@@ -50,7 +52,8 @@ namespace Furniture.web
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateRequest(int id, CustomRequestCreateDto dto)
         {
-            var buyerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //var buyerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var buyerId = "seller-1";
             await _customRequestService.UpdateAsync(id,buyerId! ,dto);
             return NoContent();
         }
@@ -59,7 +62,8 @@ namespace Furniture.web
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> CancelRequest(int id)
         {
-            var buyerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //var buyerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var buyerId = "seller-1";
             await _customRequestService.CancelRequest(id, buyerId!);
 
             return NoContent();
