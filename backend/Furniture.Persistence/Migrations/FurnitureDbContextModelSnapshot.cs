@@ -152,7 +152,7 @@ namespace Furniture.Persistence.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.CartItem", b =>
@@ -173,7 +173,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Category", b =>
@@ -202,7 +202,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Complaint", b =>
@@ -241,7 +241,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Complaints");
+                    b.ToTable("Complaints", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.CustomRequest", b =>
@@ -270,7 +270,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("BuyerId");
 
-                    b.ToTable("CustomRequests");
+                    b.ToTable("CustomRequests", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Delivery", b =>
@@ -298,7 +298,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("ShipperId");
 
-                    b.ToTable("Deliveries");
+                    b.ToTable("Deliveries", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Favourite", b =>
@@ -323,7 +323,7 @@ namespace Furniture.Persistence.Migrations
                     b.HasIndex("UserId", "ProductId")
                         .IsUnique();
 
-                    b.ToTable("Favourites");
+                    b.ToTable("Favourites", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Offer", b =>
@@ -363,7 +363,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Offers");
+                    b.ToTable("Offers", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Order", b =>
@@ -403,7 +403,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.OrderItem", b =>
@@ -424,7 +424,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Payment", b =>
@@ -456,7 +456,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Product", b =>
@@ -503,7 +503,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.ProductImage", b =>
@@ -526,7 +526,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Review", b =>
@@ -562,7 +562,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.ShippingBid", b =>
@@ -592,7 +592,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("ShippingRequestId");
 
-                    b.ToTable("ShippingBids");
+                    b.ToTable("ShippingBids", (string)null);
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.ShippingRequest", b =>
@@ -614,7 +614,7 @@ namespace Furniture.Persistence.Migrations
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("ShippingRequests");
+                    b.ToTable("ShippingRequests", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

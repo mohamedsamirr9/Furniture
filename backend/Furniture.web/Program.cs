@@ -61,6 +61,7 @@ namespace Furniture.web
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingCategory>());
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingOffer>());
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingCart>());
+            builder.Services.AddAutoMapper(x => x.AddProfile<MappingCustomRequest>());
 
   
   builder.Services.AddAutoMapper(x => x.AddProfile<MappingProduct>());
@@ -70,7 +71,8 @@ namespace Furniture.web
 
             builder.Services.AddScoped<IOfferService, OfferService>();
             builder.Services.AddScoped<ICartService, CartService>();
-
+            builder.Services.AddScoped<ICustomRequestService, CustomRequestService>();
+            
             
             var app = builder.Build();
 
