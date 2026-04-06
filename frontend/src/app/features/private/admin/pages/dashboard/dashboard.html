@@ -1,0 +1,49 @@
+
+<div class="page-header">
+  <h1>Dashboard</h1>
+</div>
+<hr class="divider" />
+<div class="stats-grid">
+  <div class="stat-card">
+    <p class="stat-label">Total Users</p>
+    <h2 class="stat-value">5</h2>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Total Products</p>
+    <h2 class="stat-value">6</h2>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Active Orders</p>
+    <h2 class="stat-value">2</h2>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Open Complaints</p>
+    <h2 class="stat-value">1</h2>
+  </div>
+</div>
+
+<div class="bottom-grid">
+  <div class="table-card">
+    <h2 class="card-title">Recent Orders</h2>
+    <div class="list-item" *ngFor="let order of recentOrders">
+      <div>
+        <p class="item-id">{{ order.id }}</p>
+        <p class="item-sub">{{ order.customer }} • {{ order.status }}</p>
+      </div>
+      <span class="badge-outline">{{ order.status }}</span>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <h2 class="card-title">Recent Complaints</h2>
+    <div class="list-item" *ngFor="let complaint of recentComplaints">
+      <div>
+        <p class="item-id">{{ complaint.user }}</p>
+        <p class="item-sub">{{ complaint.description }}</p>
+      </div>
+      <span class="badge" [ngClass]="complaint.status === 'Open' ? 'badge-red' : 'badge-outline'">
+        {{ complaint.status }}
+      </span>
+    </div>
+  </div>
+</div>
