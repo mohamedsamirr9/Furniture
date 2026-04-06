@@ -1,0 +1,30 @@
+<div class="complaints-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">My Complaints</h1>
+      <p class="page-subtitle">Submit and track your complaints</p>
+    </div>
+    <button class="new-btn" (click)="newComplaint()">+ New Complaint</button>
+  </div>
+
+  <div class="complaint-card" *ngFor="let complaint of complaints">
+    <div class="card-left">
+      <div class="card-icon" [ngClass]="complaint.status === 'Resolved' ? 'icon-resolved' : 'icon-open'">
+        <svg *ngIf="complaint.status === 'Resolved'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3d6b4f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <svg *ngIf="complaint.status !== 'Resolved'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <div>
+        <p class="complaint-id">{{ complaint.id }}</p>
+        <p class="complaint-desc">{{ complaint.description }}</p>
+        <p class="complaint-date">Submitted on {{ complaint.date }}</p>
+      </div>
+    </div>
+    <span class="badge" [ngClass]="complaint.status === 'Resolved' ? 'badge-green' : 'badge-red'">
+      {{ complaint.status }}
+    </span>
+  </div>
+</div>
