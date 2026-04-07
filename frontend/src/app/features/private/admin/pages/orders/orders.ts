@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { OrderService } from '../../../../../core/services/order.service';
 
 @Component({
   selector: 'app-orders',
@@ -7,11 +8,60 @@ import { CommonModule } from '@angular/common';
   templateUrl: './orders.html',
   styleUrl: './orders.css',
 })
-export class Orders {
-  orders = [
-    { id: '#1234', customer: 'Sarah M.', seller: 'Nordic Home', total: '$349', status: 'Active' },
-    { id: '#1234', customer: 'James K.', seller: 'Comfort Living', total: '$1299', status: 'Active' },
-    { id: '#1234', customer: 'Emily R.', seller: 'Wood & Co', total: '$599', status: 'Active' },
-    { id: '#1234', customer: 'David L.', seller: 'Simple Form', total: '$199', status: 'Active' },
-  ];
+export class Orders implements OnInit {
+  orders: any = [];
+  isLoading = true;
+
+  private validTransitions: Record<string, string[]> = {
+    'Pending': ['Accepted', 'Declined'],
+    'Accepted': ['Paid', 'Cancelled'],
+    'Paid': ['Processing'],
+    'Processing': ['Shipped'],
+    'Shipped': ['Delivered'],
+    'Delivered': ['Completed'],
+  };
+
+  private terminalStatuses = ['Completed', 'Cancelled', 'Declined'];
+
+  constructor(private orderService: OrderService) {}
+
+  ngOnInit(): void {
+    this.loadOrders();
+  }
+
+  loadOrders(): void {
+    this.isLoading = true;
+    this.orderService.getAllOrdersPaginated(1, 100).subscribe({
+      next: (res: any) => {
+        this.orders = res;
+        this.isLoading = false;
+      },
+      error: (err: any) => {
+        console.error('Error fetching orders', err);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  getValidTransitions(status: string): string[] {
+    return this.validTransitions[status] || [];
+  }
+
+  isTerminalStatus(status: string): boolean {
+    return this.terminalStatuses.includes(status);
+  }
+
+  updateStatus(order: any, event: any): void {
+    const newStatus = event.target.value;
+    const oldStatus = order.status;
+    this.orderService.updateOrderStatus(order.id || order.orderId, newStatus).subscribe({
+      next: () => {
+        order.status = newStatus;
+      },
+      error: (err: any) => {
+        console.error('Error updating order status', err);
+        event.target.value = oldStatus;
+      }
+    });
+  }
 }

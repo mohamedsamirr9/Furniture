@@ -4,10 +4,12 @@ import { Products } from './pages/products/products';
 import { Orders } from './pages/orders/orders';
 import { Complaints } from './pages/complaints/complaints';
 import { Users } from './pages/users/users';
+import { Categories } from './pages/categories/categories';
 
 export const ADMIN_ROUTES: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: Dashboard},
+  { path: 'categories', component: Categories },
   { path: 'products', component: Products },
   { path: 'orders', component: Orders},
   { path: 'complaints', component: Complaints },
