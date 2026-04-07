@@ -53,9 +53,9 @@ export class Product implements OnInit {
 
   loadProducts(): void {
     this.isLoading = true;
-    this.productService.getProducts({ pageIndex: 1, pageSize: 100 }).subscribe({
+    this.productService.getProducts({ page: 1, pageSize: 100 }).subscribe({
       next: (res: any) => {
-        this.products = res;
+        this.products = res.data || res;
         this.isLoading = false;
       },
       error: (err: any) => {

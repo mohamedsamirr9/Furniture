@@ -57,15 +57,25 @@ namespace Furniture.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ProductListDto>> GetAllAsync(int pageIndex, int pageSize, string? search)
+        public async Task<PaginatedProductsDto> GetAllAsync(ProductQueryParams queryParams)
         {
             var repo = _unitOfWork.GetRepository<Product, int>();
 
-            var spec = new ProductSpecifications(pageIndex, pageSize, search);
+            var countSpec = new ProductCountSpecification(queryParams);
+            var totalCount = await repo.CountAsync(countSpec);
 
+            var spec = new ProductSpecifications(queryParams);
             var products = await repo.GetAllAsync(spec);
 
-            return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductListDto>>(products);
+            var data = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductListDto>>(products);
+
+            return new PaginatedProductsDto
+            {
+                TotalCount = totalCount,
+                Page = queryParams.Page,
+                PageSize = queryParams.PageSize,
+                Data = data
+            };
         }
 
         public async Task<ProductDetailsDto?> GetByIdAsync(int id)

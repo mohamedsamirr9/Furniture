@@ -34,8 +34,10 @@
               </div>
               <div class="col-md-3 col-6 mt-3 mt-md-0 d-flex justify-content-center">
                 <div class="input-group input-group-sm w-75">
-                  <button class="btn btn-outline-secondary" type="button" (click)="updateQuantity(item.productId, item.quantity, -1)" [disabled]="isLoading">-</button>
+                  <button class="btn btn-outline-secondary" type="button" (click)="updateQuantity(item.productId, item.quantity, -1)" [disabled]="isLoading ">-</button>
                   <input type="text" class="form-control text-center" [value]="item.quantity" readonly>
+                  <button class="btn btn-outline-secondary" type="button" (click)="updateQuantity(item.productId, item.quantity, 1)" [disabled]="isLoading || item.quantity === item.availableStock">+</button>
+
                 </div>
               </div>
               <div class="col-md-2 col-4 mt-3 mt-md-0 text-end">

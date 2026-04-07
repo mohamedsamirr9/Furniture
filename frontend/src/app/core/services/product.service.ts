@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
+import { ProductQueryParams } from '../models/product-query-params.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +12,19 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
-  getProducts(params: any): Observable<any> {
+  buildHttpParams(filters: ProductQueryParams): HttpParams {
+    let params = new HttpParams();
+    Object.keys(filters).forEach((key) => {
+      const value = (filters as any)[key];
+      if (value !== null && value !== undefined && value !== '') {
+        params = params.set(key, value);
+      }
+    });
+    return params;
+  }
+
+  getProducts(filters: ProductQueryParams): Observable<any> {
+    const params = this.buildHttpParams(filters);
     return this.http.get<any>(`${this.baseUrl}/Product`, { params });
   }
 
