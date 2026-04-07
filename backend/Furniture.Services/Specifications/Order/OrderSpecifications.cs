@@ -45,5 +45,10 @@ public class OrderSpecifications : BaseSpecificationscs<Domain.Models.Order, int
     }
 
     #endregion
+    public OrderSpecifications(int orderId)
+        : base(o => o.Id == orderId)
+    {
+        AddInclude("OrderItems.Product");
+    }
     
 }

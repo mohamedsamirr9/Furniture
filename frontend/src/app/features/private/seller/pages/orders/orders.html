@@ -3,7 +3,8 @@
 </div>
 <hr class="divider" />
 
-<div class="table-card">
+<div *ngIf="isLoading">Loading orders...</div>
+<div class="table-card" *ngIf="!isLoading">
   <h2 class="card-title">Orders</h2>
   <table class="table">
     <thead>
@@ -17,18 +18,26 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let order of orders">
-        <td><strong>{{ order.id }}</strong></td>
-        <td>{{ order.customer }}</td>
-        <td>{{ order.items }}</td>
-        <td>{{ order.shipping }}</td>
+      <tr *ngFor="let order of (orders.orders || orders)">
+        <td><strong>ORD-{{ order.id || order.orderId }}</strong></td>
+        <td>{{ order.userName || 'Customer' }}</td>
+        <td>{{ order.itemsCount || order.orderItems?.length || 0 }} items</td>
+        <td>{{ order.shippingAddress || 'N/A' }}</td>
         <td>
-          <span class="badge" [ngClass]="{
-            'badge-outline': order.status === 'Processing' || order.status === 'Shipped' || order.status === 'Delivered',
-            'badge-red': order.status === 'Cancelled'
-          }">{{ order.status }}</span>
+          <select 
+            class="badge" 
+            [ngClass]="{
+              'badge-outline': !isTerminalStatus(order.status),
+              'badge-red': order.status === 'Cancelled' || order.status === 'Declined',
+              'badge-green': order.status === 'Completed'
+            }"
+            [disabled]="isTerminalStatus(order.status)"
+            (change)="updateStatus(order, $event)">
+            <option [value]="order.status" selected>{{ order.status }}</option>
+            <option *ngFor="let next of getValidTransitions(order.status)" [value]="next">{{ next }}</option>
+          </select>
         </td>
-        <td><strong>{{ order.total }}</strong></td>
+        <td><strong>{{ (order.totalPrice || order.total) | currency }}</strong></td>
       </tr>
     </tbody>
   </table>

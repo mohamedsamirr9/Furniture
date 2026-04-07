@@ -63,9 +63,9 @@
         </div>
 
         <button class="btn btn-add-cart w-75 py-3 rounded-pill text-white fw-bold shadow-sm d-flex justify-content-center align-items-center gap-2" 
-                (click)="addToCart()" [disabled]="isAdding">
+                (click)="addToCart()" [disabled]="isAdding || product.stockQuantity <= 0">
           <span *ngIf="isAdding" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          {{ isAdding ? 'Adding...' : 'Add To Cart' }}
+          {{ isAdding ? 'Adding...' : (product.stockQuantity > 0 ? 'Add To Cart' : 'Out of Stock') }}
         </button>
       </div>
     </div>

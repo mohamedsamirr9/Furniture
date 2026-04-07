@@ -17,7 +17,6 @@ export const PUBLIC_ROUTES: Routes = [
     children: [
       { path: '', component: Home },
       { path: 'products', component: ProductsList },
-      { path: 'categories/:id/products', component: ProductsList },
       { path: 'products/:id', component: ProductDetails },
       { path: 'cart', component: CartComponent },
       { path: 'checkout', component: CheckoutComponent },

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Furniture.Domain.InterfacesRepositories;
 using Furniture.Domain.Models;
 using Furniture.Services.Specifications;
@@ -30,6 +30,14 @@ namespace Furniture.Services
 
             product.CreatedAt = DateTime.UtcNow;
 
+            if (dto.ImageUrls != null && dto.ImageUrls.Any())
+            {
+                foreach (var url in dto.ImageUrls)
+                {
+                    product.Images.Add(new ProductImage { ImageUrl = url });
+                }
+            }
+
             await repo.AddAsync(product);
             await _unitOfWork.SaveChangesAsync();
 
@@ -49,15 +57,25 @@ namespace Furniture.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ProductListDto>> GetAllAsync(int pageIndex, int pageSize, string? search)
+        public async Task<PaginatedProductsDto> GetAllAsync(ProductQueryParams queryParams)
         {
             var repo = _unitOfWork.GetRepository<Product, int>();
 
-            var spec = new ProductSpecifications(pageIndex, pageSize, search);
+            var countSpec = new ProductCountSpecification(queryParams);
+            var totalCount = await repo.CountAsync(countSpec);
 
+            var spec = new ProductSpecifications(queryParams);
             var products = await repo.GetAllAsync(spec);
 
-            return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductListDto>>(products);
+            var data = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductListDto>>(products);
+
+            return new PaginatedProductsDto
+            {
+                TotalCount = totalCount,
+                Page = queryParams.Page,
+                PageSize = queryParams.PageSize,
+                Data = data
+            };
         }
 
         public async Task<ProductDetailsDto?> GetByIdAsync(int id)
@@ -78,11 +96,21 @@ namespace Furniture.Services
         {
             var repo = _unitOfWork.GetRepository<Product, int>();
 
-            var product = await repo.GetByIdAsync(id);
+            var spec = new ProductWithDetailsSpecifications(id);
+            var product = await repo.GetByIdAsync(spec);
 
             if (product is null) throw new Exception($"Product with id {id} not found");
 
             _mapper.Map(dto, product);
+
+            product.Images.Clear();
+            if (dto.ImageUrls != null && dto.ImageUrls.Any())
+            {
+                foreach (var url in dto.ImageUrls)
+                {
+                    product.Images.Add(new ProductImage { ImageUrl = url });
+                }
+            }
 
             repo.Update(product);
 

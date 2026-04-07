@@ -37,81 +37,51 @@
   padding: 20px 0;
 }
 
-.table-card {
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.category-card {
   background: #ffffff;
   border: 1.5px solid #e5e7eb;
   border-radius: 14px;
-  padding: 28px;
+  overflow: hidden;
 }
 
-.card-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 20px;
-}
-
-.table {
+.category-img {
   width: 100%;
-  border-collapse: collapse;
-}
-
-.table th {
-  text-align: left;
-  font-size: 14px;
-  color: #6b7280;
-  font-weight: 400;
-  padding: 10px 16px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.table td {
-  padding: 18px 16px;
-  font-size: 14px;
-  border-bottom: 1px solid #f3f4f6;
-  vertical-align: middle;
-}
-
-.product-cell {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.product-img {
-  width: 52px;
-  height: 52px;
-  border-radius: 8px;
+  height: 180px;
   object-fit: cover;
-  flex-shrink: 0;
   background: #e5e7eb;
   display: block;
 }
 
-.badge-green {
-  border: 1.5px solid #35903A;
-  color: #35903A;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 5px 14px;
-  border-radius: 999px;
+.category-info {
+  padding: 16px;
+}
+
+.category-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
 }
 
 .actions {
-  text-align: center;
-  vertical-align: middle;
-  white-space: nowrap;
-}
-
-.actions span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 6px;
+  display: flex;
+  gap: 10px;
   cursor: pointer;
 }
 
 .edit-btn { cursor: pointer; }
 .delete-btn { color: #ef4444; cursor: pointer; }
+
+.category-desc {
+  font-size: 13px;
+  color: #6b7280;
+}
 
 /* ========== Modal ========== */
 .modal-overlay {
@@ -132,7 +102,7 @@
   background: #fff;
   border-radius: 16px;
   padding: 32px;
-  width: 520px;
+  width: 480px;
   max-width: 90vw;
   max-height: 85vh;
   overflow-y: auto;
@@ -168,7 +138,6 @@
 /* ========== Form ========== */
 .form-group {
   margin-bottom: 18px;
-  flex: 1;
 }
 
 .form-group label {
@@ -199,31 +168,6 @@
   outline: none;
   border-color: #35903A;
   box-shadow: 0 0 0 3px rgba(53, 144, 58, 0.12);
-}
-
-.form-row {
-  display: flex;
-  gap: 16px;
-}
-
-.checkbox-row {
-  gap: 24px;
-  margin-bottom: 20px;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #374151;
-  cursor: pointer;
-}
-
-.checkbox-label input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: #35903A;
 }
 
 .error-text {

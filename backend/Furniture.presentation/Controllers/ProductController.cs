@@ -1,4 +1,4 @@
-﻿using Furniture.Servises_Abstraction;
+using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos.ProductDtos;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,9 +22,9 @@ namespace Furniture.presentation.Controllers
 
         // GET: api/product
         [HttpGet]
-        public async Task<IActionResult> GetAll(int pageIndex = 1,int pageSize = 10,string? search = null)
+        public async Task<IActionResult> GetAll([FromQuery] ProductQueryParams queryParams)
         {
-            var result = await _productService.GetAllAsync(pageIndex, pageSize, search);
+            var result = await _productService.GetAllAsync(queryParams);
             return Ok(result);
         }
 

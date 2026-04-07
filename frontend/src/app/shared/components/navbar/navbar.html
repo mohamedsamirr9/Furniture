@@ -66,7 +66,14 @@
         </span>
       </a>
 
-      <a class="nav-item btn-main" routerLink="/login">Log In</a>
+      <a
+        class="nav-item nav-link user-link"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        routerLink="/login"
+        aria-label="Log In"
+      >
+        <i class="bi bi-person fs-5"></i>
+      </a>
     </div>
   </div>
 </nav>

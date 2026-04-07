@@ -59,3 +59,9 @@
   background: #ef4444;
   color: #fff;
 }
+
+.badge-green {
+  border: 1.5px solid #35903A;
+  color: #35903A;
+  background: #ecfdf5;
+}
