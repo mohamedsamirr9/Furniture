@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Furniture.Domain.InterfacesRepositories;
 using Furniture.Domain.Models;
 using Furniture.Services.Specifications;
@@ -29,6 +29,14 @@ namespace Furniture.Services
             var product = _mapper.Map<Product>(dto);
 
             product.CreatedAt = DateTime.UtcNow;
+
+            if (dto.ImageUrls != null && dto.ImageUrls.Any())
+            {
+                foreach (var url in dto.ImageUrls)
+                {
+                    product.Images.Add(new ProductImage { ImageUrl = url });
+                }
+            }
 
             await repo.AddAsync(product);
             await _unitOfWork.SaveChangesAsync();
@@ -78,11 +86,21 @@ namespace Furniture.Services
         {
             var repo = _unitOfWork.GetRepository<Product, int>();
 
-            var product = await repo.GetByIdAsync(id);
+            var spec = new ProductWithDetailsSpecifications(id);
+            var product = await repo.GetByIdAsync(spec);
 
             if (product is null) throw new Exception($"Product with id {id} not found");
 
             _mapper.Map(dto, product);
+
+            product.Images.Clear();
+            if (dto.ImageUrls != null && dto.ImageUrls.Any())
+            {
+                foreach (var url in dto.ImageUrls)
+                {
+                    product.Images.Add(new ProductImage { ImageUrl = url });
+                }
+            }
 
             repo.Update(product);
 

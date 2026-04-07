@@ -3,11 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CategoryService } from '../../../../../core/services/category.service';
 
-interface CategoryCreateUpdateDto {
-  name: string;
-  description?: string;
-  image?: string;
-}
+import { CategoryCreateUpdateDto } from '../../../../../core/models/category-create-update-dto.model';
 
 @Component({
   selector: 'app-categories',
@@ -24,12 +20,13 @@ export class Categories implements OnInit {
   isSubmitting = false;
   successMessage = '';
   errorMessage = '';
+  isUploading: boolean = false;
 
   categoryForm!: FormGroup;
 
   constructor(
     private categoryService: CategoryService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
   ) {}
 
   ngOnInit(): void {
@@ -55,10 +52,21 @@ export class Categories implements OnInit {
       error: (err: any) => {
         console.error('Error fetching categories', err);
         this.isLoading = false;
-      }
+      },
     });
   }
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+    this.isUploading = true;
 
+    this.categoryService.uploadImage(file).subscribe((res: any) => {
+      this.categoryForm.patchValue({
+        image: res.secure_url,
+      });
+      this.isUploading = false;
+    });
+  }
   openAddModal(): void {
     this.isEditing = false;
     this.editingCategoryId = null;
@@ -95,7 +103,7 @@ export class Categories implements OnInit {
           image: cat.image || '',
         });
         this.showModal = true;
-      }
+      },
     });
   }
 
@@ -126,7 +134,7 @@ export class Categories implements OnInit {
         error: (err: any) => {
           this.errorMessage = err.error?.message || 'Failed to update category.';
           this.isSubmitting = false;
-        }
+        },
       });
     } else {
       this.categoryService.createCategory(dto).subscribe({
@@ -139,7 +147,7 @@ export class Categories implements OnInit {
         error: (err: any) => {
           this.errorMessage = err.error?.message || 'Failed to create category.';
           this.isSubmitting = false;
-        }
+        },
       });
     }
   }
@@ -152,7 +160,7 @@ export class Categories implements OnInit {
         },
         error: (err: any) => {
           console.error('Error deleting category', err);
-        }
+        },
       });
     }
   }

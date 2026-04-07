@@ -36,7 +36,6 @@
                 <div class="input-group input-group-sm w-75">
                   <button class="btn btn-outline-secondary" type="button" (click)="updateQuantity(item.productId, item.quantity, -1)" [disabled]="isLoading">-</button>
                   <input type="text" class="form-control text-center" [value]="item.quantity" readonly>
-                  <button class="btn btn-outline-secondary" type="button" (click)="updateQuantity(item.productId, item.quantity, 1)" [disabled]="isLoading">+</button>
                 </div>
               </div>
               <div class="col-md-2 col-4 mt-3 mt-md-0 text-end">

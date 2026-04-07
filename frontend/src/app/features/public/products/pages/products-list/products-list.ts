@@ -115,8 +115,11 @@ export class ProductsList implements OnInit {
   }
   loadCategoryProducts(id: number) {
     this.loading = true;
-
+      if(id == 0){
+        return;
+      }
     this.productService.getProductsByCategory(id).subscribe({
+
       next: (res: any) => {
         this.products = res.products;
         this.loading = false;

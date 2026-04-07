@@ -22,12 +22,8 @@ export class ProductService {
     return this.http.get<any>(`${this.baseUrl}/categories`);
   }
 
-  getProductsByCategory(
-    categoryId: number,
-  ): Observable<any> {
-    return this.http.get<any>(
-      `${this.baseUrl}/categories/${categoryId}`,
-    );
+  getProductsByCategory(categoryId: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/categories/${categoryId}`);
   }
 
   searchProducts(query: string, offset: number = 0, limit: number = 10): Observable<any> {
@@ -46,5 +42,13 @@ export class ProductService {
 
   deleteProduct(id: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/Product/${id}`);
+  }
+  uploadImage(file: File) {
+    const formData = new FormData();
+
+    formData.append('file', file);
+    formData.append('upload_preset', 'product_images');
+
+    return this.http.post<any>('https://api.cloudinary.com/v1_1/dcsd2lm6l/image/upload', formData);
   }
 }

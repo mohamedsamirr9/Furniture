@@ -4,16 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { ProductService } from '../../../../../core/services/product.service';
 import { CategoryService } from '../../../../../core/services/category.service';
 
-interface ProductCreateUpdateDto {
-  name: string;
-  description?: string;
-  price: number;
-  stockQuantity: number;
-  isAvailable: boolean;
-  isCustomized: boolean;
-  categoryId: number;
-  sellerId: string;
-}
+import { ProductCreateUpdateDto } from '../../../../../core/models/product-create-update-dto.model';
 
 @Component({
   selector: 'app-product',
@@ -29,6 +20,7 @@ export class Product implements OnInit {
   isEditing = false;
   editingProductId: number | null = null;
   isSubmitting = false;
+  isUploading = false;
   successMessage = '';
   errorMessage = '';
 
@@ -37,7 +29,7 @@ export class Product implements OnInit {
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
   ) {}
 
   ngOnInit(): void {
@@ -52,10 +44,10 @@ export class Product implements OnInit {
       description: [''],
       price: [0, [Validators.required, Validators.min(0.01)]],
       stockQuantity: [0, [Validators.required, Validators.min(0)]],
-      isAvailable: [true],
-      isCustomized: [false],
+
       categoryId: [null, Validators.required],
       sellerId: ['seller-1'],
+      imageUrl: [''],
     });
   }
 
@@ -69,18 +61,18 @@ export class Product implements OnInit {
       error: (err: any) => {
         console.error('Error fetching products', err);
         this.isLoading = false;
-      }
+      },
     });
   }
 
   loadCategories(): void {
     this.categoryService.getAllCategories(1, 100).subscribe({
       next: (res: any) => {
-        this.categories = Array.isArray(res) ? res : (res.items || []);
+        this.categories = Array.isArray(res) ? res : res.items || [];
       },
       error: (err: any) => {
         console.error('Error fetching categories', err);
-      }
+      },
     });
   }
 
@@ -92,10 +84,10 @@ export class Product implements OnInit {
       description: '',
       price: 0,
       stockQuantity: 0,
-      isAvailable: true,
-      isCustomized: false,
+
       categoryId: null,
       sellerId: 'seller-1',
+      imageUrl: '',
     });
     this.clearMessages();
     this.showModal = true;
@@ -114,10 +106,10 @@ export class Product implements OnInit {
           description: details.description || '',
           price: details.price,
           stockQuantity: details.stockQuantity,
-          isAvailable: details.isAvailable,
-          isCustomized: details.isCustomized,
+
           categoryId: details.categoryId || null,
           sellerId: details.sellerId || 'seller-1',
+          imageUrl: details.images && details.images.length > 0 ? details.images[0] : '',
         });
         this.showModal = true;
       },
@@ -129,19 +121,39 @@ export class Product implements OnInit {
           description: '',
           price: product.price,
           stockQuantity: product.stockQuantity || 0,
-          isAvailable: true,
-          isCustomized: false,
+
           categoryId: null,
           sellerId: 'seller-1',
+          imageUrl: product.mainImage || '',
         });
         this.showModal = true;
-      }
+      },
     });
   }
 
   closeModal(): void {
     this.showModal = false;
     this.clearMessages();
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.isUploading = true;
+      this.clearMessages();
+      this.productService.uploadImage(file).subscribe({
+        next: (res: any) => {
+          this.productForm.patchValue({ imageUrl: res.secure_url });
+          this.isUploading = false;
+          this.successMessage = 'Image uploaded successfully!';
+        },
+        error: (err: any) => {
+          console.error('Image upload failed', err);
+          this.errorMessage = 'Failed to upload image. Please try again.';
+          this.isUploading = false;
+        }
+      });
+    }
   }
 
   onSubmit(): void {
@@ -153,7 +165,16 @@ export class Product implements OnInit {
     this.isSubmitting = true;
     this.clearMessages();
 
-    const dto: ProductCreateUpdateDto = this.productForm.value;
+    const formValue = this.productForm.value;
+    const dto: ProductCreateUpdateDto = {
+      name: formValue.name,
+      description: formValue.description,
+      price: formValue.price,
+      stockQuantity: formValue.stockQuantity,
+      categoryId: formValue.categoryId,
+      sellerId: formValue.sellerId,
+      imageUrls: formValue.imageUrl ? [formValue.imageUrl] : []
+    };
 
     if (this.isEditing && this.editingProductId !== null) {
       this.productService.updateProduct(this.editingProductId, dto).subscribe({
@@ -166,7 +187,7 @@ export class Product implements OnInit {
         error: (err: any) => {
           this.errorMessage = err.error?.message || 'Failed to update product.';
           this.isSubmitting = false;
-        }
+        },
       });
     } else {
       this.productService.createProduct(dto).subscribe({
@@ -179,7 +200,7 @@ export class Product implements OnInit {
         error: (err: any) => {
           this.errorMessage = err.error?.message || 'Failed to create product.';
           this.isSubmitting = false;
-        }
+        },
       });
     }
   }
@@ -192,7 +213,7 @@ export class Product implements OnInit {
         },
         error: (err: any) => {
           console.error('Error deleting product', err);
-        }
+        },
       });
     }
   }

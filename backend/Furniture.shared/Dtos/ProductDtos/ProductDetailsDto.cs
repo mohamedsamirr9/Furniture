@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +16,7 @@ namespace Furniture.shared.Dtos.ProductDtos
         public bool IsAvailable { get; set; }
         public bool IsCustomized { get; set; }
         public DateTime CreatedAt { get; set; }
-
+        public int CategoryId { get; set; }
         public string CategoryName { get; set; } 
         public string SellerName { get; set; }
 

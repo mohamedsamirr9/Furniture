@@ -9,7 +9,7 @@
 
 <!-- Category Grid -->
 <div class="categories-grid" *ngIf="!isLoading">
-  <div class="category-card" *ngFor="let cat of (categories.items || categories)">
+  <div class="category-card" *ngFor="let cat of categories.items || categories">
     <img class="category-img" *ngIf="cat.image" [src]="cat.image" [alt]="cat.name" />
     <div class="category-info">
       <div class="category-row">
@@ -40,25 +40,40 @@
       <div class="form-group">
         <label for="name">Name *</label>
         <input id="name" type="text" formControlName="name" placeholder="Category name" />
-        <small class="error-text" *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.invalid">
+        <small
+          class="error-text"
+          *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.invalid"
+        >
           Name is required.
         </small>
       </div>
 
       <div class="form-group">
         <label for="description">Description</label>
-        <textarea id="description" formControlName="description" rows="3" placeholder="Category description"></textarea>
+        <textarea
+          id="description"
+          formControlName="description"
+          rows="3"
+          placeholder="Category description"
+        ></textarea>
       </div>
 
       <div class="form-group">
-        <label for="image">Image URL</label>
-        <input id="image" type="text" formControlName="image" placeholder="https://..." />
+        <label>Category Image</label>
+        <input type="file" (change)="onImageSelected($event)" />
+
+        <div *ngIf="isUploading">Uploading image...</div>
       </div>
+      <img
+        *ngIf="!isUploading && categoryForm.get('image')?.value"
+        [src]="categoryForm.get('image')?.value"
+        width="120"
+      />
 
       <div class="form-actions">
         <button type="button" class="btn-cancel" (click)="closeModal()">Cancel</button>
-        <button type="submit" class="btn-submit" [disabled]="isSubmitting">
-          {{ isSubmitting ? 'Saving...' : (isEditing ? 'Update Category' : 'Add Category') }}
+        <button type="submit" class="btn-submit" [disabled]="isSubmitting || isUploading">
+          {{ isSubmitting ? 'Saving...' : isEditing ? 'Update Category' : 'Add Category' }}
         </button>
       </div>
     </form>

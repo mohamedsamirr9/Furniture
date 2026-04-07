@@ -159,13 +159,32 @@ namespace Furniture.Services.Implementations
         public async Task<bool> UpdateOrderStatusAsync(
             int orderId, OrderStatus newStatus, string adminId)
         {
+            var spec = new OrderSpecifications(orderId);
             var order = await _unitOfWork.GetRepository<Order, int>()
-                .GetByIdAsync(orderId);
+                .GetByIdAsync(spec);
 
             if (order == null)
                 return false;
 
             ValidateStatusTransition(order.Status, newStatus);
+
+            if (newStatus == OrderStatus.Paid && order.Status != OrderStatus.Paid)
+            {
+                var productRepo = _unitOfWork.GetRepository<Product, int>();
+                foreach (var item in order.OrderItems)
+                {
+                    if (item.Product != null)
+                    {
+                        item.Product.StockQuantity -= item.Quantity;
+                        if (item.Product.StockQuantity <= 0)
+                        {
+                            item.Product.StockQuantity = 0;
+                            item.Product.IsAvailable = false;
+                        }
+                        productRepo.Update(item.Product);
+                    }
+                }
+            }
 
             order.Status = newStatus;
             _unitOfWork.GetRepository<Order, int>().Update(order);

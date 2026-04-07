@@ -49,7 +49,6 @@ export class CartComponent implements OnInit {
       next: () => this.isLoading = false,
       error: (err) => {
         this.isLoading = false;
-        this.errorMsg = 'Failed to update quantity.';
         console.error(err);
       }
     });

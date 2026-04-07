@@ -26,9 +26,13 @@
           <img class="product-img" *ngIf="product.mainImage" [src]="product.mainImage" [alt]="product.name" />
           {{ product.name }}
         </td>
-        <td>{{ product.stockQuantity ?? 'InStock' }}</td>
+        <td>{{ product.stockQuantity }}</td>
         <td><strong>{{ product.price | currency }}</strong></td>
-        <td><span class="badge-green">Available</span></td>
+        <td>
+          <span [ngClass]="product.stockQuantity > 0 ? 'badge-green' : 'alert-error'" style="padding: 4px 8px; border-radius: 4px; font-size: 0.85em;">
+            {{ product.stockQuantity > 0 ? 'Available' : 'Out of Stock' }}
+          </span>
+        </td>
         <td class="actions">
           <span class="edit-btn" (click)="openEditModal(product)">🖊</span>
           <span class="delete-btn" (click)="deleteProduct(product.id)">🗑</span>
@@ -57,6 +61,15 @@
         <small class="error-text" *ngIf="productForm.get('name')?.touched && productForm.get('name')?.invalid">
           Name is required.
         </small>
+      </div>
+
+      <div class="form-group">
+        <label for="imageFile">Product Image</label>
+        <input id="imageFile" type="file"  (change)="onFileSelected($event)" accept="image/*" [disabled]="isUploading" />
+        <small class="uploading-text" *ngIf="isUploading" style="color: blue; display: block; margin-top: 5px;">Uploading image to servers...</small>
+        <div *ngIf="productForm.get('imageUrl')?.value && !isUploading" class="image-preview" style="margin-top: 10px;">
+          <img [src]="productForm.get('imageUrl')?.value" alt="Preview" style="max-height: 80px; border-radius: 4px;" />
+        </div>
       </div>
 
       <div class="form-group">
@@ -90,14 +103,7 @@
         </small>
       </div>
 
-      <div class="form-row checkbox-row">
-        <label class="checkbox-label">
-          <input type="checkbox" formControlName="isAvailable" /> Available
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" formControlName="isCustomized" /> Customized
-        </label>
-      </div>
+
 
       <div class="form-actions">
         <button type="button" class="btn-cancel" (click)="closeModal()">Cancel</button>
