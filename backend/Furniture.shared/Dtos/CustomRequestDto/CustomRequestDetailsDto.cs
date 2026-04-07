@@ -14,6 +14,8 @@ namespace Furniture.shared.Dtos.CustomRequestDto
         public decimal Budget { get; set; }
         public string BuyerName { get; set; } = null!;
         public List<OfferDto> Offers { get; set; }=new List<OfferDto>();
+        public string? ImageUrl { get; set; }
+
 
     }
 }

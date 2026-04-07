@@ -10,5 +10,7 @@ namespace Furniture.shared.Dtos.CustomRequestDto
     {
         public string Description { get; set; } = null!;
         public decimal Budget { get; set; }
+        public string? ImageUrl { get; set; }
+
     }
 }
