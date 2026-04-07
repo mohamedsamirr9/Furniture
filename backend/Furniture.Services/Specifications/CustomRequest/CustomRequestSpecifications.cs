@@ -15,7 +15,8 @@ namespace Furniture.Services.Specifications
         (!minBudget.HasValue || r.Budget>=minBudget))
         {
             AddInclude(r => r.Buyer);
-            //ApplyPagination(pageIndex, pageSize);
+
+            ApplyPagination(pageSize, pageIndex);
             AddOrderByDescending(r => r.Id);
         }
     }
