@@ -53,9 +53,7 @@ export class WishlistComponent implements OnInit {
     }, 1000);
   }
 viewProduct(id: number) {
-  // هنا ممكن تستخدم Router عشان تروح لصفحة تفاصيل المنتج
-  // مثال:
-  // this.router.navigate(['/products', id]);
+
   alert('Go to product details for ID: ' + id);
 }
   removeItem(id: number) {

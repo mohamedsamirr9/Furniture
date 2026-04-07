@@ -1,6 +1,6 @@
-/* 🔥 Card Hover */
+
 .wishlist-card {
-  background-color: #f8f9fa; /* فاتحة عشان الكارت الأسود يبان */
+  background-color: #f8f9fa; 
   transition: all 0.3s ease;
   border-radius: 16px;
   border: none;
@@ -11,13 +11,13 @@
   box-shadow: 0 15px 40px rgba(0,0,0,0.1);
 }
 
-/* 🖼 Image */
+
 .wishlist-img {
   height: 220px;
   object-fit: cover;
 }
 
-/* ❤️ Heart Button داخل الدائرة */
+
 .btn-heart {
   background: white;
   border: none;
@@ -39,7 +39,7 @@
   transform: scale(0.9);
 }
 
-/* 🛒 Cart Button */
+
 .cart-btn {
   background-color: #000;
   color: white;
@@ -54,7 +54,6 @@
   transform: scale(1.05);
 }
 
-/* View Button بلونك #6E7359 */
 .view-btn {
   background-color: #6E7359;
   color: white;
@@ -69,7 +68,6 @@
   transform: scale(1.05);
 }
 
-/* 💀 Skeleton Loading */
 .skeleton-card {
   height: 300px;
   border-radius: 16px;
