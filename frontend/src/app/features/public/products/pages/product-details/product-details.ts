@@ -66,7 +66,7 @@ export class ProductDetails implements OnInit {
       },
       error: (err: any) => {
         this.isAdding = false;
-        this.errorMessage = 'Failed to add item to cart.';
+        this.errorMessage = err.error?.error || 'Failed to add item to cart.';
         console.error(err);
       }
     });

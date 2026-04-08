@@ -8,7 +8,7 @@ import { PublicLayout } from './layouts/public-layout/public-layout/public-layou
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, PublicLayout],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

@@ -26,4 +26,16 @@ export class OrderService {
   cancelOrder(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  getAllOrdersPaginated(pageIndex: number = 1, pageSize: number = 10): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/admin/all?pageIndex=${pageIndex}&pageSize=${pageSize}`);
+  }
+
+  getOrdersByStatus(status: string): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.apiUrl}/admin/status/${status}`);
+  }
+
+  updateOrderStatus(orderId: number, status: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/admin/${orderId}/status`, { status });
+  }
 }

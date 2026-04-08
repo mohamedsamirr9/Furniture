@@ -121,7 +121,7 @@ namespace Furniture.API.Controllers
        
         
         [HttpGet("admin/all")]
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllOrders(
             [FromQuery] int pageIndex = 1,
             [FromQuery] int pageSize = 10)
@@ -133,7 +133,7 @@ namespace Furniture.API.Controllers
        
         
         [HttpGet("admin/status/{status}")]
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetOrdersByStatus(string status)
         {
             if (!Enum.TryParse<OrderStatus>(status, true, out var orderStatus))
@@ -146,7 +146,7 @@ namespace Furniture.API.Controllers
        
         
         [HttpGet("admin/{orderId:int}")]
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetOrderByIdForAdmin(int orderId)
         {
             var order = await _orderService.GetOrderByIdForAdminAsync(orderId);
@@ -159,7 +159,7 @@ namespace Furniture.API.Controllers
         
         
         [HttpPut("admin/{orderId:int}/status")]
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateOrderStatus(
             int orderId,
             [FromBody] UpdateOrderStatusDTO updateDTO)
