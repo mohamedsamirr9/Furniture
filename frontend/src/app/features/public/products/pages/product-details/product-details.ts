@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CartService } from '../../../../../core/services/cart.service';
 import { ProductService } from '../../../../../core/services/product.service';
+import { WishlistService } from '../../../../../core/services/wishlist.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-details',
@@ -19,9 +21,14 @@ export class ProductDetails implements OnInit {
   addedSuccess: boolean = false;
   errorMessage: string = '';
 
+  isInWishlist: boolean = false;
+wishlistMessage: string = '';
+  private wishlistSub: Subscription | null = null;
+
   constructor(
     private cartService: CartService,
     private productService: ProductService,
+    private wishlistService: WishlistService,
     private route: ActivatedRoute
   ) {}
 
@@ -34,6 +41,29 @@ export class ProductDetails implements OnInit {
         this.notFoundMessage = 'Invalid product ID.';
       }
     });
+
+    this.wishlistSub = this.wishlistService.wishlist$.subscribe(items => {
+      if (this.product) {
+        this.checkWishlistStatus(items);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.wishlistSub) {
+      this.wishlistSub.unsubscribe();
+    }
+  }
+
+  checkWishlistStatus(items?: any[]): void {
+    if (!this.product) return;
+    
+    // If items aren't provided, get current value
+    if (!items) {
+      this.wishlistService.wishlist$.subscribe(curr => items = curr).unsubscribe();
+    }
+    
+    this.isInWishlist = items?.some(item => item.productId === this.product.id) || false;
   }
 
   loadProduct(id: number) {
@@ -42,6 +72,7 @@ export class ProductDetails implements OnInit {
     this.productService.getProductById(id).subscribe({
       next: (res: any) => {
         this.product = res;
+        this.checkWishlistStatus();
         this.isLoading = false;
       },
       error: (err: any) => {
@@ -71,4 +102,30 @@ export class ProductDetails implements OnInit {
       }
     });
   }
+
+  toggleWishlist() {
+  if (!this.product) return;
+
+  if (this.isInWishlist) {
+    this.wishlistService.removeFromWishlist(this.product.id).subscribe({
+      next: () => {
+        this.isInWishlist = false;
+        this.showWishlistMessage('Removed from wishlist!');
+      },
+      error: (err) => console.error('Failed to remove from wishlist', err)
+    });
+  } else {
+    this.wishlistService.addToWishlist(this.product.id).subscribe({
+      next: () => {
+        this.isInWishlist = true;
+        this.showWishlistMessage('Added to wishlist!');
+      },
+      error: (err) => console.error('Failed to add to wishlist', err)
+    });
+  }
+}
+showWishlistMessage(message: string) {
+  this.wishlistMessage = message;
+  setTimeout(() => this.wishlistMessage = '', 3000);
+}
 }

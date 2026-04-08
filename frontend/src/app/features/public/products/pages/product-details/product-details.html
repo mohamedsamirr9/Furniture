@@ -40,8 +40,10 @@
     <div class="col-md-6">
       <div class="d-flex justify-content-between align-items-start mb-3">
         <h1 class="product-name fw-bold display-6">{{ product.name }}</h1>
-        <button class="btn btn-outline-dark rounded-circle p-2 border-0 shadow-sm">
-          <i class="bi bi-heart fs-4"></i>
+        <button class="btn btn-outline-dark rounded-circle p-2 border-0 shadow-sm"
+                (click)="toggleWishlist()"
+                [ngClass]="{'text-danger': isInWishlist}">
+          <i class="bi fs-4" [ngClass]="isInWishlist ? 'bi-heart-fill' : 'bi-heart'"></i>
         </button>
       </div>
 
@@ -61,6 +63,10 @@
         <div *ngIf="addedSuccess" class="alert alert-success w-75 py-2 shadow-sm mb-3" role="alert">
           <i class="bi bi-check-circle-fill me-2"></i> Added to cart!
         </div>
+        <!-- Wishlist Success Message -->
+<div *ngIf="wishlistMessage" class="alert alert-success w-75 py-2 shadow-sm mb-3">
+  {{ wishlistMessage }}
+</div>
 
         <button class="btn btn-add-cart w-75 py-3 rounded-pill text-white fw-bold shadow-sm d-flex justify-content-center align-items-center gap-2" 
                 (click)="addToCart()" [disabled]="isAdding || product.stockQuantity <= 0">

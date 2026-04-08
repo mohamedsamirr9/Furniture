@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
+import { WishlistService } from '../../../../core/services/wishlist.service';
+import { CartService } from '../../../../core/services/cart.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-wishlist',
@@ -9,60 +11,56 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule],
   templateUrl: './wishlist.html',
   styleUrl: './wishlist.css',
-
-
 })
-export class WishlistComponent implements OnInit {
-
+export class WishlistComponent implements OnInit, OnDestroy {
   loading = true;
+  wishlistItems: any[] = [];
+  private subscriptions: Subscription[] = [];
 
-  wishlistItems = [
-    {
-      id: 1,
-      name: 'Modern Chair',
-      price: 500,
-      originalPrice: 650,
-      rating: 4,
-      reviewCount: 12,
-      mainImage: 'assets/image1.jpg',
-      brand: 'IKEA'
-    },
-    {
-      id: 2,
-      name: 'Wooden Table',
-      price: 1200,
-      rating: 5,
-      reviewCount: 30,
-      mainImage: 'assets/image2.jpg',
-      brand: 'Home Center'
-    },
-    {
-      id: 3,
-      name: 'Luxury Sofa',
-      price: 3000,
-      rating: 5,
-      reviewCount: 55,
-      mainImage: 'assets/image3.jpg',
-      brand: 'Furnora'
-    }
-  ];
+  constructor(
+    private wishlistService: WishlistService,
+    private cartService: CartService
+  ) {}
 
   ngOnInit() {
-    setTimeout(() => {
-      this.loading = false;
-    }, 1000);
-  }
-viewProduct(id: number) {
+    this.subscriptions.push(
+      this.wishlistService.wishlist$.subscribe((items: any[]) => {
+        this.wishlistItems = items;
+      })
+    );
 
-  alert('Go to product details for ID: ' + id);
-}
-  removeItem(id: number) {
-    this.wishlistItems = this.wishlistItems.filter(item => item.id !== id);
+    this.wishlistService.getWishlist().subscribe({
+      next: () => {
+        this.loading = false;
+      },
+      error: (err: any) => {
+        console.error('Error loading wishlist', err);
+        this.loading = false;
+      }
+    });
   }
 
-  addToCart(product: any) {
-    alert(product.name + ' added to cart 🛒');
+  ngOnDestroy() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
+
+  viewProduct(id: number) {
+    // Actually router link should be used in HTML, but keeping this for now
+    alert('Go to product details for ID: ' + id);
+  }
+
+  removeItem(productId: number) {
+    this.wishlistService.removeFromWishlist(productId).subscribe({
+      next: () => {
+        console.log(`Product ${productId} removed from wishlist`);
+      },
+      error: (err: any) => {
+        console.error('Error removing from wishlist', err);
+      }
+    });
+  }
+
+
 
   getStars(): number[] {
     return [1, 2, 3, 4, 5];

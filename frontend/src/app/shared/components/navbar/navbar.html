@@ -53,7 +53,21 @@
       </a>
 
       <a
-        class="nav-item nav-link position-relative cart-link ms-auto me-3"
+        class="nav-item nav-link position-relative wishlist-link ms-auto me-3"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        routerLink="/wishlist"
+      >
+        <i class="bi bi-heart fs-5"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="(wishlistService.wishlistCount$ | async) || 0 > 0">
+          {{ wishlistService.wishlistCount$ | async }}
+        </span>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="(wishlistService.wishlistCount$ | async) === 0">
+          0
+        </span>
+      </a>
+
+      <a
+        class="nav-item nav-link position-relative cart-link me-3"
         [ngClass]="isDarkPage ? 'dark-nav' : ''"
         routerLink="/cart"
       >
