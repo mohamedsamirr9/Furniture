@@ -34,6 +34,14 @@ namespace Furniture.Services
             return _mapper.Map<Review, ReviewDto>(created!);
         }
 
+        public async Task<IEnumerable<int>> GetUserReviewedProductIdsAsync(string userId)
+        {
+            var repo = _unitOfWork.GetRepository<Review, int>();
+            var spec = new UserReviewsSpecification(userId);
+            var reviews = await repo.GetAllAsync(spec);
+            return reviews.Select(r => r.ProductId).Distinct();
+        }
+
         public async Task DeleteReviewAsync(int id)
         {
             var repo = _unitOfWork.GetRepository<Review, int>();

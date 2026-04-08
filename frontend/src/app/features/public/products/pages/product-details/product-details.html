@@ -75,6 +75,61 @@
         </button>
       </div>
     </div>
+
+    <!-- Customer Reviews Section -->
+    <div class="row mt-5 pt-5 mb-5 border-top">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="fw-bold mb-0">Customer Reviews</h2>
+          <div *ngIf="productReviews.length > 0" class="avg-rating-pill d-flex align-items-center px-4 py-2 rounded-pill shadow-sm">
+            <span class="fs-4 fw-bold me-2 text-dark">{{ averageRating | number:'1.1-1' }}</span>
+            <div class="stars-mini me-2">
+              <i class="bi bi-star-fill text-warning"></i>
+            </div>
+            <span class="text-muted small">({{ productReviews.length }} reviews)</span>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="isLoadingReviews" class="text-center py-5">
+          <div class="spinner-border text-dark" role="status"></div>
+          <p class="mt-2 text-muted">Loading reflections...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!isLoadingReviews && productReviews.length === 0" class="text-center py-5 rounded-4 bg-light border border-light-subtle">
+          <i class="bi bi-chat-heart display-1 text-muted opacity-25 mb-3 d-block"></i>
+          <h4 class="fw-bold text-dark">No reviews yet</h4>
+          <p class="text-muted">Be the first to share your experience with this piece.</p>
+        </div>
+
+        <!-- Reviews List -->
+        <div *ngIf="!isLoadingReviews && productReviews.length > 0" class="reviews-grid">
+          <div *ngFor="let review of productReviews" class="review-card p-4 rounded-4 mb-3 shadow-sm border-0 transition-all">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <h6 class="fw-bold mb-1 text-dark">{{ review.userName }}</h6>
+                <div class="text-muted small">{{ review.createdAt | date:'longDate' }}</div>
+              </div>
+              <div class="star-rating-display d-flex gap-1 fs-5">
+                <i *ngFor="let star of [1,2,3,4,5]" 
+                   class="bi" 
+                   [class.bi-star-fill]="review.rating >= star" 
+                   [class.bi-star]="review.rating < star"
+                   [class.text-warning]="review.rating >= star"
+                   [class.text-secondary-subtle]="review.rating < star"></i>
+              </div>
+            </div>
+            <p class="mb-0 text-dark lh-base" *ngIf="review.message">
+              {{ review.message }}
+            </p>
+            <p class="mb-0 text-muted small fst-italic" *ngIf="!review.message">
+              No comment provided.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   </ng-container>
 </div>

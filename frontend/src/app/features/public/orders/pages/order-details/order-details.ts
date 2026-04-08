@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../../../../../core/services/order.service';
+import { ReviewService } from '../../../../../core/services/review.service';
 import { Order } from '../../../../../core/models/order.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-order-details',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './order-details.html',
   styleUrls: ['./order-details.css']
 })
@@ -17,10 +19,19 @@ export class OrderDetailsComponent implements OnInit {
   errorMsg = '';
   isCancelling = false;
 
+  // Review State
+  showReviewModal = false;
+  selectedProduct: any = null;
+  rating = 0;
+  reviewMessage = '';
+  isSubmittingReview = false;
+  reviewedProductIds: Set<number> = new Set();
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private reviewService: ReviewService
   ) {}
 
   ngOnInit(): void {
@@ -37,11 +48,23 @@ export class OrderDetailsComponent implements OnInit {
       next: (data) => {
         this.order = data;
         this.isLoading = false;
+        this.loadUserReviews();
       },
       error: (err) => {
         console.error('Error loading order', err);
         this.errorMsg = 'Failed to load order details.';
         this.isLoading = false;
+      }
+    });
+  }
+
+  loadUserReviews(): void {
+    this.reviewService.getMyReviewedProductIds().subscribe({
+      next: (ids) => {
+        this.reviewedProductIds = new Set(ids);
+      },
+      error: (err) => {
+        console.error('Error loading user reviews', err);
       }
     });
   }
@@ -79,5 +102,45 @@ export class OrderDetailsComponent implements OnInit {
 
   get canCancel(): boolean {
     return this.order?.status?.toLowerCase() === 'pending' || this.order?.status?.toLowerCase() === 'processing';
+  }
+
+  // Review Methods
+  openReview(item: any): void {
+    this.selectedProduct = item;
+    this.rating = 0;
+    this.reviewMessage = '';
+    this.showReviewModal = true;
+  }
+
+  closeReview(): void {
+    this.showReviewModal = false;
+    this.selectedProduct = null;
+  }
+
+  setRating(stars: number): void {
+    this.rating = stars;
+  }
+
+  submitReview(): void {
+    if (!this.selectedProduct || this.rating === 0) return;
+
+    this.isSubmittingReview = true;
+    this.reviewService.createReview({
+      productId: this.selectedProduct.productId,
+      rating: this.rating,
+      message: this.reviewMessage
+    }).subscribe({
+      next: () => {
+        this.isSubmittingReview = false;
+        this.reviewedProductIds.add(this.selectedProduct.productId);
+        this.closeReview();
+        alert('Thank you for your review!');
+      },
+      error: (err) => {
+        this.isSubmittingReview = false;
+        console.error('Review submission failed', err);
+        alert(err.error?.message || 'Failed to submit review.');
+      }
+    });
   }
 }

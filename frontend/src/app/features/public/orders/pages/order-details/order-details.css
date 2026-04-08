@@ -53,6 +53,34 @@
 
 .custom-project-img-wrapper {
   position: relative;
+  min-height: 250px;
+}
+
+/* Review Modal Styles */
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+}
+
+.star-rating i {
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.star-rating i:hover {
+  transform: scale(1.2) rotate(5deg);
+}
+
+.transition-all {
+  transition: all 0.2s ease;
+}
+
+.transition-all:hover {
+  transform: translateY(-2px);
+}
+
+.custom-project-img-wrapper {
+  position: relative;
   min-height: 300px;
   background-color: #f8f9fa;
   display: flex;

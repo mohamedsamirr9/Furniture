@@ -55,7 +55,18 @@
                 <div class="fw-medium text-dark bg-light d-inline-block px-3 py-1 rounded-pill small">Qty: {{ item.quantity }}</div>
               </div>
               <div class="fw-bold text-sm-end fs-5 mt-2 mt-sm-0">
-                ${{ (item.unitPrice * item.quantity) | number:'1.2-2' }}
+                <div class="mb-2">${{ (item.unitPrice * item.quantity) | number:'1.2-2' }}</div>
+                <div *ngIf="order.status?.toLowerCase() === 'delivered' || order.status?.toLowerCase() === 'completed'">
+                    <button *ngIf="!reviewedProductIds.has(item.productId)" 
+                            class="btn btn-sm btn-outline-dark rounded-pill px-3 py-1 small fw-bold mt-2 shadow-sm"
+                            (click)="openReview(item)">
+                      <i class="bi bi-star-fill me-1"></i> Review
+                    </button>
+                    <span *ngIf="reviewedProductIds.has(item.productId)" 
+                          class="badge bg-light text-success border border-success-subtle rounded-pill px-3 py-2 small d-inline-flex align-items-center mt-2">
+                      <i class="bi bi-check-circle-fill me-1"></i> Reviewed
+                    </span>
+                </div>
               </div>
             </div>
             
@@ -144,4 +155,66 @@
       </div>
     </div>
   </ng-container>
+
+  <!-- Review Modal Overlay -->
+  <div class="modal-backdrop fade show" *ngIf="showReviewModal"></div>
+  <div class="modal fade show d-block" *ngIf="showReviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header border-0 bg-dark text-white p-4">
+          <h5 class="modal-title fw-bold">Review Product</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeReview()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4 p-md-5 bg-white">
+          <div *ngIf="selectedProduct">
+            <div class="d-flex align-items-center mb-4 p-3 bg-light rounded-4">
+<img 
+  [src]="selectedProduct.productImage || 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=150&auto=format&fit=crop'" 
+  class="rounded-3 me-3 shadow-sm"
+  style="width: 50px; height: 50px; object-fit: cover;">
+                <h6 class="fw-bold mb-0 text-dark">{{ selectedProduct.productName }}</h6>
+            </div>
+            
+            <!-- Star Rating -->
+            <div class="text-center mb-4">
+              <h6 class="fw-bold text-uppercase small text-muted mb-3">Your Rating</h6>
+              <div class="star-rating fs-1 d-flex justify-content-center gap-1">
+                <i *ngFor="let star of [1,2,3,4,5]" 
+                    class="bi star"
+                    [class.bi-star-fill]="rating >= star" 
+                    [class.bi-star]="rating < star"
+                    [class.text-warning]="rating >= star"
+                    [class.text-secondary]="rating < star"
+                    (click)="setRating(star)">
+                  </i>
+              </div>
+            </div>
+
+            <!-- Review Message -->
+            <div class="mb-4">
+              <label for="reviewMessage" class="form-label fw-bold small text-muted text-uppercase">Your Review</label>
+              <textarea id="reviewMessage" 
+                        class="form-control rounded-4 p-3 bg-light border-light-subtle" 
+                        rows="4" 
+                        placeholder="Share your experience with this product..."
+                        [(ngModel)]="reviewMessage"></textarea>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="d-grid gap-2">
+              <button class="btn btn-dark btn-lg rounded-pill fw-bold py-3 shadow-sm transition-all" 
+                      [disabled]="rating === 0 || isSubmittingReview"
+                      (click)="submitReview()">
+                <span *ngIf="isSubmittingReview" class="spinner-border spinner-border-sm me-2"></span>
+                Submit Review
+              </button>
+              <button class="btn btn-link text-decoration-none text-muted fw-bold" 
+                      [disabled]="isSubmittingReview"
+                      (click)="closeReview()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

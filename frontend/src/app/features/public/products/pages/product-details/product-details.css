@@ -41,3 +41,39 @@
 h1 {
   max-width: 400px;
 }
+
+/* Reviews Section Styles */
+.avg-rating-pill {
+  background: white;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.review-card {
+  background-color: #fff;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.review-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
+}
+
+.text-warning {
+  color: #ffc107 !important;
+}
+
+.stars-mini i {
+  font-size: 1.25rem;
+}
+
+.transition-all {
+  transition: all 0.2s ease;
+}
+
+@media (max-width: 576px) {
+  .avg-rating-pill {
+    padding: 0.5rem 1rem !important;
+  }
+}
+
