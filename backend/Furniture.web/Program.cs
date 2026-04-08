@@ -63,16 +63,24 @@ namespace Furniture.web
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingCategory>());
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingOffer>());
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingCart>());
+            builder.Services.AddAutoMapper(x => x.AddProfile<MappingCustomRequest>());
+
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingOrder>());
             
   
   builder.Services.AddAutoMapper(x => x.AddProfile<MappingProduct>());
+            builder.Services.AddAutoMapper(x => x.AddProfile<MappingFavourite>());
+
+
+            builder.Services.AddAutoMapper(x => x.AddProfile<MappingProduct>());
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IProductImageService, ProductImageService>();
-
+            builder.Services.AddScoped<IFavouriteService, FavouriteService>();
             builder.Services.AddScoped<IOfferService, OfferService>();
             builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddScoped<ICustomRequestService, CustomRequestService>();
+            
             builder.Services.AddScoped<IOrderService, OrderService>();
             
             var app = builder.Build();

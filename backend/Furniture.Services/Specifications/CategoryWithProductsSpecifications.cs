@@ -12,11 +12,9 @@ namespace Furniture.Services.Specifications
     {
         public CategoryWithProductsSpecifications(int id) : base(c => c.Id == id)
         {
-            AddInclude(q => q.Include(c => c.Products)
-                            .ThenInclude(p => p.Seller));
+            AddInclude(q => q.Include(c => c.Products).ThenInclude(p => p.Seller));
 
-            AddInclude(q => q.Include(c => c.Products)
-                             .ThenInclude(p => p.Images));
+            AddInclude(q => q.Include(c => c.Products).ThenInclude(p => p.Images));
 
 
         }

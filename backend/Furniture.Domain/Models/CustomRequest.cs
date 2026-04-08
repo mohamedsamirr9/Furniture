@@ -15,7 +15,7 @@ namespace Furniture.Domain.Models
 
         public string Description { get; set; } = null!;
         public decimal Budget { get; set; }
-
+        public string? ImageUrl { get; set; }
         public CustomRequestStatus Status { get; set; }
 
         public ICollection<Offer> Offers { get; set; } = new List<Offer>();

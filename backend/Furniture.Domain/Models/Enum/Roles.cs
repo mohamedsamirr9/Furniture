@@ -8,8 +8,9 @@ namespace Furniture.Domain.Models.Enum
 {
     public enum Roles
     {
-        client,
+        buyer,
         seller,
+        shipper,
         admin
     }
 }
