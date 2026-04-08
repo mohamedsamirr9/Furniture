@@ -1,8 +1,8 @@
+import { OrderService } from '../../../../../core/services/order.service';
+import { Order } from '../../../../../core/models/order.model';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { OrderService } from '../../../../../core/services/order.service';
-import { Order } from '../../../../../core/models/order.model';
 
 @Component({
   selector: 'app-my-orders',
@@ -16,7 +16,9 @@ export class MyOrdersComponent implements OnInit {
   isLoading = true;
   errorMsg = '';
 
-  constructor(private orderService: OrderService) {}
+  constructor(
+    private orderService: OrderService
+  ) {}
 
   ngOnInit(): void {
     this.orderService.getMyOrders().subscribe({

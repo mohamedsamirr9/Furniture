@@ -14,6 +14,10 @@ export class CustomRequestService {
     return this.http.post<any>(this.baseUrl, data);
   }
 
+  getAllRequests(): Observable<any> {
+    return this.http.get<any>(this.baseUrl);
+  }
+
   getMyRequests(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/my`);
   }

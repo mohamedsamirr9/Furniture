@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Furniture.Domain.Models;
 using Furniture.Domain.Models.Enum;
 using Furniture.shared.Dtos.CustomRequestDto;
@@ -17,7 +17,8 @@ namespace Furniture.Services.Mapping
             // List
             CreateMap<CustomRequest, CustomRequestDto>()
                 .ForMember(d=>d.Status, o=>o.MapFrom(s=>s.Status.ToString()))
-                .ForMember(d=>d.BuyerName, o=>o.MapFrom(s=>s.Buyer.UserName));
+                .ForMember(d=>d.BuyerName, o=>o.MapFrom(s=>s.Buyer.UserName))
+                .ForMember(d=>d.AcceptedPrice, o=>o.MapFrom(s=>s.Offers.FirstOrDefault(o=>o.Status == OfferStatus.Accepted).Price));
 
             // Details
             CreateMap<CustomRequest, CustomRequestDetailsDto>()

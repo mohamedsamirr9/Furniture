@@ -21,7 +21,7 @@
       <tr *ngFor="let order of (orders.orders || orders)">
         <td><strong>ORD-{{ order.id || order.orderId }}</strong></td>
         <td>{{ order.userName || 'Customer' }}</td>
-        <td>{{ order.itemsCount || order.orderItems?.length || 0 }} items</td>
+        <td>{{ order.isCustom ? 'Custom Product' : (order.itemsCount || order.orderItems?.length || 0) + ' items' }}</td>
         <td>{{ order.shippingAddress || 'N/A' }}</td>
         <td>
           <select 

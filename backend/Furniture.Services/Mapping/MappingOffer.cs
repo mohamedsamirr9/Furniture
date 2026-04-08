@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Furniture.Domain.Models;
 using Furniture.Domain.Models.Enum;
 using Furniture.shared.Dtos;
@@ -18,7 +18,8 @@ namespace Furniture.Services.Mapping
             .ForMember(dest => dest.Status,
                        opt => opt.MapFrom(src => OfferStatus.Pending));
 
-            CreateMap<Offer, OfferDto>();
+            CreateMap<Offer, OfferDto>()
+                .ForMember(dest => dest.RequestStatus, opt => opt.MapFrom(src => src.CustomRequest.Status));
         }
     }
 }

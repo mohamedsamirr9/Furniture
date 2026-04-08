@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CartService } from '../../../../../core/services/cart.service';
 import { ProductService } from '../../../../../core/services/product.service';
-import { WishlistService } from '../../../../../core/services/wishlist.service';
+import { WishlistService } from '../../../../../core/services/wishlist.service';   
+import { ReviewService } from '../../../../../core/services/review.service';
+
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -22,13 +24,18 @@ export class ProductDetails implements OnInit {
   errorMessage: string = '';
 
   isInWishlist: boolean = false;
-wishlistMessage: string = '';
+  wishlistMessage: string = '';
   private wishlistSub: Subscription | null = null;
+
+  productReviews: any[] = [];
+  isLoadingReviews: boolean = false;
+  averageRating: number = 0;
 
   constructor(
     private cartService: CartService,
     private productService: ProductService,
     private wishlistService: WishlistService,
+    private reviewService: ReviewService,
     private route: ActivatedRoute
   ) {}
 
@@ -37,6 +44,7 @@ wishlistMessage: string = '';
       const id = params.get('id');
       if (id) {
         this.loadProduct(+id);
+        this.loadReviews(+id);
       } else {
         this.notFoundMessage = 'Invalid product ID.';
       }
@@ -81,6 +89,30 @@ wishlistMessage: string = '';
         console.error(err);
       }
     });
+  }
+
+  loadReviews(productId: number): void {
+    this.isLoadingReviews = true;
+    this.reviewService.getProductReviews(productId).subscribe({
+      next: (data) => {
+        this.productReviews = data;
+        this.calculateAverageRating();
+        this.isLoadingReviews = false;
+      },
+      error: (err) => {
+        console.error('Error loading reviews', err);
+        this.isLoadingReviews = false;
+      }
+    });
+  }
+
+  calculateAverageRating(): void {
+    if (this.productReviews.length === 0) {
+      this.averageRating = 0;
+      return;
+    }
+    const sum = this.productReviews.reduce((acc, curr) => acc + curr.rating, 0);
+    this.averageRating = sum / this.productReviews.length;
   }
 
   addToCart() {

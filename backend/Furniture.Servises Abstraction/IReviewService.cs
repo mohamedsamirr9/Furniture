@@ -10,6 +10,7 @@ namespace Furniture.Servises_Abstraction
     {
         Task<IEnumerable<ReviewDto>> GetProductReviewsAsync(int productId, int pageIndex, int pageSize);
         Task<ReviewDto> CreateReviewAsync(ReviewCreateDto dto);
+        Task<IEnumerable<int>> GetUserReviewedProductIdsAsync(string userId);
         Task DeleteReviewAsync(int id);
     }
 }
