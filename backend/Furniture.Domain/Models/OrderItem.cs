@@ -8,6 +8,9 @@ namespace Furniture.Domain.Models
 {
     public class OrderItem
     {
+        public string SellerId { get; set; } = null!;
+        public ApplicationUser Seller { get; set; } = null!;
+
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }
 

@@ -8,8 +8,9 @@ namespace Furniture.Domain.Models.Enum
 {
     public enum PaymentStatus
     {
-        Pending,
-        Done,
-        Refunded
+        Pending = 0,
+        Processing = 1,
+        Completed = 2,
+        Failed = 3
     }
 }

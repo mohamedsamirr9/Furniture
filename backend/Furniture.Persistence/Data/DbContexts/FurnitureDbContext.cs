@@ -199,6 +199,11 @@ namespace Furniture.Persistence.Data.DbContexts
                       .WithMany(p => p.OrderItems)
                       .HasForeignKey(oi => oi.ProductId)
                       .OnDelete(DeleteBehavior.Restrict);
+                
+                entity.HasOne(oi => oi.Seller)
+                      .WithMany()
+                      .HasForeignKey(oi => oi.SellerId)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
 
             //offer
@@ -350,19 +355,70 @@ namespace Furniture.Persistence.Data.DbContexts
             //payment
             modelBuilder.Entity<Payment>(entity =>
             {
-                entity.HasKey(p => p.Id);
+                  entity.HasKey(p => p.Id);
 
-                entity.Property(p => p.Amount)
-                      .HasColumnType("decimal(18,2)");
+                  entity.Property(p => p.Amount)
+                        .HasColumnType("decimal(18,2)");
 
-                entity.Property(p => p.PaymentDate)
-                      .HasDefaultValueSql("GETUTCDATE()");
+                  // Payment → Order (1-1) 
+                  entity.HasOne(p => p.Order)
+                        .WithOne(o => o.Payment)
+                        .HasForeignKey<Payment>(p => p.OrderId)
+                        .OnDelete(DeleteBehavior.Cascade);
+            });
+            
+            //seller profile
+            modelBuilder.Entity<SellerProfile>(entity =>
+            {
+                  entity.HasKey(s => s.Id);
 
-                //  Payment → Order (1-M)
-                entity.HasOne(p => p.Order)
-                      .WithMany(o => o.Payments)
-                      .HasForeignKey(p => p.OrderId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                  entity.Property(s => s.StoreName)
+                        .IsRequired()
+                        .HasMaxLength(200);
+
+                  entity.Property(s => s.StoreDescription)
+                        .HasMaxLength(1000);
+
+                  entity.Property(s => s.CommissionRate)
+                        .HasColumnType("decimal(5,2)");
+
+                  entity.Property(s => s.CreatedAt)
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                  entity.HasOne(s => s.User)
+                        .WithOne(u => u.SellerProfile)
+                        .HasForeignKey<SellerProfile>(s => s.UserId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                  entity.HasIndex(s => s.UserId).IsUnique();
+            });
+
+            //seller payout
+            modelBuilder.Entity<SellerPayout>(entity =>
+            {
+                  entity.HasKey(p => p.Id);
+
+                  entity.Property(p => p.OrderItemsTotal)
+                        .HasColumnType("decimal(18,2)");
+
+                  entity.Property(p => p.CommissionAmount)
+                        .HasColumnType("decimal(18,2)");
+
+                  entity.Property(p => p.NetAmount)
+                        .HasColumnType("decimal(18,2)");
+
+                  entity.Property(p => p.CreatedAt)
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                  entity.HasOne(p => p.SellerProfile)
+                        .WithMany(s => s.Payouts)
+                        .HasForeignKey(p => p.SellerProfileId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                  entity.HasOne(p => p.Order)
+                        .WithMany(o => o.SellerPayouts)
+                        .HasForeignKey(p => p.OrderId)
+                        .OnDelete(DeleteBehavior.Restrict);
             });
         }
         //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
@@ -383,6 +439,9 @@ namespace Furniture.Persistence.Data.DbContexts
         public DbSet<ShippingBid> ShippingBids { get; set; }
         public DbSet<Delivery> Deliveries { get; set; }
         public DbSet<CustomRequest> CustomRequests { get; set; }
+
+        public DbSet<SellerProfile> SellerProfiles { get; set; } = null!;
+        public DbSet<SellerPayout> SellerPayouts { get; set; } = null!;
 
 
     }
