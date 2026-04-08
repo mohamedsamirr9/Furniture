@@ -110,7 +110,6 @@ export class CustomRequestComponent implements OnInit {
   }
 
   viewOffer(requestId: number) {
-    // Navigate to actual offer comparison page or details
-    alert('Viewing offers not fully implemented in route target yet: ' + requestId);
+    this.router.navigate(['/customer/compare-offers', requestId]);
   }
 }

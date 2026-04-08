@@ -31,7 +31,9 @@ namespace Furniture.Services.Implementations
             var spec = new OrderSpecifications(userId);
             var orders = await _unitOfWork.GetRepository<Order, int>()
                 .GetAllAsync(spec);
-            return _mapper.Map<List<OrderDTO>>(orders);
+            var orderDtos = _mapper.Map<List<OrderDTO>>(orders);
+            await EnrichOrdersAsync(orderDtos);
+            return orderDtos;
         }
 
         
@@ -47,13 +49,37 @@ namespace Furniture.Services.Implementations
             var totalCount = await _unitOfWork.GetRepository<Order, int>()
                 .CountAsync(countSpec);
 
+            var orderDtos = _mapper.Map<List<OrderDTO>>(orders);
+            await EnrichOrdersAsync(orderDtos);
+
             return new PaginatedOrdersDTO
             {
-                Orders = _mapper.Map<List<OrderDTO>>(orders),
+                Orders = orderDtos,
                 TotalCount = totalCount,
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
+        }
+
+        private async Task EnrichOrdersAsync(List<OrderDTO> orderDtos)
+        {
+            var customOrderIds = orderDtos.Where(o => o.IsCustom).Select(o => o.Id).ToList();
+            if (!customOrderIds.Any()) return;
+
+            var offerRepo = _unitOfWork.GetRepository<Offer, int>();
+            var spec = new OffersByOrderIdsSpecification(customOrderIds);
+            var offers = await offerRepo.GetAllAsync(spec);
+            
+            foreach (var orderDto in orderDtos.Where(o => o.IsCustom))
+            {
+                var offer = offers.FirstOrDefault(off => off.OrderId == orderDto.Id);
+                
+                if (offer != null && offer.CustomRequest != null)
+                {
+                    orderDto.Description = offer.CustomRequest.Description;
+                    orderDto.ImageUrl = offer.CustomRequest.ImageUrl;
+                }
+            }
         }
 
         
@@ -64,7 +90,11 @@ namespace Furniture.Services.Implementations
             var order = await _unitOfWork.GetRepository<Order, int>()
                 .GetByIdAsync(spec);
 
-            return order == null ? null : _mapper.Map<OrderDTO>(order);
+            if (order == null) return null;
+            
+            var orderDto = _mapper.Map<OrderDTO>(order);
+            await EnrichOrdersAsync(new List<OrderDTO> { orderDto });
+            return orderDto;
         }
 
         
@@ -198,7 +228,9 @@ namespace Furniture.Services.Implementations
             var spec = new OrderByStatusSpecification(status);
             var orders = await _unitOfWork.GetRepository<Order, int>()
                 .GetAllAsync(spec);
-            return _mapper.Map<List<OrderDTO>>(orders);
+            var orderDtos = _mapper.Map<List<OrderDTO>>(orders);
+            await EnrichOrdersAsync(orderDtos);
+            return orderDtos;
         }
 
 
@@ -208,7 +240,11 @@ namespace Furniture.Services.Implementations
             var order = await _unitOfWork.GetRepository<Order, int>()
                 .GetByIdAsync(spec);
 
-            return order == null ? null : _mapper.Map<OrderDTO>(order);
+            if (order == null) return null;
+            
+            var orderDto = _mapper.Map<OrderDTO>(order);
+            await EnrichOrdersAsync(new List<OrderDTO> { orderDto });
+            return orderDto;
         }
 
 
@@ -222,9 +258,12 @@ namespace Furniture.Services.Implementations
             var totalCount = await _unitOfWork.GetRepository<Order, int>()
                 .CountAsync(countSpec);
 
+            var orderDtos = _mapper.Map<List<OrderDTO>>(orders);
+            await EnrichOrdersAsync(orderDtos);
+
             return new PaginatedOrdersDTO
             {
-                Orders = _mapper.Map<List<OrderDTO>>(orders),
+                Orders = orderDtos,
                 TotalCount = totalCount,
                 PageIndex = pageIndex,
                 PageSize = pageSize
