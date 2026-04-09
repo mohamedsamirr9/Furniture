@@ -75,8 +75,8 @@ export class CompareOffers implements OnInit {
           this.loadOffers(false);
           
           setTimeout(() => {
-            this.router.navigate(['/orders']);
-          }, 2000);
+            this.router.navigate(['/checkout'], { queryParams: { offerId: offer.id } });
+          }, 1500);
         },
         error: (err) => {
           console.error(err);

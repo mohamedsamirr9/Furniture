@@ -24,3 +24,8 @@ export interface CreateOrder {
   shippingAddress: string;
   notes?: string;
 }
+export interface CreateOrderFromOffer {
+  offerId: number;
+  shippingAddress: string;
+  notes?: string;
+}

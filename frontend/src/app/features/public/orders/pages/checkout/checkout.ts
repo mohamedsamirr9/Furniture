@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CartService } from '../../../../../core/services/cart.service';
 import { OrderService } from '../../../../../core/services/order.service';
+import { OfferService } from '../../../../../core/services/offer.service';
+import { of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-checkout',
@@ -16,15 +19,40 @@ import { OrderService } from '../../../../../core/services/order.service';
 export class CheckoutComponent implements OnInit {
   checkoutForm: FormGroup;
   isLoading = false;
-  cart$: Observable<any>;
+  offerId: number | null = null;
+  displayData$: Observable<any>;
 
   constructor(
     private fb: FormBuilder,
     private cartService: CartService,
     private orderService: OrderService,
-    private router: Router
+    private offerService: OfferService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
-    this.cart$ = this.cartService.cart$;
+    this.displayData$ = this.route.queryParams.pipe(
+      switchMap(params => {
+        this.offerId = params['offerId'] ? +params['offerId'] : null;
+        if (this.offerId) {
+          return this.offerService.getOfferById(this.offerId).pipe(
+            switchMap(offer => {
+              // Transform offer into a cart-like structure for the UI
+              return of({
+                totalPrice: offer.price,
+                items: [{
+                  productName: offer.customRequest?.description || 'Custom Furniture Product',
+                  productImage: offer.customRequest?.imageUrl,
+                  unitPrice: offer.price,
+                  quantity: 1
+                }]
+              });
+            })
+          );
+        } else {
+          return this.cartService.cart$;
+        }
+      })
+    );
     this.checkoutForm = this.fb.group({
       shippingAddress: ['', [Validators.required, Validators.minLength(10)]],
       notes: ['']
@@ -32,7 +60,9 @@ export class CheckoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cartService.loadCart().subscribe();
+    if (!this.offerId) {
+      this.cartService.loadCart().subscribe();
+    }
   }
 
   onSubmit(): void {
@@ -44,22 +74,39 @@ export class CheckoutComponent implements OnInit {
     this.isLoading = true;
     const formValue = this.checkoutForm.value;
 
-    this.orderService.createOrder({
-      shippingAddress: formValue.shippingAddress,
-      notes: formValue.notes
-    }).subscribe({
-      next: (response: any) => {
-        this.isLoading = false;
-        // Optionally clear the cart since checkout was successful
-        this.cartService.clearCart().subscribe(() => {
+    if (this.offerId) {
+      this.orderService.createOrderFromOffer({
+        offerId: this.offerId,
+        shippingAddress: formValue.shippingAddress,
+        notes: formValue.notes
+      }).subscribe({
+        next: (response: any) => {
+          this.isLoading = false;
           this.router.navigate(['/orders/confirmed'], { state: { orderResponse: response } });
-        });
-      },
-      error: (err) => {
-        this.isLoading = false;
-        console.error('Error creating order', err);
-        alert('Failed to close order. Please try again.');
-      }
-    });
+        },
+        error: (err) => {
+          this.isLoading = false;
+          console.error('Error creating order from offer', err);
+          alert('Failed to place order. Please try again.');
+        }
+      });
+    } else {
+      this.orderService.createOrder({
+        shippingAddress: formValue.shippingAddress,
+        notes: formValue.notes
+      }).subscribe({
+        next: (response: any) => {
+          this.isLoading = false;
+          this.cartService.clearCart().subscribe(() => {
+            this.router.navigate(['/orders/confirmed'], { state: { orderResponse: response } });
+          });
+        },
+        error: (err) => {
+          this.isLoading = false;
+          console.error('Error creating order', err);
+          alert('Failed to place order. Please try again.');
+        }
+      });
+    }
   }
 }

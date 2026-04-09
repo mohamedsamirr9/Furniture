@@ -51,7 +51,7 @@
     </div>
 
     <!-- Right: Order Summary -->
-    <div class="col-lg-5" *ngIf="cart$ | async as cart">
+    <div class="col-lg-5" *ngIf="displayData$ | async as cart">
       <div class="card border-0 shadow-sm rounded-4 bg-light">
         <div class="card-body p-4 p-md-5">
           <h4 class="fw-bold mb-4">Order Summary</h4>

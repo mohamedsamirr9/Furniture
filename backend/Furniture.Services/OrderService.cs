@@ -124,7 +124,8 @@ namespace Furniture.Services.Implementations
                 {
                     ProductId = cartItem.ProductId,
                     UnitPrice = currentPrice,
-                    Quantity = cartItem.Quantity
+                    Quantity = cartItem.Quantity,
+                    SellerId = cartItem.Product.SellerId
                 });
             }
 
@@ -158,7 +159,50 @@ namespace Furniture.Services.Implementations
                 Message = "Order created successfully!"
             };
         }
-        
+        public async Task<OrderResponseDTO> CreateOrderFromOfferAsync(
+            string userId, CreateOrderFromOfferDTO dto)
+        {
+            var offerRepo = _unitOfWork.GetRepository<Offer, int>();
+            var offer = await offerRepo.GetByIdAsync(dto.OfferId);
+
+            if (offer == null)
+                throw new InvalidOperationException("Offer not found");
+
+            if (offer.Status != OfferStatus.Accepted)
+                throw new InvalidOperationException("Offer must be accepted before creating an order");
+
+            if (offer.OrderId != null)
+                throw new InvalidOperationException("An order has already been created for this offer");
+
+            var newOrder = new Order
+            {
+                UserId = userId,
+                TotalPrice = offer.Price,
+                OrderDate = DateTime.UtcNow,
+                Status = OrderStatus.Pending,
+                ShippingAddress = dto.ShippingAddress,
+                CreatedAt = DateTime.UtcNow,
+                IsCustom = true
+            };
+
+            await _unitOfWork.GetRepository<Order, int>().AddAsync(newOrder);
+            
+            // Link the navigation property - EF will handle the ID assignment during SaveChanges
+            offer.Order = newOrder;
+            offerRepo.Update(offer);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return new OrderResponseDTO
+            {
+                OrderId = newOrder.Id,
+                TotalPrice = newOrder.TotalPrice,
+                OrderDate = newOrder.OrderDate,
+                Status = newOrder.Status.ToString(),
+                Message = "Order created successfully from offer!"
+            };
+        }
+
         
 
         public async Task<bool> CancelOrderAsync(int orderId, string userId)

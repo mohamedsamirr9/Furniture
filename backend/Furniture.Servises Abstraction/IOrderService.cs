@@ -13,6 +13,7 @@ public interface IOrderService
     Task<PaginatedOrdersDTO> GetUserOrdersPaginatedAsync(string userId, int pageIndex, int pageSize);
     Task<OrderDTO?> GetOrderByIdAsync(int orderId, string userId);
     Task<OrderResponseDTO> CreateOrderFromCartAsync(string userId, CreateOrderDTO createOrderDTO);
+    Task<OrderResponseDTO> CreateOrderFromOfferAsync(string userId, CreateOrderFromOfferDTO createOrderFromOfferDTO);
     Task<bool> CancelOrderAsync(int orderId, string userId);
 
     #endregion

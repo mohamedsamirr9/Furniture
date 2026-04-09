@@ -44,6 +44,13 @@ namespace Furniture.Services
             return _mapper.Map<IEnumerable<OfferDto>>(offers);
         }
 
+        public async Task<OfferDto?> GetOfferByIdAsync(int offerId)
+        {
+            var repo = _unitOfWork.GetRepository<Offer, int>();
+            var offer = await repo.GetByIdAsync(offerId);
+            return _mapper.Map<OfferDto>(offer);
+        }
+
         public async Task AcceptOfferAsync(int offerId)
         {
             var repo = _unitOfWork.GetRepository<Offer, int>();
@@ -73,24 +80,6 @@ namespace Furniture.Services
             if (request != null)
             {
                 request.Status = CustomRequestStatus.Accepted;
-
-                // Create a new Order based on the accepted offer
-                var orderRepo = _unitOfWork.GetRepository<Order, int>();
-                var newOrder = new Order
-                {
-                    UserId = request.BuyerId,
-                    TotalPrice = offer.Price,
-                    OrderDate = DateTime.UtcNow,
-                    CreatedAt = DateTime.UtcNow,
-                    Status = OrderStatus.Pending,
-                    IsCustom = true,
-                    ShippingAddress = "" // To be filled by user during checkout/profile
-                };
-
-                await orderRepo.AddAsync(newOrder);
-                
-                // Link the offer to the new order
-                offer.Order = newOrder;
             }
 
             await _unitOfWork.SaveChangesAsync();
