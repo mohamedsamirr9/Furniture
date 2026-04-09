@@ -5,15 +5,20 @@ using Furniture.Persistence.Data.DataSeed;
 using Furniture.Persistence.Data.DbContexts;
 using Furniture.Persistence.Repositories;
 using Furniture.Services;
+using Furniture.Services.Implementations;
 using Furniture.Services.Mapping;
+using Furniture.Services.Mappings;
 using Furniture.Servises_Abstraction;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using System.Threading.Tasks;
-using Furniture.Services.Implementations;
-using Furniture.Services.Mappings;
 
 namespace Furniture.web
 {
@@ -38,6 +43,32 @@ namespace Furniture.web
              .AddEntityFrameworkStores<FurnitureDbContext>()
              .AddDefaultTokenProviders();
 
+            //JWT
+            var jwt = builder.Configuration.GetSection("Jwt");
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(o =>
+            {
+                o.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = jwt["Issuer"],
+                    ValidAudience = jwt["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwt["Key"]))
+                };
+            });
+            builder.Services.AddAuthorization();
+
+           
 
             // CORS
             builder.Services.AddCors(options =>
@@ -64,12 +95,15 @@ namespace Furniture.web
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingOffer>());
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingCart>());
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingCustomRequest>());
-
+            builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<JwtHelper>();
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingOrder>());
             
   
   builder.Services.AddAutoMapper(x => x.AddProfile<MappingProduct>());
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingFavourite>());
+            builder.Services.AddAutoMapper(x => x.AddProfile<MappingUser>());
 
 
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingProduct>());
@@ -82,7 +116,7 @@ namespace Furniture.web
             builder.Services.AddScoped<ICustomRequestService, CustomRequestService>();
             
             builder.Services.AddScoped<IOrderService, OrderService>();
-            
+
             var app = builder.Build();
 
             // Data Seeding
@@ -104,7 +138,8 @@ namespace Furniture.web
             app.UseHttpsRedirection();
             app.UseCors("AllowAll");
             app.UseAuthorization();
-
+            app.UseAuthentication();
+            app.UseStaticFiles();
 
             app.MapControllers();
 

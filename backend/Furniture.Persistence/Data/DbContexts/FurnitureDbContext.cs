@@ -102,7 +102,7 @@ namespace Furniture.Persistence.Data.DbContexts
                     Tb.HasCheckConstraint("PhoneCheck", "PhoneNumber LIKE '01%' AND PhoneNumber NOT LIKE '%[^0-9]%'");
                 });
 
-                entity.Property(u => u.RegisterdAt)
+                entity.Property(u => u.RegisteredAt)
                       .HasDefaultValueSql("GETDATE()");
 
                 entity.Property(u => u.IsDeleted)
@@ -383,6 +383,8 @@ namespace Furniture.Persistence.Data.DbContexts
         public DbSet<ShippingBid> ShippingBids { get; set; }
         public DbSet<Delivery> Deliveries { get; set; }
         public DbSet<CustomRequest> CustomRequests { get; set; }
+        public DbSet<RefrashToken> RefreshTokens { get; set; }
+
 
 
     }
