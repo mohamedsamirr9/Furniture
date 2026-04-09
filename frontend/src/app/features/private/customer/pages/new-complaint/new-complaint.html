@@ -1,0 +1,33 @@
+<div class="new-complaint-page">
+  <h1 class="page-title">My Complaints</h1>
+  <p class="page-subtitle">Submit and track your complaints</p>
+
+  <div class="form-card">
+    <h2 class="form-title">Submit a Complaint</h2>
+
+    <div class="form-group">
+      <label>Order</label>
+      <div class="select-wrapper">
+        <select [(ngModel)]="formData.order" name="order">
+          <option value="" disabled selected>select an order...</option>
+          <option value="ORD-1234">ORD-1234</option>
+          <option value="ORD-1235">ORD-1235</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea
+        [(ngModel)]="formData.description"
+        name="description"
+        placeholder="Describe Your Issue"
+        rows="6"
+      ></textarea>
+    </div>
+
+    <div class="submit-wrapper">
+      <button class="submit-btn" (click)="onSubmit()">Submit</button>
+    </div>
+  </div>
+</div>

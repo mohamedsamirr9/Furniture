@@ -28,7 +28,7 @@
       <a routerLink="/products" class="btn btn-dark rounded-pill px-5 py-3 fw-bold shadow-sm">Shop Now</a>
     </div>
 
-    <div *ngIf="orders.length > 0">
+    <div *ngIf="orders && orders.length > 0">
       <!-- Desktop/Tablet: Table -->
       <div class="d-none d-md-block">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
@@ -45,16 +45,29 @@
               </thead>
               <tbody>
                 <tr *ngFor="let order of orders" class="border-top">
-                  <td class="px-4 py-4 fw-bold">#{{ order.id }}</td>
-                  <td class="px-4 py-4 text-muted">{{ (order.orderDate || order.createdAt) | date:'mediumDate' }}</td>
+                  <td class="px-4 py-4 fw-bold">
+                    <div class="d-flex align-items-center">
+
+                      <div>
+                        #{{ order.id }}
+                        <span *ngIf="order.isCustom" class="badge bg-info text-dark ms-2 small" style="font-size: 0.72rem; vertical-align: middle;">CUSTOM</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-4 text-muted">
+                    <div *ngIf="!order.isCustom">{{ (order.orderDate || order.createdAt) | date:'mediumDate' }}</div>
+                    <div *ngIf="order.isCustom" class="custom-request-snippet text-truncate" style="max-width: 250px;" [title]="order.description || ''">
+                      {{ order.description || 'Custom Furniture Project' }}
+                    </div>
+                  </td>
                   <td class="px-4 py-4 fw-bold text-dark fs-6">${{ order.totalPrice | number:'1.2-2' }}</td>
                   <td class="px-4 py-4">
-                    <span class="badge rounded-pill fw-medium px-3 py-2" [ngClass]="getStatusClass(order.status)">
+                    <span class="badge rounded-pill fw-medium px-3 py-2" [ngClass]="getStatusClass(order.status || '')">
                       {{ order.status }}
                     </span>
                   </td>
                   <td class="px-4 py-4 text-end">
-                    <a [routerLink]="['/orders', order.id]" class="btn btn-sm btn-dark rounded-pill px-4 py-2 fw-medium shadow-sm">
+                    <a [routerLink]="['/orders', order.id]" class="btn btn-sm btn-dark rounded-pill px-4 py-2 fw-medium shadow-sm transition-all">
                       View Details
                     </a>
                   </td>
@@ -71,16 +84,23 @@
            class="order-card-mobile text-decoration-none d-block">
           <div class="order-card-header">
             <span class="fw-bold text-dark">#{{ order.id }}</span>
-            <span class="badge rounded-pill fw-medium px-3 py-1" [ngClass]="getStatusClass(order.status)">
+            <span *ngIf="order.isCustom" class="badge bg-info text-dark ms-2" style="font-size: 0.65rem;">CUSTOM</span>
+            <span class="ms-auto badge rounded-pill fw-medium px-3 py-1" [ngClass]="getStatusClass(order.status || '')">
               {{ order.status }}
             </span>
           </div>
-          <div class="order-card-body">
-            <div>
+          <div class="order-card-body d-flex align-items-center">
+            <div *ngIf="order.isCustom && order.imageUrl" class="order-img-container me-3 shadow-sm" style="width: 50px; height: 50px;">
+              <img [src]="order.imageUrl" alt="Custom Request" class="order-img" />
+            </div>
+            <div class="flex-grow-1 overflow-hidden">
               <div class="text-muted small mb-1">{{ (order.orderDate || order.createdAt) | date:'mediumDate' }}</div>
               <div class="fw-bold text-dark fs-5">${{ order.totalPrice | number:'1.2-2' }}</div>
+              <div *ngIf="order.isCustom" class="text-truncate small text-muted w-100" style="font-style: italic;">
+                {{ order.description }}
+              </div>
             </div>
-            <i class="bi bi-chevron-right text-muted"></i>
+            <i class="bi bi-chevron-right text-muted ms-2"></i>
           </div>
         </a>
       </div>

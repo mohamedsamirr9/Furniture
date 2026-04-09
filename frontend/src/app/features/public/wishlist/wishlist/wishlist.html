@@ -1,0 +1,79 @@
+<div class="container mt-5 py-5">
+
+  <div class="row mb-5 align-items-center">
+    <div class="col">
+      <h2 class="fw-bold m-0">My Wishlist</h2>
+      <p class="text-muted mt-1 mb-0">
+        {{ wishlistItems.length }} items saved
+      </p>
+    </div>
+  </div>
+
+ 
+  <div *ngIf="loading" class="row g-4">
+    <div class="col-md-6 col-lg-4" *ngFor="let i of [1,2,3]">
+      <div class="skeleton-card"></div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && wishlistItems.length === 0" class="text-center py-5">
+    <h4>Your wishlist is empty 💔</h4>
+  </div>
+
+  <div class="row g-4" *ngIf="!loading && wishlistItems.length > 0">
+    <div class="col-md-6 col-lg-4"
+         *ngFor="let product of wishlistItems">
+
+      <div class="card wishlist-card h-100 border-0 bg-light">
+
+     
+        <div class="position-relative">
+          <img [src]="product.mainImage" class="card-img-top wishlist-img">
+
+          <button class="btn btn-heart position-absolute top-0 end-0 m-2"
+                  (click)="removeItem(product.productId)">
+            ❤️
+          </button>
+        </div>
+
+      
+        <div class="card-body d-flex flex-column">
+
+          <p class="text-muted small mb-1">{{ product.sellerName || product.categoryName }}</p>
+
+          <h6 class="fw-bold">{{ product.productName }}</h6>
+
+          <div class="mb-2">
+            <i *ngFor="let star of getStars(); let i = index"
+               class="bi"
+               [ngClass]="{
+                 'bi-star-fill text-warning': i < 5,
+                 'bi-star text-muted': i >= 5
+               }"></i>
+          </div>
+
+          <div class="mt-auto d-flex justify-content-between align-items-center">
+            <div>
+              <span class="fw-bold">${{ product.productPrice }}</span>
+            </div>
+
+            <div class="d-flex gap-2">
+             
+              <button class="btn view-btn btn-sm"
+                      [routerLink]="['/products', product.productId]">
+                View
+              </button>
+
+           
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>

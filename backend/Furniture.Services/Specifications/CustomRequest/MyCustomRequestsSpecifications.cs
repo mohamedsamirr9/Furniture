@@ -1,4 +1,4 @@
-﻿using Furniture.Domain.Models;
+using Furniture.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,7 @@ namespace Furniture.Services.Specifications
         public MyCustomRequestsSpecifications(string buyerId) : base(r=>r.BuyerId== buyerId)
         {
             AddOrderByDescending(r => r.Id);
+            AddInclude(r => r.Offers);
         }
     }
 }

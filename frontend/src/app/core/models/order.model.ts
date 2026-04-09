@@ -14,6 +14,9 @@ export interface Order {
   status: string;
   shippingAddress: string;
   createdAt: string;
+  description?: string;
+  imageUrl?: string;
+  isCustom?: boolean;
   orderItems: OrderItem[];
 }
 

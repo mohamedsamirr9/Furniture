@@ -22,7 +22,7 @@ public class OrderSpecifications : BaseSpecificationscs<Domain.Models.Order, int
         : base(o => o.Id == orderId && o.UserId == userId)
     {
         AddInclude("OrderItems.Product");
-        AddInclude(o => o.Payments!);  
+        AddInclude(o => o.Payment!);  
     }
 
     public OrderSpecifications(string userId, OrderStatus status)
@@ -41,7 +41,7 @@ public class OrderSpecifications : BaseSpecificationscs<Domain.Models.Order, int
     {
         AddInclude("OrderItems.Product");
         AddInclude(o => o.User);
-        AddInclude(o => o.Payments!);
+        AddInclude(o => o.Payment!);
     }
 
     #endregion

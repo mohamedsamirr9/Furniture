@@ -10,5 +10,8 @@ public class OrderDTO
     public DateTime CreatedAt { get; set; }
         
     public string? UserName { get; set; }  
+    public bool IsCustom { get; set; }
+    public string? Description { get; set; }
+    public string? ImageUrl { get; set; }
     public List<OrderItemDTO> OrderItems { get; set; } = new();
 }

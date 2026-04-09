@@ -25,7 +25,9 @@ namespace Furniture.Domain.Models
 
 
         public ICollection<OrderItem>? OrderItems { get; set; }
-        public ICollection<Payment> Payments { get; set; } = new List<Payment>();
+        public Payment? Payment { get; set; }
+        public ICollection<SellerPayout>? SellerPayouts { get; set; }
+
         public ShippingRequest? ShippingRequest { get; set; }
         public Delivery? Delivery { get; set; }
 

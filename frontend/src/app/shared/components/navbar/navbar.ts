@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
+import { WishlistService } from '../../../core/services/wishlist.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,10 +11,15 @@ import { CartService } from '../../../core/services/cart.service';
   styleUrl: './navbar.css',
 })
 export class Navbar implements OnInit {
-  constructor(private router: Router, public cartService: CartService) {}
+  constructor(
+    private router: Router, 
+    public cartService: CartService,
+    public wishlistService: WishlistService
+  ) {}
 
   ngOnInit(): void {
     this.cartService.loadCart().subscribe();
+    this.wishlistService.getWishlist().subscribe();
   }
 
   get isDarkPage(): boolean {

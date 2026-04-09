@@ -44,6 +44,7 @@ namespace Furniture.Domain.Models
         public Cart Cart { get; set; } = null!;
 
         public ICollection<Favourite> Favourites { get; set; } = new List<Favourite>();
+        public SellerProfile? SellerProfile { get; set; }
 
 
     }

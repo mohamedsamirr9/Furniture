@@ -1,4 +1,4 @@
-﻿using Furniture.Servises_Abstraction;
+using Furniture.Servises_Abstraction;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Furniture.presentation.Controllers
 {
     [ApiController]
-    [Route("api/favorites")]
+    [Route("api/favourites")]
     public class FavouritesController : ControllerBase
     {
         private readonly IFavouriteService _favouriteService;
@@ -20,40 +20,42 @@ namespace Furniture.presentation.Controllers
             _favouriteService = favouriteService;
         }
 
+        private string GetUserId() => "seller-1";
 
-        // GET /api/favorites/{userId}
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetFavourites(string userId)
+        // GET /api/favourites
+        [HttpGet]
+        public async Task<IActionResult> GetFavourites()
         {
-            var favourites = await _favouriteService.GetFavouritesAsync(userId);
+            var favourites = await _favouriteService.GetFavouritesAsync(GetUserId());
             return Ok(favourites);
         }
 
-
-        // POST /api/favorites/{userId}/{productId}
-        [HttpPost("{userId}/{productId}")]
-        public async Task<IActionResult> AddToFavourites(string userId, int productId)
+        // POST /api/favourites/{productId}
+        [HttpPost("{productId}")]
+        public async Task<IActionResult> AddToFavourites(int productId)
         {
             try
             {
-                var favourite = await _favouriteService.AddToFavouritesAsync(userId, productId);
+                var favourite = await _favouriteService.AddToFavouritesAsync(GetUserId(), productId);
                 return Ok(favourite);
             }
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new { error = ex.Message });
             }
-         
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
-
-        // DELETE /api/favorites/{userId}/{productId}
-        [HttpDelete("{userId}/{productId}")]
-        public async Task<IActionResult> RemoveFromFavourites(string userId, int productId)
+        // DELETE /api/favourites/{productId}
+        [HttpDelete("{productId}")]
+        public async Task<IActionResult> RemoveFromFavourites(int productId)
         {
             try
             {
-                await _favouriteService.RemoveFromFavouritesAsync(userId, productId);
+                await _favouriteService.RemoveFromFavouritesAsync(GetUserId(), productId);
                 return Ok(new { message = "Product Removed From Favourites" });
             }
             catch (KeyNotFoundException ex)
