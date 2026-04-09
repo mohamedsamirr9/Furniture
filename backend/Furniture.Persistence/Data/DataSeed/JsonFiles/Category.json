@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Living Room",
+    "description": "Furniture designed for living rooms including sofas, coffee tables, and TV units."
+  },
+  {
+    "name": "Bedroom",
+    "description": "Bedroom essentials such as beds, wardrobes, dressers, and nightstands."
+  },
+  {
+    "name": "Dining Room",
+    "description": "Dining furniture including tables, chairs, buffets, and cabinets."
+  }
+]
