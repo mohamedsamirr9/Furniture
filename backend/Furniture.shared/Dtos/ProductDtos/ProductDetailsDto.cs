@@ -21,5 +21,6 @@ namespace Furniture.shared.Dtos.ProductDtos
         public string SellerName { get; set; }
 
         public List<string> Images { get; set; } = new();
+        public ICollection<ReviewDto> Reviews { get; set; } = new List<ReviewDto>();
     }
 }

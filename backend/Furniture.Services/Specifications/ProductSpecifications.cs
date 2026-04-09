@@ -28,6 +28,7 @@ namespace Furniture.Services.Specifications
             AddInclude(p => p.Category);
             AddInclude(p => p.Seller);
             AddInclude(p => p.Images);
+            AddInclude(p => p.Reviews);
 
             if (!string.IsNullOrWhiteSpace(queryParams.Sort))
             {
