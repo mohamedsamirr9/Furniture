@@ -76,6 +76,7 @@ namespace Furniture.web
             return NoContent();
         }
 
+        [Authorize]
         [HttpGet("me")]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
@@ -85,7 +86,7 @@ namespace Furniture.web
             return Ok(user);
         }
 
-      
+        [Authorize]
         [HttpPut("profile")]
         public async Task<ActionResult<UserDto>> UpdateProfile(UpdateProfileDto dto)
         {
@@ -95,7 +96,8 @@ namespace Furniture.web
             return Ok(user);
         }
 
-      
+
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteAccount()
         {
@@ -105,12 +107,22 @@ namespace Furniture.web
             return NoContent();
         }
 
+        [Authorize]
         [HttpPost("become-seller")]
         public async Task<IActionResult> BecomeSeller(BecomeSellerDto dto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             await _accountService.BecomeSellerAsync(userId!, dto);
             return Ok("Now you are a seller");
+        }
+
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            await _accountService.ChangePasswordAync(userId!, dto);
+            return Ok("Password changed successfully");
         }
     }
 }

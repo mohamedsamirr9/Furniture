@@ -28,5 +28,6 @@ namespace Furniture.Servises_Abstraction
 
         Task DeleteAccountAsync(string userId);
         Task BecomeSellerAsync(string UserId, BecomeSellerDto dto);
+        Task ChangePasswordAync(string UserId, ChangePasswordDto dto);
     }
 }

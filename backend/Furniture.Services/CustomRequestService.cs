@@ -49,7 +49,7 @@ namespace Furniture.Services
             return _mapper.Map<IEnumerable<CustomRequestDto>>(requests);
         }
 
-        public async Task<CustomRequestDetailsDto> GetByIdAsync(int id)
+        public async Task<CustomRequestDetailsDto> GetByIdAsync(int id, string userId, string role)
         {
             var spec= new CustomRequestWithOffersSpecifications(id);
             var repo = _unitOfWork.GetRepository<CustomRequest, int>();
@@ -57,7 +57,8 @@ namespace Furniture.Services
 
             if (request is null)
                 throw new Exception("Request not found");
-
+            if (role == "buyer" && request.BuyerId != userId)
+                throw new Exception("unauthorized");
             return _mapper.Map<CustomRequestDetailsDto>(request);
         }
 

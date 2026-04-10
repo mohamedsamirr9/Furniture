@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,6 +24,8 @@ namespace Furniture.Services
         public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
         {
             var user = _mapper.Map<ApplicationUser>(dto);
+            user.Role = Roles.buyer;
+            user.IsVerified = false;
 
             if (!string.IsNullOrEmpty(dto.NationalIdImageBase64))
                 user.NationalIdImage = ImageHelper.SaveImage(dto.NationalIdImageBase64);
@@ -31,7 +34,6 @@ namespace Furniture.Services
 
             if (!result.Succeeded)
                 throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
-
             return await GenerateAuthResponse(user);
         }
 
@@ -150,11 +152,11 @@ namespace Furniture.Services
             if (user is null) return;
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
+            var encoded= WebUtility.UrlEncode(token);
             await _emailService.SendEmailAsync(
                 email,
                 "Reset Password",
-                $"Token: {token}"
+                $"Token: {encoded}"
             );
         }
 
@@ -165,10 +167,10 @@ namespace Furniture.Services
 
             if (user is null)
                 throw new Exception("User not found");
-
+            var decoded = WebUtility.UrlDecode(dto.Token);
             var result = await _userManager.ResetPasswordAsync(
                 user,
-                dto.Token,
+                decoded,
                 dto.NewPassword
             );
 
@@ -233,6 +235,19 @@ namespace Furniture.Services
             user.Role= Roles.seller;
             user.IsVerified = false;
             await _userManager.UpdateAsync(user);
+        }
+
+        public async Task ChangePasswordAync(string UserId, ChangePasswordDto dto)
+        {
+            var user = await _userManager.FindByIdAsync(UserId);
+            if (user is null)
+                throw new Exception("User not found");
+            var result= await _userManager.ChangePasswordAsync(user,dto.CurrentPassword, dto.NewPassword);
+            if (!result.Succeeded)
+            {
+                var errors= string.Join(",", result.Errors.Select(e=>e.Description));
+                throw new Exception(errors);
+            }
         }
     }
 }
