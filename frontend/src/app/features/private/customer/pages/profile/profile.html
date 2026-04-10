@@ -1,0 +1,266 @@
+<div class="profile-page">
+  <h1 class="page-title">My Profile</h1>
+
+  <!-- Personal Information -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon card-icon--green">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="card-title">Personal Information</h2>
+        <p class="card-subtitle">Update your name and phone number</p>
+      </div>
+    </div>
+
+    <div *ngIf="successPersonal" class="alert alert-success">Changes saved successfully!</div>
+    <div *ngIf="errorPersonal" class="alert alert-danger">{{ errorPersonal }}</div>
+
+    <form [formGroup]="personalForm" (ngSubmit)="savePersonal()">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" formControlName="fullName" class="form-control" placeholder="Enter your full name" />
+        <div *ngIf="personalForm.get('fullName')?.invalid && personalForm.get('fullName')?.touched" class="field-error">
+          Full name is required.
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" formControlName="phone" class="form-control" placeholder="+966 50 000 0000" />
+        <div *ngIf="personalForm.get('phone')?.invalid && personalForm.get('phone')?.touched" class="field-error">
+          Phone number is required.
+        </div>
+      </div>
+      <button type="submit" class="btn-save" [disabled]="isLoadingPersonal">
+        <span *ngIf="isLoadingPersonal" class="spinner-border spinner-border-sm"></span>
+        <svg *ngIf="!isLoadingPersonal" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+        {{ isLoadingPersonal ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Email Address -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon card-icon--blue">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="card-title">Email Address</h2>
+        <p class="card-subtitle">Current: ahmed&#64;example.com</p>
+      </div>
+    </div>
+
+    <div *ngIf="successEmail" class="alert alert-success">Email updated successfully!</div>
+    <div *ngIf="errorEmail" class="alert alert-danger">{{ errorEmail }}</div>
+
+    <form [formGroup]="emailForm" (ngSubmit)="updateEmail()">
+      <div class="form-group">
+        <label>New Email Address</label>
+        <input type="email" formControlName="newEmail" class="form-control" placeholder="Enter new email" />
+        <div *ngIf="emailForm.get('newEmail')?.invalid && emailForm.get('newEmail')?.touched" class="field-error">
+          Please enter a valid email address.
+        </div>
+      </div>
+      <button type="submit" class="btn-save btn-save--outline" [disabled]="isLoadingEmail">
+        <span *ngIf="isLoadingEmail" class="spinner-border spinner-border-sm"></span>
+        <svg *ngIf="!isLoadingEmail" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        {{ isLoadingEmail ? 'Updating...' : 'Update Email' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Change Password -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon card-icon--red">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="card-title">Change Password</h2>
+        <p class="card-subtitle">Keep your account secure</p>
+      </div>
+    </div>
+
+    <div *ngIf="successPassword" class="alert alert-success">Password changed successfully!</div>
+    <div *ngIf="errorPassword" class="alert alert-danger">{{ errorPassword }}</div>
+
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+      <div class="form-group">
+        <label>Current Password</label>
+        <div class="input-password">
+          <input [type]="showCurrentPassword ? 'text' : 'password'" formControlName="currentPassword" class="form-control" />
+          <button type="button" class="toggle-password" (click)="showCurrentPassword = !showCurrentPassword">
+            <svg *ngIf="!showCurrentPassword" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg *ngIf="showCurrentPassword" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
+        </div>
+        <div *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched" class="field-error">
+          Current password is required.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>New Password</label>
+        <div class="input-password">
+          <input [type]="showNewPassword ? 'text' : 'password'" formControlName="newPassword" class="form-control" />
+          <button type="button" class="toggle-password" (click)="showNewPassword = !showNewPassword">
+            <svg *ngIf="!showNewPassword" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg *ngIf="showNewPassword" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
+        </div>
+        <div *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched" class="field-error">
+          Password must be at least 8 characters.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Confirm New Password</label>
+        <div class="input-password">
+          <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" class="form-control" />
+          <button type="button" class="toggle-password" (click)="showConfirmPassword = !showConfirmPassword">
+            <svg *ngIf="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg *ngIf="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
+        </div>
+        <div *ngIf="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched" class="field-error">
+          Please confirm your new password.
+        </div>
+      </div>
+
+      <button type="submit" class="btn-save btn-save--outline" [disabled]="isLoadingPassword">
+        <span *ngIf="isLoadingPassword" class="spinner-border spinner-border-sm"></span>
+        <svg *ngIf="!isLoadingPassword" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        {{ isLoadingPassword ? 'Changing...' : 'Change Password' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Address -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon card-icon--green">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="card-title">Address</h2>
+        <p class="card-subtitle">Your delivery address</p>
+      </div>
+    </div>
+
+    <div *ngIf="successAddress" class="alert alert-success">Address saved successfully!</div>
+    <div *ngIf="errorAddress" class="alert alert-danger">{{ errorAddress }}</div>
+
+    <form [formGroup]="addressForm" (ngSubmit)="saveAddress()">
+      <div class="form-group">
+        <label>Street Address</label>
+        <input type="text" formControlName="street" class="form-control" placeholder="Enter street address" />
+        <div *ngIf="addressForm.get('street')?.invalid && addressForm.get('street')?.touched" class="field-error">
+          Street address is required.
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" formControlName="city" class="form-control" placeholder="City" />
+          <div *ngIf="addressForm.get('city')?.invalid && addressForm.get('city')?.touched" class="field-error">
+            City is required.
+          </div>
+        </div>
+        <div class="form-group">
+          <label>State / Region</label>
+          <input type="text" formControlName="state" class="form-control" placeholder="State / Region" />
+          <div *ngIf="addressForm.get('state')?.invalid && addressForm.get('state')?.touched" class="field-error">
+            State is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>ZIP Code</label>
+          <input type="text" formControlName="zip" class="form-control" placeholder="ZIP Code" />
+          <div *ngIf="addressForm.get('zip')?.invalid && addressForm.get('zip')?.touched" class="field-error">
+            ZIP code is required.
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Country</label>
+          <input type="text" formControlName="country" class="form-control" placeholder="Country" />
+          <div *ngIf="addressForm.get('country')?.invalid && addressForm.get('country')?.touched" class="field-error">
+            Country is required.
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-save" [disabled]="isLoadingAddress">
+        <span *ngIf="isLoadingAddress" class="spinner-border spinner-border-sm"></span>
+        <svg *ngIf="!isLoadingAddress" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+        {{ isLoadingAddress ? 'Saving...' : 'Save Address' }}
+      </button>
+    </form>
+  </div>
+
+</div>
