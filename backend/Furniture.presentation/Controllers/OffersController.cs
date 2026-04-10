@@ -1,4 +1,4 @@
-﻿
+
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +37,14 @@ namespace Furniture.API.Controllers
             var sellerId = "seller-1"; 
             var offers = await _offerService.GetMyOffersAsync(sellerId);
             return Ok(offers);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOfferById(int id)
+        {
+            var offer = await _offerService.GetOfferByIdAsync(id);
+            if (offer == null) return NotFound();
+            return Ok(offer);
         }
 
         [HttpPost("{id}/accept")]

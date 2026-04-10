@@ -31,7 +31,9 @@ namespace Furniture.Services.Implementations
             var spec = new OrderSpecifications(userId);
             var orders = await _unitOfWork.GetRepository<Order, int>()
                 .GetAllAsync(spec);
-            return _mapper.Map<List<OrderDTO>>(orders);
+            var orderDtos = _mapper.Map<List<OrderDTO>>(orders);
+            await EnrichOrdersAsync(orderDtos);
+            return orderDtos;
         }
 
         
@@ -47,13 +49,37 @@ namespace Furniture.Services.Implementations
             var totalCount = await _unitOfWork.GetRepository<Order, int>()
                 .CountAsync(countSpec);
 
+            var orderDtos = _mapper.Map<List<OrderDTO>>(orders);
+            await EnrichOrdersAsync(orderDtos);
+
             return new PaginatedOrdersDTO
             {
-                Orders = _mapper.Map<List<OrderDTO>>(orders),
+                Orders = orderDtos,
                 TotalCount = totalCount,
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
+        }
+
+        private async Task EnrichOrdersAsync(List<OrderDTO> orderDtos)
+        {
+            var customOrderIds = orderDtos.Where(o => o.IsCustom).Select(o => o.Id).ToList();
+            if (!customOrderIds.Any()) return;
+
+            var offerRepo = _unitOfWork.GetRepository<Offer, int>();
+            var spec = new OffersByOrderIdsSpecification(customOrderIds);
+            var offers = await offerRepo.GetAllAsync(spec);
+            
+            foreach (var orderDto in orderDtos.Where(o => o.IsCustom))
+            {
+                var offer = offers.FirstOrDefault(off => off.OrderId == orderDto.Id);
+                
+                if (offer != null && offer.CustomRequest != null)
+                {
+                    orderDto.Description = offer.CustomRequest.Description;
+                    orderDto.ImageUrl = offer.CustomRequest.ImageUrl;
+                }
+            }
         }
 
         
@@ -64,7 +90,11 @@ namespace Furniture.Services.Implementations
             var order = await _unitOfWork.GetRepository<Order, int>()
                 .GetByIdAsync(spec);
 
-            return order == null ? null : _mapper.Map<OrderDTO>(order);
+            if (order == null) return null;
+            
+            var orderDto = _mapper.Map<OrderDTO>(order);
+            await EnrichOrdersAsync(new List<OrderDTO> { orderDto });
+            return orderDto;
         }
 
         
@@ -94,7 +124,8 @@ namespace Furniture.Services.Implementations
                 {
                     ProductId = cartItem.ProductId,
                     UnitPrice = currentPrice,
-                    Quantity = cartItem.Quantity
+                    Quantity = cartItem.Quantity,
+                    SellerId = cartItem.Product.SellerId
                 });
             }
 
@@ -128,7 +159,50 @@ namespace Furniture.Services.Implementations
                 Message = "Order created successfully!"
             };
         }
-        
+        public async Task<OrderResponseDTO> CreateOrderFromOfferAsync(
+            string userId, CreateOrderFromOfferDTO dto)
+        {
+            var offerRepo = _unitOfWork.GetRepository<Offer, int>();
+            var offer = await offerRepo.GetByIdAsync(dto.OfferId);
+
+            if (offer == null)
+                throw new InvalidOperationException("Offer not found");
+
+            if (offer.Status != OfferStatus.Accepted)
+                throw new InvalidOperationException("Offer must be accepted before creating an order");
+
+            if (offer.OrderId != null)
+                throw new InvalidOperationException("An order has already been created for this offer");
+
+            var newOrder = new Order
+            {
+                UserId = userId,
+                TotalPrice = offer.Price,
+                OrderDate = DateTime.UtcNow,
+                Status = OrderStatus.Pending,
+                ShippingAddress = dto.ShippingAddress,
+                CreatedAt = DateTime.UtcNow,
+                IsCustom = true
+            };
+
+            await _unitOfWork.GetRepository<Order, int>().AddAsync(newOrder);
+            
+            // Link the navigation property - EF will handle the ID assignment during SaveChanges
+            offer.Order = newOrder;
+            offerRepo.Update(offer);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return new OrderResponseDTO
+            {
+                OrderId = newOrder.Id,
+                TotalPrice = newOrder.TotalPrice,
+                OrderDate = newOrder.OrderDate,
+                Status = newOrder.Status.ToString(),
+                Message = "Order created successfully from offer!"
+            };
+        }
+
         
 
         public async Task<bool> CancelOrderAsync(int orderId, string userId)
@@ -198,7 +272,9 @@ namespace Furniture.Services.Implementations
             var spec = new OrderByStatusSpecification(status);
             var orders = await _unitOfWork.GetRepository<Order, int>()
                 .GetAllAsync(spec);
-            return _mapper.Map<List<OrderDTO>>(orders);
+            var orderDtos = _mapper.Map<List<OrderDTO>>(orders);
+            await EnrichOrdersAsync(orderDtos);
+            return orderDtos;
         }
 
 
@@ -208,7 +284,11 @@ namespace Furniture.Services.Implementations
             var order = await _unitOfWork.GetRepository<Order, int>()
                 .GetByIdAsync(spec);
 
-            return order == null ? null : _mapper.Map<OrderDTO>(order);
+            if (order == null) return null;
+            
+            var orderDto = _mapper.Map<OrderDTO>(order);
+            await EnrichOrdersAsync(new List<OrderDTO> { orderDto });
+            return orderDto;
         }
 
 
@@ -222,9 +302,12 @@ namespace Furniture.Services.Implementations
             var totalCount = await _unitOfWork.GetRepository<Order, int>()
                 .CountAsync(countSpec);
 
+            var orderDtos = _mapper.Map<List<OrderDTO>>(orders);
+            await EnrichOrdersAsync(orderDtos);
+
             return new PaginatedOrdersDTO
             {
-                Orders = _mapper.Map<List<OrderDTO>>(orders),
+                Orders = orderDtos,
                 TotalCount = totalCount,
                 PageIndex = pageIndex,
                 PageSize = pageSize

@@ -1,44 +1,112 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CustomRequestService } from '../../../../../core/services/custom-request.service';
 
 @Component({
   selector: 'app-custom-request',
-  imports: [CommonModule, FormsModule],
-templateUrl: './custom-request.html',
- styleUrl: './custom-request.css',
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './custom-request.html',
+  styleUrl: './custom-request.css',
 })
-export class CustomRequestComponent {
-  formData = {
-    fullName: '',
-    email: '',
-    furnitureType: '',
-    dimensions: '',
-    material: '',
-    budgetRange: '',
-    description: '',
-  };
+export class CustomRequestComponent implements OnInit {
+  requestForm: FormGroup;
+  myRequests: any[] = [];
+  
+  selectedFile: File | null = null;
+  imagePreviewUrl: string | null = null;
+  
+  isLoading = false;
+  submitError = '';
+  submitSuccess = false;
 
-  myRequests = [
-    {
-      id: 1,
-      name: 'Custom Oak Dining Table',
-      description: 'Need a 6-seater dining table in solid oak',
-      status: 'Open',
-    },
-    {
-      id: 2,
-      name: 'Corner Bookshelf Unit',
-      description: 'L-shaped bookshelf for living room corner',
-      status: 'In Progress',
-    },
-  ];
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private customRequestService: CustomRequestService
+  ) {
+    this.requestForm = this.fb.group({
+      description: ['', [Validators.required, Validators.minLength(10)]],
+      budget: [null, [Validators.required, Validators.min(1)]]
+    });
+  }
 
-  constructor(private router: Router) {}
+  ngOnInit() {
+    this.loadMyRequests();
+  }
+
+  loadMyRequests() {
+    this.customRequestService.getMyRequests().subscribe({
+      next: (reqs) => this.myRequests = reqs,
+      error: (err) => console.error('Failed to load requests', err)
+    });
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreviewUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
   onSubmit() {
-    this.router.navigate(['/customer/success']);
+    if (this.requestForm.invalid) {
+      this.requestForm.markAllAsTouched();
+      return;
+    }
+
+    this.isLoading = true;
+    this.submitError = '';
+    this.submitSuccess = false;
+
+    const finalizeSubmission = (imageUrl: string | null) => {
+      const payload = {
+        Description: this.requestForm.value.description,
+        Budget: this.requestForm.value.budget,
+        ImageUrl: imageUrl
+      };
+
+      this.customRequestService.createCustomRequest(payload).subscribe({
+        next: (res) => {
+          this.isLoading = false;
+          this.submitSuccess = true;
+          this.requestForm.reset();
+          this.selectedFile = null;
+          this.imagePreviewUrl = null;
+          this.loadMyRequests();
+          setTimeout(() => {
+            this.router.navigate(['/customer/success']);
+          }, 1500);
+        },
+        error: (err) => {
+          console.error(err);
+          this.submitError = 'Failed to submit request. Please try again.';
+          this.isLoading = false;
+        }
+      });
+    };
+
+    if (this.selectedFile) {
+      this.customRequestService.uploadImage(this.selectedFile).subscribe({
+        next: (res) => {
+          finalizeSubmission(res.secure_url);
+        },
+        error: (err) => {
+          console.error(err);
+          this.submitError = 'Failed to upload image. Please try again.';
+          this.isLoading = false;
+        }
+      });
+    } else {
+      finalizeSubmission(null);
+    }
   }
 
   viewOffer(requestId: number) {

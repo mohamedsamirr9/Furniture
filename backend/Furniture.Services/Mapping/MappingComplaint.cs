@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Furniture.Domain.Models;
+using Furniture.Domain.Models.Enum;
 using Furniture.shared.Dtos.ComplaintsDto;
 using System;   
 using System.Collections.Generic;
@@ -13,12 +14,17 @@ namespace Furniture.Services.Mapping
     {
         public MappingComplaint()
         {
-            //when you create a list
+            //Listing
             CreateMap<Complaint, ComplaintDto>()
                 .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()));
-            //details 
-            CreateMap<Complaint, ComplaintDetails>()    
-
+            //Details 
+            CreateMap<Complaint, ComplaintDetailDto>()
+                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()))
+                .ForMember(d => d.UserName, o => o.MapFrom(s => s.User.UserName));
+            //Create
+            CreateMap<ComplaintCreateDto, Complaint>()
+                .ForMember(d => d.Status, o => o.MapFrom(s => ComplaintStatus.Open))
+                .ForMember(d => d.CreatedAt, o => o.MapFrom(s => DateTime.UtcNow));
 
         }
     }

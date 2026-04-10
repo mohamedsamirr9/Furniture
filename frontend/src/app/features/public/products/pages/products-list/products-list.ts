@@ -151,7 +151,13 @@ export class ProductsList implements OnInit, OnDestroy {
 
     this.productService.getProducts(filters).subscribe({
       next: (res: any) => {
-        this.products = res.data || res;
+        const data = res.data || res;
+        this.products = data.map((product: any) => ({
+          ...product,
+          averageRating: product.reviews && product.reviews.length > 0
+            ? product.reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / product.reviews.length
+            : 0
+        }));
         this.totalCount = res.totalCount || 0;
         this.loading = false;
       },

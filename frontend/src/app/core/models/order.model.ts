@@ -14,10 +14,18 @@ export interface Order {
   status: string;
   shippingAddress: string;
   createdAt: string;
+  description?: string;
+  imageUrl?: string;
+  isCustom?: boolean;
   orderItems: OrderItem[];
 }
 
 export interface CreateOrder {
+  shippingAddress: string;
+  notes?: string;
+}
+export interface CreateOrderFromOffer {
+  offerId: number;
   shippingAddress: string;
   notes?: string;
 }

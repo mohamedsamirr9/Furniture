@@ -10,6 +10,8 @@ import { CheckoutComponent } from './orders/pages/checkout/checkout';
 import { OrderConfirmedComponent } from './orders/pages/order-confirmed/order-confirmed';
 import { MyOrdersComponent } from './orders/pages/my-orders/my-orders';
 import { OrderDetailsComponent } from './orders/pages/order-details/order-details';
+import { WishlistComponent } from './wishlist/wishlist/wishlist';
+
 export const PUBLIC_ROUTES: Routes = [
   {
     path: '',
@@ -23,6 +25,7 @@ export const PUBLIC_ROUTES: Routes = [
       { path: 'orders/confirmed', component: OrderConfirmedComponent },
       { path: 'orders/:id', component: OrderDetailsComponent },
       { path: 'orders', component: MyOrdersComponent },
+      { path: 'wishlist', component: WishlistComponent },
     ],
   },
 ];

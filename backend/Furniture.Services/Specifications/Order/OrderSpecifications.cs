@@ -8,12 +8,12 @@ public class OrderSpecifications : BaseSpecificationscs<Domain.Models.Order, int
 
     public OrderSpecifications(string userId) : base(o => o.UserId == userId)
     {
-        AddInclude("OrderItems.Product");
+        AddInclude("OrderItems.Product.Images");
         AddOrderByDescending(o => o.OrderDate);
     }
     public OrderSpecifications(string userId, int pageIndex, int pageSize) : base(o => o.UserId == userId)
     {
-        AddInclude("OrderItems.Product");
+        AddInclude("OrderItems.Product.Images");
         AddOrderByDescending(o => o.OrderDate);
         ApplyPagination(pageSize, pageIndex);
     }
@@ -21,14 +21,14 @@ public class OrderSpecifications : BaseSpecificationscs<Domain.Models.Order, int
     public OrderSpecifications(int orderId, string userId)
         : base(o => o.Id == orderId && o.UserId == userId)
     {
-        AddInclude("OrderItems.Product");
-        AddInclude(o => o.Payments!);  
+        AddInclude("OrderItems.Product.Images");
+        AddInclude(o => o.Payment!);  
     }
 
     public OrderSpecifications(string userId, OrderStatus status)
         : base(o => o.UserId == userId && o.Status == status)
     {
-        AddInclude("OrderItems.Product");
+        AddInclude("OrderItems.Product.Images");
         AddOrderByDescending(o => o.OrderDate);
     }
 
@@ -39,16 +39,16 @@ public class OrderSpecifications : BaseSpecificationscs<Domain.Models.Order, int
     public OrderSpecifications(int orderId, bool isAdmin)
         : base(o => o.Id == orderId)
     {
-        AddInclude("OrderItems.Product");
+        AddInclude("OrderItems.Product.Images");
         AddInclude(o => o.User);
-        AddInclude(o => o.Payments!);
+        AddInclude(o => o.Payment!);
     }
 
     #endregion
     public OrderSpecifications(int orderId)
         : base(o => o.Id == orderId)
     {
-        AddInclude("OrderItems.Product");
+        AddInclude("OrderItems.Product.Images");
     }
     
 }

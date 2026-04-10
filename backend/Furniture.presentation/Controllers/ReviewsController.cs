@@ -13,6 +13,8 @@ namespace Furniture.presentation.Controllers
     [ApiController]
     public class ReviewsController(IReviewService _reviewService) : ControllerBase
     {
+        private readonly string userId = "seller-1";
+
         // GET /api/products/{productId}/reviews
         [HttpGet("api/products/{productId:int}/reviews")]
         public async Task<ActionResult<IEnumerable<ReviewDto>>> GetProductReviews(int productId, int pageIndex = 1, int pageSize = 10)
@@ -21,10 +23,19 @@ namespace Furniture.presentation.Controllers
             return Ok(reviews);
         }
 
+        // GET /api/reviews/my/products
+        [HttpGet("api/reviews/my/products")]
+        public async Task<ActionResult<IEnumerable<int>>> GetMyReviewedProductIds()
+        {
+            var productIds = await _reviewService.GetUserReviewedProductIdsAsync(userId);
+            return Ok(productIds);
+        }
+
         // POST /api/reviews
         [HttpPost("api/reviews")]
         public async Task<ActionResult<ReviewDto>> CreateReview(ReviewCreateDto dto)
         {
+            dto.UserId = userId;
             var review = await _reviewService.CreateReviewAsync(dto);
             return CreatedAtAction(null, new { id = review.Id }, review);
         }

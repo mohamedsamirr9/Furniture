@@ -1,4 +1,4 @@
-﻿using Furniture.Domain.Models.Enum;
+using Furniture.Domain.Models.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,7 @@ namespace Furniture.shared.Dtos
         public decimal Price { get; set; }
         public int DeliveryDays { get; set; }
         public OfferStatus Status { get; set; }
+        public CustomRequestStatus? RequestStatus { get; set; }
         public string SellerId { get; set; } = null!;
     }
 }

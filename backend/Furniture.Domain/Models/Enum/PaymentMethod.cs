@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Furniture.Domain.Models.Enum
 {
-    public enum PaymentType
+    public enum PaymentMethod
     {
-         Deposit=1 ,
-         Final
+        Cash = 0,
+        Card = 1
 
     }
 }

@@ -10,35 +10,56 @@
   </button>
 
   <h1 class="page-title">Compare Seller Offers</h1>
-  <p class="page-for">For: Dining Table</p>
+  <p class="page-for">For Request #{{ requestId }}</p>
 
-  <div class="offers-grid">
-    <div class="offer-card" *ngFor="let offer of offers">
-      <h3 class="offer-name">{{ offer.name }}</h3>
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading offers...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="acceptSuccess" class="success-message" style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+    <strong>Success!</strong> Offer accepted and <strong>Order created successfully</strong>. Redirecting you to your orders...
+  </div>
+
+  <div *ngIf="!isLoading && offers.length === 0 && !errorMessage" class="empty-state" style="text-align: center; padding: 40px; color: #666;">
+    <p>No offers have been made for this request yet.</p>
+  </div>
+
+  <div class="offers-grid" *ngIf="!isLoading && offers.length > 0">
+    <div class="offer-card" *ngFor="let offer of offers" [style.border-color]="offer.status === 1 ? '#28a745' : (offer.status === 2 ? '#eee' : '#ddd')">
+      <div class="offer-header" style="display: flex; justify-content: space-between; align-items: start;">
+        <h3 class="offer-name">Seller: {{ offer.sellerId || 'Unknown Seller' }}</h3>
+        <span *ngIf="offer.status === 1" style="background: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+          ACCEPTED
+        </span>
+        <span *ngIf="offer.status === 2" style="background: #6c757d; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+          DECLINED
+        </span>
+      </div>
+      
       <div class="offer-rows">
         <div class="offer-row">
           <span>Price</span>
-          <span>{{ offer.price }}</span>
+          <span style="font-weight: bold; color: #2e5c3e; font-size: 1.2em;">${{ offer.price }}</span>
         </div>
         <div class="offer-row">
-          <span>Delivery</span>
-          <span>{{ offer.delivery }}</span>
-        </div>
-        <div class="offer-row">
-          <span>Material</span>
-          <span class="bold">{{ offer.material }}</span>
-        </div>
-        <div class="offer-row">
-          <span>Rating</span>
-          <span class="rating">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#3d6b4f" stroke="none">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-            </svg>
-            {{ offer.rating }}
-          </span>
+          <span>Delivery Time</span>
+          <span>{{ offer.deliveryDays }} days</span>
         </div>
       </div>
-      <button class="accept-btn" (click)="acceptOffer(offer)">Accept Offer</button>
+
+      <button class="accept-btn" 
+        (click)="acceptOffer(offer)" 
+        [disabled]="isAnyOfferAccepted" 
+        [style.opacity]="isAnyOfferAccepted ? '0.5' : '1'" 
+        [style.background-color]="offer.status === 1 ? '#28a745' : (isAnyOfferAccepted ? '#ccc' : '#3d6b4f')"
+        [style.cursor]="isAnyOfferAccepted ? 'not-allowed' : 'pointer'">
+        {{ offer.status === 1 ? 'Accepted' : (offer.status === 2 ? 'Declined' : 'Accept Offer') }}
+      </button>
     </div>
   </div>
 
