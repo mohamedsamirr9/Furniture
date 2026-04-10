@@ -36,8 +36,10 @@ export class Categories implements OnInit {
 
   initForm(): void {
     this.categoryForm = this.fb.group({
-      name: ['', Validators.required],
-      description: [''],
+      nameEn: ['', Validators.required],
+      nameAr: [''],
+      descriptionEn: ['', Validators.required],
+      descriptionAr: [''],
       image: [''],
     });
   }
@@ -71,8 +73,10 @@ export class Categories implements OnInit {
     this.isEditing = false;
     this.editingCategoryId = null;
     this.categoryForm.reset({
-      name: '',
-      description: '',
+      nameEn: '',
+      nameAr: '',
+      descriptionEn: '',
+      descriptionAr: '',
       image: '',
     });
     this.clearMessages();
@@ -88,8 +92,10 @@ export class Categories implements OnInit {
     this.categoryService.getCategoryById(cat.id).subscribe({
       next: (details: any) => {
         this.categoryForm.patchValue({
-          name: details.name,
-          description: details.description || '',
+          nameEn: details.nameEn,
+          nameAr: details.nameAr || '',
+          descriptionEn: details.descriptionEn || '',
+          descriptionAr: details.descriptionAr || '',
           image: details.image || '',
         });
         this.showModal = true;
@@ -98,8 +104,10 @@ export class Categories implements OnInit {
         console.error('Error fetching category details', err);
         // Fallback: use list data
         this.categoryForm.patchValue({
-          name: cat.name,
-          description: cat.description || '',
+          nameEn: cat.nameEn || cat.name,
+          nameAr: cat.nameAr || '',
+          descriptionEn: cat.descriptionEn || '',
+          descriptionAr: cat.descriptionAr || '',
           image: cat.image || '',
         });
         this.showModal = true;
@@ -121,7 +129,14 @@ export class Categories implements OnInit {
     this.isSubmitting = true;
     this.clearMessages();
 
-    const dto: CategoryCreateUpdateDto = this.categoryForm.value;
+    const formValue = this.categoryForm.value;
+    const dto: CategoryCreateUpdateDto = {
+      nameEn: formValue.nameEn,
+      nameAr: formValue.nameAr,
+      descriptionEn: formValue.descriptionEn,
+      descriptionAr: formValue.descriptionAr,
+      image: formValue.image
+    };
 
     if (this.isEditing && this.editingCategoryId !== null) {
       this.categoryService.updateCategory(this.editingCategoryId, dto).subscribe({

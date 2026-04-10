@@ -82,6 +82,16 @@
 
       <a
         class="nav-item nav-link user-link"
+        style="cursor: pointer;"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        (click)="toggleLanguage()"
+        aria-label="Toggle Language"
+      >
+        <span class="fs-6 fw-bold border rounded px-2 py-1">{{ currentLang === 'en' ? 'AR' : 'EN' }}</span>
+      </a>
+
+      <a
+        class="nav-item nav-link user-link"
         [ngClass]="isDarkPage ? 'dark-nav' : ''"
         routerLink="/login"
         aria-label="Log In"

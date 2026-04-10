@@ -37,25 +37,32 @@
     <div class="alert alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
     <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="name">Name *</label>
-        <input id="name" type="text" formControlName="name" placeholder="Category name" />
-        <small
-          class="error-text"
-          *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.invalid"
-        >
-          Name is required.
-        </small>
+      <div class="form-row" style="display: flex; gap: 15px; margin-bottom: 15px;">
+        <div class="form-group" style="flex: 1;">
+          <label for="nameEn">English Name *</label>
+          <input id="nameEn" type="text" formControlName="nameEn" placeholder="Category name in English" />
+          <small class="error-text" *ngIf="categoryForm.get('nameEn')?.touched && categoryForm.get('nameEn')?.invalid">
+            English Name is required.
+          </small>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label for="nameAr">Arabic Name</label>
+          <input id="nameAr" type="text" formControlName="nameAr" placeholder="اسم الفئة بالعربية" dir="rtl" />
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="description">Description</label>
-        <textarea
-          id="description"
-          formControlName="description"
-          rows="3"
-          placeholder="Category description"
-        ></textarea>
+      <div class="form-row" style="display: flex; gap: 15px; margin-bottom: 15px;">
+        <div class="form-group" style="flex: 1;">
+          <label for="descriptionEn">English Description *</label>
+          <textarea id="descriptionEn" formControlName="descriptionEn" rows="3" placeholder="Category description in English"></textarea>
+          <small class="error-text" *ngIf="categoryForm.get('descriptionEn')?.touched && categoryForm.get('descriptionEn')?.invalid">
+            English Description is required.
+          </small>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label for="descriptionAr">Arabic Description</label>
+          <textarea id="descriptionAr" formControlName="descriptionAr" rows="3" placeholder="وصف الفئة بالعربية" dir="rtl"></textarea>
+        </div>
       </div>
 
       <div class="form-group">

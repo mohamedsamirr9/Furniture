@@ -1,4 +1,4 @@
-﻿using Furniture.Domain.Models;
+using Furniture.Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -24,11 +24,17 @@ namespace Furniture.Persistence.Data.DbContexts
             {
                 entity.HasKey(c => c.Id);
 
-                entity.Property(c => c.Name)
+                entity.Property(c => c.NameEn)
                       .IsRequired()
                       .HasMaxLength(200);
 
-                entity.Property(c => c.Description)
+                entity.Property(c => c.NameAr)
+                      .HasMaxLength(200);
+
+                entity.Property(c => c.DescriptionEn)
+                      .HasMaxLength(500);
+
+                entity.Property(c => c.DescriptionAr)
                       .HasMaxLength(500);
 
                 entity.Property(c => c.Image)
@@ -40,11 +46,17 @@ namespace Furniture.Persistence.Data.DbContexts
             {
                 entity.HasKey(p => p.Id);
 
-                entity.Property(p => p.Name)
+                entity.Property(p => p.NameEn)
                       .IsRequired()
                       .HasMaxLength(300);
 
-                entity.Property(p => p.Description)
+                entity.Property(p => p.NameAr)
+                      .HasMaxLength(300);
+
+                entity.Property(p => p.DescriptionEn)
+                      .HasMaxLength(2000);
+
+                entity.Property(p => p.DescriptionAr)
                       .HasMaxLength(2000);
 
                 entity.Property(p => p.Price)

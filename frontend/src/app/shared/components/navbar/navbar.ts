@@ -11,6 +11,8 @@ import { WishlistService } from '../../../core/services/wishlist.service';
   styleUrl: './navbar.css',
 })
 export class Navbar implements OnInit {
+  currentLang: string = 'en';
+
   constructor(
     private router: Router, 
     public cartService: CartService,
@@ -18,11 +20,18 @@ export class Navbar implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.currentLang = localStorage.getItem('lang') || 'en';
     this.cartService.loadCart().subscribe();
     this.wishlistService.getWishlist().subscribe();
   }
 
   get isDarkPage(): boolean {
     return this.router.url !== '/';
+  }
+
+  toggleLanguage(): void {
+    this.currentLang = this.currentLang === 'en' ? 'ar' : 'en';
+    localStorage.setItem('lang', this.currentLang);
+    window.location.reload();
   }
 }

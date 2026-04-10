@@ -20,11 +20,14 @@ namespace Furniture.presentation.Controllers
             _productService = productService;
         }
 
+        private string GetLanguage() =>
+            Request.Headers["Accept-Language"].FirstOrDefault()?.Trim() ?? "en";
+
         // GET: api/product
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] ProductQueryParams queryParams)
         {
-            var result = await _productService.GetAllAsync(queryParams);
+            var result = await _productService.GetAllAsync(queryParams, GetLanguage());
             return Ok(result);
         }
 
@@ -32,7 +35,7 @@ namespace Furniture.presentation.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var result = await _productService.GetByIdAsync(id);
+            var result = await _productService.GetByIdAsync(id, GetLanguage());
 
             if (result is null)
                 return NotFound($"Product with id {id} not found");
@@ -48,7 +51,7 @@ namespace Furniture.presentation.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _productService.CreateAsync(dto);
+            var result = await _productService.CreateAsync(dto, GetLanguage());
 
             return CreatedAtAction(
                 nameof(GetById),

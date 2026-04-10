@@ -1,4 +1,4 @@
-﻿using Furniture.Servises_Abstraction;
+using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos.CategoryDto;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,10 +14,12 @@ namespace Furniture.presentation.Controllers
     [Route("api/[controller]")]
     public class CategoriesController(ICategoryService _categoryService) : ControllerBase
     {
+        private string GetLanguage() =>
+            Request.Headers["Accept-Language"].FirstOrDefault()?.Trim() ?? "en";
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoryListDto>>> GetAllCategories(int pageIndex = 1, int pageSize = 10, string? search = null)
         {
-            var categories = await _categoryService.GetAllCategoriesAsync(pageIndex, pageSize, search);
+            var categories = await _categoryService.GetAllCategoriesAsync(pageIndex, pageSize, search, GetLanguage());
             return Ok(categories);
         }
 
@@ -25,7 +27,7 @@ namespace Furniture.presentation.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<CategoryDto>> GetCategory(int id)
         {
-            var category = await _categoryService.GetCategoryByIdAsync(id);
+            var category = await _categoryService.GetCategoryByIdAsync(id, GetLanguage());
             return Ok(category);
         }
 
@@ -33,7 +35,7 @@ namespace Furniture.presentation.Controllers
         [HttpPost]
         public async Task<ActionResult<CategoryDto>> CreateCategory(CategoryCreateUpdateDto dto)
         {
-            var category = await _categoryService.CreateCategoryAsync(dto);
+            var category = await _categoryService.CreateCategoryAsync(dto, GetLanguage());
 
             return CreatedAtAction(nameof(GetCategory), new { id = category.Id }, category);
         }
