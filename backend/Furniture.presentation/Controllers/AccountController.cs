@@ -76,7 +76,6 @@ namespace Furniture.web
             return NoContent();
         }
 
-        [Authorize]
         [HttpGet("me")]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
@@ -87,7 +86,6 @@ namespace Furniture.web
         }
 
       
-        [Authorize]
         [HttpPut("profile")]
         public async Task<ActionResult<UserDto>> UpdateProfile(UpdateProfileDto dto)
         {
@@ -98,7 +96,6 @@ namespace Furniture.web
         }
 
       
-        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteAccount()
         {
@@ -106,6 +103,14 @@ namespace Furniture.web
 
             await _accountService.DeleteAccountAsync(userId!);
             return NoContent();
+        }
+
+        [HttpPost("become-seller")]
+        public async Task<IActionResult> BecomeSeller(BecomeSellerDto dto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            await _accountService.BecomeSellerAsync(userId!, dto);
+            return Ok("Now you are a seller");
         }
     }
 }

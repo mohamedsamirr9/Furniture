@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Furniture.Domain.InterfacesRepositories;
 using Furniture.Domain.Models;
+using Furniture.Domain.Models.Enum;
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos.AuthDto;
 using Microsoft.AspNetCore.Identity;
@@ -216,6 +217,21 @@ namespace Furniture.Services
             user.IsDeleted = true;
             user.DeletedAt = DateTime.UtcNow;
 
+            await _userManager.UpdateAsync(user);
+        }
+
+        public async Task BecomeSellerAsync(string UserId, BecomeSellerDto dto)
+        {
+            var user= await _userManager.FindByIdAsync(UserId);
+            if (user is null)
+                throw new Exception("user not found");
+            if (user.Role == Roles.seller)
+                throw new Exception("Already a seller");
+            if(!string.IsNullOrEmpty(dto.NationalIdImageBase64))
+                user.NationalIdImage=ImageHelper.SaveImage(dto.NationalIdImageBase64);
+
+            user.Role= Roles.seller;
+            user.IsVerified = false;
             await _userManager.UpdateAsync(user);
         }
     }
