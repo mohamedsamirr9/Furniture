@@ -3,7 +3,10 @@ namespace Furniture.shared.Dtos.Order;
 public class OrderDTO
 {
     public int Id { get; set; }
+    public decimal SubTotal { get; set; }
+    public decimal ShippingCost { get; set; }
     public decimal TotalPrice { get; set; }
+    public string City { get; set; } 
     public DateTime OrderDate { get; set; }
     public string Status { get; set; } = string.Empty;
     public string? ShippingAddress { get; set; }

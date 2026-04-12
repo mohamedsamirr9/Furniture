@@ -16,6 +16,7 @@ namespace Furniture.Domain.Models
 
         //rel
         public ICollection<Product> Products { get; set; }= new List<Product>();
+        public ICollection<ShippingRule> ShippingRules { get; set; } = new List<ShippingRule>();
 
     }
 }

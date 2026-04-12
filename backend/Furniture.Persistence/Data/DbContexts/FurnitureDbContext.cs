@@ -168,15 +168,11 @@ namespace Furniture.Persistence.Data.DbContexts
                       .HasForeignKey(o => o.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                // Order → ShippingRequest (1-1)
-                entity.HasOne(o => o.ShippingRequest)
-                      .WithOne(sr => sr.Order)
-                      .HasForeignKey<ShippingRequest>(sr => sr.OrderId);
-
-                //  Order → Delivery (1-1)
-                entity.HasOne(o => o.Delivery)
-                      .WithOne(d => d.Order)
-                      .HasForeignKey<Delivery>(d => d.OrderId);
+                entity.HasOne(o => o.ShippingRule)
+                     .WithMany(sr => sr.Orders)
+                     .HasForeignKey(o => o.ShippingRuleId)
+                     .OnDelete(DeleteBehavior.Restrict)
+                     .IsRequired(false);
             });
 
             //order item
@@ -246,42 +242,6 @@ namespace Furniture.Persistence.Data.DbContexts
                       .WithMany(u => u.CustomRequests)
                       .HasForeignKey(cr => cr.BuyerId)
                       .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            //shipping request
-            modelBuilder.Entity<ShippingRequest>(entity =>
-            {
-                entity.HasKey(sr => sr.Id);
-
-                entity.HasMany(sr => sr.Bids)
-                      .WithOne(b => b.ShippingRequest)
-                      .HasForeignKey(b => b.ShippingRequestId);
-            });
-
-            //shipping bid
-            modelBuilder.Entity<ShippingBid>(entity =>
-            {
-                entity.HasKey(sb => sb.Id);
-                entity.Property(sb => sb.Price)
-                 .HasColumnType("decimal(18,2)");
-
-                //  ShippingBid → Shipper
-                entity.HasOne(sb => sb.Shipper)
-               .WithMany()
-               .HasForeignKey(sb => sb.ShipperId)
-               .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            //delivery
-            modelBuilder.Entity<Delivery>(entity =>
-            {
-                entity.HasKey(d => d.Id);
-
-                //  Delivery → Shipper
-                entity.HasOne(sb => sb.Shipper)
-               .WithMany()
-               .HasForeignKey(sb => sb.ShipperId)
-               .OnDelete(DeleteBehavior.Restrict);
             });
 
             //favourite
@@ -420,6 +380,28 @@ namespace Furniture.Persistence.Data.DbContexts
                         .HasForeignKey(p => p.OrderId)
                         .OnDelete(DeleteBehavior.Restrict);
             });
+
+            //ShippingRule 
+            modelBuilder.Entity<ShippingRule>(entity =>
+            {
+                entity.HasKey(sr => sr.Id);
+
+                entity.Property(sr => sr.City)
+                      .IsRequired()
+                      .HasMaxLength(200);
+
+                entity.Property(sr => sr.Price)
+                      .HasColumnType("decimal(18,2)");
+
+                // ShippingRule → Category (M-1)
+                entity.HasOne(sr => sr.Category)
+                      .WithMany(c => c.ShippingRules)
+                      .HasForeignKey(sr => sr.CategoryId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+
+
         }
         //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Cart> Carts { get; set; }
@@ -435,9 +417,7 @@ namespace Furniture.Persistence.Data.DbContexts
         public DbSet<Complaint> Complaints { get; set; }
         public DbSet<Payment> Payments { get; set; }
 
-        public DbSet<ShippingRequest> ShippingRequests { get; set; }
-        public DbSet<ShippingBid> ShippingBids { get; set; }
-        public DbSet<Delivery> Deliveries { get; set; }
+        public DbSet<ShippingRule> ShippingRules { get; set; }
         public DbSet<CustomRequest> CustomRequests { get; set; }
 
         public DbSet<SellerProfile> SellerProfiles { get; set; } = null!;
