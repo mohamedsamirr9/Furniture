@@ -82,6 +82,15 @@ namespace Furniture.web
             builder.Services.AddScoped<ICustomRequestService, CustomRequestService>();
             
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
+            
+            
+             // HttpClient -- Paymob
+            builder.Services.AddHttpClient("Paymob", client =>
+            {
+                client.BaseAddress = new Uri("https://accept.paymob.com/api/");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
             
             var app = builder.Build();
 
@@ -89,7 +98,7 @@ namespace Furniture.web
             await using var scope= app.Services.CreateAsyncScope();
             var DataSeedingService = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
            await DataSeedingService.InitializeAsync();
-
+           
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -113,3 +122,4 @@ namespace Furniture.web
         }
     }
 }
+
