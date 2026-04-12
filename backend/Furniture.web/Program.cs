@@ -91,6 +91,7 @@ namespace Furniture.web
                 client.BaseAddress = new Uri("https://accept.paymob.com/api/");
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
+
             
             var app = builder.Build();
 
