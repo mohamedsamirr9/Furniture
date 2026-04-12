@@ -1,0 +1,78 @@
+{
+  "NAV": {
+    "HOME": "Home",
+    "ABOUT_US": "About Us",
+    "CATEGORIES": "Categories",
+    "CUSTOM_PRODUCT": "Custom Product",
+    "ORDERS": "Orders"
+  },
+  "BUTTONS": {
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "ADD_PRODUCT": "+ Add Product",
+    "ADD_CATEGORY": "+ Add Category",
+    "UPDATE_PRODUCT": "Update Product",
+    "UPDATE_CATEGORY": "Update Category",
+    "VIEW_DETAILS": "View Details",
+    "ADD_TO_CART": "Add to Cart",
+    "PREV": "Prev",
+    "NEXT": "Next",
+    "CLEAR": "Clear",
+    "APPLY": "Apply"
+  },
+  "FORM": {
+    "NAME_EN": "English Name",
+    "NAME_AR": "Arabic Name",
+    "DESCRIPTION_EN": "English Description",
+    "DESCRIPTION_AR": "Arabic Description",
+    "PRICE": "Price",
+    "STOCK": "Stock Quantity",
+    "CATEGORY": "Category",
+    "PRODUCT_IMAGE": "Product Image",
+    "CATEGORY_IMAGE": "Category Image",
+    "SELECT_CATEGORY": "Select a category"
+  },
+  "DASHBOARD": {
+    "PRODUCT_TITLE": "Product",
+    "YOUR_PRODUCTS": "Your Products",
+    "CATEGORY_TITLE": "Categories",
+    "STOCK": "Stock",
+    "PRICE": "Price",
+    "STATUS": "Status",
+    "ACTIONS": "Actions",
+    "AVAILABLE": "Available",
+    "OUT_OF_STOCK": "Out of Stock"
+  },
+  "ALERTS": {
+    "LOADING": "Loading...",
+    "UPLOADING": "Uploading image...",
+    "NAME_REQUIRED_EN": "English Name is required.",
+    "DESC_REQUIRED_EN": "English Description is required.",
+    "NAME_REQUIRED": "Name is required.",
+    "DESC_REQUIRED": "Description is required.",
+    "PRICE_MIN": "Price must be greater than 0.",
+    "CATEGORY_REQUIRED": "Category is required."
+  },
+  "PRODUCT": {
+    "PRODUCTS": "Products",
+    "ALL_PRODUCTS": "All Products",
+    "CATEGORIES": "Categories",
+    "LATEST_PRODUCTS": "Latest Products",
+    "DESCRIPTION": "Description",
+    "SHOP_BY_CATEGORY": "Shop By Category",
+    "PAGE": "Page",
+    "OF": "of",
+    "NEW": "New",
+    "SORT": "Sort",
+    "DEFAULT": "Default",
+    "NEWEST": "Newest",
+    "PRICE_ASC": "Price: Low to High",
+    "PRICE_DESC": "Price: High to Low",
+    "NO_PRODUCTS": "No products found.",
+    "REVIEWS": "Customer Reviews",
+    "REVIEW_COUNT": "reviews",
+    "NO_REVIEWS": "No reviews yet",
+    "FIRST_REVIEW": "Be the first to share your experience with this piece.",
+    "NO_COMMENT": "No comment provided."
+  }
+}

@@ -8,9 +8,11 @@ import { ReviewService } from '../../../../../core/services/review.service';
 
 import { Subscription } from 'rxjs';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-product-details',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './product-details.html',
   styleUrl: './product-details.css',
 })

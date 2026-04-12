@@ -6,9 +6,11 @@ import { CategoryService } from '../../../../../core/services/category.service';
 
 import { ProductCreateUpdateDto } from '../../../../../core/models/product-create-update-dto.model';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-products',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './products.html',
   styleUrl: './products.css',
 })

@@ -5,9 +5,11 @@ import { CategoryService } from '../../../../../core/services/category.service';
 
 import { CategoryCreateUpdateDto } from '../../../../../core/models/category-create-update-dto.model';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-categories',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './categories.html',
   styleUrl: './categories.css',
 })

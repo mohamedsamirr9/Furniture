@@ -1,0 +1,78 @@
+{
+  "NAV": {
+    "HOME": "الرئيسية",
+    "ABOUT_US": "معلومات عنا",
+    "CATEGORIES": "الفئات",
+    "CUSTOM_PRODUCT": "المنتجات المخصصة",
+    "ORDERS": "الطلبات"
+  },
+  "BUTTONS": {
+    "SAVE": "حفظ",
+    "CANCEL": "إلغاء",
+    "ADD_PRODUCT": "+ إضافة منتج",
+    "ADD_CATEGORY": "+ إضافة فئة",
+    "UPDATE_PRODUCT": "تحديث المنتج",
+    "UPDATE_CATEGORY": "تحديث الفئة",
+    "VIEW_DETAILS": "عرض التفاصيل",
+    "ADD_TO_CART": "أضف إلى السلة",
+    "PREV": "السابق",
+    "NEXT": "التالي",
+    "CLEAR": "مسح",
+    "APPLY": "تطبيق"
+  },
+  "FORM": {
+    "NAME_EN": "الاسم بالإنجليزية",
+    "NAME_AR": "الاسم بالعربية",
+    "DESCRIPTION_EN": "الوصف بالإنجليزية",
+    "DESCRIPTION_AR": "الوصف بالعربية",
+    "PRICE": "السعر",
+    "STOCK": "كمية المخزون",
+    "CATEGORY": "الفئة",
+    "PRODUCT_IMAGE": "صورة المنتج",
+    "CATEGORY_IMAGE": "صورة الفئة",
+    "SELECT_CATEGORY": "اختر فئة"
+  },
+  "DASHBOARD": {
+    "PRODUCT_TITLE": "المنتجات",
+    "YOUR_PRODUCTS": "منتجاتك",
+    "CATEGORY_TITLE": "الفئات",
+    "STOCK": "المخزون",
+    "PRICE": "السعر",
+    "STATUS": "الحالة",
+    "ACTIONS": "إجراءات",
+    "AVAILABLE": "متوفر",
+    "OUT_OF_STOCK": "غير متوفر"
+  },
+  "ALERTS": {
+    "LOADING": "جاري التحميل...",
+    "UPLOADING": "جاري رفع الصورة...",
+    "NAME_REQUIRED_EN": "الاسم بالإنجليزية مطلوب.",
+    "DESC_REQUIRED_EN": "الوصف بالإنجليزية مطلوب.",
+    "NAME_REQUIRED": "الاسم مطلوب.",
+    "DESC_REQUIRED": "الوصف مطلوب.",
+    "PRICE_MIN": "السعر يجب أن يكون أكبر من صفر.",
+    "CATEGORY_REQUIRED": "الفئة مطلوبة."
+  },
+  "PRODUCT": {
+    "PRODUCTS": "المنتجات",
+    "ALL_PRODUCTS": "جميع المنتجات",
+    "CATEGORIES": "الفئات",
+    "LATEST_PRODUCTS": "أحدث المنتجات",
+    "DESCRIPTION": "الوصف",
+    "SHOP_BY_CATEGORY": "تسوق حسب الفئة",
+    "PAGE": "صفحة",
+    "OF": "من",
+    "NEW": "جديد",
+    "SORT": "ترتيب",
+    "DEFAULT": "افتراضي",
+    "NEWEST": "الأحدث",
+    "PRICE_ASC": "السعر: من الأقل إلى الأعلى",
+    "PRICE_DESC": "السعر: من الأعلى إلى الأقل",
+    "NO_PRODUCTS": "لم يتم العثور على منتجات.",
+    "REVIEWS": "تقييمات العملاء",
+    "REVIEW_COUNT": "تقييمات",
+    "NO_REVIEWS": "لا توجد تقييمات بعد",
+    "FIRST_REVIEW": "كن أول من يشارك تجربته مع هذه القطعة.",
+    "NO_COMMENT": "لم يتم تقديم تعليق."
+  }
+}

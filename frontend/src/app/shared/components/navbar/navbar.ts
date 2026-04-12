@@ -4,9 +4,11 @@ import { Router, RouterModule } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-navbar',
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, TranslateModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
