@@ -1,18 +1,18 @@
 <div class="page-header">
-  <h1>Complaints</h1>
+  <h1>{{ 'ADMIN.COMPLAINTS_TITLE' | translate }}</h1>
   <hr />
 </div>
 
 <div class="table-card">
-  <h2 class="card-title">All Complaints</h2>
+  <h2 class="card-title">{{ 'ADMIN.ALL_COMPLAINTS' | translate }}</h2>
   <table class="table">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>User</th>
-        <th>Description</th>
-        <th>Date</th>
-        <th>Status</th>
+        <th>{{ 'ADMIN.ID' | translate }}</th>
+        <th>{{ 'ADMIN.USER' | translate }}</th>
+        <th>{{ 'ADMIN.DESCRIPTION' | translate }}</th>
+        <th>{{ 'ADMIN.DATE' | translate }}</th>
+        <th>{{ 'ADMIN.STATUS' | translate }}</th>
       </tr>
     </thead>
     <tbody>
@@ -28,7 +28,7 @@
               'badge-outline': complaint.status === 'In Progress',
               'badge-gray': complaint.status === 'Resolved'
             }">
-            {{ complaint.status }}
+            {{ 'STATUS.' + (complaint.status === 'In Progress' ? 'PENDING' : complaint.status.toUpperCase()) | translate }}
           </span>
         </td>
       </tr>

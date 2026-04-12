@@ -1,4 +1,4 @@
-﻿using Furniture.Domain.Models;
+using Furniture.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +9,7 @@ namespace Furniture.Services.Specifications
 {
     public class CategoryCountSpecification : BaseSpecificationscs<Category, int>
     {
-        public CategoryCountSpecification(string search): base
-            (c => string.IsNullOrWhiteSpace(search) || c.Name.Contains(search))
+        public CategoryCountSpecification(string? search): base(c => string.IsNullOrEmpty(search) || c.NameEn.ToLower().Contains(search.ToLower()))
         {
 
         }

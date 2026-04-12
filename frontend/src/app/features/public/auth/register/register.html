@@ -2,32 +2,32 @@
   <div class="row h-100">
     <!-- LEFT -->
     <div class="col-md-6 d-flex flex-column justify-content-center px-5">
-      <h3 class="brand mb-4" (click)="goHome()" style="cursor: pointer">Furnora</h3>
+      <h3 class="brand mb-4" (click)="goHome()" style="cursor: pointer">{{ 'NAV.BRAND' | translate }}</h3>
 
-      <h2 class="fw-bold">Create your account</h2>
-      <p class="text-muted mb-4">Join Furnora as a buyer or seller</p>
+      <h2 class="fw-bold">{{ 'AUTH.CREATE_ACCOUNT' | translate }}</h2>
+      <p class="text-muted mb-4">{{ 'AUTH.JOIN_DESC' | translate }}</p>
 
       <form>
         <div class="mb-3">
-          <label class="form-label">Full Name</label>
+          <label class="form-label">{{ 'AUTH.FULL_NAME' | translate }}</label>
           <input type="text" class="form-control input" placeholder="ex: ahmed ahmed" />
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Email</label>
+          <label class="form-label">{{ 'AUTH.EMAIL' | translate }}</label>
           <input type="email" class="form-control input" placeholder="you@example.com" />
         </div>
 
         <div class="mb-4">
-          <label class="form-label">Password</label>
+          <label class="form-label">{{ 'AUTH.PASSWORD' | translate }}</label>
           <input type="password" class="form-control input" placeholder="********" />
         </div>
 
-        <button class="btn btn-main w-100 mb-3">Create Account</button>
+        <button class="btn btn-main w-100 mb-3">{{ 'AUTH.CREATE_ACCOUNT' | translate }}</button>
 
         <p class="text-center">
-          Already have an account?
-          <a routerLink="/login" class="link">Sign In</a>
+          {{ 'AUTH.ALREADY_ACCOUNT' | translate }}
+          <a routerLink="/login" class="link">{{ 'AUTH.SIGN_IN' | translate }}</a>
         </p>
       </form>
     </div>
@@ -37,10 +37,11 @@
       class="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center right text-center"
     >
       <div class="square mb-4"></div>
-      <h3 class="fw-bold">Start Your Journey</h3>
+      <h3 class="fw-bold">{{ 'AUTH.START_JOURNEY' | translate }}</h3>
       <p class="text-muted w-75">
-        Whether buying or selling, Furnora makes furniture trading simple and elegant.
+        {{ 'AUTH.JOURNEY_DESC' | translate }}
       </p>
     </div>
+
   </div>
 </div>

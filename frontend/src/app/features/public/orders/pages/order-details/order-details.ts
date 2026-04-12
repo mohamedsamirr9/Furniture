@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { OrderService } from '../../../../../core/services/order.service';
 import { ReviewService } from '../../../../../core/services/review.service';
 import { Order } from '../../../../../core/models/order.model';
@@ -9,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-order-details',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, TranslateModule],
   templateUrl: './order-details.html',
   styleUrls: ['./order-details.css']
 })

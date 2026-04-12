@@ -5,9 +5,9 @@
       <polyline points="20 6 9 17 4 12"/>
     </svg>
   </div>
-  <h1 class="success-title">Request Submitted!</h1>
+  <h1 class="success-title">{{ 'CUSTOMER.REQUEST.SUBMITTED_TITLE' | translate }}</h1>
   <p class="success-desc">
-    We'll review your custom furniture request and get back to you within 24-48 hours with options and quotes.
+    {{ 'ORDER_CONFIRMATION.MESSAGE' | translate }}
   </p>
-  <button class="submit-another" (click)="submitAnother()">Submit Another Request</button>
+  <button class="submit-another" (click)="submitAnother()">{{ 'CUSTOMER.REQUEST.SUBMIT_ANOTHER' | translate }}</button>
 </div>

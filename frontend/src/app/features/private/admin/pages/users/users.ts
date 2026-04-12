@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-users',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, TranslateModule],
   templateUrl: './users.html',
   styleUrl: './users.css',
 })

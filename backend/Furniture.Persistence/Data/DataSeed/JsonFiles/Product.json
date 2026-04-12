@@ -1,7 +1,9 @@
 [
   {
-    "Name": "Modern Sofa 1",
-    "Description": "Comfortable sofa",
+    "NameEn": "Modern Sofa 1",
+    "NameAr": "كنبة عصرية 1",
+    "DescriptionEn": "Comfortable sofa",
+    "DescriptionAr": "كنبة مريحة",
     "Price": 5000,
     "StockQuantity": 10,
     "IsAvailable": true,
@@ -10,8 +12,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Modern Sofa 2",
-    "Description": "Comfortable sofa",
+    "NameEn": "Modern Sofa 2",
+    "NameAr": "كنبة عصرية 2",
+    "DescriptionEn": "Comfortable sofa",
+    "DescriptionAr": "كنبة مريحة",
     "Price": 5200,
     "StockQuantity": 8,
     "IsAvailable": true,
@@ -20,8 +24,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Modern Sofa 3",
-    "Description": "Comfortable sofa",
+    "NameEn": "Modern Sofa 3",
+    "NameAr": "كنبة عصرية 3",
+    "DescriptionEn": "Comfortable sofa",
+    "DescriptionAr": "كنبة مريحة",
     "Price": 5300,
     "StockQuantity": 6,
     "IsAvailable": true,
@@ -30,8 +36,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "TV Stand 1",
-    "Description": "Wooden TV unit",
+    "NameEn": "TV Stand 1",
+    "NameAr": "حامل تلفزيون 1",
+    "DescriptionEn": "Wooden TV unit",
+    "DescriptionAr": "وحدة تلفزيون خشبية",
     "Price": 3000,
     "StockQuantity": 7,
     "IsAvailable": true,
@@ -40,8 +48,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Coffee Table 1",
-    "Description": "Elegant coffee table",
+    "NameEn": "Coffee Table 1",
+    "NameAr": "طاولة قهوة 1",
+    "DescriptionEn": "Elegant coffee table",
+    "DescriptionAr": "طاولة قهوة أنيقة",
     "Price": 2000,
     "StockQuantity": 12,
     "IsAvailable": true,
@@ -49,10 +59,11 @@
     "CategoryId": 1,
     "SellerId": "seller-1"
   },
-
   {
-    "Name": "Armchair 1",
-    "Description": "Relax chair",
+    "NameEn": "Armchair 1",
+    "NameAr": "كرسي بذراعين 1",
+    "DescriptionEn": "Relax chair",
+    "DescriptionAr": "كرسي استرخاء",
     "Price": 1800,
     "StockQuantity": 9,
     "IsAvailable": true,
@@ -61,8 +72,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Bookshelf 1",
-    "Description": "Wood bookshelf",
+    "NameEn": "Bookshelf 1",
+    "NameAr": "رف كتب 1",
+    "DescriptionEn": "Wood bookshelf",
+    "DescriptionAr": "رف كتب خشبي",
     "Price": 2500,
     "StockQuantity": 5,
     "IsAvailable": true,
@@ -71,8 +84,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Side Table 1",
-    "Description": "Small table",
+    "NameEn": "Side Table 1",
+    "NameAr": "طاولة جانبية 1",
+    "DescriptionEn": "Small table",
+    "DescriptionAr": "طاولة صغيرة",
     "Price": 1200,
     "StockQuantity": 15,
     "IsAvailable": true,
@@ -81,8 +96,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Decor Shelf 1",
-    "Description": "Wall shelf",
+    "NameEn": "Decor Shelf 1",
+    "NameAr": "رف ديكور 1",
+    "DescriptionEn": "Wall shelf",
+    "DescriptionAr": "رف حائط",
     "Price": 900,
     "StockQuantity": 20,
     "IsAvailable": true,
@@ -91,8 +108,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Lounge Chair 1",
-    "Description": "Comfort chair",
+    "NameEn": "Lounge Chair 1",
+    "NameAr": "كرسي صالة 1",
+    "DescriptionEn": "Comfort chair",
+    "DescriptionAr": "كرسي مريح",
     "Price": 2200,
     "StockQuantity": 6,
     "IsAvailable": true,
@@ -100,10 +119,11 @@
     "CategoryId": 1,
     "SellerId": "seller-1"
   },
-
   {
-    "Name": "King Bed 1",
-    "Description": "Large bed",
+    "NameEn": "King Bed 1",
+    "NameAr": "سرير كينج 1",
+    "DescriptionEn": "Large bed",
+    "DescriptionAr": "سرير كبير",
     "Price": 8000,
     "StockQuantity": 4,
     "IsAvailable": true,
@@ -112,8 +132,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "King Bed 2",
-    "Description": "Luxury bed",
+    "NameEn": "King Bed 2",
+    "NameAr": "سرير كينج 2",
+    "DescriptionEn": "Luxury bed",
+    "DescriptionAr": "سرير فاخر",
     "Price": 8500,
     "StockQuantity": 3,
     "IsAvailable": true,
@@ -122,8 +144,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Wardrobe 1",
-    "Description": "3 door wardrobe",
+    "NameEn": "Wardrobe 1",
+    "NameAr": "خزانة ملابس 1",
+    "DescriptionEn": "3 door wardrobe",
+    "DescriptionAr": "خزانة ملابس 3 أبواب",
     "Price": 6000,
     "StockQuantity": 5,
     "IsAvailable": true,
@@ -132,8 +156,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Wardrobe 2",
-    "Description": "Sliding wardrobe",
+    "NameEn": "Wardrobe 2",
+    "NameAr": "خزانة ملابس 2",
+    "DescriptionEn": "Sliding wardrobe",
+    "DescriptionAr": "خزانة ملابس منزلقة",
     "Price": 6500,
     "StockQuantity": 4,
     "IsAvailable": true,
@@ -142,8 +168,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Night Stand 1",
-    "Description": "Bed side table",
+    "NameEn": "Night Stand 1",
+    "NameAr": "طاولة سرير 1",
+    "DescriptionEn": "Bed side table",
+    "DescriptionAr": "طاولة جانب السرير",
     "Price": 1000,
     "StockQuantity": 12,
     "IsAvailable": true,
@@ -152,8 +180,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Night Stand 2",
-    "Description": "Wood night stand",
+    "NameEn": "Night Stand 2",
+    "NameAr": "طاولة سرير 2",
+    "DescriptionEn": "Wood night stand",
+    "DescriptionAr": "طاولة سرير خشبية",
     "Price": 1100,
     "StockQuantity": 10,
     "IsAvailable": true,
@@ -162,8 +192,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Dresser 1",
-    "Description": "Bedroom dresser",
+    "NameEn": "Dresser 1",
+    "NameAr": "تسريحة 1",
+    "DescriptionEn": "Bedroom dresser",
+    "DescriptionAr": "تسريحة غرفة نوم",
     "Price": 3000,
     "StockQuantity": 6,
     "IsAvailable": true,
@@ -172,8 +204,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Dresser 2",
-    "Description": "Modern dresser",
+    "NameEn": "Dresser 2",
+    "NameAr": "تسريحة 2",
+    "DescriptionEn": "Modern dresser",
+    "DescriptionAr": "تسريحة عصرية",
     "Price": 3200,
     "StockQuantity": 5,
     "IsAvailable": true,
@@ -182,8 +216,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Mattress 1",
-    "Description": "Comfort mattress",
+    "NameEn": "Mattress 1",
+    "NameAr": "مرتبة 1",
+    "DescriptionEn": "Comfort mattress",
+    "DescriptionAr": "مرتبة مريحة",
     "Price": 4000,
     "StockQuantity": 8,
     "IsAvailable": true,
@@ -192,8 +228,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Mattress 2",
-    "Description": "Soft mattress",
+    "NameEn": "Mattress 2",
+    "NameAr": "مرتبة 2",
+    "DescriptionEn": "Soft mattress",
+    "DescriptionAr": "مرتبة ناعمة",
     "Price": 4200,
     "StockQuantity": 7,
     "IsAvailable": true,
@@ -201,10 +239,11 @@
     "CategoryId": 2,
     "SellerId": "seller-1"
   },
-
   {
-    "Name": "Dining Table 1",
-    "Description": "6 seater table",
+    "NameEn": "Dining Table 1",
+    "NameAr": "طاولة طعام 1",
+    "DescriptionEn": "6 seater table",
+    "DescriptionAr": "طاولة طعام 6 مقاعد",
     "Price": 7000,
     "StockQuantity": 5,
     "IsAvailable": true,
@@ -213,8 +252,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Dining Table 2",
-    "Description": "Wood dining table",
+    "NameEn": "Dining Table 2",
+    "NameAr": "طاولة طعام 2",
+    "DescriptionEn": "Wood dining table",
+    "DescriptionAr": "طاولة طعام خشبية",
     "Price": 7200,
     "StockQuantity": 4,
     "IsAvailable": true,
@@ -223,8 +264,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Dining Chair Set 1",
-    "Description": "6 chairs set",
+    "NameEn": "Dining Chair Set 1",
+    "NameAr": "طقم كراسي طعام 1",
+    "DescriptionEn": "6 chairs set",
+    "DescriptionAr": "طقم 6 كراسي",
     "Price": 3500,
     "StockQuantity": 6,
     "IsAvailable": true,
@@ -233,8 +276,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Dining Chair Set 2",
-    "Description": "Modern chairs",
+    "NameEn": "Dining Chair Set 2",
+    "NameAr": "طقم كراسي طعام 2",
+    "DescriptionEn": "Modern chairs",
+    "DescriptionAr": "كراسي عصرية",
     "Price": 3600,
     "StockQuantity": 5,
     "IsAvailable": true,
@@ -243,8 +288,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Buffet 1",
-    "Description": "Storage buffet",
+    "NameEn": "Buffet 1",
+    "NameAr": "بوفيه 1",
+    "DescriptionEn": "Storage buffet",
+    "DescriptionAr": "بوفيه تخزين",
     "Price": 2800,
     "StockQuantity": 7,
     "IsAvailable": true,
@@ -253,8 +300,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Buffet 2",
-    "Description": "Luxury buffet",
+    "NameEn": "Buffet 2",
+    "NameAr": "بوفيه 2",
+    "DescriptionEn": "Luxury buffet",
+    "DescriptionAr": "بوفيه فاخر",
     "Price": 3000,
     "StockQuantity": 6,
     "IsAvailable": true,
@@ -263,8 +312,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Cabinet 1",
-    "Description": "Kitchen cabinet",
+    "NameEn": "Cabinet 1",
+    "NameAr": "خزانة 1",
+    "DescriptionEn": "Kitchen cabinet",
+    "DescriptionAr": "خزانة مطبخ",
     "Price": 2500,
     "StockQuantity": 10,
     "IsAvailable": true,
@@ -273,8 +324,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Cabinet 2",
-    "Description": "Wood cabinet",
+    "NameEn": "Cabinet 2",
+    "NameAr": "خزانة 2",
+    "DescriptionEn": "Wood cabinet",
+    "DescriptionAr": "خزانة خشبية",
     "Price": 2600,
     "StockQuantity": 8,
     "IsAvailable": true,
@@ -283,8 +336,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Bar Table 1",
-    "Description": "Modern bar table",
+    "NameEn": "Bar Table 1",
+    "NameAr": "طاولة بار 1",
+    "DescriptionEn": "Modern bar table",
+    "DescriptionAr": "طاولة بار عصرية",
     "Price": 3200,
     "StockQuantity": 5,
     "IsAvailable": true,
@@ -293,8 +348,10 @@
     "SellerId": "seller-1"
   },
   {
-    "Name": "Bar Table 2",
-    "Description": "Stylish bar table",
+    "NameEn": "Bar Table 2",
+    "NameAr": "طاولة بار 2",
+    "DescriptionEn": "Stylish bar table",
+    "DescriptionAr": "طاولة بار أنيقة",
     "Price": 3300,
     "StockQuantity": 4,
     "IsAvailable": true,

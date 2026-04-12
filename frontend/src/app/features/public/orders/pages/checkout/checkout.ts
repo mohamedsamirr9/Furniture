@@ -9,10 +9,12 @@ import { OfferService } from '../../../../../core/services/offer.service';
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './checkout.html',
   styleUrls: ['./checkout.css']
 })
