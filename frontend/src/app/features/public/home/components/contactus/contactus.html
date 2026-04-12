@@ -1,13 +1,13 @@
 <section class="contact-section py-5">
   <div class="container">
-    <h2 class="text-center mb-5 section-title">Contact Us</h2>
+    <h2 class="text-center mb-5 section-title">{{ 'HOME.CONTACT.TITLE' | translate }}</h2>
     
     <div class="row justify-content-center align-items-center g-5">
       <div class="col-lg-6">
         <div class="contact-form">
-          <input type="text" placeholder="Your Name" class="form-control custom-input mb-3" />
-          <input type="email" placeholder="Your Email" class="form-control custom-input mb-3" />
-          <textarea placeholder="Your Message" class="form-control custom-input mb-3" rows="6"></textarea>
+          <input type="text" [placeholder]="'FORMS.NAME' | translate" class="form-control custom-input mb-3" />
+          <input type="email" [placeholder]="'FORMS.EMAIL' | translate" class="form-control custom-input mb-3" />
+          <textarea [placeholder]="'FORMS.MESSAGE' | translate" class="form-control custom-input mb-3" rows="6"></textarea>
         </div>
       </div>
 
@@ -29,14 +29,14 @@
             <div class="icon-circle">
               <i class="bi bi-geo-alt-fill"></i>
             </div>
-            <span>Damietta, Egypt</span>
+            <span>{{ 'FOOTER.ADDRESS' | translate }}</span>
           </div>
         </div>
       </div>
     </div>
 
     <div class="text-center mt-5">
-      <button class="contact-btn">Send Message</button>
+      <button class="contact-btn">{{ 'HOME.CONTACT.SEND' | translate }}</button>
     </div>
   </div>
 </section>

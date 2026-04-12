@@ -46,7 +46,7 @@
 <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>{{ isEditing ? 'Edit Product' : 'Add Product' }}</h2>
+      <h2>{{ (isEditing ? 'FORM.EDIT_PRODUCT' : 'FORM.ADD_PRODUCT') | translate }}</h2>
       <span class="modal-close" (click)="closeModal()">&times;</span>
     </div>
 
@@ -74,7 +74,7 @@
         <input id="imageFile" type="file"  (change)="onFileSelected($event)" accept="image/*" [disabled]="isUploading" />
         <small class="uploading-text" *ngIf="isUploading" style="color: blue; display: block; margin-top: 5px;">{{ 'ALERTS.UPLOADING' | translate }}</small>
         <div *ngIf="productForm.get('imageUrl')?.value && !isUploading" class="image-preview" style="margin-top: 10px;">
-          <img [src]="productForm.get('imageUrl')?.value" alt="Preview" style="max-height: 80px; border-radius: 4px;" />
+          <img [src]="productForm.get('imageUrl')?.value" [alt]="'FORM.PREVIEW' | translate" style="max-height: 80px; border-radius: 4px;" />
         </div>
       </div>
 

@@ -6,7 +6,7 @@ import { CategoryService } from '../../../../../core/services/category.service';
 
 import { ProductCreateUpdateDto } from '../../../../../core/models/product-create-update-dto.model';
 
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-products',
@@ -32,6 +32,7 @@ export class Products implements OnInit {
     private productService: ProductService,
     private categoryService: CategoryService,
     private fb: FormBuilder,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -155,11 +156,11 @@ export class Products implements OnInit {
         next: (res: any) => {
           this.productForm.patchValue({ imageUrl: res.secure_url });
           this.isUploading = false;
-          this.successMessage = 'Image uploaded successfully!';
+          this.successMessage = 'ALERTS.UPLOAD_SUCCESS';
         },
         error: (err: any) => {
           console.error('Image upload failed', err);
-          this.errorMessage = 'Failed to upload image. Please try again.';
+          this.errorMessage = 'ALERTS.UPLOAD_ERROR';
           this.isUploading = false;
         }
       });
@@ -191,26 +192,26 @@ export class Products implements OnInit {
     if (this.isEditing && this.editingProductId !== null) {
       this.productService.updateProduct(this.editingProductId, dto).subscribe({
         next: () => {
-          this.successMessage = 'Product updated successfully!';
+          this.successMessage = 'ALERTS.UPDATE_SUCCESS';
           this.isSubmitting = false;
           this.loadProducts();
           setTimeout(() => this.closeModal(), 1200);
         },
         error: (err: any) => {
-          this.errorMessage = err.error?.message || 'Failed to update product.';
+          this.errorMessage = err.error?.message || 'ALERTS.ERROR';
           this.isSubmitting = false;
         },
       });
     } else {
       this.productService.createProduct(dto).subscribe({
         next: () => {
-          this.successMessage = 'Product created successfully!';
+          this.successMessage = 'ALERTS.CREATE_SUCCESS';
           this.isSubmitting = false;
           this.loadProducts();
           setTimeout(() => this.closeModal(), 1200);
         },
         error: (err: any) => {
-          this.errorMessage = err.error?.message || 'Failed to create product.';
+          this.errorMessage = err.error?.message || 'ALERTS.ERROR';
           this.isSubmitting = false;
         },
       });
@@ -218,7 +219,8 @@ export class Products implements OnInit {
   }
 
   deleteProduct(id: number): void {
-    if (confirm('Are you sure you want to delete this product?')) {
+    const confirmMsg = this.translate.instant('ALERTS.DELETE_CONFIRM');
+    if (confirm(confirmMsg)) {
       this.productService.deleteProduct(id).subscribe({
         next: () => {
           this.loadProducts();

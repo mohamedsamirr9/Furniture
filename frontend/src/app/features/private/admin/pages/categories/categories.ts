@@ -5,7 +5,7 @@ import { CategoryService } from '../../../../../core/services/category.service';
 
 import { CategoryCreateUpdateDto } from '../../../../../core/models/category-create-update-dto.model';
 
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-categories',
@@ -29,6 +29,7 @@ export class Categories implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private fb: FormBuilder,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -143,26 +144,26 @@ export class Categories implements OnInit {
     if (this.isEditing && this.editingCategoryId !== null) {
       this.categoryService.updateCategory(this.editingCategoryId, dto).subscribe({
         next: () => {
-          this.successMessage = 'Category updated successfully!';
+          this.successMessage = 'ALERTS.UPDATE_SUCCESS';
           this.isSubmitting = false;
           this.loadCategories();
           setTimeout(() => this.closeModal(), 1200);
         },
         error: (err: any) => {
-          this.errorMessage = err.error?.message || 'Failed to update category.';
+          this.errorMessage = err.error?.message || 'ALERTS.ERROR';
           this.isSubmitting = false;
         },
       });
     } else {
       this.categoryService.createCategory(dto).subscribe({
         next: () => {
-          this.successMessage = 'Category created successfully!';
+          this.successMessage = 'ALERTS.CREATE_SUCCESS';
           this.isSubmitting = false;
           this.loadCategories();
           setTimeout(() => this.closeModal(), 1200);
         },
         error: (err: any) => {
-          this.errorMessage = err.error?.message || 'Failed to create category.';
+          this.errorMessage = err.error?.message || 'ALERTS.ERROR';
           this.isSubmitting = false;
         },
       });
@@ -170,7 +171,8 @@ export class Categories implements OnInit {
   }
 
   deleteCategory(id: number): void {
-    if (confirm('Are you sure you want to delete this category?')) {
+    const confirmMsg = this.translate.instant('ALERTS.DELETE_CONFIRM');
+    if (confirm(confirmMsg)) {
       this.categoryService.deleteCategory(id).subscribe({
         next: () => {
           this.loadCategories();

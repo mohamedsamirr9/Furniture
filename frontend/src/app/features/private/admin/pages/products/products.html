@@ -46,13 +46,13 @@
 <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>{{ isEditing ? 'Edit Product' : 'Add Product' }}</h2>
+      <h2>{{ isEditing ? ('BUTTONS.UPDATE_PRODUCT' | translate) : ('BUTTONS.ADD_PRODUCT' | translate) }}</h2>
       <span class="modal-close" (click)="closeModal()">&times;</span>
     </div>
 
     <!-- Success / Error Messages -->
-    <div class="alert alert-success" *ngIf="successMessage">{{ successMessage }}</div>
-    <div class="alert alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+    <div class="alert alert-success" *ngIf="successMessage">{{ successMessage | translate }}</div>
+    <div class="alert alert-error" *ngIf="errorMessage">{{ errorMessage | translate }}</div>
 
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
       <div class="form-row" style="display: flex; gap: 15px; margin-bottom: 15px;">

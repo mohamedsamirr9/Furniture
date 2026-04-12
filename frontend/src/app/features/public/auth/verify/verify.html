@@ -2,12 +2,12 @@
   class="container-fluid vh-100 d-flex flex-column align-items-center justify-content-center bg-white"
 >
   <div class="position-absolute top-0 start-0 p-4">
-    <h3 class="brand mb-4" (click)="goHome()" style="cursor: pointer">Furnora</h3>
+    <h3 class="brand mb-4" (click)="goHome()" style="cursor: pointer">{{ 'NAV.BRAND' | translate }}</h3>
   </div>
 
   <div class="text-center mb-4">
-    <h2 class="fw-bold mb-3">Verify Your Email</h2>
-    <p class="text-secondary">We sent a 6-digit code to your email. Enter it below.</p>
+    <h2 class="fw-bold mb-3">{{ 'VERIFY.TITLE' | translate }}</h2>
+    <p class="text-secondary">{{ 'VERIFY.DESC' | translate }}</p>
   </div>
 
   <div class="otp-container d-flex gap-2 mb-4">
@@ -20,9 +20,9 @@
   </div>
 
   <div class="w-100 d-flex flex-column align-items-center" style="max-width: 400px">
-    <button class="btn btn-verify w-100 py-2 text-white mb-3 shadow-sm">Verify</button>
+    <button class="btn btn-verify w-100 py-2 text-white mb-3 shadow-sm">{{ 'AUTH_EXTRA.VERIFY_BTN' | translate }}</button>
     <p class="text-secondary small">
-      Didn't receive a code? <a href="#" class="text-decoration-none fw-bold text-dark">Resend</a>
+      {{ 'AUTH_EXTRA.RESEND_TEXT' | translate }} <a href="#" class="text-decoration-none fw-bold text-dark">{{ 'VERIFY.RESEND' | translate }}</a>
     </p>
   </div>
 </div>
