@@ -245,7 +245,7 @@ namespace Furniture.Services.Implementations
             if (newStatus == OrderStatus.Paid && order.Status != OrderStatus.Paid)
             {
                 var productRepo = _unitOfWork.GetRepository<Product, int>();
-                foreach (var item in order.OrderItems)
+                foreach (var item in order.OrderItems ?? new List<OrderItem>())
                 {
                     if (item.Product != null)
                     {

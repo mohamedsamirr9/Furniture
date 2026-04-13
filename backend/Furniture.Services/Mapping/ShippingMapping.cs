@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Furniture.Domain.Models;
 using Furniture.shared.Dtos.ShippingRule;
 using System;
@@ -14,7 +14,7 @@ namespace Furniture.Services.Mapping
         public ShippingMapping()
         {
             CreateMap<ShippingRule, ShippingRuleDto>()
-           .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category.Name));
+           .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category.NameEn));
 
             CreateMap<ShippingRuleCreateUpdateDto, ShippingRule>();
         }

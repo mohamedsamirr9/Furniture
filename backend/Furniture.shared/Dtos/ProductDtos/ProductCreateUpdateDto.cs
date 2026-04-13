@@ -18,7 +18,7 @@ namespace Furniture.shared.Dtos.ProductDtos
         public bool IsCustomized { get; set; }
 
         public int CategoryId { get; set; }
-        public string SellerId { get; set; } 
+        public string SellerId { get; set; } = string.Empty;
         
         public List<string>? ImageUrls { get; set; } = new List<string>(); 
     }

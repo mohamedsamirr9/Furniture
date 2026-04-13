@@ -21,8 +21,8 @@ namespace Furniture.shared.Dtos.ProductDtos
         public bool IsCustomized { get; set; }
         public DateTime CreatedAt { get; set; }
         public int CategoryId { get; set; }
-        public string CategoryName { get; set; } 
-        public string SellerName { get; set; }
+        public string CategoryName { get; set; } = string.Empty;
+        public string SellerName { get; set; } = string.Empty;
 
         public List<string> Images { get; set; } = new();
         public ICollection<ReviewDto> Reviews { get; set; } = new List<ReviewDto>();

@@ -6,7 +6,7 @@ public class OrderDTO
     public decimal SubTotal { get; set; }
     public decimal ShippingCost { get; set; }
     public decimal TotalPrice { get; set; }
-    public string City { get; set; } 
+    public string City { get; set; } = string.Empty;
     public DateTime OrderDate { get; set; }
     public string Status { get; set; } = string.Empty;
     public string? ShippingAddress { get; set; }

@@ -20,7 +20,7 @@ namespace Furniture.Services.Mapping
                 .ForMember(d => d.ProductPrice, o => o.MapFrom(s => s.Product.Price))
                 .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Product.Category.NameEn))
                 .ForMember(d => d.SellerName, o => o.MapFrom(s => s.Product.Seller.Name))
-                .ForMember(d => d.MainImage, o => o.MapFrom(s => s.Product.Images.FirstOrDefault().ImageUrl))
+                .ForMember(d => d.MainImage, o => o.MapFrom(s => s.Product.Images.FirstOrDefault() == null ? string.Empty : s.Product.Images.FirstOrDefault()!.ImageUrl))
                 .ForMember(d => d.IsAvailable, o => o.MapFrom(s => s.Product.IsAvailable));
         }
     }
