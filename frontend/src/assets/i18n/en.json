@@ -249,6 +249,9 @@
     "BREADCRUMB_CHECKOUT": "Checkout",
     "SECURE_PURCHASE": "Complete your purchase securely",
     "SHIPPING_INFO": "Shipping Information",
+    "CITY": "City",
+    "SELECT_CITY": "Select a city...",
+    "CITY_REQUIRED": "City is required.",
     "SHIPPING_ADDR": "Shipping Address",
     "SHIPPING_ADDR_PLACEHOLDER": "Enter your full delivery address (e.g. 123 Main St, Apt 4B, City, Country)",
     "ADDR_REQUIRED": "Shipping address is required.",
@@ -264,6 +267,19 @@
     "SHIPPING_ESTIMATE": "Shipping Estimate",
     "FREE": "Free",
     "TOTAL": "Total"
+  },
+  "CITIES": {
+    "Cairo": "Cairo",
+    "Giza": "Giza",
+    "Alexandria": "Alexandria",
+    "Aswan": "Aswan",
+    "Luxor": "Luxor",
+    "Port Said": "Port Said",
+    "Suez": "Suez",
+    "Mansoura": "Mansoura",
+    "Tanta": "Tanta",
+    "Ismailia": "Ismailia",
+    "Assiut": "Assiut"
   },
   "MY_ORDERS": {
     "TITLE": "My Orders",
@@ -318,7 +334,19 @@
     "ACTIVE_ORDERS": "Active Orders",
     "OPEN_COMPLAINTS": "Open Complaints",
     "RECENT_ORDERS": "Recent Orders",
-    "RECENT_COMPLAINTS": "Recent Complaints"
+    "RECENT_COMPLAINTS": "Recent Complaints",
+    "SHIPPING_RULES": "Shipping Rules",
+    "CITY": "City",
+    "PRICE": "Price",
+    "CATEGORY": "Category",
+    "ADD_RULE": "Add New Rule",
+    "EDIT_RULE": "Edit Shipping Rule",
+    "RULE_SAVED": "Shipping rule saved successfully",
+    "RULE_DELETED": "Shipping rule deleted successfully",
+    "NO_RULES": "No shipping rules found. Add one to get started.",
+    "PRICE_REQUIRED": "Price is required.",
+    "CITY_REQUIRED": "City is required.",
+    "CATEGORY_REQUIRED": "Category is required."
   },
   "VALIDATION": {
     "BUDGET_REQUIRED": "Budget is required.",

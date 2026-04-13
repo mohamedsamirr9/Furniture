@@ -80,6 +80,24 @@
 }
 
 .send-btn:hover { background: #5a8f6b; }
+.view-details-btn {
+  background: #ffffff;
+  color: #374151;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.view-details-btn:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
 
 /* Modal Styles */
 .modal-overlay {

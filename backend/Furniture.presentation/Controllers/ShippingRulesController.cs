@@ -29,16 +29,30 @@ namespace Furniture.presentation.Controllers
         [HttpPost]
         public async Task<ActionResult<ShippingRuleDto>> Create(ShippingRuleCreateUpdateDto dto)
         {
-            var rule = await _shippingService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = rule.Id }, rule);
+            try
+            {
+                var rule = await _shippingService.CreateAsync(dto);
+                return CreatedAtAction(nameof(GetById), new { id = rule.Id }, rule);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         // PUT /api/shippingrules/{id}
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, ShippingRuleCreateUpdateDto dto)
         {
-            await _shippingService.UpdateAsync(id, dto);
-            return NoContent();
+            try
+            {
+                await _shippingService.UpdateAsync(id, dto);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         // DELETE /api/shippingrules/{id}

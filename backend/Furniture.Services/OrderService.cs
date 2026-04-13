@@ -13,11 +13,13 @@ namespace Furniture.Services.Implementations
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IShippingCalculatorService _shippingCalculator;
 
-        public OrderService(IUnitOfWork unitOfWork, IMapper mapper)
+        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IShippingCalculatorService shippingCalculator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _shippingCalculator = shippingCalculator;
         }
 
         
@@ -129,10 +131,17 @@ namespace Furniture.Services.Implementations
                 });
             }
 
+            var categoryIds = cart.CartItems.Select(ci => ci.Product.CategoryId).Distinct();
+            var shippingResult = await _shippingCalculator.CalculateShippingAsync(createOrderDTO.City, categoryIds);
+
             var newOrder = new Order
             {
                 UserId = userId,
-                TotalPrice = totalPrice,
+                SubTotal = totalPrice,
+                ShippingCost = shippingResult.ShippingCost,
+                TotalPrice = totalPrice + shippingResult.ShippingCost,
+                City = createOrderDTO.City,
+                ShippingRuleId = shippingResult.ShippingRuleId,
                 OrderDate = DateTime.UtcNow,
                 Status = OrderStatus.Pending,
                 ShippingAddress = createOrderDTO.ShippingAddress,
@@ -174,10 +183,16 @@ namespace Furniture.Services.Implementations
             if (offer.OrderId != null)
                 throw new InvalidOperationException("An order has already been created for this offer");
 
+            // Offers don't have defined category ids, so pass an empty list
+            var shippingResult = await _shippingCalculator.CalculateShippingAsync(dto.City ?? "Unknown City", new List<int>());
+
             var newOrder = new Order
             {
                 UserId = userId,
-                TotalPrice = offer.Price,
+                SubTotal = offer.Price,
+                ShippingCost = shippingResult.ShippingCost,
+                TotalPrice = offer.Price + shippingResult.ShippingCost,
+                City = dto.City ?? "Unknown City",
                 OrderDate = DateTime.UtcNow,
                 Status = OrderStatus.Pending,
                 ShippingAddress = dto.ShippingAddress,

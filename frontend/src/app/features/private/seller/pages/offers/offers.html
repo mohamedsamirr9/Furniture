@@ -25,9 +25,14 @@
     {{ 'SELLER.STATUS' | translate }}: {{ request.status }}
   </p>
 
-  <button class="send-btn" *ngIf="activeRequestId !== request.id" [disabled]="request.status !== 'Open'" (click)="openOfferForm(request.id)">
-    ✈ {{ 'SELLER.SEND_OFFER' | translate }}
-  </button>
+  <div class="action-buttons" style="display: flex; gap: 10px; margin-top: 16px;">
+    <button class="send-btn" *ngIf="activeRequestId !== request.id" [disabled]="request.status !== 'Open'" (click)="openOfferForm(request.id)" style="margin-top: 0;">
+      ✈ {{ 'SELLER.SEND_OFFER' | translate }}
+    </button>
+    <button class="view-details-btn" (click)="openDetails(request)">
+      👁 {{ 'MY_ORDERS.VIEW_DETAILS' | translate }}
+    </button>
+  </div>
 
   <div *ngIf="activeRequestId === request.id" class="offer-form-container" style="margin-top: 15px; padding: 15px; background: #f9f9f9; border-radius: 8px;">
     <h4>{{ 'SELLER.MAKE_OFFER' | translate }}</h4>
@@ -91,6 +96,10 @@
     <span *ngIf="offer.requestStatus === 3" class="badge" style="background: #dc3545; font-size: 11px; padding: 3px 8px; border-radius: 4px; color: white;">
       {{ 'SELLER.CANCELLED' | translate }}
     </span>
+
+    <button class="view-details-btn" (click)="openDetails(offer.customRequest)" *ngIf="offer.customRequest" style="margin-left: auto;">
+      👁 {{ 'MY_ORDERS.VIEW_DETAILS' | translate }}
+    </button>
   </div>
 </div>
 

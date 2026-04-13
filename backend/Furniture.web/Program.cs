@@ -82,6 +82,7 @@ namespace Furniture.web
             builder.Services.AddScoped<ICustomRequestService, CustomRequestService>();
             builder.Services.AddScoped<IShippingService, ShippingService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IShippingCalculatorService, ShippingCalculatorService>();
             
             var app = builder.Build();
 

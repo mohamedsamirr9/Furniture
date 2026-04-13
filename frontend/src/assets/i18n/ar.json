@@ -249,6 +249,9 @@
     "BREADCRUMB_CHECKOUT": "إتمام الشراء",
     "SECURE_PURCHASE": "أكمل عملية الشراء بأمان",
     "SHIPPING_INFO": "معلومات الشحن",
+    "CITY": "المدينة",
+    "SELECT_CITY": "اختر مدينة...",
+    "CITY_REQUIRED": "المدينة مطلوبة.",
     "SHIPPING_ADDR": "عنوان الشحن",
     "SHIPPING_ADDR_PLACEHOLDER": "أدخل عنوان التسليم الكامل (مثال: 123 شارع النصر، شقة 4ب، دمياط، مصر)",
     "ADDR_REQUIRED": "عنوان الشحن مطلوب.",
@@ -264,6 +267,19 @@
     "SHIPPING_ESTIMATE": "تقدير الشحن",
     "FREE": "مجاني",
     "TOTAL": "الإجمالي"
+  },
+  "CITIES": {
+    "Cairo": "القاهرة",
+    "Giza": "الجيزة",
+    "Alexandria": "الإسكندرية",
+    "Aswan": "أسوان",
+    "Luxor": "الأقصر",
+    "Port Said": "بورسعيد",
+    "Suez": "السويس",
+    "Mansoura": "المنصورة",
+    "Tanta": "طنطا",
+    "Ismailia": "الإسماعيلية",
+    "Assiut": "أسيوط"
   },
   "MY_ORDERS": {
     "TITLE": "طلباتي",
@@ -318,7 +334,19 @@
     "ACTIVE_ORDERS": "الطلبات النشطة",
     "OPEN_COMPLAINTS": "الشكاوى المفتوحة",
     "RECENT_ORDERS": "الطلبات الأخيرة",
-    "RECENT_COMPLAINTS": "الشكاوى الأخيرة"
+    "RECENT_COMPLAINTS": "الشكاوى الأخيرة",
+    "SHIPPING_RULES": "قواعد الشحن",
+    "CITY": "المدينة",
+    "PRICE": "السعر",
+    "CATEGORY": "الفئة",
+    "ADD_RULE": "إضافة قاعدة جديدة",
+    "EDIT_RULE": "تعديل قاعدة الشحن",
+    "RULE_SAVED": "تم حفظ قاعدة الشحن بنجاح",
+    "RULE_DELETED": "تم حذف قاعدة الشحن بنجاح",
+    "NO_RULES": "لا توجد قواعد شحن. أضف واحدة للبدء.",
+    "PRICE_REQUIRED": "السعر مطلوب.",
+    "CITY_REQUIRED": "المدينة مطلوبة.",
+    "CATEGORY_REQUIRED": "الفئة مطلوبة."
   },
   "VALIDATION": {
     "BUDGET_REQUIRED": "الميزانية مطلوبة.",

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Furniture.Domain.InterfacesRepositories;
 using Furniture.Domain.Models;
 using Furniture.Services.Specifications;
@@ -47,6 +47,14 @@ namespace Furniture.Services
         public async Task<ShippingRuleDto> CreateAsync(ShippingRuleCreateUpdateDto dto)
         {
             var repo = _unitOfWork.GetRepository<ShippingRule, int>();
+            
+            var existingSpec = new ShippingRuleSpecifications(dto.City, dto.CategoryId);
+            var existing = await repo.GetAllAsync(existingSpec);
+            if (existing.Any())
+            {
+                throw new InvalidOperationException("Shipping rule already exists for this City and Category");
+            }
+
             var rule = _mapper.Map<ShippingRule>(dto);
             await repo.AddAsync(rule);
             await _unitOfWork.SaveChangesAsync();
@@ -59,6 +67,14 @@ namespace Furniture.Services
         public async Task UpdateAsync(int id, ShippingRuleCreateUpdateDto dto)
         {
             var repo = _unitOfWork.GetRepository<ShippingRule, int>();
+            
+            var existingSpec = new ShippingRuleSpecifications(dto.City, dto.CategoryId);
+            var existing = await repo.GetAllAsync(existingSpec);
+            if (existing.Any(r => r.Id != id))
+            {
+                throw new InvalidOperationException("Shipping rule already exists for this City and Category");
+            }
+
             var rule = await repo.GetByIdAsync(id);
             if (rule is null) throw new Exception($"ShippingRule with id {id} not found");
             _mapper.Map(dto, rule);

@@ -123,11 +123,11 @@
             
             <div class="d-flex justify-content-between mb-3 text-muted">
               <span>{{ 'CART.SUBTOTAL' | translate }}</span>
-              <span class="fw-bold text-dark">${{ order.totalPrice | number:'1.2-2' }}</span>
+              <span class="fw-bold text-dark">${{ order.subTotal | number:'1.2-2' }}</span>
             </div>
             <div class="d-flex justify-content-between mb-3 text-muted">
               <span>{{ 'CART.SHIPPING' | translate }}</span>
-              <span class="fw-bold text-success">{{ 'CHECKOUT.FREE' | translate }}</span>
+              <span class="fw-bold text-dark">${{ order.shippingCost | number:'1.2-2' }}</span>
             </div>
             
             <hr class="my-4 border-secondary-subtle">

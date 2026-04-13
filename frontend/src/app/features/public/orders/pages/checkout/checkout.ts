@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -6,8 +6,9 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CartService } from '../../../../../core/services/cart.service';
 import { OrderService } from '../../../../../core/services/order.service';
 import { OfferService } from '../../../../../core/services/offer.service';
-import { of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { ShippingService } from '../../../../../core/services/shipping.service';
+import { of, BehaviorSubject, Subject } from 'rxjs';
+import { switchMap, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -18,17 +19,24 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './checkout.html',
   styleUrls: ['./checkout.css']
 })
-export class CheckoutComponent implements OnInit {
+export class CheckoutComponent implements OnInit, OnDestroy {
   checkoutForm: FormGroup;
   isLoading = false;
   offerId: number | null = null;
   displayData$: Observable<any>;
+  shippingCost$ = new BehaviorSubject<number>(0);
+  cities: string[] = [
+    'Cairo', 'Giza', 'Alexandria', 'Aswan', 'Luxor', 
+    'Port Said', 'Suez', 'Mansoura', 'Tanta', 'Ismailia', 'Assiut'
+  ];
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private cartService: CartService,
     private orderService: OrderService,
     private offerService: OfferService,
+    private shippingService: ShippingService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -56,8 +64,27 @@ export class CheckoutComponent implements OnInit {
       })
     );
     this.checkoutForm = this.fb.group({
+      city: ['', Validators.required],
       shippingAddress: ['', [Validators.required, Validators.minLength(10)]],
       notes: ['']
+    });
+
+    this.checkoutForm.get('city')?.valueChanges.pipe(
+      takeUntil(this.destroy$),
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(city => {
+      if (city) {
+        this.shippingService.estimateShipping(city, this.offerId).subscribe({
+          next: (res) => this.shippingCost$.next(res.shippingCost),
+          error: (err) => {
+            console.error('Failed to estimate shipping', err);
+            this.shippingCost$.next(0);
+          }
+        });
+      } else {
+         this.shippingCost$.next(0);
+      }
     });
   }
 
@@ -65,6 +92,11 @@ export class CheckoutComponent implements OnInit {
     if (!this.offerId) {
       this.cartService.loadCart().subscribe();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onSubmit(): void {
@@ -79,6 +111,7 @@ export class CheckoutComponent implements OnInit {
     if (this.offerId) {
       this.orderService.createOrderFromOffer({
         offerId: this.offerId,
+        city: formValue.city,
         shippingAddress: formValue.shippingAddress,
         notes: formValue.notes
       }).subscribe({
@@ -94,6 +127,7 @@ export class CheckoutComponent implements OnInit {
       });
     } else {
       this.orderService.createOrder({
+        city: formValue.city,
         shippingAddress: formValue.shippingAddress,
         notes: formValue.notes
       }).subscribe({
