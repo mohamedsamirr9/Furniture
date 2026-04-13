@@ -1,4 +1,4 @@
-﻿using Furniture.Domain.Models.Enum;
+using Furniture.Domain.Models.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace Furniture.Domain.Models
 
         //rel
         public int OrderId { get; set; }
-        public Order Order { get; set; }
+        public Order Order { get; set; } = null!;
         public string UserId { get; set; } = null!;
         public ApplicationUser User { get; set; } = null!;
 

@@ -1,20 +1,20 @@
 <div class="page-header">
-  <h1>Users</h1>
+  <h1>{{ 'ADMIN.USERS_TITLE' | translate }}</h1>
   <hr />
 </div>
 
 <div class="table-card">
-  <h2 class="card-title">Users Management</h2>
+  <h2 class="card-title">{{ 'ADMIN.USERS_MGMT' | translate }}</h2>
   <table class="table">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Address</th>
-        <th>Status</th>
-        <th>Joined</th>
-        <th>Status</th>
+        <th>{{ 'ADMIN.NAME' | translate }}</th>
+        <th>{{ 'ADMIN.EMAIL' | translate }}</th>
+        <th>{{ 'ADMIN.PHONE' | translate }}</th>
+        <th>{{ 'ADMIN.ADDRESS' | translate }}</th>
+        <th>{{ 'ADMIN.STATUS' | translate }}</th>
+        <th>{{ 'ADMIN.JOINED' | translate }}</th>
+        <th>{{ 'ADMIN.STATUS' | translate }}</th>
       </tr>
     </thead>
     <tbody>
@@ -23,12 +23,12 @@
         <td>{{ user.email }}</td>
         <td>{{ user.phone }}</td>
         <td>{{ user.address }}</td>
-        <td><span class="badge-outline">{{ user.role }}</span></td>
+        <td><span class="badge-outline">{{ 'AUTH.' + (user.role | uppercase) | translate }}</span></td>
         <td>{{ user.joined }}</td>
         <td>
           <span class="badge"
             [ngClass]="user.accountStatus === 'Deleted' ? 'badge-red' : 'badge-gray'">
-            {{ user.accountStatus }}
+            {{ 'STATUS.' + (user.accountStatus | uppercase) | translate }}
           </span>
         </td>
       </tr>

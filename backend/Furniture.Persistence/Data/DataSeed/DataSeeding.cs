@@ -52,24 +52,26 @@ namespace Furniture.Persistence.Data.DataSeed
                                                 var HasCategories =await _dbContext.Categories.AnyAsync();
 
 
-                if (!HasProductsImages)
-                {
-                    Console.WriteLine("Seeding Products started...");
-                    await SeedDataFromJsonAsync<ProductImage>("ProductImages.json", _dbContext.ProductImages);
-                    await _dbContext.SaveChangesAsync();
-                }
-                if (!HasProducts)
-                {
-                    Console.WriteLine("Seeding Products started...");
-                    await SeedDataFromJsonAsync<Product>("Product.json", _dbContext.Products);
-                    await _dbContext.SaveChangesAsync();
-                }
                 if (!HasCategories)
                 {
                     await SeedDataFromJsonAsync<Category>("Category.json", _dbContext.Categories);
                     await _dbContext.SaveChangesAsync();
                 }
-                
+
+                if (!HasProducts)
+                {
+                    Console.WriteLine("Seeding Products...");
+                    await SeedDataFromJsonAsync<Product>("Product.json", _dbContext.Products);
+                    await _dbContext.SaveChangesAsync();
+                }
+
+                if (!HasProductsImages)
+                {
+                    Console.WriteLine("Seeding Product Images...");
+                    await SeedDataFromJsonAsync<ProductImage>("ProductImages.json", _dbContext.ProductImages);
+                    await _dbContext.SaveChangesAsync();
+                }
+
             }
             catch (Exception ex) { Console.WriteLine($"Data Seeding Failed: {ex}"); }
 

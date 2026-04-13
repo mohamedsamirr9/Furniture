@@ -91,6 +91,27 @@ namespace Furniture.API.Controllers
             }
         }
 
+        [HttpPost("from-offer")]
+        public async Task<IActionResult> CreateOrderFromOffer([FromBody] CreateOrderFromOfferDTO createOrderFromOfferDTO)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            try
+            {
+                var result = await _orderService.CreateOrderFromOfferAsync(userId, createOrderFromOfferDTO);
+                return CreatedAtAction(nameof(GetOrderById), new { orderId = result.OrderId }, result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         
         
         [HttpDelete("{orderId:int}")]

@@ -1,28 +1,28 @@
 <div class="page-header">
-  <h1>Orders</h1>
+  <h1>{{ 'ADMIN.ORDERS_TITLE' | translate }}</h1>
 </div>
 <hr class="divider" />
 
-<div *ngIf="isLoading">Loading orders...</div>
+<div *ngIf="isLoading">{{ 'ADMIN.LOADING' | translate }}</div>
 <div class="table-card" *ngIf="!isLoading">
-  <h2 class="card-title">Orders</h2>
+  <h2 class="card-title">{{ 'ADMIN.ORDERS_TITLE' | translate }}</h2>
   <table class="table">
     <thead>
       <tr>
-        <th>Order</th>
-        <th>Customer</th>
-        <th>Items</th>
-        <th>Shipping</th>
-        <th>Status</th>
-        <th>Total</th>
+        <th>{{ 'ADMIN.ORDER_ID' | translate }}</th>
+        <th>{{ 'ADMIN.CUSTOMER' | translate }}</th>
+        <th>{{ 'ADMIN.ITEMS' | translate }}</th>
+        <th>{{ 'ADMIN.SHIPPING' | translate }}</th>
+        <th>{{ 'ADMIN.STATUS' | translate }}</th>
+        <th>{{ 'ADMIN.TOTAL' | translate }}</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let order of (orders.orders || orders)">
         <td><strong>ORD-{{ order.id || order.orderId }}</strong></td>
-        <td>{{ order.userName || 'Customer' }}</td>
-        <td>{{ order.itemsCount || order.orderItems?.length || 0 }} items</td>
-        <td>{{ order.shippingAddress || 'N/A' }}</td>
+        <td>{{ order.userName || ('ADMIN.CUSTOMER' | translate) }}</td>
+        <td>{{ order.itemsCount || order.orderItems?.length || 0 }} {{ 'ADMIN.ITEMS_COUNT' | translate }}</td>
+        <td>{{ order.shippingAddress || ('ADMIN.NA' | translate) }}</td>
         <td>
           <select 
             class="badge" 
@@ -33,8 +33,8 @@
             }"
             [disabled]="isTerminalStatus(order.status)"
             (change)="updateStatus(order, $event)">
-            <option [value]="order.status" selected>{{ order.status }}</option>
-            <option *ngFor="let next of getValidTransitions(order.status)" [value]="next">{{ next }}</option>
+            <option [value]="order.status" selected>{{ 'STATUS.' + (order.status | uppercase) | translate }}</option>
+            <option *ngFor="let next of getValidTransitions(order.status)" [value]="next">{{ 'STATUS.' + (next | uppercase) | translate }}</option>
           </select>
         </td>
         <td><strong>{{ (order.totalPrice || order.total) | currency }}</strong></td>

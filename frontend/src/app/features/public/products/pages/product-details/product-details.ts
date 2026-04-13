@@ -8,9 +8,11 @@ import { ReviewService } from '../../../../../core/services/review.service';
 
 import { Subscription } from 'rxjs';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-product-details',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './product-details.html',
   styleUrl: './product-details.css',
 })
@@ -142,7 +144,7 @@ export class ProductDetails implements OnInit {
     this.wishlistService.removeFromWishlist(this.product.id).subscribe({
       next: () => {
         this.isInWishlist = false;
-        this.showWishlistMessage('Removed from wishlist!');
+        this.showWishlistMessage('WISHLIST.REMOVED');
       },
       error: (err) => console.error('Failed to remove from wishlist', err)
     });
@@ -150,7 +152,7 @@ export class ProductDetails implements OnInit {
     this.wishlistService.addToWishlist(this.product.id).subscribe({
       next: () => {
         this.isInWishlist = true;
-        this.showWishlistMessage('Added to wishlist!');
+        this.showWishlistMessage('WISHLIST.ADDED');
       },
       error: (err) => console.error('Failed to add to wishlist', err)
     });

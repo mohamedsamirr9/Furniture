@@ -1,4 +1,4 @@
-﻿using Furniture.Domain.Models.Enum;
+using Furniture.Domain.Models.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace Furniture.Domain.Models
 
         //rel
         public int CustomRequestId { get; set; }
-        public CustomRequest CustomRequest { get; set; }
+        public CustomRequest CustomRequest { get; set; } = null!;
 
         public string SellerId { get; set; } = null!;
         public ApplicationUser Seller { get; set; } = null!;

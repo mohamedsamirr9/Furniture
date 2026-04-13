@@ -13,7 +13,7 @@ namespace Furniture.Services.Specifications
             var search = queryParams.Search?.ToLower();
 
             return p =>
-                (string.IsNullOrWhiteSpace(search) || EF.Functions.Like(p.Name.ToLower(), $"%{search}%")) &&
+                (string.IsNullOrWhiteSpace(search) || EF.Functions.Like(p.NameEn.ToLower(), $"%{search}%")) &&
                 (!queryParams.CategoryId.HasValue || p.CategoryId == queryParams.CategoryId) &&
                 (!queryParams.MinPrice.HasValue || p.Price >= queryParams.MinPrice.Value) &&
                 (!queryParams.MaxPrice.HasValue || p.Price <= queryParams.MaxPrice.Value);
@@ -28,6 +28,7 @@ namespace Furniture.Services.Specifications
             AddInclude(p => p.Category);
             AddInclude(p => p.Seller);
             AddInclude(p => p.Images);
+            AddInclude(p => p.Reviews);
 
             if (!string.IsNullOrWhiteSpace(queryParams.Sort))
             {

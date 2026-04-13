@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-role',
-  imports: [],
+  imports: [RouterModule, TranslateModule, CommonModule],
   templateUrl: './role.html',
   styleUrl: './role.css',
 })

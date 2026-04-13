@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-submit-success',
-  imports: [],
+  standalone: true,
+  imports: [TranslateModule],
   templateUrl: './submit-success.html',
   styleUrl: './submit-success.css',
 })

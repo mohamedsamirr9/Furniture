@@ -1,17 +1,17 @@
 <div class="container py-5 mt-4">
   <div class="row align-items-center mb-5">
     <div class="col-sm-8 text-center text-sm-start">
-      <h1 class="display-6 fw-bold mb-0">My Orders</h1>
-      <p class="text-muted mt-2 mb-0">View and track your previous purchases</p>
+      <h1 class="display-6 fw-bold mb-0">{{ 'MY_ORDERS.TITLE' | translate }}</h1>
+      <p class="text-muted mt-2 mb-0">{{ 'MY_ORDERS.DESC' | translate }}</p>
     </div>
     <div class="col-sm-4 text-center text-sm-end mt-4 mt-sm-0">
-      <a routerLink="/products" class="btn btn-outline-dark rounded-pill px-4 shadow-sm border-2 fw-medium">Continue Shopping</a>
+      <a routerLink="/products" class="btn btn-outline-dark rounded-pill px-4 shadow-sm border-2 fw-medium">{{ 'MY_ORDERS.CONTINUE_SHOPPING' | translate }}</a>
     </div>
   </div>
 
   <div *ngIf="isLoading" class="d-flex justify-content-center my-5 py-5">
     <div class="spinner-border text-dark" role="status">
-      <span class="visually-hidden">Loading...</span>
+      <span class="visually-hidden">{{ 'ALERTS.LOADING' | translate }}</span>
     </div>
   </div>
 
@@ -23,9 +23,9 @@
     
     <div *ngIf="orders.length === 0" class="text-center py-5 my-5 bg-light rounded-4 shadow-sm">
       <i class="bi bi-bag-x text-muted mb-4 d-block" style="font-size: 4rem;"></i>
-      <h3 class="fw-bold mb-3">No orders yet</h3>
-      <p class="text-muted mb-4 fs-5">You haven't placed any orders. Start exploring our collection!</p>
-      <a routerLink="/products" class="btn btn-dark rounded-pill px-5 py-3 fw-bold shadow-sm">Shop Now</a>
+      <h3 class="fw-bold mb-3">{{ 'MY_ORDERS.EMPTY_TITLE' | translate }}</h3>
+      <p class="text-muted mb-4 fs-5">{{ 'MY_ORDERS.EMPTY_DESC' | translate }}</p>
+      <a routerLink="/products" class="btn btn-dark rounded-pill px-5 py-3 fw-bold shadow-sm">{{ 'MY_ORDERS.SHOP_NOW' | translate }}</a>
     </div>
 
     <div *ngIf="orders && orders.length > 0">
@@ -36,11 +36,11 @@
             <table class="table table-hover align-middle mb-0">
               <thead class="table-light">
                 <tr>
-                  <th scope="col" class="py-3 px-4 border-0 text-uppercase small fw-bold text-muted">Order ID</th>
-                  <th scope="col" class="py-3 px-4 border-0 text-uppercase small fw-bold text-muted">Date</th>
-                  <th scope="col" class="py-3 px-4 border-0 text-uppercase small fw-bold text-muted">Total</th>
-                  <th scope="col" class="py-3 px-4 border-0 text-uppercase small fw-bold text-muted">Status</th>
-                  <th scope="col" class="py-3 px-4 border-0 text-end text-uppercase small fw-bold text-muted">Action</th>
+                  <th scope="col" class="py-3 px-4 border-0 text-uppercase small fw-bold text-muted">{{ 'MY_ORDERS.ID' | translate }}</th>
+                  <th scope="col" class="py-3 px-4 border-0 text-uppercase small fw-bold text-muted">{{ 'MY_ORDERS.DATE' | translate }}</th>
+                  <th scope="col" class="py-3 px-4 border-0 text-uppercase small fw-bold text-muted">{{ 'MY_ORDERS.TOTAL' | translate }}</th>
+                  <th scope="col" class="py-3 px-4 border-0 text-uppercase small fw-bold text-muted">{{ 'MY_ORDERS.STATUS' | translate }}</th>
+                  <th scope="col" class="py-3 px-4 border-0 text-end text-uppercase small fw-bold text-muted">{{ 'MY_ORDERS.ACTION' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -50,25 +50,25 @@
 
                       <div>
                         #{{ order.id }}
-                        <span *ngIf="order.isCustom" class="badge bg-info text-dark ms-2 small" style="font-size: 0.72rem; vertical-align: middle;">CUSTOM</span>
+                        <span *ngIf="order.isCustom" class="badge bg-info text-dark ms-2 small" style="font-size: 0.72rem; vertical-align: middle;">{{ 'MY_ORDERS.CUSTOM' | translate }}</span>
                       </div>
                     </div>
                   </td>
                   <td class="px-4 py-4 text-muted">
                     <div *ngIf="!order.isCustom">{{ (order.orderDate || order.createdAt) | date:'mediumDate' }}</div>
                     <div *ngIf="order.isCustom" class="custom-request-snippet text-truncate" style="max-width: 250px;" [title]="order.description || ''">
-                      {{ order.description || 'Custom Furniture Project' }}
+                      {{ order.description || ('ORDER.CUSTOM_TITLE' | translate) }}
                     </div>
                   </td>
                   <td class="px-4 py-4 fw-bold text-dark fs-6">${{ order.totalPrice | number:'1.2-2' }}</td>
                   <td class="px-4 py-4">
                     <span class="badge rounded-pill fw-medium px-3 py-2" [ngClass]="getStatusClass(order.status || '')">
-                      {{ order.status }}
+                      {{ 'STATUS.' + (order.status | uppercase) | translate }}
                     </span>
                   </td>
                   <td class="px-4 py-4 text-end">
                     <a [routerLink]="['/orders', order.id]" class="btn btn-sm btn-dark rounded-pill px-4 py-2 fw-medium shadow-sm transition-all">
-                      View Details
+                      {{ 'MY_ORDERS.VIEW_DETAILS' | translate }}
                     </a>
                   </td>
                 </tr>
@@ -84,14 +84,14 @@
            class="order-card-mobile text-decoration-none d-block">
           <div class="order-card-header">
             <span class="fw-bold text-dark">#{{ order.id }}</span>
-            <span *ngIf="order.isCustom" class="badge bg-info text-dark ms-2" style="font-size: 0.65rem;">CUSTOM</span>
+            <span *ngIf="order.isCustom" class="badge bg-info text-dark ms-2" style="font-size: 0.65rem;">{{ 'MY_ORDERS.CUSTOM' | translate }}</span>
             <span class="ms-auto badge rounded-pill fw-medium px-3 py-1" [ngClass]="getStatusClass(order.status || '')">
-              {{ order.status }}
+              {{ 'STATUS.' + (order.status | uppercase) | translate }}
             </span>
           </div>
           <div class="order-card-body d-flex align-items-center">
             <div *ngIf="order.isCustom && order.imageUrl" class="order-img-container me-3 shadow-sm" style="width: 50px; height: 50px;">
-              <img [src]="order.imageUrl" alt="Custom Request" class="order-img" />
+              <img [src]="order.imageUrl" [alt]="'ORDER.CUSTOM_PRODUCT' | translate" class="order-img" />
             </div>
             <div class="flex-grow-1 overflow-hidden">
               <div class="text-muted small mb-1">{{ (order.orderDate || order.createdAt) | date:'mediumDate' }}</div>
@@ -107,3 +107,4 @@
     </div>
   </ng-container>
 </div>
+
