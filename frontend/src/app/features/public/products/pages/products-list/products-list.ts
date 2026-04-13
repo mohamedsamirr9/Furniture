@@ -7,9 +7,11 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ProductQueryParams } from '../../../../../core/models/product-query-params.model';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-products-list',
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule],
   templateUrl: './products-list.html',
   styleUrl: './products-list.css',
 })

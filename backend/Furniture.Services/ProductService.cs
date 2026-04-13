@@ -22,12 +22,11 @@ namespace Furniture.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<ProductDetailsDto> CreateAsync(ProductCreateUpdateDto dto)
+
+        public async Task<ProductDetailsDto> CreateAsync(ProductCreateUpdateDto dto, string language = "en")
         {
             var repo = _unitOfWork.GetRepository<Product, int>();
-
             var product = _mapper.Map<Product>(dto);
-
             product.CreatedAt = DateTime.UtcNow;
 
             if (dto.ImageUrls != null && dto.ImageUrls.Any())
@@ -41,23 +40,22 @@ namespace Furniture.Services
             await repo.AddAsync(product);
             await _unitOfWork.SaveChangesAsync();
 
-            return _mapper.Map<ProductDetailsDto>(product);
+            var result = _mapper.Map<ProductDetailsDto>(product);
+            LocalizeProductDetails(product, result, language);
+            return result;
         }
 
         public async Task DeleteAsync(int id)
         {
             var repo = _unitOfWork.GetRepository<Product, int>();
-
             var product = await repo.GetByIdAsync(id);
-
             if (product is null) throw new Exception($"Product with id {id} not found");
 
             repo.Remove(product);
-
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<PaginatedProductsDto> GetAllAsync(ProductQueryParams queryParams)
+        public async Task<PaginatedProductsDto> GetAllAsync(ProductQueryParams queryParams, string language = "en")
         {
             var repo = _unitOfWork.GetRepository<Product, int>();
 
@@ -67,7 +65,13 @@ namespace Furniture.Services
             var spec = new ProductSpecifications(queryParams);
             var products = await repo.GetAllAsync(spec);
 
-            var data = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductListDto>>(products);
+            var productList = products.ToList();
+            var data = _mapper.Map<List<ProductListDto>>(productList);
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                LocalizeProductList(productList[i], data[i], language);
+            }
 
             return new PaginatedProductsDto
             {
@@ -78,24 +82,22 @@ namespace Furniture.Services
             };
         }
 
-        public async Task<ProductDetailsDto?> GetByIdAsync(int id)
+        public async Task<ProductDetailsDto?> GetByIdAsync(int id, string language = "en")
         {
             var repo = _unitOfWork.GetRepository<Product, int>();
-
             var spec = new ProductWithDetailsSpecifications(id);
-
             var product = await repo.GetByIdAsync(spec);
 
-            if (product is null)
-                return null;
+            if (product is null) return null;
 
-            return _mapper.Map<Product, ProductDetailsDto>(product);
+            var result = _mapper.Map<ProductDetailsDto>(product);
+            LocalizeProductDetails(product, result, language);
+            return result;
         }
 
         public async Task UpdateAsync(int id, ProductCreateUpdateDto dto)
         {
             var repo = _unitOfWork.GetRepository<Product, int>();
-
             var spec = new ProductWithDetailsSpecifications(id);
             var product = await repo.GetByIdAsync(spec);
 
@@ -113,8 +115,28 @@ namespace Furniture.Services
             }
 
             repo.Update(product);
-
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        private static void LocalizeProductList(Product entity, ProductListDto dto, string language)
+        {
+            dto.Name = LocalizationHelper.Localize(entity.NameEn, entity.NameAr, language);
+            if (entity.Category != null)
+            {
+                dto.CategoryName = LocalizationHelper.Localize(
+                    entity.Category.NameEn, entity.Category.NameAr, language);
+            }
+        }
+
+        private static void LocalizeProductDetails(Product entity, ProductDetailsDto dto, string language)
+        {
+            dto.Name = LocalizationHelper.Localize(entity.NameEn, entity.NameAr, language);
+            dto.Description = LocalizationHelper.LocalizeNullable(entity.DescriptionEn, entity.DescriptionAr, language);
+            if (entity.Category != null)
+            {
+                dto.CategoryName = LocalizationHelper.Localize(
+                    entity.Category.NameEn, entity.Category.NameAr, language);
+            }
         }
     }
 }

@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomRequestService } from '../../../../../core/services/custom-request.service';
 import { OfferService } from '../../../../../core/services/offer.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-offers',
-  imports: [CommonModule, ReactiveFormsModule],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './offers.html',
   styleUrl: './offers.css',
 })
@@ -50,7 +52,7 @@ export class Offers implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        this.errorMessage = 'Failed to load requests.';
+        this.errorMessage = 'ALERTS.LOAD_ERROR';
         this.isLoading = false;
       }
     });
@@ -111,7 +113,7 @@ export class Offers implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        this.submitError = err.error?.message || 'Failed to submit offer. Please try again.';
+        this.submitError = err.error?.message || 'ALERTS.SUBMIT_ERROR';
         this.isSubmitting = false;
       }
     });

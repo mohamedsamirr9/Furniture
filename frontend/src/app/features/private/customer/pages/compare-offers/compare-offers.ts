@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { OfferService } from '../../../../../core/services/offer.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-compare-offers',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, TranslateModule],
   templateUrl: './compare-offers.html',
   styleUrl: './compare-offers.css',
 })
@@ -19,7 +21,8 @@ export class CompareOffers implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private offerService: OfferService
+    private offerService: OfferService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -41,7 +44,7 @@ export class CompareOffers implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        this.errorMessage = 'Failed to load offers.';
+        this.errorMessage = 'ALERTS.ERROR';
         this.isLoading = false;
       }
     });
@@ -56,7 +59,8 @@ export class CompareOffers implements OnInit {
   }
 
   acceptOffer(offer: any) {
-    if (confirm('Are you sure you want to accept this offer? This will decline other offers.')) {
+    const confirmMsg = this.translate.instant('COMPARE_OFFERS.CONFIRM_ACCEPT');
+    if (confirm(confirmMsg)) {
       this.offerService.acceptOffer(offer.id).subscribe({
         next: () => {
           this.acceptSuccess = true;
@@ -80,7 +84,7 @@ export class CompareOffers implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          this.errorMessage = err.error?.message || 'Failed to accept offer.';
+          this.errorMessage = err.error?.message || 'ALERTS.OFFER_ACCEPT_ERROR';
         }
       });
     }

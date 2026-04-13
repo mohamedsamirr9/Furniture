@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterModule],
+  imports: [RouterModule, TranslateModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
