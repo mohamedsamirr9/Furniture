@@ -69,6 +69,8 @@ namespace Furniture.web
             
   
   builder.Services.AddAutoMapper(x => x.AddProfile<MappingProduct>());
+            builder.Services.AddAutoMapper(x => x.AddProfile<MappingComplaint>());
+
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingFavourite>());
 
 
@@ -80,7 +82,7 @@ namespace Furniture.web
             builder.Services.AddScoped<IOfferService, OfferService>();
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<ICustomRequestService, CustomRequestService>();
-            
+            builder.Services.AddScoped<IComplaintService, ComplaintService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             
             var app = builder.Build();
