@@ -3,11 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
-
+import { AuthService } from '../../../core/services/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-navbar',
+  standalone: true,
   imports: [RouterModule, CommonModule, TranslateModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
@@ -18,13 +19,21 @@ export class Navbar implements OnInit {
   constructor(
     private router: Router, 
     public cartService: CartService,
-    public wishlistService: WishlistService
+    public wishlistService: WishlistService,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.currentLang = localStorage.getItem('lang') || 'en';
-    this.cartService.loadCart().subscribe();
-    this.wishlistService.getWishlist().subscribe();
+    if (this.authService.isLoggedIn()) {
+      this.cartService.loadCart().subscribe();
+      this.wishlistService.getWishlist().subscribe();
+    }
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   get isDarkPage(): boolean {

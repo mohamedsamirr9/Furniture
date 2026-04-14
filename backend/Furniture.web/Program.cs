@@ -178,8 +178,8 @@ namespace Furniture.web
 
             app.UseHttpsRedirection();
             app.UseCors("AllowAll");
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseStaticFiles();
 
             app.MapControllers();

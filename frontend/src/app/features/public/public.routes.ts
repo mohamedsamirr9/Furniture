@@ -12,6 +12,8 @@ import { MyOrdersComponent } from './orders/pages/my-orders/my-orders';
 import { OrderDetailsComponent } from './orders/pages/order-details/order-details';
 import { WishlistComponent } from './wishlist/wishlist/wishlist';
 
+import { authGuard } from '../../core/guards/auth.guard';
+
 export const PUBLIC_ROUTES: Routes = [
   {
     path: '',
@@ -20,12 +22,12 @@ export const PUBLIC_ROUTES: Routes = [
       { path: '', component: Home },
       { path: 'products', component: ProductsList },
       { path: 'products/:id', component: ProductDetails },
-      { path: 'cart', component: CartComponent },
-      { path: 'checkout', component: CheckoutComponent },
-      { path: 'orders/confirmed', component: OrderConfirmedComponent },
-      { path: 'orders/:id', component: OrderDetailsComponent },
-      { path: 'orders', component: MyOrdersComponent },
-      { path: 'wishlist', component: WishlistComponent },
+      { path: 'cart', component: CartComponent, canActivate: [authGuard] },
+      { path: 'checkout', component: CheckoutComponent, canActivate: [authGuard] },
+      { path: 'orders/confirmed', component: OrderConfirmedComponent, canActivate: [authGuard] },
+      { path: 'orders/:id', component: OrderDetailsComponent, canActivate: [authGuard] },
+      { path: 'orders', component: MyOrdersComponent, canActivate: [authGuard] },
+      { path: 'wishlist', component: WishlistComponent, canActivate: [authGuard] },
     ],
   },
 ];

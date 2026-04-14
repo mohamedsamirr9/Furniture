@@ -11,6 +11,7 @@ import { TranslateHttpLoader, provideTranslateHttpLoader } from '@ngx-translate/
 
 import { routes } from './app.routes';
 import { languageInterceptor } from './core/interceptors/language.interceptor';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 export function HttpLoaderFactory() {
   return new TranslateHttpLoader();
@@ -21,7 +22,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([languageInterceptor])),
+    provideHttpClient(withInterceptors([languageInterceptor, authInterceptor])),
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {

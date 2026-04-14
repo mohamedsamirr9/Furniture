@@ -93,14 +93,36 @@
         <span class="fs-6 fw-bold border rounded px-2 py-1">{{ currentLang === 'en' ? 'AR' : 'EN' }}</span>
       </a>
 
-      <a
-        class="nav-item nav-link user-link"
-        [ngClass]="isDarkPage ? 'dark-nav' : ''"
-        routerLink="/login"
-        [attr.aria-label]="'NAV.LOGIN' | translate"
-      >
-        <i class="bi bi-person fs-5"></i>
-      </a>
+      <ng-container *ngIf="authService.currentUser$ | async as user; else guest">
+        <a
+          class="nav-item nav-link user-link"
+          [ngClass]="isDarkPage ? 'dark-nav' : ''"
+          routerLink="/profile"
+          [attr.aria-label]="'NAV.PROFILE' | translate"
+        >
+          <i class="bi bi-person-circle fs-5"></i>
+          <span class="ms-1 small d-none d-lg-inline">{{ user.name }}</span>
+        </a>
+        <a
+          class="nav-item nav-link user-link text-danger"
+          [ngClass]="isDarkPage ? 'dark-nav' : ''"
+          (click)="logout()"
+          style="cursor: pointer;"
+        >
+          <i class="bi bi-box-arrow-right fs-5"></i>
+        </a>
+      </ng-container>
+
+      <ng-template #guest>
+        <a
+          class="nav-item nav-link user-link"
+          [ngClass]="isDarkPage ? 'dark-nav' : ''"
+          routerLink="/login"
+          [attr.aria-label]="'NAV.LOGIN' | translate"
+        >
+          <i class="bi bi-person fs-5"></i>
+        </a>
+      </ng-template>
     </div>
   </div>
 </nav>
