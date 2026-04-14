@@ -1,12 +1,14 @@
 
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Furniture.API.Controllers
 {
     [ApiController]
     [Route("api/offers")]
+    [Authorize]
     public class OffersController : ControllerBase
     {
         private readonly IOfferService _offerService;
@@ -16,6 +18,7 @@ namespace Furniture.API.Controllers
             _offerService = offerService;
         }
 
+        [Authorize(Roles ="seller")]
         [HttpPost]
         public async Task<IActionResult> CreateOffer([FromBody] OfferCreateDto dto)
         {
@@ -46,7 +49,7 @@ namespace Furniture.API.Controllers
             if (offer == null) return NotFound();
             return Ok(offer);
         }
-
+        [Authorize(Roles ="buyer")]
         [HttpPost("{id}/accept")]
         public async Task<IActionResult> AcceptOffer(int id)
         {

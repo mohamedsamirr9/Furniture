@@ -15,11 +15,11 @@ namespace Furniture.Services
         {
             var client = new SmtpClient("smtp.gmail.com", 587)
             {
-                Credentials = new NetworkCredential("tasbeehmohamed540@gmail.com", "hchu nxgt cqcd kvsk"),
+                Credentials = new NetworkCredential("furnitureee23@gmail.com", "uecr tgzh tdmu folg"),
                 EnableSsl = true
             };
 
-            var mail = new MailMessage("tasbeehmohamed540@gmail.com", to, subject, body);
+            var mail = new MailMessage("furnitureee23@gmail.com", to, subject, body);
 
             await client.SendMailAsync(mail);
         }

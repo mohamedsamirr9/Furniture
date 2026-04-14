@@ -1,5 +1,6 @@
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace Furniture.presentation.Controllers
         }
 
         // POST /api/reviews
+        [Authorize(Roles ="buyer")]
         [HttpPost("api/reviews")]
         public async Task<ActionResult<ReviewDto>> CreateReview(ReviewCreateDto dto)
         {
@@ -41,6 +43,7 @@ namespace Furniture.presentation.Controllers
         }
 
         // DELETE /api/reviews/{id}
+        [Authorize(Roles ="buyer")]
         [HttpDelete("api/reviews/{id:int}")]
         public async Task<IActionResult> DeleteReview(int id)
         {

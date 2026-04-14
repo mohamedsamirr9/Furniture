@@ -1,5 +1,6 @@
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos.CategoryDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace Furniture.presentation.Controllers
         }
 
         // POST
+        [Authorize(Roles ="admin, seller")]
         [HttpPost]
         public async Task<ActionResult<CategoryDto>> CreateCategory(CategoryCreateUpdateDto dto)
         {
@@ -41,6 +43,7 @@ namespace Furniture.presentation.Controllers
         }
 
         // PUT
+        [Authorize(Roles = "admin, seller")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateCategory(int id, CategoryCreateUpdateDto dto)
         {
@@ -49,6 +52,7 @@ namespace Furniture.presentation.Controllers
         }
 
         // DELETE
+        [Authorize(Roles = "admin, seller")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
