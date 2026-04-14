@@ -395,6 +395,17 @@
       "EXPLORE": "Explore Catalog",
       "BECOME_SELLER": "Become a Seller"
     },
+    "CUSTOM_ORDER": {
+  "TAG": "Custom Orders",
+  "TITLE1": "Design It Your Way.",
+  "TITLE2": "We'll Build It.",
+  "DESC": "Can't find exactly what you want? With Furnora's custom order feature, you describe your dream piece — size, material, style — and our verified sellers compete to bring it to life. It's furniture, your way.",
+  "STEP1": "Describe your idea — dimensions, materials, budget",
+  "STEP2": "Receive multiple offers from skilled artisans",
+  "STEP3": "Compare prices, timelines & reviews — then choose",
+  "CTA": "Create Your Custom Order",
+  "BADGE": "Only on Furnora"
+},
     "SPECIAL": {
       "TITLE": "Special Offers",
       "TITLE_DESC": "Don't Miss These Deals",

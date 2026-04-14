@@ -5,10 +5,11 @@ import { Bestseller } from '../../components/bestseller/bestseller';
 import { Specialoffers } from '../../components/specialoffers/specialoffers';
 import { Hero } from '../../components/hero/hero';
 import { Categories } from '../../components/categories/categories';
+import { CustomOrder } from '../../components/custom-order/custom-order';
 
 @Component({
   selector: 'app-home',
-  imports: [Aboutus, Contactus, Bestseller, Specialoffers, Hero, Categories],
+  imports: [Aboutus, Contactus, Bestseller, Specialoffers, Hero, Categories, CustomOrder],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
