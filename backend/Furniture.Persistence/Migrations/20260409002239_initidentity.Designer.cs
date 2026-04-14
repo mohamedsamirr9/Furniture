@@ -4,6 +4,7 @@ using Furniture.Persistence.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Furniture.Persistence.Migrations
 {
     [DbContext(typeof(FurnitureDbContext))]
-    partial class FurnitureDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260409002239_initidentity")]
+    partial class initidentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,12 +199,7 @@ namespace Furniture.Persistence.Migrations
                     b.Property<DateTime>("Created_At")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DescriptionAr")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("DescriptionEn")
-                        .IsRequired()
+                    b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -209,11 +207,7 @@ namespace Furniture.Persistence.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("NameAr")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("NameEn")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -294,6 +288,34 @@ namespace Furniture.Persistence.Migrations
                     b.ToTable("CustomRequests");
                 });
 
+            modelBuilder.Entity("Furniture.Domain.Models.Delivery", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ShipperId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique();
+
+                    b.HasIndex("ShipperId");
+
+                    b.ToTable("Deliveries");
+                });
+
             modelBuilder.Entity("Furniture.Domain.Models.Favourite", b =>
                 {
                     b.Property<int>("Id")
@@ -367,10 +389,6 @@ namespace Furniture.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -386,17 +404,8 @@ namespace Furniture.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<decimal>("ShippingCost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("ShippingRuleId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("SubTotal")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -406,8 +415,6 @@ namespace Furniture.Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ShippingRuleId");
 
                     b.HasIndex("UserId");
 
@@ -425,18 +432,12 @@ namespace Furniture.Persistence.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("SellerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("OrderId", "ProductId");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("SellerId");
 
                     b.ToTable("OrderItems");
                 });
@@ -452,35 +453,23 @@ namespace Furniture.Persistence.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Method")
-                        .HasColumnType("int");
-
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("PaidAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PaymobOrderId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymobTransactionId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("PaymentDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId")
-                        .IsUnique();
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Payments");
                 });
@@ -501,23 +490,14 @@ namespace Furniture.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<string>("DescriptionAr")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<string>("DescriptionEn")
-                        .IsRequired()
+                    b.Property<string>("Description")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
-                    b.Property<string>("NameAr")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<string>("NameEn")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
@@ -629,7 +609,7 @@ namespace Furniture.Persistence.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("Furniture.Domain.Models.SellerPayout", b =>
+            modelBuilder.Entity("Furniture.Domain.Models.ShippingBid", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -637,30 +617,14 @@ namespace Furniture.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("CommissionAmount")
+                    b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
+                    b.Property<string>("ShipperId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal>("NetAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("OrderItemsTotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("PaidAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PaymobTransactionId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SellerProfileId")
+                    b.Property<int>("ShippingRequestId")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -668,14 +632,14 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("ShipperId");
 
-                    b.HasIndex("SellerProfileId");
+                    b.HasIndex("ShippingRequestId");
 
-                    b.ToTable("SellerPayouts");
+                    b.ToTable("ShippingBids");
                 });
 
-            modelBuilder.Entity("Furniture.Domain.Models.SellerProfile", b =>
+            modelBuilder.Entity("Furniture.Domain.Models.ShippingRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -683,71 +647,18 @@ namespace Furniture.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("BankAccountNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("BankName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("CommissionRate")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PaymobMerchantId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StoreDescription")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("StoreName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
+                    b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("SellerProfiles");
-                });
-
-            modelBuilder.Entity("Furniture.Domain.Models.ShippingRule", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("ShippingRules");
+                    b.ToTable("ShippingRequests");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -943,6 +854,25 @@ namespace Furniture.Persistence.Migrations
                     b.Navigation("Buyer");
                 });
 
+            modelBuilder.Entity("Furniture.Domain.Models.Delivery", b =>
+                {
+                    b.HasOne("Furniture.Domain.Models.Order", "Order")
+                        .WithOne("Delivery")
+                        .HasForeignKey("Furniture.Domain.Models.Delivery", "OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "Shipper")
+                        .WithMany()
+                        .HasForeignKey("ShipperId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Shipper");
+                });
+
             modelBuilder.Entity("Furniture.Domain.Models.Favourite", b =>
                 {
                     b.HasOne("Furniture.Domain.Models.Product", "Product")
@@ -989,18 +919,11 @@ namespace Furniture.Persistence.Migrations
 
             modelBuilder.Entity("Furniture.Domain.Models.Order", b =>
                 {
-                    b.HasOne("Furniture.Domain.Models.ShippingRule", "ShippingRule")
-                        .WithMany("Orders")
-                        .HasForeignKey("ShippingRuleId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Furniture.Domain.Models.ApplicationUser", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ShippingRule");
 
                     b.Navigation("User");
                 });
@@ -1019,24 +942,16 @@ namespace Furniture.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "Seller")
-                        .WithMany()
-                        .HasForeignKey("SellerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Order");
 
                     b.Navigation("Product");
-
-                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Payment", b =>
                 {
                     b.HasOne("Furniture.Domain.Models.Order", "Order")
-                        .WithOne("Payment")
-                        .HasForeignKey("Furniture.Domain.Models.Payment", "OrderId")
+                        .WithMany("Payments")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1103,45 +1018,34 @@ namespace Furniture.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Furniture.Domain.Models.SellerPayout", b =>
+            modelBuilder.Entity("Furniture.Domain.Models.ShippingBid", b =>
                 {
-                    b.HasOne("Furniture.Domain.Models.Order", "Order")
-                        .WithMany("SellerPayouts")
-                        .HasForeignKey("OrderId")
+                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "Shipper")
+                        .WithMany()
+                        .HasForeignKey("ShipperId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Furniture.Domain.Models.SellerProfile", "SellerProfile")
-                        .WithMany("Payouts")
-                        .HasForeignKey("SellerProfileId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("SellerProfile");
-                });
-
-            modelBuilder.Entity("Furniture.Domain.Models.SellerProfile", b =>
-                {
-                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "User")
-                        .WithOne("SellerProfile")
-                        .HasForeignKey("Furniture.Domain.Models.SellerProfile", "UserId")
+                    b.HasOne("Furniture.Domain.Models.ShippingRequest", "ShippingRequest")
+                        .WithMany("Bids")
+                        .HasForeignKey("ShippingRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Shipper");
+
+                    b.Navigation("ShippingRequest");
                 });
 
-            modelBuilder.Entity("Furniture.Domain.Models.ShippingRule", b =>
+            modelBuilder.Entity("Furniture.Domain.Models.ShippingRequest", b =>
                 {
-                    b.HasOne("Furniture.Domain.Models.Category", "Category")
-                        .WithMany("ShippingRules")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("Furniture.Domain.Models.Order", "Order")
+                        .WithOne("ShippingRequest")
+                        .HasForeignKey("Furniture.Domain.Models.ShippingRequest", "OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1215,8 +1119,6 @@ namespace Furniture.Persistence.Migrations
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("Reviews");
-
-                    b.Navigation("SellerProfile");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Cart", b =>
@@ -1227,8 +1129,6 @@ namespace Furniture.Persistence.Migrations
             modelBuilder.Entity("Furniture.Domain.Models.Category", b =>
                 {
                     b.Navigation("Products");
-
-                    b.Navigation("ShippingRules");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.CustomRequest", b =>
@@ -1238,11 +1138,13 @@ namespace Furniture.Persistence.Migrations
 
             modelBuilder.Entity("Furniture.Domain.Models.Order", b =>
                 {
+                    b.Navigation("Delivery");
+
                     b.Navigation("OrderItems");
 
-                    b.Navigation("Payment");
+                    b.Navigation("Payments");
 
-                    b.Navigation("SellerPayouts");
+                    b.Navigation("ShippingRequest");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Product", b =>
@@ -1258,14 +1160,9 @@ namespace Furniture.Persistence.Migrations
                     b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("Furniture.Domain.Models.SellerProfile", b =>
+            modelBuilder.Entity("Furniture.Domain.Models.ShippingRequest", b =>
                 {
-                    b.Navigation("Payouts");
-                });
-
-            modelBuilder.Entity("Furniture.Domain.Models.ShippingRule", b =>
-                {
-                    b.Navigation("Orders");
+                    b.Navigation("Bids");
                 });
 #pragma warning restore 612, 618
         }

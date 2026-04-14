@@ -1,5 +1,6 @@
 ﻿using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos.ProductDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace Furniture.presentation.Controllers
         }
 
         // POST /api/products/{id}/images
+        [Authorize(Roles ="seller")]
         [HttpPost("api/products/{id}/images")]
         public async Task<IActionResult> AddImage(int id, [FromBody] ProductImageCreateDto dto)
         {
@@ -29,6 +31,7 @@ namespace Furniture.presentation.Controllers
         }
 
         // DELETE /api/images/{id}
+        [Authorize(Roles ="admin, seller")]
         [HttpDelete("api/images/{id}")]
         public async Task<IActionResult> DeleteImage(int id)
         {
