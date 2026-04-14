@@ -9,6 +9,8 @@ export interface OrderItem {
 
 export interface Order {
   id: number;
+  subTotal: number;
+  shippingCost: number;
   totalPrice: number;
   orderDate: string;
   status: string;
@@ -21,11 +23,13 @@ export interface Order {
 }
 
 export interface CreateOrder {
+  city: string;
   shippingAddress: string;
   notes?: string;
 }
 export interface CreateOrderFromOffer {
   offerId: number;
+  city: string;
   shippingAddress: string;
   notes?: string;
 }

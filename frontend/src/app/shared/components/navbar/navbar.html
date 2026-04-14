@@ -1,11 +1,12 @@
 <nav class="customer-container navbar navbar-expand-lg navbar-dark">
-  <a class="navbar-brand logo" href="#">Furnora</a>
+  <a class="navbar-brand logo" routerLink="/">{{ 'NAV.BRAND' | translate }}</a>
 
   <button
     class="navbar-toggler"
     type="button"
     data-bs-toggle="collapse"
     data-bs-target="#navbarNavAltMarkup"
+    [attr.aria-label]="'NAV.TOGGLE_LANG' | translate"
   >
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -17,7 +18,7 @@
         [ngClass]="isDarkPage ? 'dark-nav' : ''"
         routerLink="/"
       >
-        Home
+        {{ 'NAV.HOME' | translate }}
       </a>
 
       <a
@@ -25,7 +26,7 @@
         [ngClass]="isDarkPage ? 'dark-nav' : ''"
         routerLink="/about"
       >
-        About Us
+        {{ 'NAV.ABOUT_US' | translate }}
       </a>
 
       <a
@@ -33,7 +34,7 @@
         [ngClass]="isDarkPage ? 'dark-nav' : ''"
         routerLink="/categories"
       >
-        Categories
+        {{ 'NAV.CATEGORIES' | translate }}
       </a>
 
       <a
@@ -41,7 +42,7 @@
         [ngClass]="isDarkPage ? 'dark-nav' : ''"
         routerLink="/customer"
       >
-        Custome Product
+        {{ 'NAV.CUSTOM_PRODUCT' | translate }}
       </a>
 
       <a
@@ -49,13 +50,14 @@
         [ngClass]="isDarkPage ? 'dark-nav' : ''"
         routerLink="/orders"
       >
-        Orders
+        {{ 'NAV.ORDERS' | translate }}
       </a>
 
       <a
         class="nav-item nav-link position-relative wishlist-link ms-auto me-3"
         [ngClass]="isDarkPage ? 'dark-nav' : ''"
         routerLink="/wishlist"
+        [attr.aria-label]="'NAV.WISHLIST' | translate"
       >
         <i class="bi bi-heart fs-5"></i>
         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="(wishlistService.wishlistCount$ | async) || 0 > 0">
@@ -70,6 +72,7 @@
         class="nav-item nav-link position-relative cart-link me-3"
         [ngClass]="isDarkPage ? 'dark-nav' : ''"
         routerLink="/cart"
+        [attr.aria-label]="'NAV.CART' | translate"
       >
         <i class="bi bi-cart3 fs-5"></i>
         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="(cartService.cartCount$ | async) || 0 > 0">
@@ -82,12 +85,23 @@
 
       <a
         class="nav-item nav-link user-link"
+        style="cursor: pointer;"
+        [ngClass]="isDarkPage ? 'dark-nav' : ''"
+        (click)="toggleLanguage()"
+        [attr.aria-label]="'NAV.TOGGLE_LANG' | translate"
+      >
+        <span class="fs-6 fw-bold border rounded px-2 py-1">{{ currentLang === 'en' ? 'AR' : 'EN' }}</span>
+      </a>
+
+      <a
+        class="nav-item nav-link user-link"
         [ngClass]="isDarkPage ? 'dark-nav' : ''"
         routerLink="/login"
-        aria-label="Log In"
+        [attr.aria-label]="'NAV.LOGIN' | translate"
       >
         <i class="bi bi-person fs-5"></i>
       </a>
     </div>
   </div>
 </nav>
+

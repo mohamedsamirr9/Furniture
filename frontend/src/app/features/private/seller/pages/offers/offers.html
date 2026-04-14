@@ -1,100 +1,105 @@
 <div class="page-header">
-  <h1>Offers</h1>
+  <h1>{{ 'SELLER.OFFERS_TITLE' | translate }}</h1>
 </div>
 <hr class="divider" />
 
-<h2 class="section-title">Customer Requests</h2>
+<h2 class="section-title">{{ 'SELLER.CUSTOMER_REQUESTS' | translate }}</h2>
 
 <div *ngIf="isLoading" class="loading-state">
   <div class="spinner"></div>
 </div>
 
 <div *ngIf="errorMessage" class="error-message">
-  {{ errorMessage }}
+  {{ errorMessage | translate }}
 </div>
 
 <div *ngIf="!isLoading && requests.length === 0" class="empty-state">
-  <p>No customer requests available at the moment.</p>
+  <p>{{ 'SELLER.EMPTY_REQUESTS' | translate }}</p>
 </div>
 
 <div class="request-card" *ngFor="let request of requests">
-  <h3 class="request-title">Request #{{ request.id }} by {{ request.buyerName }}</h3>
+  <h3 class="request-title">{{ 'SELLER.REQUEST_ID' | translate }}{{ request.id }} {{ 'SELLER.BY' | translate }} {{ request.buyerName }}</h3>
   <p class="request-desc">{{ request.description }}</p>
   <p class="request-meta">
-    Budget: ${{ request.budget }} &nbsp;&nbsp;
-    Status: {{ request.status }}
+    {{ 'SELLER.BUDGET' | translate }}: ${{ request.budget }} &nbsp;&nbsp;
+    {{ 'SELLER.STATUS' | translate }}: {{ request.status }}
   </p>
 
-  <button class="send-btn" *ngIf="activeRequestId !== request.id" [disabled]="request.status !== 'Open'" (click)="openOfferForm(request.id)">
-    ✈ Send Offer
-  </button>
-
-  <button class="view-details-btn" *ngIf="activeRequestId !== request.id" (click)="openDetails(request)" style="margin-left: 10px; padding: 10px 15px; background: #eee; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; color: #333; font-weight: 500;">
-    👁 View Details
-  </button>
+  <div class="action-buttons" style="display: flex; gap: 10px; margin-top: 16px;">
+    <button class="send-btn" *ngIf="activeRequestId !== request.id" [disabled]="request.status !== 'Open'" (click)="openOfferForm(request.id)" style="margin-top: 0;">
+      ✈ {{ 'SELLER.SEND_OFFER' | translate }}
+    </button>
+    <button class="view-details-btn" (click)="openDetails(request)">
+      👁 {{ 'MY_ORDERS.VIEW_DETAILS' | translate }}
+    </button>
+  </div>
 
   <div *ngIf="activeRequestId === request.id" class="offer-form-container" style="margin-top: 15px; padding: 15px; background: #f9f9f9; border-radius: 8px;">
-    <h4>Make an Offer</h4>
+    <h4>{{ 'SELLER.MAKE_OFFER' | translate }}</h4>
     
     <div *ngIf="submitSuccess" class="success-message" style="color: #155724; margin-bottom: 10px;">
-      Offer submitted successfully!
+      {{ 'SELLER.OFFER_SUBMITTED' | translate }}
     </div>
     
     <div *ngIf="submitError" class="error-message" style="color: #dc3545; margin-bottom: 10px;">
-      {{ submitError }}
+      {{ submitError | translate }}
     </div>
 
     <form [formGroup]="offerForm" (ngSubmit)="submitOffer(request.id)" *ngIf="!submitSuccess">
       <div class="form-group" style="margin-bottom: 10px;">
-        <label>Price ($)</label>
+        <label>{{ 'SELLER.PRICE' | translate }}</label>
         <input type="number" formControlName="price" class="form-control" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
         <div *ngIf="offerForm.get('price')?.touched && offerForm.get('price')?.invalid" style="color: red; font-size: 12px;">
-          Valid price is required.
+          {{ 'VALIDATION.PRICE_MIN' | translate }}
         </div>
       </div>
       
       <div class="form-group" style="margin-bottom: 10px;">
-        <label>Delivery Days</label>
+        <label>{{ 'SELLER.DELIVERY_DAYS' | translate }}</label>
         <input type="number" formControlName="deliveryDays" class="form-control" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
         <div *ngIf="offerForm.get('deliveryDays')?.touched && offerForm.get('deliveryDays')?.invalid" style="color: red; font-size: 12px;">
-          Valid delivery days required.
+           {{ 'VALIDATION.DAYS_REQUIRED' | translate }}
         </div>
       </div>
       
       <div class="form-actions" style="display: flex; gap: 10px;">
         <button type="submit" class="send-btn" [disabled]="isSubmitting">
-          {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+          {{ isSubmitting ? ('ALERTS.LOADING' | translate) : ('SELLER.SUBMIT' | translate) }}
         </button>
         <button type="button" class="cancel-btn" (click)="cancelOffer()" style="padding: 8px 16px; background: #ccc; border: none; border-radius: 4px; cursor: pointer;">
-          Cancel
+          {{ 'BUTTONS.CANCEL' | translate }}
         </button>
       </div>
     </form>
   </div>
 </div>
 
-<h2 class="section-title" style="margin-top: 40px;">My Offers</h2>
+<h2 class="section-title" style="margin-top: 40px;">{{ 'SELLER.MY_OFFERS' | translate }}</h2>
 <div *ngIf="myOffers.length === 0" class="empty-state">
-  <p>You haven't made any offers yet.</p>
+  <p>{{ 'SELLER.EMPTY_OFFERS' | translate }}</p>
 </div>
 <div class="request-card" *ngFor="let offer of myOffers">
-  <h3 class="request-title">Offer #{{ offer.id }}</h3>
+  <h3 class="request-title">{{ 'SELLER.OFFER_LABEL' | translate }} #{{ offer.id }}</h3>
   <p class="request-meta">
-    Price: ${{ offer.price }} &nbsp;&nbsp;
-    Delivery: {{ offer.deliveryDays }} days &nbsp;&nbsp;
+    {{ 'SELLER.PRICE' | translate }}: ${{ offer.price }} &nbsp;&nbsp;
+    {{ 'SELLER.DELIVERY_DAYS' | translate }}: {{ offer.deliveryDays }} &nbsp;&nbsp;
   </p>
   <div class="offer-row" style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
     <span class="badge-outline" [style.borderColor]="offer.status === 1 ? '#28a745' : '#ccc'" [style.color]="offer.status === 1 ? '#28a745' : 'inherit'">
-      {{ offer.status === 1 ? 'Accepted' : (offer.status === 2 ? 'Rejected' : 'Pending') }}
+      {{ 'SELLER.' + (offer.status === 1 ? 'ACCEPTED' : (offer.status === 2 ? 'REJECTED' : 'PENDING')) | translate }}
     </span>
     
     <!-- Status of the Request itself -->
     <span *ngIf="offer.requestStatus === 1 || offer.requestStatus === 2" class="badge" style="background: #6c757d; font-size: 11px; padding: 3px 8px; border-radius: 4px; color: white;">
-      <i class="bi bi-lock-fill"></i> Closed
+      <i class="bi bi-lock-fill"></i> {{ 'SELLER.CLOSED' | translate }}
     </span>
     <span *ngIf="offer.requestStatus === 3" class="badge" style="background: #dc3545; font-size: 11px; padding: 3px 8px; border-radius: 4px; color: white;">
-      Cancelled
+      {{ 'SELLER.CANCELLED' | translate }}
     </span>
+
+    <button class="view-details-btn" (click)="openDetails(offer.customRequest)" *ngIf="offer.customRequest" style="margin-left: auto;">
+      👁 {{ 'MY_ORDERS.VIEW_DETAILS' | translate }}
+    </button>
   </div>
 </div>
 
@@ -102,47 +107,47 @@
 <div class="modal-overlay" *ngIf="selectedRequestDetail" (click)="closeDetails()">
   <div class="modal-card" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>Request Details #{{ selectedRequestDetail.id }}</h2>
+      <h2>{{ 'MY_ORDERS.VIEW_DETAILS' | translate }} #{{ selectedRequestDetail.id }}</h2>
       <button class="close-btn" (click)="closeDetails()">&times;</button>
     </div>
     
     <div class="modal-content">
       <div class="detail-row">
-        <strong>Buyer:</strong> {{ selectedRequestDetail.buyerName }}
+        <strong>{{ 'ADMIN.USER' | translate }}:</strong> {{ selectedRequestDetail.buyerName }}
       </div>
       <div class="detail-row">
-        <strong>Status:</strong> 
+        <strong>{{ 'DASHBOARD.STATUS' | translate }}:</strong> 
         <span class="badge" [style.background]="selectedRequestDetail.status === 'Open' ? '#28a745' : '#17a2b8'">
-            {{ selectedRequestDetail.status }}
+            {{ 'STATUS.' + (selectedRequestDetail.status | uppercase) | translate }}
         </span>
       </div>
       <div class="detail-row">
-        <strong>Description:</strong>
+        <strong>{{ 'PRODUCT.DESCRIPTION' | translate }}:</strong>
         <p class="desc-text">{{ selectedRequestDetail.description }}</p>
       </div>
       <div class="detail-row">
-        <strong>Budget:</strong> 
+        <strong>{{ 'SELLER.BUDGET' | translate }}:</strong> 
         <span class="price-text">${{ selectedRequestDetail.budget }}</span>
       </div>
       <div class="detail-row" *ngIf="selectedRequestDetail.acceptedPrice">
-        <strong>Accepted Price:</strong> 
+        <strong>{{ 'SELLER.ACCEPTED_PRICE' | translate }}:</strong> 
         <span class="price-text" style="color: #28a745;">${{ selectedRequestDetail.acceptedPrice }}</span>
       </div>
 
       <div class="image-section" *ngIf="selectedRequestDetail.imageUrl">
-        <strong>Reference Image:</strong>
+        <strong>{{ 'SELLER.NO_IMAGE' | translate | slice:0:15 }}:</strong>
         <div class="image-container">
           <img [src]="selectedRequestDetail.imageUrl" alt="Reference" class="ref-image" />
         </div>
       </div>
       
       <div class="image-section" *ngIf="!selectedRequestDetail.imageUrl">
-        <p class="no-image-text">No reference image provided.</p>
+        <p class="no-image-text">{{ 'SELLER.NO_IMAGE_DESC' | translate }}</p>
       </div>
     </div>
     
     <div class="modal-footer">
-      <button class="footer-close-btn" (click)="closeDetails()">Close</button>
+      <button class="footer-close-btn" (click)="closeDetails()">{{ 'BUTTONS.CANCEL' | translate }}</button>
     </div>
   </div>
 </div>

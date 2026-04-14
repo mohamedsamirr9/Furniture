@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { CartService } from '../../../../../core/services/cart.service';
 import { Observable } from 'rxjs';
 import { Cart } from '../../../../../core/models/cart.model';
@@ -8,7 +9,7 @@ import { Cart } from '../../../../../core/models/cart.model';
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './cart.html',
   styleUrl: './cart.css'
 })

@@ -1,4 +1,4 @@
-﻿using Furniture.shared.Dtos.CategoryDto;
+using Furniture.shared.Dtos.CategoryDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +9,11 @@ namespace Furniture.Servises_Abstraction
 {
     public interface ICategoryService
     {
-        Task<IEnumerable<CategoryListDto>> GetAllCategoriesAsync(int pageIndex, int pageSize, string? search);
+        Task<IEnumerable<CategoryListDto>> GetAllCategoriesAsync(int pageIndex, int pageSize, string? search, string language = "en");
 
-        Task<CategoryDto> GetCategoryByIdAsync(int id);
+        Task<CategoryDto> GetCategoryByIdAsync(int id, string language = "en");
 
-        Task<CategoryDto> CreateCategoryAsync(CategoryCreateUpdateDto dto);
+        Task<CategoryDto> CreateCategoryAsync(CategoryCreateUpdateDto dto, string language = "en");
 
         Task UpdateCategoryAsync(int id, CategoryCreateUpdateDto dto);
 

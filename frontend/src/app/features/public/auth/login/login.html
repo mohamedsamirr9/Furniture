@@ -2,31 +2,31 @@
   <div class="row h-100">
     <!-- LEFT -->
     <div class="col-md-6 d-flex flex-column justify-content-center px-5">
-      <h3 class="brand mb-4" (click)="goHome()" style="cursor: pointer">Furnora</h3>
+      <h3 class="brand mb-4" (click)="goHome()" style="cursor: pointer">{{ 'NAV.BRAND' | translate }}</h3>
 
-      <h2 class="fw-bold">Welcome back</h2>
-      <p class="text-muted mb-4">Sign in to your account to continue</p>
+      <h2 class="fw-bold">{{ 'AUTH.WELCOME' | translate }}</h2>
+      <p class="text-muted mb-4">{{ 'AUTH.SIGN_IN_DESC' | translate }}</p>
 
       <form>
         <div class="mb-3">
-          <label class="form-label">Email</label>
+          <label class="form-label">{{ 'AUTH.EMAIL' | translate }}</label>
           <input type="email" class="form-control input" placeholder="you@example.com" />
         </div>
 
         <div class="mb-2">
-          <label class="form-label">Password</label>
+          <label class="form-label">{{ 'AUTH.PASSWORD' | translate }}</label>
           <input type="password" class="form-control input" placeholder="********" />
         </div>
 
         <div class="text-end mb-4">
-          <a href="#" class="link small">Forgot password?</a>
+          <a href="#" class="link small">{{ 'AUTH.FORGOT_PASS' | translate }}</a>
         </div>
 
-        <button class="btn btn-main w-100 mb-3">Sign In</button>
+        <button class="btn btn-main w-100 mb-3">{{ 'AUTH.SIGN_IN' | translate }}</button>
 
         <p class="text-center">
-          Don't have an account?
-          <a routerLink="/register" class="link">Sign up</a>
+          {{ 'AUTH.NO_ACCOUNT' | translate }}
+          <a routerLink="/register" class="link">{{ 'AUTH.SIGN_UP' | translate }}</a>
         </p>
       </form>
     </div>
@@ -36,10 +36,11 @@
       class="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center right text-center"
     >
       <div class="square mb-4"></div>
-      <h3 class="fw-bold">Find Your Perfect Furniture</h3>
+      <h3 class="fw-bold">{{ 'AUTH.FIND_PERFECT' | translate }}</h3>
       <p class="text-muted w-75">
-        Browse thousands of unique pieces from trusted sellers around the world.
+        {{ 'AUTH.BROWSE_THOUSANDS' | translate }}
       </p>
     </div>
+
   </div>
 </div>

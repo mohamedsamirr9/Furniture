@@ -3,37 +3,36 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-6">
       <!-- Brand -->
       <div class="col">
-        <h5>Damietta.</h5>
+        <h5>{{ 'NAV.BRAND' | translate }}.</h5>
         <p>
-          Premium handcrafted furniture, bringing <br />
-          Damietta's finest craftsmanship to your home.
+          {{ 'FOOTER.CRAFTSMANSHIP' | translate }}
         </p>
       </div>
 
       <!-- Links -->
       <div class="col">
-        <h5>Quick Links</h5>
+        <h5>{{ 'FOOTER.QUICK_LINKS' | translate }}</h5>
         <ul class="nav flex-column">
-          <li><a href="#" class="nav-link p-0">Home</a></li>
-          <li><a href="#" class="nav-link p-0">Categories</a></li>
-          <li><a href="#" class="nav-link p-0">About Us</a></li>
-          <li><a href="#" class="nav-link p-0">Contact Us</a></li>
+          <li><a routerLink="/" class="nav-link p-0">{{ 'NAV.HOME' | translate }}</a></li>
+          <li><a routerLink="/categories" class="nav-link p-0">{{ 'NAV.CATEGORIES' | translate }}</a></li>
+          <li><a routerLink="/about" class="nav-link p-0">{{ 'NAV.ABOUT_US' | translate }}</a></li>
+          <li><a routerLink="/contact" class="nav-link p-0">{{ 'FOOTER.CONTACT_US' | translate }}</a></li>
         </ul>
       </div>
 
       <!-- Links -->
       <div class="col">
-        <h5>Contact</h5>
+        <h5>{{ 'FOOTER.CONTACT' | translate }}</h5>
         <ul class="nav flex-column">
-          <li><a href="#" class="nav-link p-0">hello@damietta.com</a></li>
-          <li><a href="#" class="nav-link p-0">+20 123 456 7890</a></li>
-          <li><a href="#" class="nav-link p-0">Damietta, Egypt</a></li>
+          <li><a href="mailto:hello@furnora.com" class="nav-link p-0">hello@furnora.com</a></li>
+          <li><a href="tel:+201234567890" class="nav-link p-0">+20 123 456 7890</a></li>
+          <li><a href="#" class="nav-link p-0">{{ 'FOOTER.ADDRESS' | translate }}</a></li>
         </ul>
       </div>
 
       <!-- Social -->
       <div class="col d-flex flex-column align-items-center">
-        <h5>Follow Us</h5>
+        <h5>{{ 'FOOTER.FOLLOW_US' | translate }}</h5>
         <div class="d-flex gap-3 mt-2">
           <a href="#"><i class="bi bi-facebook"></i></a>
           <a href="#"><i class="bi bi-twitter"></i></a>
@@ -44,7 +43,8 @@
 
     <!-- bottom -->
     <div class="text-center pt-4 pb-3">
-      <small>© 2026 Furnora. All rights reserved.</small>
+      <small>© 2026 {{ 'NAV.BRAND' | translate }}. {{ 'FOOTER.RIGHTS' | translate }}</small>
     </div>
   </div>
 </footer>
+

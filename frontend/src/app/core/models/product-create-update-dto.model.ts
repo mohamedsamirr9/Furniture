@@ -1,6 +1,8 @@
 export interface ProductCreateUpdateDto {
-  name: string;
-  description?: string;
+  nameEn: string;
+  nameAr?: string;
+  descriptionEn: string;
+  descriptionAr?: string;
   price: number;
   stockQuantity: number;
   categoryId: number;
