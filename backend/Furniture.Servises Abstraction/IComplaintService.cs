@@ -11,6 +11,7 @@ namespace Furniture.Servises_Abstraction
     {
         Task<ComplaintDto>CreateAsync(string userId, ComplaintCreateDto dto);
         Task<IEnumerable<ComplaintDto>> GetMyAsync(string userId); 
+        Task<IEnumerable<ComplaintDto>> GetSellerComplaintsAsync(string sellerId);
         Task<ComplaintDetailDto> GetByIdAsync(int id);
         Task UpdateAsync(int id, string userId, ComplaintCreateDto dto);
         Task CloseAsync(int id, string userId);

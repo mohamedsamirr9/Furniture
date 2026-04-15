@@ -14,18 +14,28 @@ namespace Furniture.web
     public class ComplaintsController(IComplaintService _complaintService) : ControllerBase
     {
         [HttpGet]
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="admin")]
         public async Task<ActionResult<IEnumerable<ComplaintDto>>> GetAll(string? status = null)
         {
             var result = await _complaintService.GetAllAsync(status);
             return Ok(result);
         }
+                [Authorize (Roles ="buyer")]
         [HttpGet("My")]
         public async Task<ActionResult<IEnumerable<ComplaintDto>>> GetMy()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             //var userId = "seller-1";
             var result = await _complaintService.GetMyAsync(userId!);
+            return Ok(result);
+        }
+
+        [HttpGet("seller")]
+        [Authorize(Roles = "seller")]
+        public async Task<ActionResult<IEnumerable<ComplaintDto>>> GetSellerComplaints()
+        {
+            var sellerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = await _complaintService.GetSellerComplaintsAsync(sellerId!);
             return Ok(result);
         }
         

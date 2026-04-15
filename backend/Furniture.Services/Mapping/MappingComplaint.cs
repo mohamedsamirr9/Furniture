@@ -16,7 +16,9 @@ namespace Furniture.Services.Mapping
         {
             //Listing
             CreateMap<Complaint, ComplaintDto>()
-                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()));
+                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()))
+                .ForMember(d => d.UserId, o => o.MapFrom(s => s.UserId))
+                .ForMember(d => d.UserName, o => o.MapFrom(s => s.User.UserName ?? s.User.Email));
             //Details 
             CreateMap<Complaint, ComplaintDetailDto>()
                 .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()))

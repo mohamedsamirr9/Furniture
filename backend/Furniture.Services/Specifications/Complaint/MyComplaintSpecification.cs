@@ -11,6 +11,8 @@ namespace Furniture.Services.Specifications
     {
         public MyComplaintSpecification(string userId):base (c=>c.UserId==userId)
         {
+            AddInclude(c => c.User);
+            AddInclude(c => c.Order);
             AddOrderByDescending(c => c.CreatedAt);
         }
     }

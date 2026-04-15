@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { Complaint } from '../../../../../core/models/complaint.model';
+import { ComplaintService } from '../../../../../core/services/complaint.service';
 
 @Component({
   selector: 'app-complaints',
@@ -9,10 +11,43 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './complaints.html',
   styleUrl: './complaints.css',
 })
-export class Complaints {
-  complaints = [
-    { id: 'C-001', user: 'Lisa P.', description: 'Damaged item received', date: '2026-03-25', status: 'Open' },
-    { id: 'C-002', user: 'Mike D.', description: 'Wrong color delivered', date: '2026-03-22', status: 'In Progress' },
-    { id: 'C-003', user: 'Anna S.', description: 'Late delivery', date: '2026-03-18', status: 'Resolved' },
-  ];
+export class Complaints implements OnInit {
+  complaints: Complaint[] = [];
+  loading = false;
+  error = '';
+
+  constructor(private complaintService: ComplaintService) {}
+
+  ngOnInit() {
+    this.loadComplaints();
+  }
+
+  loadComplaints() {
+    this.loading = true;
+    this.error = '';
+
+    this.complaintService.getAllComplaints().subscribe({
+      next: (data: Complaint[]) => {
+        this.complaints = data;
+        this.loading = false;
+      },
+      error: (err: any) => {
+        this.error = 'Failed to load complaints';
+        this.loading = false;
+        console.error('Error loading complaints:', err);
+      },
+    });
+  }
+
+  getStatusClass(status: string): string {
+    if (status === 'Open') return 'badge-red';
+    if (status === 'InProgress') return 'badge-outline';
+    if (status === 'Resolved' || status === 'Closed') return 'badge-gray';
+    return '';
+  }
+
+  getStatusDisplay(status: string): string {
+    if (status === 'InProgress') return 'In Progress';
+    return status;
+  }
 }

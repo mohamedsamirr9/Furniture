@@ -76,6 +76,13 @@ namespace Furniture.Services
             return _mapper.Map<IEnumerable<ComplaintDto>>(complaints);
         }
 
+        public async Task<IEnumerable<ComplaintDto>> GetSellerComplaintsAsync(string sellerId)
+        {
+            var spec = new SellerComplaintSpecification(sellerId);
+            var complaints = await _unitOfWork.GetRepository<Complaint, int>().GetAllAsync(spec);
+            return _mapper.Map<IEnumerable<ComplaintDto>>(complaints);
+        }
+
         public async Task UpdateAsync(int id, string userId, ComplaintCreateDto dto)
         {
             var repo = _unitOfWork.GetRepository<Complaint, int>();

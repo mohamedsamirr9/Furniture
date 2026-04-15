@@ -12,6 +12,8 @@ namespace Furniture.Services.Specifications
     {
         public ComplaintSpecifications(string? status):base(c=>string.IsNullOrEmpty(status)||c.Status.ToString().ToLower()==status.ToLower())
         {
+            AddInclude(c => c.User);
+            AddInclude(c => c.Order);
             AddOrderByDescending(c => c.CreatedAt);
         }
     }

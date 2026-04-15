@@ -11,9 +11,10 @@ namespace Furniture.Services.Specifications
     {
         public ComplaintWithUserSpecification(int id):base(c=>c.Id==id)
         {
-           AddInclude(c => c.User);
+            AddInclude(c => c.User);
             AddInclude(c => c.Order);
-
+            AddInclude("Order.OrderItems.Product");
+            AddInclude("Order.Offer");
         }
     }
 }
