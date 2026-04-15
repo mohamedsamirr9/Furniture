@@ -32,9 +32,9 @@
       <a
         class="nav-item nav-link flex-fill"
         [ngClass]="isDarkPage ? 'dark-nav' : ''"
-        routerLink="/categories"
+        routerLink="/customer/complaints"
       >
-        {{ 'NAV.CATEGORIES' | translate }}
+        {{ 'NAV.COMPLAINTS' | translate }}
       </a>
 
       <a
@@ -60,10 +60,16 @@
         [attr.aria-label]="'NAV.WISHLIST' | translate"
       >
         <i class="bi bi-heart fs-5"></i>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="(wishlistService.wishlistCount$ | async) || 0 > 0">
+        <span
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+          *ngIf="(wishlistService.wishlistCount$ | async) || 0 > 0"
+        >
           {{ wishlistService.wishlistCount$ | async }}
         </span>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="(wishlistService.wishlistCount$ | async) === 0">
+        <span
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+          *ngIf="(wishlistService.wishlistCount$ | async) === 0"
+        >
           0
         </span>
       </a>
@@ -75,22 +81,30 @@
         [attr.aria-label]="'NAV.CART' | translate"
       >
         <i class="bi bi-cart3 fs-5"></i>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="(cartService.cartCount$ | async) || 0 > 0">
+        <span
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+          *ngIf="(cartService.cartCount$ | async) || 0 > 0"
+        >
           {{ cartService.cartCount$ | async }}
         </span>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="(cartService.cartCount$ | async) === 0">
+        <span
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+          *ngIf="(cartService.cartCount$ | async) === 0"
+        >
           0
         </span>
       </a>
 
       <a
         class="nav-item nav-link user-link"
-        style="cursor: pointer;"
+        style="cursor: pointer"
         [ngClass]="isDarkPage ? 'dark-nav' : ''"
         (click)="toggleLanguage()"
         [attr.aria-label]="'NAV.TOGGLE_LANG' | translate"
       >
-        <span class="fs-6 fw-bold border rounded px-2 py-1">{{ currentLang === 'en' ? 'AR' : 'EN' }}</span>
+        <span class="fs-6 fw-bold border rounded px-2 py-1">{{
+          currentLang === 'en' ? 'AR' : 'EN'
+        }}</span>
       </a>
 
       <ng-container *ngIf="authService.currentUser$ | async as user; else guest">
@@ -107,7 +121,7 @@
           class="nav-item nav-link user-link text-danger"
           [ngClass]="isDarkPage ? 'dark-nav' : ''"
           (click)="logout()"
-          style="cursor: pointer;"
+          style="cursor: pointer"
         >
           <i class="bi bi-box-arrow-right fs-5"></i>
         </a>
@@ -126,4 +140,3 @@
     </div>
   </div>
 </nav>
-
