@@ -8,10 +8,9 @@
     <div class="form-group">
       <label>{{ 'CUSTOMER.COMPLAINTS.ORDER_LABEL' | translate }}</label>
       <div class="select-wrapper">
-        <select [(ngModel)]="formData.order" name="order">
+        <select [(ngModel)]="formData.orderId" name="order">
           <option value="" disabled selected>{{ 'CUSTOMER.COMPLAINTS.SELECT_ORDER' | translate }}</option>
-          <option value="ORD-1234">ORD-1234</option>
-          <option value="ORD-1235">ORD-1235</option>
+          <option *ngFor="let order of orders" [value]="order.id">ORD-{{ order.id }}</option>
         </select>
       </div>
     </div>

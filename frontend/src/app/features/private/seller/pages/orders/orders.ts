@@ -33,7 +33,7 @@ export class Orders implements OnInit {
 
   loadOrders(): void {
     this.isLoading = true;
-    this.orderService.getAllOrdersPaginated(1, 100).subscribe({
+    this.orderService.getSellerOrders().subscribe({
       next: (res: any) => {
         this.orders = res;
         this.isLoading = false;

@@ -7,23 +7,46 @@
       <h2 class="fw-bold">{{ 'AUTH.CREATE_ACCOUNT' | translate }}</h2>
       <p class="text-muted mb-4">{{ 'AUTH.JOIN_DESC' | translate }}</p>
 
-      <form>
-        <div class="mb-3">
-          <label class="form-label">{{ 'AUTH.FULL_NAME' | translate }}</label>
-          <input type="text" class="form-control input" placeholder="ex: ahmed ahmed" />
+      <div *ngIf="errorMessage" class="alert alert-danger shadow-sm py-2 mb-3">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ 'AUTH.FULL_NAME' | translate }}</label>
+            <input type="text" formControlName="name" class="form-control input" placeholder="ex: Ahmed Ali" [class.is-invalid]="registerForm.get('name')?.touched && registerForm.get('name')?.invalid" />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Username</label>
+            <input type="text" formControlName="userName" class="form-control input" placeholder="ex: ahmed99" [class.is-invalid]="registerForm.get('userName')?.touched && registerForm.get('userName')?.invalid" />
+          </div>
         </div>
 
         <div class="mb-3">
           <label class="form-label">{{ 'AUTH.EMAIL' | translate }}</label>
-          <input type="email" class="form-control input" placeholder="you@example.com" />
+          <input type="email" formControlName="email" class="form-control input" placeholder="you@example.com" [class.is-invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" />
         </div>
 
-        <div class="mb-4">
-          <label class="form-label">{{ 'AUTH.PASSWORD' | translate }}</label>
-          <input type="password" class="form-control input" placeholder="********" />
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">{{ 'AUTH.PASSWORD' | translate }}</label>
+            <input type="password" formControlName="password" class="form-control input" placeholder="********" [class.is-invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" />
+          </div>
+          <div class="col-md-6 mb-4">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" formControlName="confirmPassword" class="form-control input" placeholder="********" [class.is-invalid]="registerForm.get('confirmPassword')?.touched && (registerForm.get('confirmPassword')?.invalid || registerForm.hasError('passwordMismatch'))" />
+            <div *ngIf="registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched" class="invalid-feedback d-block">
+              Passwords do not match.
+            </div>
+          </div>
         </div>
 
-        <button class="btn btn-main w-100 mb-3">{{ 'AUTH.CREATE_ACCOUNT' | translate }}</button>
+        <button type="submit" class="btn btn-main w-100 mb-3 d-flex align-items-center justify-content-center gap-2" [disabled]="registerForm.invalid || isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status"></span>
+          {{ isLoading ? ('ALERTS.LOADING' | translate) : ('AUTH.CREATE_ACCOUNT' | translate) }}
+        </button>
 
         <p class="text-center">
           {{ 'AUTH.ALREADY_ACCOUNT' | translate }}

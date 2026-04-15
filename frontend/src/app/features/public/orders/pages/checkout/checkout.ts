@@ -73,11 +73,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       debounceTime(300),
       distinctUntilChanged()
-    ).subscribe(city => {
+    ).subscribe((city: string | null) => {
       if (city) {
         this.shippingService.estimateShipping(city, this.offerId).subscribe({
-          next: (res) => this.shippingCost$.next(res.shippingCost),
-          error: (err) => {
+          next: (res: any) => this.shippingCost$.next(res.shippingCost),
+          error: (err: any) => {
             console.error('Failed to estimate shipping', err);
             this.shippingCost$.next(0);
           }
@@ -119,7 +119,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           this.router.navigate(['/orders/confirmed'], { state: { orderResponse: response } });
         },
-        error: (err) => {
+        error: (err: any) => {
           this.isLoading = false;
           console.error('Error creating order from offer', err);
           alert('Failed to place order. Please try again.');
@@ -137,7 +137,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.router.navigate(['/orders/confirmed'], { state: { orderResponse: response } });
           });
         },
-        error: (err) => {
+        error: (err: any) => {
           this.isLoading = false;
           console.error('Error creating order', err);
           alert('Failed to place order. Please try again.');

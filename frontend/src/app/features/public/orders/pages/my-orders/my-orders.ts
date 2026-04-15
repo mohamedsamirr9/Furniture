@@ -29,7 +29,7 @@ export class MyOrdersComponent implements OnInit {
         this.orders = Array.isArray(data) ? data : (data.items || data.data || []);
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         this.errorMsg = 'Failed to load your orders. Please try again later.';
         this.isLoading = false;
         console.error('Error loading orders', err);

@@ -52,7 +52,7 @@ export class ProductDetails implements OnInit {
       }
     });
 
-    this.wishlistSub = this.wishlistService.wishlist$.subscribe(items => {
+    this.wishlistSub = this.wishlistService.wishlist$.subscribe((items: any[]) => {
       if (this.product) {
         this.checkWishlistStatus(items);
       }
@@ -70,7 +70,7 @@ export class ProductDetails implements OnInit {
     
     // If items aren't provided, get current value
     if (!items) {
-      this.wishlistService.wishlist$.subscribe(curr => items = curr).unsubscribe();
+      this.wishlistService.wishlist$.subscribe((curr: any[]) => items = curr).unsubscribe();
     }
     
     this.isInWishlist = items?.some(item => item.productId === this.product.id) || false;
@@ -146,7 +146,7 @@ export class ProductDetails implements OnInit {
         this.isInWishlist = false;
         this.showWishlistMessage('WISHLIST.REMOVED');
       },
-      error: (err) => console.error('Failed to remove from wishlist', err)
+      error: (err: any) => console.error('Failed to remove from wishlist', err)
     });
   } else {
     this.wishlistService.addToWishlist(this.product.id).subscribe({
@@ -154,7 +154,7 @@ export class ProductDetails implements OnInit {
         this.isInWishlist = true;
         this.showWishlistMessage('WISHLIST.ADDED');
       },
-      error: (err) => console.error('Failed to add to wishlist', err)
+      error: (err: any) => console.error('Failed to add to wishlist', err)
     });
   }
 }

@@ -114,7 +114,7 @@ namespace Furniture.Persistence.Data.DbContexts
                     Tb.HasCheckConstraint("PhoneCheck", "PhoneNumber LIKE '01%' AND PhoneNumber NOT LIKE '%[^0-9]%'");
                 });
 
-                entity.Property(u => u.RegisterdAt)
+                entity.Property(u => u.RegisteredAt)
                       .HasDefaultValueSql("GETDATE()");
 
                 entity.Property(u => u.IsDeleted)
@@ -237,7 +237,7 @@ namespace Furniture.Persistence.Data.DbContexts
 
                 //  Offer → Order 
                 entity.HasOne(o => o.Order)
-                      .WithOne()
+                      .WithOne(ord => ord.Offer)
                       .HasForeignKey<Offer>(o => o.OrderId)
                       .IsRequired(false);
             });
@@ -431,6 +431,8 @@ namespace Furniture.Persistence.Data.DbContexts
 
         public DbSet<ShippingRule> ShippingRules { get; set; }
         public DbSet<CustomRequest> CustomRequests { get; set; }
+        public DbSet<RefrashToken> RefreshTokens { get; set; }
+
 
         public DbSet<SellerProfile> SellerProfiles { get; set; } = null!;
         public DbSet<SellerPayout> SellerPayouts { get; set; } = null!;

@@ -363,5 +363,21 @@ namespace Furniture.Services.Implementations
         }
 
         #endregion
+
+        #region Seller
+
+        public async Task<List<OrderDTO>> GetOrdersForSellerAsync(string sellerId)
+        {
+            var spec = new SellerOrdersSpecification(sellerId);
+            var orders = await _unitOfWork.GetRepository<Order, int>()
+                .GetAllAsync(spec);
+
+            var orderDtos = _mapper.Map<List<OrderDTO>>(orders);
+            await EnrichOrdersAsync(orderDtos);
+
+            return orderDtos;
+        }
+
+        #endregion
     }
 }

@@ -82,6 +82,33 @@ namespace Furniture.Services
             };
         }
 
+        public async Task<PaginatedProductsDto> GetSellerProductsAsync(string sellerId, ProductQueryParams queryParams, string language = "en")
+        {
+            var repo = _unitOfWork.GetRepository<Product, int>();
+
+            var countSpec = new SellerProductsCountSpecification(sellerId, queryParams);
+            var totalCount = await repo.CountAsync(countSpec);
+
+            var spec = new SellerProductsSpecification(sellerId, queryParams);
+            var products = await repo.GetAllAsync(spec);
+
+            var productList = products.ToList();
+            var data = _mapper.Map<List<ProductListDto>>(productList);
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                LocalizeProductList(productList[i], data[i], language);
+            }
+
+            return new PaginatedProductsDto
+            {
+                TotalCount = totalCount,
+                Page = queryParams.Page,
+                PageSize = queryParams.PageSize,
+                Data = data
+            };
+        }
+
         public async Task<ProductDetailsDto?> GetByIdAsync(int id, string language = "en")
         {
             var repo = _unitOfWork.GetRepository<Product, int>();

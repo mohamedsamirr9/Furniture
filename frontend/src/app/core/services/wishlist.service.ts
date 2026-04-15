@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WishlistService {
-  private baseUrl = 'http://localhost:5227/api/favourites';
+  private baseUrl = `${environment.apiUrl}/favourites`;
   
   private wishlistSubject = new BehaviorSubject<any[]>([]);
   public wishlist$ = this.wishlistSubject.asObservable();
@@ -25,7 +26,7 @@ export class WishlistService {
 
   addToWishlist(productId: number): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/${productId}`, {}).pipe(
-      tap((newItem) => {
+      tap((newItem: any) => {
         const currentItems = this.wishlistSubject.value;
         this.wishlistSubject.next([...currentItems, newItem]);
       })
@@ -36,7 +37,7 @@ export class WishlistService {
     return this.http.delete<any>(`${this.baseUrl}/${productId}`).pipe(
       tap(() => {
         const currentItems = this.wishlistSubject.value;
-        this.wishlistSubject.next(currentItems.filter(item => item.productId !== productId));
+        this.wishlistSubject.next(currentItems.filter((item: any) => item.productId !== productId));
       })
     );
   }
