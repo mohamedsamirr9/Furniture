@@ -6,9 +6,11 @@ import { CategoryService } from '../../../../../core/services/category.service';
 
 import { ProductCreateUpdateDto } from '../../../../../core/models/product-create-update-dto.model';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-product',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './product.html',
   styleUrl: './product.css',
 })
@@ -40,20 +42,22 @@ export class Product implements OnInit {
 
   initForm(): void {
     this.productForm = this.fb.group({
-      name: ['', Validators.required],
-      description: [''],
+      nameEn: ['', Validators.required],
+      nameAr: [''],
+      descriptionEn: ['', Validators.required],
+      descriptionAr: [''],
       price: [0, [Validators.required, Validators.min(0.01)]],
       stockQuantity: [0, [Validators.required, Validators.min(0)]],
 
       categoryId: [null, Validators.required],
-      sellerId: ['seller-1'],
+      sellerId: [''],
       imageUrl: [''],
     });
   }
 
   loadProducts(): void {
     this.isLoading = true;
-    this.productService.getProducts({ page: 1, pageSize: 100 }).subscribe({
+    this.productService.getSellerProducts({ page: 1, pageSize: 100 }).subscribe({
       next: (res: any) => {
         this.products = res.data || res;
         this.isLoading = false;
@@ -80,13 +84,15 @@ export class Product implements OnInit {
     this.isEditing = false;
     this.editingProductId = null;
     this.productForm.reset({
-      name: '',
-      description: '',
+      nameEn: '',
+      nameAr: '',
+      descriptionEn: '',
+      descriptionAr: '',
       price: 0,
       stockQuantity: 0,
 
       categoryId: null,
-      sellerId: 'seller-1',
+      sellerId: '',
       imageUrl: '',
     });
     this.clearMessages();
@@ -102,13 +108,15 @@ export class Product implements OnInit {
     this.productService.getProductById(product.id).subscribe({
       next: (details: any) => {
         this.productForm.patchValue({
-          name: details.name,
-          description: details.description || '',
+          nameEn: details.nameEn,
+          nameAr: details.nameAr || '',
+          descriptionEn: details.descriptionEn || '',
+          descriptionAr: details.descriptionAr || '',
           price: details.price,
           stockQuantity: details.stockQuantity,
 
           categoryId: details.categoryId || null,
-          sellerId: details.sellerId || 'seller-1',
+          sellerId: details.sellerId || '',
           imageUrl: details.images && details.images.length > 0 ? details.images[0] : '',
         });
         this.showModal = true;
@@ -117,13 +125,15 @@ export class Product implements OnInit {
         console.error('Error fetching product details', err);
         // Fallback: use the list data
         this.productForm.patchValue({
-          name: product.name,
-          description: '',
+          nameEn: product.nameEn || product.name,
+          nameAr: product.nameAr || '',
+          descriptionEn: product.descriptionEn || '',
+          descriptionAr: product.descriptionAr || '',
           price: product.price,
           stockQuantity: product.stockQuantity || 0,
 
           categoryId: null,
-          sellerId: 'seller-1',
+          sellerId: '',
           imageUrl: product.mainImage || '',
         });
         this.showModal = true;
@@ -167,8 +177,10 @@ export class Product implements OnInit {
 
     const formValue = this.productForm.value;
     const dto: ProductCreateUpdateDto = {
-      name: formValue.name,
-      description: formValue.description,
+      nameEn: formValue.nameEn,
+      nameAr: formValue.nameAr,
+      descriptionEn: formValue.descriptionEn,
+      descriptionAr: formValue.descriptionAr,
       price: formValue.price,
       stockQuantity: formValue.stockQuantity,
       categoryId: formValue.categoryId,

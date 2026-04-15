@@ -8,9 +8,11 @@ import { ReviewService } from '../../../../../core/services/review.service';
 
 import { Subscription } from 'rxjs';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-product-details',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './product-details.html',
   styleUrl: './product-details.css',
 })
@@ -50,7 +52,7 @@ export class ProductDetails implements OnInit {
       }
     });
 
-    this.wishlistSub = this.wishlistService.wishlist$.subscribe(items => {
+    this.wishlistSub = this.wishlistService.wishlist$.subscribe((items: any[]) => {
       if (this.product) {
         this.checkWishlistStatus(items);
       }
@@ -68,7 +70,7 @@ export class ProductDetails implements OnInit {
     
     // If items aren't provided, get current value
     if (!items) {
-      this.wishlistService.wishlist$.subscribe(curr => items = curr).unsubscribe();
+      this.wishlistService.wishlist$.subscribe((curr: any[]) => items = curr).unsubscribe();
     }
     
     this.isInWishlist = items?.some(item => item.productId === this.product.id) || false;
@@ -142,17 +144,17 @@ export class ProductDetails implements OnInit {
     this.wishlistService.removeFromWishlist(this.product.id).subscribe({
       next: () => {
         this.isInWishlist = false;
-        this.showWishlistMessage('Removed from wishlist!');
+        this.showWishlistMessage('WISHLIST.REMOVED');
       },
-      error: (err) => console.error('Failed to remove from wishlist', err)
+      error: (err: any) => console.error('Failed to remove from wishlist', err)
     });
   } else {
     this.wishlistService.addToWishlist(this.product.id).subscribe({
       next: () => {
         this.isInWishlist = true;
-        this.showWishlistMessage('Added to wishlist!');
+        this.showWishlistMessage('WISHLIST.ADDED');
       },
-      error: (err) => console.error('Failed to add to wishlist', err)
+      error: (err: any) => console.error('Failed to add to wishlist', err)
     });
   }
 }

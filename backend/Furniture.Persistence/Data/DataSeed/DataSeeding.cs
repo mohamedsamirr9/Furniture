@@ -2,6 +2,7 @@
 using Furniture.Domain.Models;
 using Furniture.Domain.Models.Enum;
 using Furniture.Persistence.Data.DbContexts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,61 +16,85 @@ namespace Furniture.Persistence.Data.DataSeed
     public class DataSeeding : IDataSeeding
     {
         private readonly FurnitureDbContext _dbContext;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public DataSeeding(FurnitureDbContext dbContext)
+        public DataSeeding(
+            FurnitureDbContext dbContext,
+            UserManager<ApplicationUser> userManager)
         {
             _dbContext = dbContext;
+            _userManager = userManager;
         }
 
         public async Task InitializeAsync()
         {
             try
             {
-                if (!await _dbContext.Users.AnyAsync())
-                {
-                    var seller = new ApplicationUser
-                    {
-                        Id = "seller-1", 
-                        UserName = "seller@test.com",
-                        NormalizedUserName = "SELLER@TEST.COM",
-                        Email = "seller@test.com",
-                        NormalizedEmail = "SELLER@TEST.COM",
-                        EmailConfirmed = true,
-                        Name = "Main Seller",
-                        Role = Roles.seller,
-                        Address = "Cairo",
-                        IsConfirmed = true,
+                if (!await _userManager.Users.AnyAsync())
+            {
+                var admin = new ApplicationUser
+            {
+                Id = "admin-1",
+                UserName = "admin@test.com",
+                Email = "admin@test.com",
+                Name = "Main Admin",
+                Address = "Cairo",
+                Role = Roles.admin,
+                EmailConfirmed = true,
+                IsConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
 
-                        SecurityStamp = Guid.NewGuid().ToString("D"),
-                        PasswordHash = "AQAAAAEAACcQAAAAE" 
-                    };
+            var seller = new ApplicationUser
+            {
+                Id = "seller-1",
+                UserName = "seller@test.com",
+                Email = "seller@test.com",
+                Name = "Main Seller",
+                Address = "Cairo",
+                Role = Roles.seller,
+                EmailConfirmed = true,
+                IsConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
 
-                    await _dbContext.Users.AddAsync(seller);
-                    await _dbContext.SaveChangesAsync();
-                }
+            var adminResult = await _userManager.CreateAsync(admin, "Admin@123");
+            var sellerResult = await _userManager.CreateAsync(seller, "Seller@123");
+
+            if (!adminResult.Succeeded || !sellerResult.Succeeded)
+            {
+                throw new Exception(
+                    string.Join(", ",
+                        adminResult.Errors.Concat(sellerResult.Errors)
+                        .Select(e => e.Description))
+                );
+            }
+            }
                 var HasProductsImages = await _dbContext.ProductImages.AnyAsync();
                                 var HasProducts = await _dbContext.Products.AnyAsync();
                                                 var HasCategories =await _dbContext.Categories.AnyAsync();
 
 
-                if (!HasProductsImages)
-                {
-                    Console.WriteLine("Seeding Products started...");
-                    await SeedDataFromJsonAsync<ProductImage>("ProductImages.json", _dbContext.ProductImages);
-                    await _dbContext.SaveChangesAsync();
-                }
-                if (!HasProducts)
-                {
-                    Console.WriteLine("Seeding Products started...");
-                    await SeedDataFromJsonAsync<Product>("Product.json", _dbContext.Products);
-                    await _dbContext.SaveChangesAsync();
-                }
                 if (!HasCategories)
                 {
                     await SeedDataFromJsonAsync<Category>("Category.json", _dbContext.Categories);
                     await _dbContext.SaveChangesAsync();
                 }
-                
+
+                if (!HasProducts)
+                {
+                    Console.WriteLine("Seeding Products...");
+                    await SeedDataFromJsonAsync<Product>("Product.json", _dbContext.Products);
+                    await _dbContext.SaveChangesAsync();
+                }
+
+                if (!HasProductsImages)
+                {
+                    Console.WriteLine("Seeding Product Images...");
+                    await SeedDataFromJsonAsync<ProductImage>("ProductImages.json", _dbContext.ProductImages);
+                    await _dbContext.SaveChangesAsync();
+                }
+
             }
             catch (Exception ex) { Console.WriteLine($"Data Seeding Failed: {ex}"); }
 

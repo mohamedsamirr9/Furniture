@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Furniture.Domain.Models;
 using Furniture.shared.Dtos.ProductDtos;
 using System;
@@ -16,13 +16,13 @@ namespace Furniture.Services.Mapping
 
             CreateMap<ProductCreateUpdateDto, Product>();
 
-            CreateMap<Product, ProductListDto>().ForMember(d => d.CategoryName,o => o.MapFrom(s => s.Category.Name))
+            CreateMap<Product, ProductListDto>().ForMember(d => d.CategoryName,o => o.MapFrom(s => s.Category.NameEn))
                            .ForMember(d => d.SellerName,o => o.MapFrom(s => s.Seller.UserName))
                            .ForMember(d => d.MainImage, o => o.MapFrom
                      (s => s.Images.FirstOrDefault() != null ? s.Images.FirstOrDefault()!.ImageUrl : null ));
 
 
-            CreateMap<Product, ProductDetailsDto>().ForMember(d => d.CategoryName,o => o.MapFrom(s => s.Category.Name))
+            CreateMap<Product, ProductDetailsDto>().ForMember(d => d.CategoryName,o => o.MapFrom(s => s.Category.NameEn))
                           .ForMember(d => d.SellerName, o => o.MapFrom(s => s.Seller.UserName))
                           .ForMember(d => d.Images,o => o.MapFrom(s =>  s.Images.Select(i => i.ImageUrl)));
         }

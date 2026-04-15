@@ -1,4 +1,4 @@
-﻿using Furniture.shared.Dtos;
+using Furniture.shared.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,7 @@ namespace Furniture.Servises_Abstraction
         Task<OfferDto> CreateOfferAsync(OfferCreateDto dto, string sellerId);
         Task<IEnumerable<OfferDto>> GetOffersByRequestAsync(int requestId);
         Task<IEnumerable<OfferDto>> GetMyOffersAsync(string sellerId);
+        Task<OfferDto?> GetOfferByIdAsync(int offerId);
         Task AcceptOfferAsync(int offerId);
     }
 }

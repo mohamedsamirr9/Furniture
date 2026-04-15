@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { CartService } from '../../../../../core/services/cart.service';
+import { AuthService } from '../../../../../core/services/auth.service';
 import { Observable } from 'rxjs';
 import { Cart } from '../../../../../core/models/cart.model';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './cart.html',
   styleUrl: './cart.css'
 })
@@ -17,12 +19,17 @@ export class CartComponent implements OnInit {
   isLoading: boolean = false;
   errorMsg: string = '';
 
-  constructor(private cartService: CartService) {
+  constructor(
+    private cartService: CartService,
+    private authService: AuthService
+  ) {
     this.cart$ = this.cartService.cart$;
   }
 
   ngOnInit(): void {
-    this.loadCart();
+    if (this.authService.isLoggedIn()) {
+      this.loadCart();
+    }
   }
 
   loadCart(): void {
@@ -32,7 +39,7 @@ export class CartComponent implements OnInit {
       next: () => {
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         this.isLoading = false;
         this.errorMsg = 'Failed to load cart items. Please try again later.';
         console.error(err);
@@ -47,7 +54,7 @@ export class CartComponent implements OnInit {
     this.isLoading = true;
     this.cartService.updateQuantity(productId, newQuantity).subscribe({
       next: () => this.isLoading = false,
-      error: (err) => {
+      error: (err: any) => {
         this.isLoading = false;
         console.error(err);
       }
@@ -58,7 +65,7 @@ export class CartComponent implements OnInit {
     this.isLoading = true;
     this.cartService.removeCartItem(productId).subscribe({
       next: () => this.isLoading = false,
-      error: (err) => {
+      error: (err: any) => {
         this.isLoading = false;
         this.errorMsg = 'Failed to remove item.';
         console.error(err);
@@ -71,7 +78,7 @@ export class CartComponent implements OnInit {
       this.isLoading = true;
       this.cartService.clearCart().subscribe({
         next: () => this.isLoading = false,
-        error: (err) => {
+        error: (err: any) => {
           this.isLoading = false;
           this.errorMsg = 'Failed to clear cart.';
           console.error(err);

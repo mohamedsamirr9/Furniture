@@ -1,33 +1,32 @@
 <div class="new-complaint-page">
-  <h1 class="page-title">My Complaints</h1>
-  <p class="page-subtitle">Submit and track your complaints</p>
+  <h1 class="page-title">{{ 'CUSTOMER.COMPLAINTS.TITLE' | translate }}</h1>
+  <p class="page-subtitle">{{ 'CUSTOMER.COMPLAINTS.SUBTITLE' | translate }}</p>
 
   <div class="form-card">
-    <h2 class="form-title">Submit a Complaint</h2>
+    <h2 class="form-title">{{ 'CUSTOMER.COMPLAINTS.SUBMIT_TITLE' | translate }}</h2>
 
     <div class="form-group">
-      <label>Order</label>
+      <label>{{ 'CUSTOMER.COMPLAINTS.ORDER_LABEL' | translate }}</label>
       <div class="select-wrapper">
-        <select [(ngModel)]="formData.order" name="order">
-          <option value="" disabled selected>select an order...</option>
-          <option value="ORD-1234">ORD-1234</option>
-          <option value="ORD-1235">ORD-1235</option>
+        <select [(ngModel)]="formData.orderId" name="order">
+          <option value="" disabled selected>{{ 'CUSTOMER.COMPLAINTS.SELECT_ORDER' | translate }}</option>
+          <option *ngFor="let order of orders" [value]="order.id">ORD-{{ order.id }}</option>
         </select>
       </div>
     </div>
 
     <div class="form-group">
-      <label>Description</label>
+      <label>{{ 'CUSTOMER.COMPLAINTS.DESC_LABEL' | translate }}</label>
       <textarea
         [(ngModel)]="formData.description"
         name="description"
-        placeholder="Describe Your Issue"
+        placeholder="{{ 'FORMS.MESSAGE' | translate }}"
         rows="6"
       ></textarea>
     </div>
 
     <div class="submit-wrapper">
-      <button class="submit-btn" (click)="onSubmit()">Submit</button>
+      <button class="submit-btn" (click)="onSubmit()">{{ 'SELLER.SUBMIT' | translate }}</button>
     </div>
   </div>
 </div>

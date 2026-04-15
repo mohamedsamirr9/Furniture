@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Furniture.Domain.Models.Enum
+namespace Furniture.shared.Dtos.AuthDto
 {
-    public enum ShippingBidStatus
+    public class ForgetPasswordDto
     {
-         Pending , Accepted , Rejected
+        public string Email { get; set; } = null!;
     }
 }

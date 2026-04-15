@@ -18,7 +18,7 @@ namespace Furniture.Services.Mapping
             CreateMap<CustomRequest, CustomRequestDto>()
                 .ForMember(d=>d.Status, o=>o.MapFrom(s=>s.Status.ToString()))
                 .ForMember(d=>d.BuyerName, o=>o.MapFrom(s=>s.Buyer.UserName))
-                .ForMember(d=>d.AcceptedPrice, o=>o.MapFrom(s=>s.Offers.FirstOrDefault(o=>o.Status == OfferStatus.Accepted).Price));
+                .ForMember(d=>d.AcceptedPrice, o=>o.MapFrom(s=>s.Offers.FirstOrDefault(o=>o.Status == OfferStatus.Accepted) == null ? 0 : s.Offers.FirstOrDefault(o=>o.Status == OfferStatus.Accepted)!.Price));
 
             // Details
             CreateMap<CustomRequest, CustomRequestDetailsDto>()

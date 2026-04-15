@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { ProductQueryParams } from '../models/product-query-params.model';
+import { Product } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root',
@@ -28,16 +29,21 @@ export class ProductService {
     return this.http.get<any>(`${this.baseUrl}/Product`, { params });
   }
 
-  getProductById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/Product/${id}`);
+  getProductById(id: number): Observable<Product> {
+    return this.http.get<Product>(`${this.baseUrl}/Product/${id}`);
+  }
+
+  getSellerProducts(filters: ProductQueryParams): Observable<any> {
+    const params = this.buildHttpParams(filters);
+    return this.http.get<any>(`${this.baseUrl}/seller/products`, { params });
   }
 
   getCategories(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/categories`);
   }
 
-  getProductsByCategory(categoryId: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/categories/${categoryId}`);
+  getProductsByCategory(categoryId: number): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.baseUrl}/categories/${categoryId}`);
   }
 
   searchProducts(query: string, offset: number = 0, limit: number = 10): Observable<any> {

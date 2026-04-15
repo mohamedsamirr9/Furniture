@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { OrderService } from '../../../../../core/services/order.service';
 import { ReviewService } from '../../../../../core/services/review.service';
 import { Order } from '../../../../../core/models/order.model';
@@ -9,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-order-details',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, TranslateModule],
   templateUrl: './order-details.html',
   styleUrls: ['./order-details.css']
 })
@@ -45,12 +46,12 @@ export class OrderDetailsComponent implements OnInit {
 
   loadOrder(id: number): void {
     this.orderService.getOrderById(id).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.order = data;
         this.isLoading = false;
         this.loadUserReviews();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error loading order', err);
         this.errorMsg = 'Failed to load order details.';
         this.isLoading = false;
@@ -79,7 +80,7 @@ export class OrderDetailsComponent implements OnInit {
         if(this.order) this.order.status = 'Cancelled';
         alert("Order cancelled successfully");
       },
-      error: (err) => {
+      error: (err: any) => {
         this.isCancelling = false;
         console.error(err);
         alert(err.error?.message || "Failed to cancel order.");

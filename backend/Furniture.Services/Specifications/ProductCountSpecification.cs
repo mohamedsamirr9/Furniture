@@ -10,4 +10,12 @@ namespace Furniture.Services.Specifications
         {
         }
     }
+
+    public class SellerProductsCountSpecification : BaseSpecificationscs<Product, int>
+    {
+        public SellerProductsCountSpecification(string sellerId, ProductQueryParams queryParams)
+            : base(ProductFilters.BuildSellerFilter(sellerId, queryParams))
+        {
+        }
+    }
 }

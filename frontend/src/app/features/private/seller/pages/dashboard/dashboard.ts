@@ -1,17 +1,18 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
   stats = [
-    { label: 'Total Products', value: '24' },
-    { label: 'Active Orders', value: '6' },
-    { label: 'Revenue', value: '$2247' },
-    { label: 'Open Complaints', value: '1' },
+    { label: 'DASHBOARD.TOTAL_PRODUCTS', value: '24' },
+    { label: 'DASHBOARD.ACTIVE_ORDERS', value: '6' },
+    { label: 'DASHBOARD.REVENUE', value: '$2247' },
+    { label: 'DASHBOARD.OPEN_COMPLAINTS', value: '1' },
   ];
 }

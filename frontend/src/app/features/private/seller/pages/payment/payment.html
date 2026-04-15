@@ -1,18 +1,18 @@
 <div class="page-header">
-  <h1>Payment</h1>
+  <h1>{{ 'SELLER.PAYMENTS_TITLE' | translate }}</h1>
 </div>
 <hr class="divider" />
 
 <div class="table-card">
-  <h2 class="card-title">Payments</h2>
+  <h2 class="card-title">{{ 'SELLER.PAYMENTS_TITLE' | translate }}</h2>
   <table class="table">
     <thead>
       <tr>
-        <th>Payment ID</th>
-        <th>Order</th>
-        <th>Reference</th>
-        <th>Status</th>
-        <th>Date</th>
+        <th>{{ 'SELLER.PAYMENT_ID' | translate }}</th>
+        <th>{{ 'SELLER.ORDER' | translate }}</th>
+        <th>{{ 'SELLER.REFERENCE' | translate }}</th>
+        <th>{{ 'SELLER.STATUS' | translate }}</th>
+        <th>{{ 'SELLER.DATE' | translate }}</th>
       </tr>
     </thead>
     <tbody>
@@ -22,7 +22,7 @@
         <td>{{ payment.reference }}</td>
         <td>
           <span class="badge" [ngClass]="payment.status === 'Refunded' ? 'badge-red' : 'badge-outline'">
-            {{ payment.status }}
+            {{ 'STATUS.' + (payment.status | uppercase) | translate }}
           </span>
         </td>
         <td><strong>{{ payment.date }}</strong></td>

@@ -9,7 +9,7 @@ namespace Furniture.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    // [Authorize]
+     [Authorize]
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
@@ -23,11 +23,11 @@ namespace Furniture.API.Controllers
 
         #region User 
 
-        private readonly string userId = "seller-1";        
         [HttpGet]
+        [Authorize(Roles = "buyer,admin")]
         public async Task<IActionResult> GetMyOrders()
         {
-            // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
@@ -38,6 +38,7 @@ namespace Furniture.API.Controllers
         
         
         [HttpGet("paginated")]
+        [Authorize(Roles = "buyer,admin")]
         public async Task<IActionResult> GetMyOrdersPaginated(
             [FromQuery] int pageIndex = 1,
             [FromQuery] int pageSize = 10)
@@ -54,9 +55,10 @@ namespace Furniture.API.Controllers
         
         
         [HttpGet("{orderId:int}")]
+        [Authorize(Roles = "buyer,admin")]
         public async Task<IActionResult> GetOrderById(int orderId)
         {
-            // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
@@ -71,12 +73,13 @@ namespace Furniture.API.Controllers
         
         
         [HttpPost]
+        [Authorize(Roles = "buyer")]
         public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO createOrderDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
@@ -91,12 +94,35 @@ namespace Furniture.API.Controllers
             }
         }
 
+        [HttpPost("from-offer")]
+        [Authorize(Roles = "buyer")]
+        public async Task<IActionResult> CreateOrderFromOffer([FromBody] CreateOrderFromOfferDTO createOrderFromOfferDTO)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            try
+            {
+                var result = await _orderService.CreateOrderFromOfferAsync(userId, createOrderFromOfferDTO);
+                return CreatedAtAction(nameof(GetOrderById), new { orderId = result.OrderId }, result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         
         
         [HttpDelete("{orderId:int}")]
+        [Authorize(Roles = "buyer,admin")]
         public async Task<IActionResult> CancelOrder(int orderId)
         {
-            // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
@@ -121,7 +147,7 @@ namespace Furniture.API.Controllers
        
         
         [HttpGet("admin/all")]
-        // [Authorize(Roles = "Admin")]
+         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAllOrders(
             [FromQuery] int pageIndex = 1,
             [FromQuery] int pageSize = 10)
@@ -133,7 +159,7 @@ namespace Furniture.API.Controllers
        
         
         [HttpGet("admin/status/{status}")]
-        // [Authorize(Roles = "Admin")]
+         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetOrdersByStatus(string status)
         {
             if (!Enum.TryParse<OrderStatus>(status, true, out var orderStatus))
@@ -146,7 +172,7 @@ namespace Furniture.API.Controllers
        
         
         [HttpGet("admin/{orderId:int}")]
-        // [Authorize(Roles = "Admin")]
+         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetOrderByIdForAdmin(int orderId)
         {
             var order = await _orderService.GetOrderByIdForAdminAsync(orderId);
@@ -159,7 +185,7 @@ namespace Furniture.API.Controllers
         
         
         [HttpPut("admin/{orderId:int}/status")]
-        // [Authorize(Roles = "Admin")]
+         [Authorize(Roles = "admin,seller")]
         public async Task<IActionResult> UpdateOrderStatus(
             int orderId,
             [FromBody] UpdateOrderStatusDTO updateDTO)
@@ -187,5 +213,23 @@ namespace Furniture.API.Controllers
         }
 
         #endregion
+
+        #region Seller 
+
+        [HttpGet("seller/orders")]
+        [Authorize(Roles = "seller")]
+        public async Task<IActionResult> GetSellerOrders()
+        {
+            var sellerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(sellerId))
+                return Unauthorized();
+
+            var orders = await _orderService.GetOrdersForSellerAsync(sellerId);
+            return Ok(orders);
+        }
+
+        #endregion
     }
+
 }

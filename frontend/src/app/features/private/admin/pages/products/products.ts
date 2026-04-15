@@ -6,9 +6,11 @@ import { CategoryService } from '../../../../../core/services/category.service';
 
 import { ProductCreateUpdateDto } from '../../../../../core/models/product-create-update-dto.model';
 
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-products',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './products.html',
   styleUrl: './products.css',
 })
@@ -30,6 +32,7 @@ export class Products implements OnInit {
     private productService: ProductService,
     private categoryService: CategoryService,
     private fb: FormBuilder,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -40,8 +43,10 @@ export class Products implements OnInit {
 
   initForm(): void {
     this.productForm = this.fb.group({
-      name: ['', Validators.required],
-      description: [''],
+      nameEn: ['', Validators.required],
+      nameAr: [''],
+      descriptionEn: ['', Validators.required],
+      descriptionAr: [''],
       price: [0, [Validators.required, Validators.min(0.01)]],
       stockQuantity: [0, [Validators.required, Validators.min(0)]],
 
@@ -80,8 +85,10 @@ export class Products implements OnInit {
     this.isEditing = false;
     this.editingProductId = null;
     this.productForm.reset({
-      name: '',
-      description: '',
+      nameEn: '',
+      nameAr: '',
+      descriptionEn: '',
+      descriptionAr: '',
       price: 0,
       stockQuantity: 0,
 
@@ -102,8 +109,10 @@ export class Products implements OnInit {
     this.productService.getProductById(product.id).subscribe({
       next: (details: any) => {
         this.productForm.patchValue({
-          name: details.name,
-          description: details.description || '',
+          nameEn: details.nameEn,
+          nameAr: details.nameAr || '',
+          descriptionEn: details.descriptionEn || '',
+          descriptionAr: details.descriptionAr || '',
           price: details.price,
           stockQuantity: details.stockQuantity,
 
@@ -117,8 +126,10 @@ export class Products implements OnInit {
         console.error('Error fetching product details', err);
         // Fallback: use the list data
         this.productForm.patchValue({
-          name: product.name,
-          description: '',
+          nameEn: product.nameEn || product.name,
+          nameAr: product.nameAr || '',
+          descriptionEn: product.descriptionEn || '',
+          descriptionAr: product.descriptionAr || '',
           price: product.price,
           stockQuantity: product.stockQuantity || 0,
 
@@ -145,11 +156,11 @@ export class Products implements OnInit {
         next: (res: any) => {
           this.productForm.patchValue({ imageUrl: res.secure_url });
           this.isUploading = false;
-          this.successMessage = 'Image uploaded successfully!';
+          this.successMessage = 'ALERTS.UPLOAD_SUCCESS';
         },
         error: (err: any) => {
           console.error('Image upload failed', err);
-          this.errorMessage = 'Failed to upload image. Please try again.';
+          this.errorMessage = 'ALERTS.UPLOAD_ERROR';
           this.isUploading = false;
         }
       });
@@ -167,8 +178,10 @@ export class Products implements OnInit {
 
     const formValue = this.productForm.value;
     const dto: ProductCreateUpdateDto = {
-      name: formValue.name,
-      description: formValue.description,
+      nameEn: formValue.nameEn,
+      nameAr: formValue.nameAr,
+      descriptionEn: formValue.descriptionEn,
+      descriptionAr: formValue.descriptionAr,
       price: formValue.price,
       stockQuantity: formValue.stockQuantity,
       categoryId: formValue.categoryId,
@@ -179,26 +192,26 @@ export class Products implements OnInit {
     if (this.isEditing && this.editingProductId !== null) {
       this.productService.updateProduct(this.editingProductId, dto).subscribe({
         next: () => {
-          this.successMessage = 'Product updated successfully!';
+          this.successMessage = 'ALERTS.UPDATE_SUCCESS';
           this.isSubmitting = false;
           this.loadProducts();
           setTimeout(() => this.closeModal(), 1200);
         },
         error: (err: any) => {
-          this.errorMessage = err.error?.message || 'Failed to update product.';
+          this.errorMessage = err.error?.message || 'ALERTS.ERROR';
           this.isSubmitting = false;
         },
       });
     } else {
       this.productService.createProduct(dto).subscribe({
         next: () => {
-          this.successMessage = 'Product created successfully!';
+          this.successMessage = 'ALERTS.CREATE_SUCCESS';
           this.isSubmitting = false;
           this.loadProducts();
           setTimeout(() => this.closeModal(), 1200);
         },
         error: (err: any) => {
-          this.errorMessage = err.error?.message || 'Failed to create product.';
+          this.errorMessage = err.error?.message || 'ALERTS.ERROR';
           this.isSubmitting = false;
         },
       });
@@ -206,7 +219,8 @@ export class Products implements OnInit {
   }
 
   deleteProduct(id: number): void {
-    if (confirm('Are you sure you want to delete this product?')) {
+    const confirmMsg = this.translate.instant('ALERTS.DELETE_CONFIRM');
+    if (confirm(confirmMsg)) {
       this.productService.deleteProduct(id).subscribe({
         next: () => {
           this.loadProducts();

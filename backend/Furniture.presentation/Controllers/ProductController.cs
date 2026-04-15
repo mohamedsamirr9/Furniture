@@ -1,9 +1,11 @@
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos.ProductDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,11 +22,14 @@ namespace Furniture.presentation.Controllers
             _productService = productService;
         }
 
+        private string GetLanguage() =>
+            Request.Headers["Accept-Language"].FirstOrDefault()?.Trim() ?? "en";
+
         // GET: api/product
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] ProductQueryParams queryParams)
         {
-            var result = await _productService.GetAllAsync(queryParams);
+            var result = await _productService.GetAllAsync(queryParams, GetLanguage());
             return Ok(result);
         }
 
@@ -32,7 +37,7 @@ namespace Furniture.presentation.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var result = await _productService.GetByIdAsync(id);
+            var result = await _productService.GetByIdAsync(id, GetLanguage());
 
             if (result is null)
                 return NotFound($"Product with id {id} not found");
@@ -42,13 +47,20 @@ namespace Furniture.presentation.Controllers
 
 
         // POST: api/product
+        [Authorize(Roles ="seller")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ProductCreateUpdateDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _productService.CreateAsync(dto);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User ID not found in claims");
+
+            dto.SellerId = userId;
+
+            var result = await _productService.CreateAsync(dto, GetLanguage());
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -58,11 +70,18 @@ namespace Furniture.presentation.Controllers
         }
 
         // PUT: api/product/5
+        [Authorize(Roles ="seller")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] ProductCreateUpdateDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User ID not found in claims");
+
+            dto.SellerId = userId;
 
             await _productService.UpdateAsync(id, dto);
 
@@ -70,6 +89,7 @@ namespace Furniture.presentation.Controllers
         }
 
         // DELETE: api/product/5
+        [Authorize(Roles ="seller")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

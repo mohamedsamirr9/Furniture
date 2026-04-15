@@ -10,9 +10,9 @@ namespace Furniture.Services.Mapping
         {
             CreateMap<CartItem, CartItemDto>()
                 .ForMember(dest => dest.ProductName,
-                    opt => opt.MapFrom(src => src.Product.Name))
+                    opt => opt.MapFrom(src => src.Product.NameEn))
                 .ForMember(dest => dest.ProductImage,
-                    opt => opt.MapFrom(src => src.Product.Images.FirstOrDefault().ImageUrl))
+                    opt => opt.MapFrom(src => src.Product.Images.FirstOrDefault() == null ? string.Empty : src.Product.Images.FirstOrDefault()!.ImageUrl))
                 .ForMember(dest => dest.SubTotal,
                     opt => opt.MapFrom(src => src.UnitPrice * src.Quantity))
                 .ForMember(dest => dest.AvailableStock,

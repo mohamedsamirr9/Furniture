@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Furniture.Domain.Models.Enum
+namespace Furniture.shared.Dtos.AuthDto
 {
-    public enum ShippingRequestStatus
+    public class SendOtpDto
     {
-        Open,
-        Closed
+        public string Email { get; set; } = null!;
     }
 }

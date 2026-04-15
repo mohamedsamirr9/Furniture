@@ -3,10 +3,12 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomRequestService } from '../../../../../core/services/custom-request.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-custom-request',
-  imports: [CommonModule, ReactiveFormsModule],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './custom-request.html',
   styleUrl: './custom-request.css',
 })
@@ -87,7 +89,7 @@ export class CustomRequestComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          this.submitError = 'Failed to submit request. Please try again.';
+          this.submitError = 'ALERTS.SUBMIT_ERROR';
           this.isLoading = false;
         }
       });
@@ -100,7 +102,7 @@ export class CustomRequestComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          this.submitError = 'Failed to upload image. Please try again.';
+          this.submitError = 'ALERTS.UPLOAD_ERROR';
           this.isLoading = false;
         }
       });

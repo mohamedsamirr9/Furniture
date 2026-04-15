@@ -1,0 +1,141 @@
+<div class="profile-page container py-5" *ngIf="user">
+  <h1 class="page-title mb-4 fw-bold">My Profile</h1>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <!-- Personal Information -->
+      <div class="card shadow-sm border-0 mb-4 p-4">
+        <div class="card-header bg-transparent border-0 d-flex align-items-center gap-3 p-0 mb-4">
+          <div class="card-icon card-icon--green bg-success-subtle text-success p-2 rounded">
+            <i class="bi bi-person-fill fs-4"></i>
+          </div>
+          <div>
+            <h2 class="card-title h5 mb-0 fw-bold">Personal Information</h2>
+            <p class="card-subtitle text-muted small mb-0">Update your name</p>
+          </div>
+        </div>
+
+        <div *ngIf="successPersonal" class="alert alert-success py-2">Changes saved successfully!</div>
+        <div *ngIf="errorPersonal" class="alert alert-danger py-2">{{ errorPersonal }}</div>
+
+        <form [formGroup]="personalForm" (ngSubmit)="savePersonal()">
+          <div class="form-group mb-3">
+            <label class="form-label small fw-bold">Full Name</label>
+            <input type="text" formControlName="name" class="form-control" placeholder="Enter your full name" />
+            <div *ngIf="personalForm.get('name')?.invalid && personalForm.get('name')?.touched" class="text-danger small mt-1">
+              Full name is required.
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-dark px-4 py-2 rounded-pill d-flex align-items-center gap-2" [disabled]="isLoadingPersonal">
+            <span *ngIf="isLoadingPersonal" class="spinner-border spinner-border-sm"></span>
+            <i *ngIf="!isLoadingPersonal" class="bi bi-save"></i>
+            {{ isLoadingPersonal ? 'Saving...' : 'Save Changes' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Address -->
+      <div class="card shadow-sm border-0 mb-4 p-4">
+        <div class="card-header bg-transparent border-0 d-flex align-items-center gap-3 p-0 mb-4">
+          <div class="card-icon card-icon--green bg-success-subtle text-success p-2 rounded">
+            <i class="bi bi-geo-alt-fill fs-4"></i>
+          </div>
+          <div>
+            <h2 class="card-title h5 mb-0 fw-bold">Address</h2>
+            <p class="card-subtitle text-muted small mb-0">Your delivery address</p>
+          </div>
+        </div>
+
+        <div *ngIf="successAddress" class="alert alert-success py-2">Address saved successfully!</div>
+        <div *ngIf="errorAddress" class="alert alert-danger py-2">{{ errorAddress }}</div>
+
+        <form [formGroup]="addressForm" (ngSubmit)="saveAddress()">
+          <div class="form-group mb-3">
+            <label class="form-label small fw-bold">Full Address</label>
+            <textarea formControlName="address" class="form-control" rows="3" placeholder="Enter your full delivery address"></textarea>
+            <div *ngIf="addressForm.get('address')?.invalid && addressForm.get('address')?.touched" class="text-danger small mt-1">
+              Address is required.
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-dark px-4 py-2 rounded-pill d-flex align-items-center gap-2" [disabled]="isLoadingAddress">
+            <span *ngIf="isLoadingAddress" class="spinner-border spinner-border-sm"></span>
+            <i *ngIf="!isLoadingAddress" class="bi bi-house-door"></i>
+            {{ isLoadingAddress ? 'Saving...' : 'Save Address' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Become Seller (Only if not already a seller or just always show for now) -->
+      <div class="card shadow-sm border-0 mb-4 p-4">
+        <div class="card-header bg-transparent border-0 d-flex align-items-center gap-3 p-0 mb-4">
+          <div class="card-icon bg-primary-subtle text-primary p-2 rounded">
+            <i class="bi bi-shop fs-4"></i>
+          </div>
+          <div>
+            <h2 class="card-title h5 mb-0 fw-bold">Become Seller</h2>
+            <p class="card-subtitle text-muted small mb-0">Start selling your furniture on Furnora</p>
+          </div>
+        </div>
+
+        <div *ngIf="successBecomeSeller" class="alert alert-success py-2">Request submitted! Now you are a seller.</div>
+        <div *ngIf="errorBecomeSeller" class="alert alert-danger py-2">{{ errorBecomeSeller }}</div>
+
+        <form [formGroup]="becomeSellerForm" (ngSubmit)="submitBecomeSeller($event)">
+          <div class="form-group mb-4">
+            <label class="form-label small fw-bold d-block">National ID Image</label>
+            <input type="file" (change)="onFileSelected($event)" class="form-control" accept="image/*" />
+            <p class="text-muted small mt-1">Upload a clear photo of your National ID to verify your identity.</p>
+          </div>
+
+          <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill d-flex align-items-center gap-2" [disabled]="isLoadingBecomeSeller || !nationalIdImageBase64">
+            <span *ngIf="isLoadingBecomeSeller" class="spinner-border spinner-border-sm"></span>
+            <i class="bi bi-arrow-up-circle"></i>
+            {{ isLoadingBecomeSeller ? 'Submitting...' : 'Submit Request' }}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <!-- Change Password -->
+      <div class="card shadow-sm border-0 p-4">
+        <div class="card-header bg-transparent border-0 d-flex align-items-center gap-3 p-0 mb-4">
+          <div class="card-icon bg-danger-subtle text-danger p-2 rounded">
+            <i class="bi bi-lock-fill fs-4"></i>
+          </div>
+          <div>
+            <h2 class="card-title h5 mb-0 fw-bold">Security</h2>
+            <p class="card-subtitle text-muted small mb-0">Change your password</p>
+          </div>
+        </div>
+
+        <div *ngIf="successPassword" class="alert alert-success py-2 text-center">Success!</div>
+        <div *ngIf="errorPassword" class="alert alert-danger py-2 small">{{ errorPassword }}</div>
+
+        <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Current Password</label>
+            <input [type]="showCurrentPassword ? 'text' : 'password'" formControlName="currentPassword" class="form-control" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">New Password</label>
+            <input [type]="showNewPassword ? 'text' : 'password'" formControlName="newPassword" class="form-control" />
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-bold">Confirm New Password</label>
+            <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" class="form-control" />
+          </div>
+
+          <button type="submit" class="btn btn-outline-danger w-100 py-2 rounded-pill d-flex align-items-center justify-content-center gap-2" [disabled]="isLoadingPassword">
+            <span *ngIf="isLoadingPassword" class="spinner-border spinner-border-sm"></span>
+            {{ isLoadingPassword ? 'Updating...' : 'Change Password' }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

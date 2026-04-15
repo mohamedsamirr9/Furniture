@@ -13,11 +13,13 @@ namespace Furniture.Services.Implementations
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IShippingCalculatorService _shippingCalculator;
 
-        public OrderService(IUnitOfWork unitOfWork, IMapper mapper)
+        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IShippingCalculatorService shippingCalculator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _shippingCalculator = shippingCalculator;
         }
 
         
@@ -124,14 +126,22 @@ namespace Furniture.Services.Implementations
                 {
                     ProductId = cartItem.ProductId,
                     UnitPrice = currentPrice,
-                    Quantity = cartItem.Quantity
+                    Quantity = cartItem.Quantity,
+                    SellerId = cartItem.Product.SellerId
                 });
             }
+
+            var categoryIds = cart.CartItems.Select(ci => ci.Product.CategoryId).Distinct();
+            var shippingResult = await _shippingCalculator.CalculateShippingAsync(createOrderDTO.City, categoryIds);
 
             var newOrder = new Order
             {
                 UserId = userId,
-                TotalPrice = totalPrice,
+                SubTotal = totalPrice,
+                ShippingCost = shippingResult.ShippingCost,
+                TotalPrice = totalPrice + shippingResult.ShippingCost,
+                City = createOrderDTO.City,
+                ShippingRuleId = shippingResult.ShippingRuleId,
                 OrderDate = DateTime.UtcNow,
                 Status = OrderStatus.Pending,
                 ShippingAddress = createOrderDTO.ShippingAddress,
@@ -158,7 +168,56 @@ namespace Furniture.Services.Implementations
                 Message = "Order created successfully!"
             };
         }
-        
+        public async Task<OrderResponseDTO> CreateOrderFromOfferAsync(
+            string userId, CreateOrderFromOfferDTO dto)
+        {
+            var offerRepo = _unitOfWork.GetRepository<Offer, int>();
+            var offer = await offerRepo.GetByIdAsync(dto.OfferId);
+
+            if (offer == null)
+                throw new InvalidOperationException("Offer not found");
+
+            if (offer.Status != OfferStatus.Accepted)
+                throw new InvalidOperationException("Offer must be accepted before creating an order");
+
+            if (offer.OrderId != null)
+                throw new InvalidOperationException("An order has already been created for this offer");
+
+            // Offers don't have defined category ids, so pass an empty list
+            var shippingResult = await _shippingCalculator.CalculateShippingAsync(dto.City ?? "Unknown City", new List<int>());
+
+            var newOrder = new Order
+            {
+                UserId = userId,
+                SubTotal = offer.Price,
+                ShippingCost = shippingResult.ShippingCost,
+                TotalPrice = offer.Price + shippingResult.ShippingCost,
+                City = dto.City ?? "Unknown City",
+                OrderDate = DateTime.UtcNow,
+                Status = OrderStatus.Pending,
+                ShippingAddress = dto.ShippingAddress,
+                CreatedAt = DateTime.UtcNow,
+                IsCustom = true
+            };
+
+            await _unitOfWork.GetRepository<Order, int>().AddAsync(newOrder);
+            
+            // Link the navigation property - EF will handle the ID assignment during SaveChanges
+            offer.Order = newOrder;
+            offerRepo.Update(offer);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return new OrderResponseDTO
+            {
+                OrderId = newOrder.Id,
+                TotalPrice = newOrder.TotalPrice,
+                OrderDate = newOrder.OrderDate,
+                Status = newOrder.Status.ToString(),
+                Message = "Order created successfully from offer!"
+            };
+        }
+
         
 
         public async Task<bool> CancelOrderAsync(int orderId, string userId)
@@ -201,7 +260,7 @@ namespace Furniture.Services.Implementations
             if (newStatus == OrderStatus.Paid && order.Status != OrderStatus.Paid)
             {
                 var productRepo = _unitOfWork.GetRepository<Product, int>();
-                foreach (var item in order.OrderItems)
+                foreach (var item in order.OrderItems ?? new List<OrderItem>())
                 {
                     if (item.Product != null)
                     {
@@ -301,6 +360,22 @@ namespace Furniture.Services.Implementations
                 throw new InvalidOperationException(
                     $"Invalid status transition from '{currentStatus}' to '{newStatus}'.");
             }
+        }
+
+        #endregion
+
+        #region Seller
+
+        public async Task<List<OrderDTO>> GetOrdersForSellerAsync(string sellerId)
+        {
+            var spec = new SellerOrdersSpecification(sellerId);
+            var orders = await _unitOfWork.GetRepository<Order, int>()
+                .GetAllAsync(spec);
+
+            var orderDtos = _mapper.Map<List<OrderDTO>>(orders);
+            await EnrichOrdersAsync(orderDtos);
+
+            return orderDtos;
         }
 
         #endregion

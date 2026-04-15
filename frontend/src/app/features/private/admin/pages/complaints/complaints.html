@@ -1,37 +1,36 @@
 <div class="page-header">
-  <h1>Complaints</h1>
+  <h1>{{ 'ADMIN.COMPLAINTS_TITLE' | translate }}</h1>
   <hr />
 </div>
 
-<div class="table-card">
-  <h2 class="card-title">All Complaints</h2>
+<div class="table-card" *ngIf="!loading && !error">
+  <h2 class="card-title">{{ 'ADMIN.ALL_COMPLAINTS' | translate }}</h2>
   <table class="table">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>User</th>
-        <th>Description</th>
-        <th>Date</th>
-        <th>Status</th>
+        <th>{{ 'ADMIN.ID' | translate }}</th>
+        <th>{{ 'ADMIN.USER' | translate }}</th>
+        <th>{{ 'ADMIN.DESCRIPTION' | translate }}</th>
+        <th>{{ 'ADMIN.DATE' | translate }}</th>
+        <th>{{ 'ADMIN.STATUS' | translate }}</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let complaint of complaints">
-        <td>{{ complaint.id }}</td>
-        <td>{{ complaint.user }}</td>
+        <td>#{{ complaint.id }}</td>
+        <td>{{ complaint.userName || complaint.userId }}</td>
         <td>{{ complaint.description }}</td>
-        <td>{{ complaint.date }}</td>
+        <td>{{ complaint.createdAt | date:'mediumDate' }}</td>
         <td>
-          <span class="badge"
-            [ngClass]="{
-              'badge-red': complaint.status === 'Open',
-              'badge-outline': complaint.status === 'In Progress',
-              'badge-gray': complaint.status === 'Resolved'
-            }">
-            {{ complaint.status }}
+          <span class="badge" [ngClass]="getStatusClass(complaint.status)">
+            {{ getStatusDisplay(complaint.status) }}
           </span>
         </td>
       </tr>
     </tbody>
   </table>
+</div>
+
+<div class="empty-state" *ngIf="!loading && !error && complaints.length === 0">
+  <p>No complaints found</p>
 </div>

@@ -22,6 +22,10 @@ export class OfferService {
     return this.http.get<any[]>(`${this.baseUrl}/my`);
   }
 
+  getOfferById(offerId: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${offerId}`);
+  }
+
   acceptOffer(offerId: number): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/${offerId}/accept`, {});
   }

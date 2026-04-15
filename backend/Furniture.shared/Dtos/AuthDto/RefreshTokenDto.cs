@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Furniture.Domain.Models.Enum
+namespace Furniture.shared.Dtos.AuthDto
 {
-    public enum DeliveryStatus
+    public class RefreshTokenDto
     {
-       PickedUp, InTransit, Delivered
+        public string Token { get; set; } = null!;
 
     }
 }

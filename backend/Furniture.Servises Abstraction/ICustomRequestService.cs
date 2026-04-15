@@ -11,7 +11,7 @@ namespace Furniture.Servises_Abstraction
     {
         Task<CustomRequestDto> CreateAsync(string buyerId, CustomRequestCreateDto dto);
         Task<IEnumerable<CustomRequestDto>> GetMyRequestsAsync(string buyerId);
-        Task<CustomRequestDetailsDto> GetByIdAsync(int id);
+        Task<CustomRequestDetailsDto> GetByIdAsync(int id, string userId, string role);
         Task UpdateAsync(int id, string buyerId, CustomRequestCreateDto dto);
         Task CancelRequest(int id, string buyerId);
         Task<IEnumerable<CustomRequestDto>> GetAllAsync(int pageIndex,  int pageSize, string? status, decimal? minBudget);

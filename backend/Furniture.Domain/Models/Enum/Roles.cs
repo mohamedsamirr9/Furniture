@@ -10,7 +10,6 @@ namespace Furniture.Domain.Models.Enum
     {
         buyer,
         seller,
-        shipper,
         admin
     }
 }
