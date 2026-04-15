@@ -237,7 +237,7 @@ namespace Furniture.Persistence.Data.DbContexts
 
                 //  Offer → Order 
                 entity.HasOne(o => o.Order)
-                      .WithOne()
+                      .WithOne(ord => ord.Offer)
                       .HasForeignKey<Offer>(o => o.OrderId)
                       .IsRequired(false);
             });

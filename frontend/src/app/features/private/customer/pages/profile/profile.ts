@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { UserDto } from '../../../../../core/models/auth.model';
 
@@ -39,7 +40,11 @@ export class ProfileComponent implements OnInit {
   user: UserDto | null = null;
   nationalIdImageBase64: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(
+    private fb: FormBuilder, 
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.personalForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
     });
@@ -151,7 +156,8 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  submitBecomeSeller() {
+  submitBecomeSeller(event: Event) {
+    event.preventDefault();
     if (!this.nationalIdImageBase64) {
       this.errorBecomeSeller = 'Please upload your National ID image.';
       return;
@@ -164,6 +170,12 @@ export class ProfileComponent implements OnInit {
       next: () => {
         this.isLoadingBecomeSeller = false;
         this.successBecomeSeller = true;
+        
+        // As per requirements: Logout and redirect to login so the user gets a new JWT with 'Seller' role
+        setTimeout(() => {
+          this.authService.logout();
+          this.router.navigate(['/login'], { queryParams: { message: 'role_updated' } });
+        }, 2000);
       },
       error: (err: any) => {
         this.isLoadingBecomeSeller = false;

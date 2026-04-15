@@ -43,4 +43,8 @@ export class OrderService {
   updateOrderStatus(orderId: number, status: string): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/admin/${orderId}/status`, { status });
   }
+
+  getSellerOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.apiUrl}/seller/orders`);
+  }
 }

@@ -24,6 +24,7 @@ namespace Furniture.API.Controllers
         #region User 
 
         [HttpGet]
+        [Authorize(Roles = "buyer,admin")]
         public async Task<IActionResult> GetMyOrders()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -37,6 +38,7 @@ namespace Furniture.API.Controllers
         
         
         [HttpGet("paginated")]
+        [Authorize(Roles = "buyer,admin")]
         public async Task<IActionResult> GetMyOrdersPaginated(
             [FromQuery] int pageIndex = 1,
             [FromQuery] int pageSize = 10)
@@ -53,6 +55,7 @@ namespace Furniture.API.Controllers
         
         
         [HttpGet("{orderId:int}")]
+        [Authorize(Roles = "buyer,admin")]
         public async Task<IActionResult> GetOrderById(int orderId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -70,6 +73,7 @@ namespace Furniture.API.Controllers
         
         
         [HttpPost]
+        [Authorize(Roles = "buyer")]
         public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO createOrderDTO)
         {
             if (!ModelState.IsValid)
@@ -91,6 +95,7 @@ namespace Furniture.API.Controllers
         }
 
         [HttpPost("from-offer")]
+        [Authorize(Roles = "buyer")]
         public async Task<IActionResult> CreateOrderFromOffer([FromBody] CreateOrderFromOfferDTO createOrderFromOfferDTO)
         {
             if (!ModelState.IsValid)
@@ -114,6 +119,7 @@ namespace Furniture.API.Controllers
         
         
         [HttpDelete("{orderId:int}")]
+        [Authorize(Roles = "buyer,admin")]
         public async Task<IActionResult> CancelOrder(int orderId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -179,7 +185,7 @@ namespace Furniture.API.Controllers
         
         
         [HttpPut("admin/{orderId:int}/status")]
-         [Authorize(Roles = "admin")]
+         [Authorize(Roles = "admin,seller")]
         public async Task<IActionResult> UpdateOrderStatus(
             int orderId,
             [FromBody] UpdateOrderStatusDTO updateDTO)
@@ -207,5 +213,23 @@ namespace Furniture.API.Controllers
         }
 
         #endregion
+
+        #region Seller 
+
+        [HttpGet("seller/orders")]
+        [Authorize(Roles = "seller")]
+        public async Task<IActionResult> GetSellerOrders()
+        {
+            var sellerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(sellerId))
+                return Unauthorized();
+
+            var orders = await _orderService.GetOrdersForSellerAsync(sellerId);
+            return Ok(orders);
+        }
+
+        #endregion
     }
+
 }

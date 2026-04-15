@@ -39,8 +39,15 @@ export class Login {
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         this.isLoading = false;
-        // Redirect based on role if needed, or just home
-        this.router.navigate(['/']);
+        const role = this.authService.getUserRole();
+        
+        if (role === 'seller') {
+          this.router.navigate(['/seller']);
+        } else if (role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/']);
+        }
       },
       error: (err: any) => {
         this.isLoading = false;

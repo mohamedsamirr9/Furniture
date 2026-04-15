@@ -18,6 +18,7 @@ export const routes: Routes = [
     path: 'customer',
     component: PrivateLayoutComponent,
     canActivate: [authGuard],
+    data: { expectedRoles: ['buyer'] },
     children: [
       {
         path: '',
@@ -29,6 +30,7 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminLayout,
     canActivate: [authGuard],
+    data: { expectedRoles: ['admin'] },
     children: [
       {
         path: '',
@@ -40,6 +42,7 @@ export const routes: Routes = [
     path: 'seller',
     component: SellerLayout,
     canActivate: [authGuard],
+    data: { expectedRoles: ['seller'] },
     children: [
       {
         path: '',

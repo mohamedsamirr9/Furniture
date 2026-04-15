@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { jwtDecode } from 'jwt-decode';
 import { BehaviorSubject, Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
@@ -100,9 +101,7 @@ export class AuthService {
   }
 
   becomeSeller(data: BecomeSellerDto): Observable<any> {
-    return this.http.post(`${this.baseUrl}/become-seller`, data).pipe(
-      tap(() => this.getCurrentUser().subscribe()) // Refresh user info to get new role/permissions
-    );
+    return this.http.post(`${this.baseUrl}/become-seller`, data);
   }
 
   sendOtp(email: string): Observable<any> {
@@ -139,5 +138,23 @@ export class AuthService {
     const hasToken = !!this.token;
     const hasUser = !!this.currentUserSubject.value;
     return hasToken && hasUser;
+  }
+
+  getUserRole(): string | null {
+    const token = this.token;
+    if (!token) return null;
+
+    try {
+      const decoded: any = jwtDecode(token);
+      // Standard ASP.NET Core Role claim key
+      const role = decoded['role'] || 
+                   decoded['ClaimTypes.Role'] || 
+                   decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+      
+      return role ? role.toLowerCase() : null;
+    } catch (e) {
+      console.error('Failed to decode token', e);
+      return null;
+    }
   }
 }

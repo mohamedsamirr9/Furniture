@@ -113,8 +113,8 @@ namespace Furniture.web
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             await _accountService.BecomeSellerAsync(userId!, dto);
-            return Ok("Now you are a seller");
-        }
+return Ok(new { message = "Now you are a seller" });  
+      }
 
         [Authorize]
         [HttpPost("change-password")]
@@ -122,7 +122,7 @@ namespace Furniture.web
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             await _accountService.ChangePasswordAync(userId!, dto);
-            return Ok("Password changed successfully");
+            return Ok(new { message = "Password changed successfully" });
         }
     }
 }

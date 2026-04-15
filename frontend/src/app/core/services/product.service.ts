@@ -33,6 +33,11 @@ export class ProductService {
     return this.http.get<Product>(`${this.baseUrl}/Product/${id}`);
   }
 
+  getSellerProducts(filters: ProductQueryParams): Observable<any> {
+    const params = this.buildHttpParams(filters);
+    return this.http.get<any>(`${this.baseUrl}/seller/products`, { params });
+  }
+
   getCategories(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/categories`);
   }

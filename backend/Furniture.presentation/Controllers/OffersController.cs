@@ -3,6 +3,7 @@ using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Furniture.API.Controllers
 {
@@ -22,8 +23,8 @@ namespace Furniture.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOffer([FromBody] OfferCreateDto dto)
         {
-            var sellerId = "seller-1"; 
-            var offer = await _offerService.CreateOfferAsync(dto, sellerId);
+            var sellerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var offer = await _offerService.CreateOfferAsync(dto, sellerId!);
             return Ok(offer);
         }
 
@@ -35,10 +36,11 @@ namespace Furniture.API.Controllers
         }
 
         [HttpGet("my")]
+        [Authorize(Roles = "seller")]
         public async Task<IActionResult> GetMyOffers()
         {
-            var sellerId = "seller-1"; 
-            var offers = await _offerService.GetMyOffersAsync(sellerId);
+            var sellerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var offers = await _offerService.GetMyOffersAsync(sellerId!);
             return Ok(offers);
         }
 

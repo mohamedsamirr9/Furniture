@@ -32,5 +32,7 @@ namespace Furniture.Domain.Models
 
         public int? ShippingRuleId { get; set; }
         public ShippingRule? ShippingRule { get; set; }
+
+        public Offer? Offer { get; set; }
     }
 }

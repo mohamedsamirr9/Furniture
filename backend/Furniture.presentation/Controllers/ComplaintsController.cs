@@ -60,7 +60,7 @@ namespace Furniture.web
             await _complaintService.UpdateAsync(id, userId, dto);
             return NoContent();
         }
-        [Authorize("admin, buyer")]
+        [Authorize(Roles = "admin, buyer")]
         [HttpPost("{id:int}/close")]
         public async Task<IActionResult> Close(int id)
         {

@@ -50,14 +50,14 @@ export class Product implements OnInit {
       stockQuantity: [0, [Validators.required, Validators.min(0)]],
 
       categoryId: [null, Validators.required],
-      sellerId: ['seller-1'],
+      sellerId: [''],
       imageUrl: [''],
     });
   }
 
   loadProducts(): void {
     this.isLoading = true;
-    this.productService.getProducts({ page: 1, pageSize: 100 }).subscribe({
+    this.productService.getSellerProducts({ page: 1, pageSize: 100 }).subscribe({
       next: (res: any) => {
         this.products = res.data || res;
         this.isLoading = false;
@@ -92,7 +92,7 @@ export class Product implements OnInit {
       stockQuantity: 0,
 
       categoryId: null,
-      sellerId: 'seller-1',
+      sellerId: '',
       imageUrl: '',
     });
     this.clearMessages();
@@ -116,7 +116,7 @@ export class Product implements OnInit {
           stockQuantity: details.stockQuantity,
 
           categoryId: details.categoryId || null,
-          sellerId: details.sellerId || 'seller-1',
+          sellerId: details.sellerId || '',
           imageUrl: details.images && details.images.length > 0 ? details.images[0] : '',
         });
         this.showModal = true;
@@ -133,7 +133,7 @@ export class Product implements OnInit {
           stockQuantity: product.stockQuantity || 0,
 
           categoryId: null,
-          sellerId: 'seller-1',
+          sellerId: '',
           imageUrl: product.mainImage || '',
         });
         this.showModal = true;

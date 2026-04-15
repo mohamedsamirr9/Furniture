@@ -82,7 +82,7 @@
         <div *ngIf="successBecomeSeller" class="alert alert-success py-2">Request submitted! Now you are a seller.</div>
         <div *ngIf="errorBecomeSeller" class="alert alert-danger py-2">{{ errorBecomeSeller }}</div>
 
-        <form (ngSubmit)="submitBecomeSeller()">
+        <form [formGroup]="becomeSellerForm" (ngSubmit)="submitBecomeSeller($event)">
           <div class="form-group mb-4">
             <label class="form-label small fw-bold d-block">National ID Image</label>
             <input type="file" (change)="onFileSelected($event)" class="form-control" accept="image/*" />

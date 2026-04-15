@@ -9,7 +9,7 @@ namespace Furniture.presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "buyer")]
     public class CartController : ControllerBase
     {
         private readonly ICartService _cartService;

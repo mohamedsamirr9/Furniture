@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,6 +54,12 @@ namespace Furniture.presentation.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User ID not found in claims");
+
+            dto.SellerId = userId;
+
             var result = await _productService.CreateAsync(dto, GetLanguage());
 
             return CreatedAtAction(
@@ -69,6 +76,12 @@ namespace Furniture.presentation.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User ID not found in claims");
+
+            dto.SellerId = userId;
 
             await _productService.UpdateAsync(id, dto);
 
