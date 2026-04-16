@@ -11,7 +11,7 @@ import { OrderConfirmedComponent } from './orders/pages/order-confirmed/order-co
 import { MyOrdersComponent } from './orders/pages/my-orders/my-orders';
 import { OrderDetailsComponent } from './orders/pages/order-details/order-details';
 import { WishlistComponent } from './wishlist/wishlist/wishlist';
-
+import { SellerProfileComponent } from './seller-profile/pages/seller-profile/seller-profile';
 import { authGuard } from '../../core/guards/auth.guard';
 
 export const PUBLIC_ROUTES: Routes = [
@@ -28,6 +28,7 @@ export const PUBLIC_ROUTES: Routes = [
       { path: 'orders/:id', component: OrderDetailsComponent, canActivate: [authGuard] },
       { path: 'orders', component: MyOrdersComponent, canActivate: [authGuard] },
       { path: 'wishlist', component: WishlistComponent, canActivate: [authGuard] },
+      { path: 'seller/:id', component: SellerProfileComponent },
     ],
   },
 ];

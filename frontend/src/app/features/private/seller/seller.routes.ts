@@ -6,6 +6,7 @@ import { Orders } from './pages/orders/orders';
 import { Offers } from './pages/offers/offers';
 import { Payment } from './pages/payment/payment';
 import { Complaints } from './pages/complaints/complaints';
+import { EditProfile } from './pages/edit-profile/edit-profile';
 
 export const SELLER_ROUTES: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -15,4 +16,5 @@ export const SELLER_ROUTES: Routes = [
   { path: 'offers', component: Offers },
   { path: 'payment', component: Payment },
   { path: 'complaints', component: Complaints },
+  { path: 'profile', component: EditProfile },
 ];
