@@ -21,6 +21,6 @@ namespace Furniture.Domain.Models
         public string UserId { get; set; } = null!;
         public ApplicationUser User { get; set; } = null!;
 
-      
+        public ICollection<ComplaintReply> Replies { get; set; } = new List<ComplaintReply>();
     }
 }

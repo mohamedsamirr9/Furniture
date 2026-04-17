@@ -42,7 +42,8 @@
 }
 
 .form-group select,
-.form-group textarea {
+.form-group textarea,
+.form-group input[type='file'] {
   border: 1.5px solid #e5e7eb;
   border-radius: 10px;
   padding: 14px 16px;
@@ -100,3 +101,44 @@
 }
 
 .submit-btn:hover { background: #5a8f6b; }
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.image-preview {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.image-preview img {
+  width: 180px;
+  max-width: 100%;
+  border-radius: 10px;
+  border: 1.5px solid #e5e7eb;
+}
+
+.clear-image-btn {
+  width: fit-content;
+  border: none;
+  background: transparent;
+  color: #b91c1c;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.upload-status {
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.error-text {
+  color: #dc2626;
+  font-size: 13px;
+  margin-bottom: 8px;
+}

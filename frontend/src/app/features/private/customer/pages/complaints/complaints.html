@@ -21,12 +21,19 @@
         <div>
           <p class="complaint-id">#{{ complaint.id }}</p>
           <p class="complaint-desc">{{ complaint.description }}</p>
+
           <p class="complaint-date">Submitted on {{ complaint.createdAt | date:'mediumDate' }}</p>
+          <p class="complaint-date" *ngIf="complaint.latestReplyMessage">
+            Latest response: {{ complaint.latestReplyMessage }} ({{ complaint.latestReplyBy }})
+          </p>
         </div>
       </div>
-      <span class="badge" [ngClass]="complaint.status === 'Resolved' || complaint.status === 'Closed' ? 'badge-green' : 'badge-red'">
-        {{ complaint.status === 'InProgress' ? 'In Progress' : complaint.status }}
-      </span>
+      <div class="card-right">
+        <span class="badge" [ngClass]="complaint.status === 'Resolved' || complaint.status === 'Closed' ? 'badge-green' : 'badge-red'">
+          {{ complaint.status === 'InProgress' ? 'In Progress' : complaint.status }}
+        </span>
+        <button type="button" class="details-btn" (click)="openComplaintDetails(complaint.id)">View Details</button>
+      </div>
     </div>
   </div>
 
@@ -34,3 +41,12 @@
     <p>No complaints found</p>
   </div>
 </div>
+
+<app-complaint-details-modal
+  [isOpen]="showDetailsModal"
+  [loading]="detailsLoading"
+  [error]="detailsError"
+  [complaint]="selectedComplaint"
+  [role]="'buyer'"
+  (close)="closeComplaintDetails()"
+></app-complaint-details-modal>

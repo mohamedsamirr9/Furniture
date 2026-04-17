@@ -13,18 +13,33 @@
         <th>{{ 'ADMIN.DESCRIPTION' | translate }}</th>
         <th>{{ 'ADMIN.DATE' | translate }}</th>
         <th>{{ 'ADMIN.STATUS' | translate }}</th>
+        <th>Response</th>
+        <th>Details</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let complaint of complaints">
         <td>#{{ complaint.id }}</td>
         <td>{{ complaint.userName || complaint.userId }}</td>
-        <td>{{ complaint.description }}</td>
+        <td>
+          {{ complaint.description }}   
+        </td>
         <td>{{ complaint.createdAt | date:'mediumDate' }}</td>
         <td>
           <span class="badge" [ngClass]="getStatusClass(complaint.status)">
             {{ getStatusDisplay(complaint.status) }}
           </span>
+        </td>
+        <td>
+          <div class="latest-reply" *ngIf="complaint.latestReplyMessage">
+            <p class="reply-msg">{{ complaint.latestReplyMessage }}</p>
+            <small>{{ complaint.latestReplyBy }} • {{ complaint.latestReplyAt | date:'short' }}</small>
+          </div>
+        </td>
+        <td>
+          <button type="button" class="action-btn view-details-btn" (click)="openComplaintDetails(complaint.id)">
+            View Details
+          </button>
         </td>
       </tr>
     </tbody>
@@ -34,3 +49,16 @@
 <div class="empty-state" *ngIf="!loading && !error && complaints.length === 0">
   <p>No complaints found</p>
 </div>
+
+<app-complaint-details-modal
+  [isOpen]="showDetailsModal"
+  [loading]="detailsLoading"
+  [error]="detailsError"
+  [complaint]="selectedComplaint"
+  [role]="'admin'"
+  [isReplySubmitting]="replySubmitting"
+  [isStatusUpdating]="statusUpdating"
+  (submitReply)="submitReply($event)"
+  (submitStatus)="updateStatus($event)"
+  (close)="closeComplaintDetails()"
+></app-complaint-details-modal>
