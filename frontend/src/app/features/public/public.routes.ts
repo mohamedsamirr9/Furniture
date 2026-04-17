@@ -28,7 +28,7 @@ export const PUBLIC_ROUTES: Routes = [
       { path: 'orders/:id', component: OrderDetailsComponent, canActivate: [authGuard] },
       { path: 'orders', component: MyOrdersComponent, canActivate: [authGuard] },
       { path: 'wishlist', component: WishlistComponent, canActivate: [authGuard] },
-      { path: 'seller/:id', component: SellerProfileComponent },
+      { path: 'sellers/:id', component: SellerProfileComponent },
     ],
   },
 ];
