@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ProductQueryParams } from '../../../../../core/models/product-query-params.model';
+import { Product } from '../../../../../core/models/product.model';
 
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -290,10 +291,12 @@ export class ProductsList implements OnInit, OnDestroy {
         const data = res.Data || res.data || res;
         this.products = data.map((product: any) => ({
           ...product,
+          categoryName: product.categoryName || product.CategoryName || '',
+          sellerName: product.sellerName || product.SellerName || '',
           averageRating: product.reviews && product.reviews.length > 0
             ? product.reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / product.reviews.length
             : 0
-        }));
+        })) as Product[];
         this.totalCount = res.TotalCount || res.totalCount || 0;
         this.loading = false;
       },

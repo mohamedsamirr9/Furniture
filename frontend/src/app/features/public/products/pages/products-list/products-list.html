@@ -307,6 +307,9 @@
                   [routerLink]="['/products', product.id]"
                   style="cursor: pointer"
                 >
+                  <span class="category-badge" *ngIf="product.categoryName">
+                    {{ product.categoryName }}
+                  </span>
                   <img
                     [src]="product.mainImage"
                     class="card-img-top"
@@ -316,13 +319,18 @@
                 </div>
                 <div class="card-body p-3">
                   <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6
-                      class="card-title fw-bold m-0 text-truncate w-75"
-                      [routerLink]="['/products', product.id]"
-                      style="cursor: pointer"
-                    >
-                      {{ product.name }}
-                    </h6>
+                    <div class="w-75">
+                      <h6
+                        class="card-title fw-bold m-0 text-truncate"
+                        [routerLink]="['/products', product.id]"
+                        style="cursor: pointer"
+                      >
+                        {{ product.name }}
+                      </h6>
+                      <p class="seller-name m-0 text-truncate" *ngIf="product.sellerName">
+                      {{ product.sellerName }}
+                      </p>
+                    </div>
                     <span
                       class="rating-badge small fw-bold"
                       [class.text-success]="product.averageRating > 0"
