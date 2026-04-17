@@ -114,7 +114,25 @@
     "NO_COMMENT": "لم يتم تقديم تعليق.",
     "SEARCH_PLACEHOLDER": "ابحث عن المنتجات...",
     "BACK_TO_LIST": "العودة إلى جميع المنتجات",
-    "REVIEWS_LOADING": "جاري تحميل المراجعات..."
+    "REVIEWS_LOADING": "جاري تحميل المراجعات...",
+    "SEARCH_TEXT": "نص",
+    "SEARCH_IMAGE": "صورة",
+    "IMAGE_SEARCH_TITLE": "ابحث بالصورة",
+    "IMAGE_SEARCH_DESC": "ارفع صورة للأثاث الذي يعجبك واعثر على منتجات مشابهة",
+    "IMAGE_MAX_SIZE": "الحجم الأقصى: 10 ميجابايت",
+    "SEARCH_SIMILAR": "اعثر على منتجات مشابهة",
+    "SEARCHING": "جاري البحث عن منتجات مشابهة...",
+    "IMAGE_SEARCH_TIPS_TITLE": "نصائح للحصول على نتائج أفضل",
+    "IMAGE_SEARCH_TIP_1": "استخدم صور واضحة ومضاءة جيداً",
+    "IMAGE_SEARCH_TIP_2": "قم بتضمين قطعة الأثاث الكاملة في الإطار",
+    "IMAGE_SEARCH_TIP_3": "تجنب الصور الضبابية أو منخفضة الدقة",
+    "NO_SIMILAR_FOUND": "لم يتم العثور على منتجات مشابهة",
+    "NO_SIMILAR_DESC": "جرب رفع صورة مختلفة أو استخدم البحث النصي",
+    "TRY_ANOTHER": "جرب صورة أخرى",
+    "SIMILAR_PRODUCTS": "منتجات مشابهة",
+    "RESULTS_FOUND": "نتيجة",
+    "IMAGE_SEARCH": "بحث بالصورة",
+    "MATCH": "تطابق"
   },
   "CATEGORY": {
     "BEDROOM": "غرفة النوم",
@@ -479,5 +497,11 @@
     "COMPLAINTS": "الشكاوى",
     "COLLAPSE": "طي القائمة",
     "SIGN_OUT": "تسجيل الخروج"
+  },
+  "SEARCH": {
+    "REBUILD_INDEX": "إعادة بناء فهرس البحث",
+    "REBUILD_CONFIRM": "هل أنت متأكد أنك تريد إعادة بناء فهرس البحث؟",
+    "REBUILD_SUCCESS": "تمت إعادة بناء فهرس البحث بنجاح.",
+    "REBUILD_ERROR": "فشلت إعادة بناء فهرس البحث. حاول مرة أخرى."
   }
 }

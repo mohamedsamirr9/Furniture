@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Threading.Tasks;
+using Furniture.Application.Services;
 
 namespace Furniture.web
 {
@@ -156,7 +157,9 @@ namespace Furniture.web
             builder.Services.AddScoped<IShippingService, ShippingService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IPaymentService, PaymentService>();
-            
+            builder.Services.AddScoped<ISearchService, SearchService>();
+            builder.Services.AddHttpClient("PythonService");
+
             
              // HttpClient -- Paymob
             builder.Services.AddHttpClient("Paymob", client =>

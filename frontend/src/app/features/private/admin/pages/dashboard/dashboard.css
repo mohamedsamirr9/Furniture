@@ -2,7 +2,18 @@
 .page-header h1 {
   font-size: 32px;
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-bottom: 0;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.rebuild-btn {
+  white-space: nowrap;
 }
 
 .divider {

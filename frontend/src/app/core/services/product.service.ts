@@ -5,6 +5,21 @@ import { HttpParams } from '@angular/common/http';
 import { ProductQueryParams } from '../models/product-query-params.model';
 import { Product } from '../models/product.model';
 
+export interface ImageSearchResult {
+  productId: number;
+  name: string;
+  price: number;
+  similarity: number;
+  imageUrl: string;
+  description?: string;
+}
+
+export interface ImageSearchResponse {
+  success: boolean;
+  message: string;
+  data: ImageSearchResult[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -63,6 +78,7 @@ export class ProductService {
   deleteProduct(id: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/Product/${id}`);
   }
+
   uploadImage(file: File) {
     const formData = new FormData();
 
@@ -70,5 +86,51 @@ export class ProductService {
     formData.append('upload_preset', 'product_images');
 
     return this.http.post<any>('https://api.cloudinary.com/v1_1/dcsd2lm6l/image/upload', formData);
+  }
+
+ 
+  searchByImage(file: File, topK: number = 10): Observable<any> {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    return this.http.post<any>(`${this.baseUrl}/search?topK=${topK}`, formData);
+  }
+
+ 
+  validateImageFile(file: File): { valid: boolean; error?: string } {
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+
+    if (!file || file.size === 0) {
+      return { valid: false, error: 'Please select an image file' };
+    }
+
+    if (file.size > maxSize) {
+      return { valid: false, error: 'File size must be less than 10MB' };
+    }
+
+    if (!allowedTypes.includes(file.type.toLowerCase())) {
+      return { valid: false, error: 'Only JPEG, PNG, and WebP images are allowed' };
+    }
+
+    const extension = '.' + (file.name.split('.').pop()?.toLowerCase() || '');
+    if (!allowedExtensions.includes(extension)) {
+      return { valid: false, error: 'Invalid file extension' };
+    }
+
+    return { valid: true };
+  }
+
+  /**
+   * Convert file to base64 for preview
+   */
+  fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
   }
 }
