@@ -9,8 +9,9 @@ export interface Product {
     price: number;
     stockQuantity: number;
     categoryId: number;
-    categoryName: string;
-    sellerName: string;
+    categoryName?: string;
+    sellerId?: string;
+    sellerName?: string;
     averageRating: number;
     mainImage?: string;
     images?: string[];
