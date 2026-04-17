@@ -114,7 +114,25 @@
     "NO_COMMENT": "No comment provided.",
     "SEARCH_PLACEHOLDER": "Search products...",
     "BACK_TO_LIST": "Back to all products",
-    "REVIEWS_LOADING": "Loading reflections..."
+    "REVIEWS_LOADING": "Loading reflections...",
+    "SEARCH_TEXT": "Text",
+    "SEARCH_IMAGE": "Image",
+    "IMAGE_SEARCH_TITLE": "Search with Image",
+    "IMAGE_SEARCH_DESC": "Upload a photo of furniture you like and find similar products",
+    "IMAGE_MAX_SIZE": "Max file size: 10MB",
+    "SEARCH_SIMILAR": "Find Similar Products",
+    "SEARCHING": "Searching for similar products...",
+    "IMAGE_SEARCH_TIPS_TITLE": "Tips for Better Results",
+    "IMAGE_SEARCH_TIP_1": "Use clear, well-lit photos",
+    "IMAGE_SEARCH_TIP_2": "Include the full furniture piece in frame",
+    "IMAGE_SEARCH_TIP_3": "Avoid blurry or low-resolution images",
+    "NO_SIMILAR_FOUND": "No Similar Products Found",
+    "NO_SIMILAR_DESC": "Try uploading a different image or use text search",
+    "TRY_ANOTHER": "Try Another Image",
+    "SIMILAR_PRODUCTS": "Similar Products",
+    "RESULTS_FOUND": "results found",
+    "IMAGE_SEARCH": "Image Search",
+    "MATCH": "match"
   },
   "CATEGORY": {
     "BEDROOM": "Bedroom",
@@ -479,5 +497,11 @@
     "COMPLAINTS": "Complaints",
     "COLLAPSE": "Collapse",
     "SIGN_OUT": "Sign Out"
+  },
+  "SEARCH": {
+    "REBUILD_INDEX": "Rebuild Search Index",
+    "REBUILD_CONFIRM": "Are you sure you want to rebuild the search index?",
+    "REBUILD_SUCCESS": "Search index rebuilt successfully.",
+    "REBUILD_ERROR": "Failed to rebuild search index. Please try again."
   }
 }

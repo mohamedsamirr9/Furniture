@@ -39,7 +39,7 @@ namespace Furniture.API.Controllers
 
         
         [HttpPost("build-index")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> BuildIndex()
         {
             try
