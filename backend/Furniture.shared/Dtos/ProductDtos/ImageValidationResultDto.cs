@@ -2,16 +2,16 @@ using System.Text.Json.Serialization;
 
 namespace Furniture.shared.Dtos.ProductDtos;
 
-public class ImageValidationResultDto
+public class ImageValidationResult
 {
     [JsonPropertyName("ai_probability")]
-    public double AiProbability { get; set; }
-    
+    public float AiProbability { get; set; }
+
     [JsonPropertyName("real_probability")]
-    public double RealProbability { get; set; }
-    
+    public float RealProbability { get; set; }
+
     [JsonPropertyName("decision")]
     public string Decision { get; set; } = null!;
 
+    public bool IsApproved => Decision == "approve";
 }
-

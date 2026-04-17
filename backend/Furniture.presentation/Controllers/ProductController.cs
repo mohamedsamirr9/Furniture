@@ -8,6 +8,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Furniture.Servises_Abstraction.Exceptions;
 
 namespace Furniture.presentation.Controllers
 {
@@ -46,47 +48,117 @@ namespace Furniture.presentation.Controllers
         }
 
 
-        // POST: api/product
-        [Authorize(Roles ="seller")]
+        // // POST: api/product
+        // [Authorize(Roles ="seller")]
+        // [HttpPost]
+        // public async Task<IActionResult> Create([FromBody] ProductCreateUpdateDto dto)
+        // {
+        //     if (!ModelState.IsValid)
+        //         return BadRequest(ModelState);
+        //
+        //     var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //     if (string.IsNullOrEmpty(userId))
+        //         return Unauthorized("User ID not found in claims");
+        //
+        //     dto.SellerId = userId;
+        //
+        //     var result = await _productService.CreateAsync(dto, GetLanguage());
+        //
+        //     return CreatedAtAction(
+        //         nameof(GetById),
+        //         new { id = result.Id },
+        //         result
+        //     );
+        // }
+        
+        [Authorize(Roles = "seller")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ProductCreateUpdateDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
-                return Unauthorized("User ID not found in claims");
+            if (string.IsNullOrEmpty(userId)) return Unauthorized("User ID not found in claims");
 
             dto.SellerId = userId;
 
-            var result = await _productService.CreateAsync(dto, GetLanguage());
-
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = result.Id },
-                result
-            );
+            try
+            {
+                var result = await _productService.CreateAsync(dto, GetLanguage());
+                return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            }
+            catch (ImageValidationException ex)
+            {
+                return BadRequest(new
+                {
+                    message = "Some images were rejected",
+                    results = ex.Summary.Results.Select(r => new
+                    {
+                        url = r.Url,
+                        decision = r.Decision,
+                        aiProbability = r.AiProbability
+                    })
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
-        // PUT: api/product/5
-        [Authorize(Roles ="seller")]
+        [Authorize(Roles = "seller")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] ProductCreateUpdateDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
-                return Unauthorized("User ID not found in claims");
+            if (string.IsNullOrEmpty(userId)) return Unauthorized("User ID not found in claims");
 
             dto.SellerId = userId;
 
-            await _productService.UpdateAsync(id, dto);
-
-            return NoContent();
+            try
+            {
+                await _productService.UpdateAsync(id, dto);
+                return NoContent();
+            }
+            catch (ImageValidationException ex)
+            {
+                return BadRequest(new
+                {
+                    message = "Some images were rejected",
+                    results = ex.Summary.Results.Select(r => new
+                    {
+                        url = r.Url,
+                        decision = r.Decision,
+                        aiProbability = r.AiProbability
+                    })
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
+
+        // // PUT: api/product/5
+        // [Authorize(Roles ="seller")]
+        // [HttpPut("{id}")]
+        // public async Task<IActionResult> Update(int id, [FromBody] ProductCreateUpdateDto dto)
+        // {
+        //     if (!ModelState.IsValid)
+        //         return BadRequest(ModelState);
+        //
+        //     var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //     if (string.IsNullOrEmpty(userId))
+        //         return Unauthorized("User ID not found in claims");
+        //
+        //     dto.SellerId = userId;
+        //
+        //     await _productService.UpdateAsync(id, dto);
+        //
+        //     return NoContent();
+        // }
 
         // DELETE: api/product/5
         [Authorize(Roles ="seller")]
