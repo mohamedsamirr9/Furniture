@@ -10,7 +10,16 @@
     Back to Shop
   </a>
 
+  <div *ngIf="isLoading" class="profile-header">
+    <p>Loading seller profile...</p>
+  </div>
+
+  <div *ngIf="!isLoading && errorMessage" class="profile-header">
+    <p>{{ errorMessage }}</p>
+  </div>
+
   <!-- Profile Header -->
+  <ng-container *ngIf="!isLoading && seller">
   <div class="profile-header">
     <div class="profile-main">
       <img [src]="seller.avatarUrl" [alt]="seller.name" class="avatar" />
@@ -79,7 +88,9 @@
       </div>
     </div>
   </div>
+  </ng-container>
 
+  <ng-container *ngIf="!isLoading && seller">
   <!-- Portfolio -->
   <div class="portfolio-section">
     <div class="portfolio-header">
@@ -97,7 +108,7 @@
     </div>
 
     <div class="portfolio-grid">
-      <div class="portfolio-card" *ngFor="let item of seller.portfolio">
+      <div class="portfolio-card" *ngFor="let item of seller.portfolio" [routerLink]="['/products', item.id]">
         <div class="portfolio-img-wrap">
           <img [src]="item.imageUrl" [alt]="item.title" class="portfolio-img" />
         </div>
@@ -109,5 +120,6 @@
       </div>
     </div>
   </div>
+  </ng-container>
 
 </div>

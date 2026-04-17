@@ -155,6 +155,7 @@ namespace Furniture.web
             builder.Services.AddScoped<ICustomRequestService, CustomRequestService>();
             builder.Services.AddScoped<IComplaintService, ComplaintService>();
             builder.Services.AddScoped<IShippingService, ShippingService>();
+            builder.Services.AddScoped<ISellerService, SellerService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<ISearchService, SearchService>();
