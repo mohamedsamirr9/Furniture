@@ -378,6 +378,19 @@ namespace Furniture.Services.Implementations
             return orderDtos;
         }
 
+        public async Task<OrderDTO?> GetOrderByIdForSellerAsync(int orderId, string sellerId)
+        {
+            var spec = new SellerOrderByIdSpecification(orderId, sellerId);
+            var order = await _unitOfWork.GetRepository<Order, int>()
+                .GetByIdAsync(spec);
+
+            if (order == null) return null;
+
+            var orderDto = _mapper.Map<OrderDTO>(order);
+            await EnrichOrdersAsync(new List<OrderDTO> { orderDto });
+            return orderDto;
+        }
+
         #endregion
     }
 }

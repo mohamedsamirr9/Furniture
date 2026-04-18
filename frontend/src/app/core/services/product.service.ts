@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { ProductQueryParams } from '../models/product-query-params.model';
 import { Product } from '../models/product.model';
+import { forkJoin, map, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface ImageSearchResult {
   productId: number;
@@ -24,7 +25,8 @@ export interface ImageSearchResponse {
   providedIn: 'root',
 })
 export class ProductService {
-  private baseUrl = 'http://localhost:5227/api';
+  private readonly apiRoot = environment.apiUrl;
+  private readonly productsUrl = `${this.apiRoot}/products`;
 
   constructor(private http: HttpClient) {}
 
@@ -41,42 +43,42 @@ export class ProductService {
 
   getProducts(filters: ProductQueryParams): Observable<any> {
     const params = this.buildHttpParams(filters);
-    return this.http.get<any>(`${this.baseUrl}/Product`, { params });
+    return this.http.get<any>(this.productsUrl, { params });
   }
 
   getProductById(id: number): Observable<Product> {
-    return this.http.get<Product>(`${this.baseUrl}/Product/${id}`);
+    return this.http.get<Product>(`${this.productsUrl}/${id}`);
   }
 
   getSellerProducts(filters: ProductQueryParams): Observable<any> {
     const params = this.buildHttpParams(filters);
-    return this.http.get<any>(`${this.baseUrl}/seller/products`, { params });
+    return this.http.get<any>(`${this.productsUrl}/seller`, { params });
   }
 
   getCategories(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/categories`);
+    return this.http.get<any>(`${this.apiRoot}/categories`);
   }
 
   getProductsByCategory(categoryId: number): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.baseUrl}/categories/${categoryId}`);
+    return this.http.get<Product[]>(`${this.apiRoot}/categories/${categoryId}`);
   }
 
   searchProducts(query: string, offset: number = 0, limit: number = 10): Observable<any> {
     return this.http.get<any>(
-      `${this.baseUrl}/products/?title=${query}&offset=${offset}&limit=${limit}`,
+      `${this.productsUrl}?title=${query}&offset=${offset}&limit=${limit}`,
     );
   }
 
   createProduct(data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/Product`, data);
+    return this.http.post<any>(this.productsUrl, data);
   }
 
   updateProduct(id: number, data: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/Product/${id}`, data);
+    return this.http.put<any>(`${this.productsUrl}/${id}`, data);
   }
 
   deleteProduct(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/Product/${id}`);
+    return this.http.delete<any>(`${this.productsUrl}/${id}`);
   }
 
   uploadImage(file: File) {
@@ -88,12 +90,17 @@ export class ProductService {
     return this.http.post<any>('https://api.cloudinary.com/v1_1/dcsd2lm6l/image/upload', formData);
   }
 
+  uploadImages(files: File[]): Observable<string[]> {
+    if (!files || files.length === 0) return new Observable<string[]>((s) => { s.next([]); s.complete(); });
+    return forkJoin(files.map((f) => this.uploadImage(f).pipe(map((res: any) => res.secure_url as string))));
+  }
+
  
   searchByImage(file: File, topK: number = 10): Observable<any> {
     const formData = new FormData();
     formData.append('image', file);
 
-    return this.http.post<any>(`${this.baseUrl}/search?topK=${topK}`, formData);
+    return this.http.post<any>(`${this.apiRoot}/search?topK=${topK}`, formData);
   }
 
  

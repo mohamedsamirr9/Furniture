@@ -16,6 +16,7 @@ namespace Furniture.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private const int MaxProductImages = 5;
 
         public ProductService(IUnitOfWork unitOfWork , IMapper mapper)
         {
@@ -28,6 +29,9 @@ namespace Furniture.Services
             var repo = _unitOfWork.GetRepository<Product, int>();
             var product = _mapper.Map<Product>(dto);
             product.CreatedAt = DateTime.UtcNow;
+
+            if (dto.ImageUrls != null && dto.ImageUrls.Count > MaxProductImages)
+                throw new Exception($"A product can have at most {MaxProductImages} images.");
 
             if (dto.ImageUrls != null && dto.ImageUrls.Any())
             {
@@ -129,6 +133,9 @@ namespace Furniture.Services
             var product = await repo.GetByIdAsync(spec);
 
             if (product is null) throw new Exception($"Product with id {id} not found");
+
+            if (dto.ImageUrls != null && dto.ImageUrls.Count > MaxProductImages)
+                throw new Exception($"A product can have at most {MaxProductImages} images.");
 
             _mapper.Map(dto, product);
 

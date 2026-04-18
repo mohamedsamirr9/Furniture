@@ -28,6 +28,14 @@ export class OrderService {
     return this.http.get<Order>(`${this.apiUrl}/${id}`);
   }
 
+  getOrderByIdForAdmin(orderId: number): Observable<Order> {
+    return this.http.get<Order>(`${this.apiUrl}/admin/${orderId}`);
+  }
+
+  getOrderByIdForSeller(orderId: number): Observable<Order> {
+    return this.http.get<Order>(`${this.apiUrl}/seller/${orderId}`);
+  }
+
   cancelOrder(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
