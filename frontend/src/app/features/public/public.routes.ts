@@ -19,7 +19,7 @@ export const PUBLIC_ROUTES: Routes = [
     path: '',
     component: PublicLayout,
     children: [
-      { path: '', component: Home, canActivate: [authGuard], data: { expectedRoles: ['buyer'] } },
+      { path: '', component: Home },
       { path: 'products', component: ProductsList },
       { path: 'products/:id', component: ProductDetails },
       { path: 'cart', component: CartComponent, canActivate: [authGuard] },
