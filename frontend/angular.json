@@ -28,11 +28,6 @@
           },
           "configurations": {
             "production": {
-              "optimization": {
-                "fonts": {
-                  "inline": false
-                }
-              },
               "budgets": [
                 {
                   "type": "initial",
@@ -58,7 +53,7 @@
                   "minify": true,
                   "inlineCritical": true
                 },
-                "fonts": true
+                "fonts": false
               }
             },
             "development": {
