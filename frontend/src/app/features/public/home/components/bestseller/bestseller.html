@@ -1,28 +1,48 @@
-<section class="best-sellers py-5">
-  <div class="container text-center">
-    <h2 class="fw-bold">{{ 'HOME.BEST.TITLE' | translate }}</h2>
-    <p class="text-muted mb-5">{{ 'HOME.BEST.DESC' | translate }}</p>
+<section class="best-sellers-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">✦ Curated For You</p>
+      <h2 class="section-title">{{ 'HOME.BEST.TITLE' | translate }}</h2>
+      <p class="section-desc">{{ 'HOME.BEST.DESC' | translate }}</p>
+    </div>
 
-    <div class="row g-4">
-      <!-- Item -->
-      <div class="col-md-6">
-        <div class="seller-card">
-          <img src="/assets/images/sellers/1.jpg" class="img-fluid" />
-
-          <button class="btn view-btn">{{ 'HOME.BEST.VIEW' | translate }}</button>
+    <div class="sellers-grid">
+      <div class="seller-card">
+        <div class="img-wrapper">
+          <img src="/assets/images/sellers/1.jpg" alt="Best Seller 1" />
+          <div class="img-overlay"></div>
+          <div class="card-hover-content">
+            <button class="view-btn">
+              <span>{{ 'HOME.BEST.VIEW' | translate }}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
         </div>
+       <div class="card-footer">
+  <span class="card-label">{{ 'HOME.BEST.LIVING_ROOM' | translate }}</span>
+  <span class="card-arrow">→</span>
+</div>
       </div>
 
-      <!-- Item -->
-      <div class="col-md-6">
-        <div class="seller-card">
-          <img
-            src="/assets/images/sellers/2.jpg"
-            class="img-fluid"
-          />
-
-          <button class="btn view-btn">{{ 'HOME.BEST.VIEW' | translate }}</button>
+      <div class="seller-card">
+        <div class="img-wrapper">
+          <img src="/assets/images/sellers/2.jpg" alt="Best Seller 2" />
+          <div class="img-overlay"></div>
+          <div class="card-hover-content">
+            <button class="view-btn">
+              <span>{{ 'HOME.BEST.VIEW' | translate }}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
         </div>
+       <div class="card-footer">
+  <span class="card-label">{{ 'HOME.BEST.KITCHEN' | translate }}</span>
+  <span class="card-arrow">→</span>
+</div>
       </div>
     </div>
   </div>

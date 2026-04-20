@@ -11,13 +11,14 @@
     "LOGIN": "Log In",
     "TOGGLE_LANG": "Toggle Language",
     "DASHBOARD": "Dashboard",
-    "CATEGORIES": "Categories",
     "PRODUCTS": "Products",
-    "ORDERS": "Orders",
     "COMPLAINTS": "Complaints",
     "USERS": "Users",
     "SIGNOUT": "Sign Out",
-    "COLLAPSE": "Collapse"
+    "COLLAPSE": "Collapse",
+    "CATALOG": "Catalog",
+    "OFFERS": "Offers",
+    "SEARCH": "Search"
   },
   "BUTTONS": {
     "SAVE": "Save",
@@ -409,21 +410,24 @@
   },
   "HOME": {
     "HERO": {
+      "EYEBROW": "FURNITURE ATELIER — EST. 2026",
       "TITLE": "Discover Damietta Furniture Online",
-      "EXPLORE": "Explore Catalog",
+      "SUBTITLE": "Bespoke furniture, crafted by verified artisans — designed to feel like home.",
+      "EXPLORE": "EXPLORE COLLECTION",
+      "CUSTOM_ORDER": "CUSTOM ORDER",
       "BECOME_SELLER": "Become a Seller"
     },
     "CUSTOM_ORDER": {
-  "TAG": "Custom Orders",
-  "TITLE1": "Design It Your Way.",
-  "TITLE2": "We'll Build It.",
-  "DESC": "Can't find exactly what you want? With Furnora's custom order feature, you describe your dream piece — size, material, style — and our verified sellers compete to bring it to life. It's furniture, your way.",
-  "STEP1": "Describe your idea — dimensions, materials, budget",
-  "STEP2": "Receive multiple offers from skilled artisans",
-  "STEP3": "Compare prices, timelines & reviews — then choose",
-  "CTA": "Create Your Custom Order",
-  "BADGE": "Only on Furnora"
-},
+      "TAG": "Custom Orders",
+      "TITLE1": "Design It Your Way.",
+      "TITLE2": "We'll Build It.",
+      "DESC": "Can't find exactly what you want? With Furnora's custom order feature, you describe your dream piece — size, material, style — and our verified sellers compete to bring it to life. It's furniture, your way.",
+      "STEP1": "Describe your idea — dimensions, materials, budget",
+      "STEP2": "Receive multiple offers from skilled artisans",
+      "STEP3": "Compare prices, timelines & reviews — then choose",
+      "CTA": "Create Your Custom Order",
+      "BADGE": "Only on Furnora"
+    },
     "SPECIAL": {
       "TITLE": "Special Offers",
       "TITLE_DESC": "Don't Miss These Deals",
@@ -434,11 +438,18 @@
     "BEST": {
       "TITLE": "Best Sellers",
       "DESC": "Our most loved pieces, handpicked for quality and timeless style.",
-      "VIEW": "View"
+      "VIEW": "View",
+      "LIVING_ROOM": "Living Room",
+      "KITCHEN": "Kitchen"
     },
     "CONTACT": {
       "TITLE": "Contact Us",
-      "SEND": "Send Message"
+      "SEND": "Send Message",
+      "SUBTITLE": "We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
+      "REPLY_NOTE": "We typically reply within 24 hours",
+      "EMAIL_LABEL": "Email",
+      "PHONE_LABEL": "Phone",
+      "LOCATION_LABEL": "Location"
     }
   },
   "CUSTOMER": {

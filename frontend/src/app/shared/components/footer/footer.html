@@ -1,50 +1,82 @@
-<footer class="customer-container footer border-top pt-5">
-  <div>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-6">
+<footer class="footer">
+  <div class="footer-main">
+    <div class="footer-grid">
+
       <!-- Brand -->
-      <div class="col">
-        <h5>{{ 'NAV.BRAND' | translate }}.</h5>
-        <p>
-          {{ 'FOOTER.CRAFTSMANSHIP' | translate }}
-        </p>
-      </div>
-
-      <!-- Links -->
-      <div class="col">
-        <h5>{{ 'FOOTER.QUICK_LINKS' | translate }}</h5>
-        <ul class="nav flex-column">
-          <li><a routerLink="/" class="nav-link p-0">{{ 'NAV.HOME' | translate }}</a></li>
-          <li><a routerLink="/categories" class="nav-link p-0">{{ 'NAV.CATEGORIES' | translate }}</a></li>
-          <li><a routerLink="/about" class="nav-link p-0">{{ 'NAV.ABOUT_US' | translate }}</a></li>
-          <li><a routerLink="/contact" class="nav-link p-0">{{ 'FOOTER.CONTACT_US' | translate }}</a></li>
-        </ul>
-      </div>
-
-      <!-- Links -->
-      <div class="col">
-        <h5>{{ 'FOOTER.CONTACT' | translate }}</h5>
-        <ul class="nav flex-column">
-          <li><a href="mailto:hello@furnora.com" class="nav-link p-0">hello@furnora.com</a></li>
-          <li><a href="tel:+201234567890" class="nav-link p-0">+20 123 456 7890</a></li>
-          <li><a href="#" class="nav-link p-0">{{ 'FOOTER.ADDRESS' | translate }}</a></li>
-        </ul>
-      </div>
-
-      <!-- Social -->
-      <div class="col d-flex flex-column align-items-center">
-        <h5>{{ 'FOOTER.FOLLOW_US' | translate }}</h5>
-        <div class="d-flex gap-3 mt-2">
-          <a href="#"><i class="bi bi-facebook"></i></a>
-          <a href="#"><i class="bi bi-twitter"></i></a>
-          <a href="#"><i class="bi bi-instagram"></i></a>
+      <div class="footer-brand">
+        <div class="brand-logo">
+          <span class="logo-icon">F</span>
+          <span class="logo-text">{{ 'NAV.BRAND' | translate }}</span>
+        </div>
+        <p class="brand-desc">{{ 'FOOTER.CRAFTSMANSHIP' | translate }}</p>
+        <div class="social-links">
+          <a href="#" class="social-link" aria-label="Facebook">
+            <i class="bi bi-facebook"></i>
+          </a>
+          <a href="#" class="social-link" aria-label="Twitter">
+            <i class="bi bi-twitter-x"></i>
+          </a>
+          <a href="#" class="social-link" aria-label="Instagram">
+            <i class="bi bi-instagram"></i>
+          </a>
         </div>
       </div>
-    </div>
 
-    <!-- bottom -->
-    <div class="text-center pt-4 pb-3">
-      <small>© 2026 {{ 'NAV.BRAND' | translate }}. {{ 'FOOTER.RIGHTS' | translate }}</small>
+      <!-- Quick Links -->
+      <div class="footer-col">
+        <h6 class="footer-heading">{{ 'FOOTER.QUICK_LINKS' | translate }}</h6>
+        <ul class="footer-links">
+          <li><a routerLink="/">{{ 'NAV.HOME' | translate }}</a></li>
+          <li><a routerLink="/categories">{{ 'NAV.CATEGORIES' | translate }}</a></li>
+          <li><a routerLink="/about">{{ 'NAV.ABOUT_US' | translate }}</a></li>
+          <li><a routerLink="/contact">{{ 'FOOTER.CONTACT_US' | translate }}</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div class="footer-col">
+        <h6 class="footer-heading">{{ 'FOOTER.CONTACT' | translate }}</h6>
+        <ul class="footer-links">
+          <li>
+            <i class="bi bi-envelope"></i>
+            <a href="mailto:hello@furnora.com">hello@furnora.com</a>
+          </li>
+          <li>
+            <i class="bi bi-telephone"></i>
+            <a href="tel:+201234567890">+20 123 456 7890</a>
+          </li>
+          <li>
+            <i class="bi bi-geo-alt"></i>
+            <a href="#">{{ 'FOOTER.ADDRESS' | translate }}</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Follow Us -->
+      <div class="footer-col">
+        <h6 class="footer-heading">{{ 'FOOTER.FOLLOW_US' | translate }}</h6>
+        <p class="follow-desc">Stay updated with our latest collections and offers.</p>
+        <div class="social-links-col">
+          <a href="#" class="social-link-row">
+            <i class="bi bi-facebook"></i>
+            <span>Facebook</span>
+          </a>
+          <a href="#" class="social-link-row">
+            <i class="bi bi-twitter-x"></i>
+            <span>Twitter</span>
+          </a>
+          <a href="#" class="social-link-row">
+            <i class="bi bi-instagram"></i>
+            <span>Instagram</span>
+          </a>
+        </div>
+      </div>
+
     </div>
   </div>
-</footer>
 
+  <!-- Bottom -->
+  <div class="footer-bottom">
+    <small>© 2026 {{ 'NAV.BRAND' | translate }}. {{ 'FOOTER.RIGHTS' | translate }}</small>
+  </div>
+</footer>
