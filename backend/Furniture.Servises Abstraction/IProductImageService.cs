@@ -8,7 +8,7 @@ namespace Furniture.Servises_Abstraction
 {
     public interface IProductImageService 
     {
-        Task AddImageAsync(int productId, string imageUrl);
+        Task AddImageAsync(int productId, Stream imageStream, string fileName, string contentType);
         Task DeleteImageAsync(int imageId);
     }
 }

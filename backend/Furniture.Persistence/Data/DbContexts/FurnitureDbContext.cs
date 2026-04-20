@@ -431,6 +431,15 @@ namespace Furniture.Persistence.Data.DbContexts
                       .HasForeignKey(sr => sr.CategoryId)
                       .OnDelete(DeleteBehavior.Restrict);
             });
+            
+            modelBuilder.Entity<UserPreference>(entity =>
+            {
+                  entity.HasKey(x => x.Id);
+                  entity.Property(x => x.EmbeddingVector).HasColumnType("nvarchar(max)");
+                  entity.HasOne(x => x.User)
+                        .WithOne()
+                        .HasForeignKey<UserPreference>(x => x.UserId);
+            });
 
 
 
@@ -457,7 +466,7 @@ namespace Furniture.Persistence.Data.DbContexts
 
         public DbSet<SellerProfile> SellerProfiles { get; set; } = null!;
         public DbSet<SellerPayout> SellerPayouts { get; set; } = null!;
-
+        public DbSet<UserPreference> UserPreferences { get; set; }
 
     }
 }
