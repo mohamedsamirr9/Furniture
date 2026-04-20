@@ -2,7 +2,7 @@ using Furniture.shared.Dtos.Seller;
 
 namespace Furniture.Servises_Abstraction;
 
-public interface ISellerService
+public interface ISellerPaymentService
 {
     
     Task<SellerProfileDTO> CreateSellerProfileAsync(string userId, CreateSellerProfileDTO dto);

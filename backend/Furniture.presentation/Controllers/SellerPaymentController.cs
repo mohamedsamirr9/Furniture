@@ -10,11 +10,11 @@ namespace Furniture.presentation.Controllers
     [Route("api/[controller]")]
     public class SellersController : ControllerBase
     {
-        private readonly ISellerService _sellerService;
+        private readonly ISellerPaymentService _sellerPaymentService;
 
-        public SellersController(ISellerService sellerService)
+        public SellersController(ISellerPaymentService sellerPaymentService)
         {
-            _sellerService = sellerService;
+            _sellerPaymentService = sellerPaymentService;
         }
 
         // ============================================
@@ -36,7 +36,7 @@ namespace Furniture.presentation.Controllers
 
             try
             {
-                var result = await _sellerService.CreateSellerProfileAsync(userId, dto);
+                var result = await _sellerPaymentService.CreateSellerProfileAsync(userId, dto);
                 return Ok(result);
             }
             catch (InvalidOperationException ex)
@@ -57,7 +57,7 @@ namespace Furniture.presentation.Controllers
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
-            var result = await _sellerService.GetMyProfileAsync(userId);
+            var result = await _sellerPaymentService.GetMyProfileAsync(userId);
 
             if (result == null)
                 return NotFound(new { message = "Profile not found" });
@@ -79,7 +79,7 @@ namespace Furniture.presentation.Controllers
 
             try
             {
-                var result = await _sellerService.GetEarningsAsync(userId);
+                var result = await _sellerPaymentService.GetEarningsAsync(userId);
                 return Ok(result);
             }
             catch (InvalidOperationException ex)
@@ -100,7 +100,7 @@ namespace Furniture.presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllSellers()
         {
-            var result = await _sellerService.GetAllSellersAsync();
+            var result = await _sellerPaymentService.GetAllSellersAsync();
             return Ok(result);
         }
 
@@ -112,7 +112,7 @@ namespace Furniture.presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetPendingSellers()
         {
-            var result = await _sellerService.GetPendingSellersAsync();
+            var result = await _sellerPaymentService.GetPendingSellersAsync();
             return Ok(result);
         }
 
@@ -126,7 +126,7 @@ namespace Furniture.presentation.Controllers
         {
             try
             {
-                var result = await _sellerService.VerifySellerAsync(sellerId);
+                var result = await _sellerPaymentService.VerifySellerAsync(sellerId);
 
                 if (!result)
                     return NotFound(new { message = "Seller not found" });

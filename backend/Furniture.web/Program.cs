@@ -83,7 +83,7 @@ namespace Furniture.web
             
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IPaymentService, PaymentService>();
-            builder.Services.AddScoped<ISellerService, SellerService>();
+            builder.Services.AddScoped<ISellerPaymentService, SellerPaymentPaymentService>();
             
             
              // HttpClient -- Paymob

@@ -11,14 +11,14 @@ using Microsoft.Extensions.Configuration;
 
 namespace Furniture.Services.Implementations
 {
-    public class SellerService : ISellerService
+    public class SellerPaymentPaymentService : ISellerPaymentService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _config;
 
-        public SellerService(IUnitOfWork unitOfWork, IMapper mapper, IHttpClientFactory httpClientFactory, IConfiguration config)
+        public SellerPaymentPaymentService(IUnitOfWork unitOfWork, IMapper mapper, IHttpClientFactory httpClientFactory, IConfiguration config)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
