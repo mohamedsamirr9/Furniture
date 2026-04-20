@@ -102,24 +102,30 @@ namespace Furniture.Persistence.Data.DataSeed
 
         private async Task SeedDataFromJsonAsync<T>(string fileName, DbSet<T> dbset) where T : class
         {
-            var filePath = @"..\Furniture.Persistence\Data\DataSeed\JsonFiles\"+fileName;
-            if (!File.Exists(filePath)) throw new FileNotFoundException();
+            var assemblyDir = AppContext.BaseDirectory;
+            var filePath = Path.Combine(assemblyDir, "Data", "DataSeed", "JsonFiles", fileName);
+
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"[DataSeeding] Seed file not found, skipping: {filePath}");
+                return;
+            }
+
             try
             {
                 using var dataStream = File.OpenRead(filePath);
-                var data =await JsonSerializer.DeserializeAsync<List<T>>(dataStream, new JsonSerializerOptions()
+                var data = await JsonSerializer.DeserializeAsync<List<T>>(dataStream, new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true,
                 });
-                if(data is not null)
+                if (data is not null)
                 {
-                   await dbset.AddRangeAsync(data);
+                    await dbset.AddRangeAsync(data);
                 }
             }
             catch (Exception ex)
             {
-
-                Console.WriteLine($"Error while reading json: {ex}");
+                Console.WriteLine($"[DataSeeding] Error while reading json '{fileName}': {ex}");
                 return;
             }
         }
