@@ -73,6 +73,12 @@ namespace Furniture.Services
 
             await repo.AddAsync(product);
             await _unitOfWork.SaveChangesAsync();
+            
+            var firstImage = product.Images.FirstOrDefault()?.ImageUrl;
+            if (firstImage != null)
+                _ = _recommendationService.GenerateAndSaveEmbeddingAsync(
+                    product.Id, firstImage, product.DescriptionEn);
+
 
             var result = _mapper.Map<ProductDetailsDto>(product);
             LocalizeProductDetails(product, result, language);
@@ -105,6 +111,11 @@ namespace Furniture.Services
 
             repo.Update(product);
             await _unitOfWork.SaveChangesAsync();
+            
+            var firstImage = product.Images.FirstOrDefault()?.ImageUrl;
+            if (firstImage != null)
+                _ = _recommendationService.GenerateAndSaveEmbeddingAsync(
+                    id, firstImage, product.DescriptionEn);
         }
 
         public async Task DeleteAsync(int id)
