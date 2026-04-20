@@ -1,38 +1,116 @@
-.special-offers {
-  background: #fff;
+.special-offers-section {
+  background: #faf7f4;
+  padding: 100px 40px;
 }
 
-/* CARD */
-.offer-card {
-  position: relative;
-  background: #f8f8f8;
-  border-radius: 12px;
-  overflow: hidden;
-  padding-bottom: 20px;
-  transition: 0.3s;
+/* Header */
+.section-header {
   text-align: center;
+  margin-bottom: 60px;
+  animation: fadeInUp 0.7s both;
 }
+
+.section-eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #a08060;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-family: 'Cormorant Garant', serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+
+.section-desc {
+  color: #7a6a5a;
+  font-size: 15px;
+  margin: 0;
+}
+
+/* Grid */
+.offers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Card */
+.offer-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 4px 24px rgba(44, 26, 14, 0.08);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.4s ease;
+  animation: fadeInUp 0.7s both;
+}
+
+.offer-card:nth-child(1) { animation-delay: 0.1s; }
+.offer-card:nth-child(2) { animation-delay: 0.2s; }
+.offer-card:nth-child(3) { animation-delay: 0.3s; }
 
 .offer-card:hover {
   transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(44, 26, 14, 0.15);
 }
 
-/* IMAGE WRAPPER */
+/* Image */
 .img-wrapper {
   position: relative;
+  overflow: hidden;
 }
 
-.offer-card img {
+.img-wrapper img {
   width: 100%;
-  height: 460px;
+  height: 420px;
   object-fit: cover;
   display: block;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* TEXT OVER IMAGE */
+.offer-card:hover .img-wrapper img {
+  transform: scale(1.05);
+}
+
+.img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    rgba(44, 26, 14, 0.6) 100%
+  );
+}
+
+/* Badge */
+.badge-off {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #2c1a0e;
+  color: white;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  z-index: 3;
+}
+
+/* Info over image */
 .offer-info {
   position: absolute;
-  bottom: 15px;
+  bottom: 18px;
   left: 20px;
   color: white;
   z-index: 2;
@@ -40,43 +118,78 @@
 }
 
 .offer-info h6 {
-  margin: 0;
+  margin: 0 0 4px;
+  font-size: 15px;
   font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .price {
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 16px;
   margin: 0;
 }
 
 .price span {
   text-decoration: line-through;
-  color: #ddd;
+  color: rgba(255,255,255,0.6);
   margin-left: 8px;
+  font-size: 13px;
+  font-weight: 400;
 }
 
-/* DISCOUNT BADGE */
-.badge-off {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: var(--furnora-main);
-  color: #fff;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  z-index: 3;
-}
-
-/* BUTTON */
+/* Button */
 .shop-btn {
-  background: var(--furnora-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px 20px;
+  padding: 13px 0;
+  background: #2c1a0e;
   color: white;
-  border-radius: 25px;
-  width: 80%;
+  border: 2px solid #2c1a0e;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.shop-btn svg {
+  transition: transform 0.3s ease;
 }
 
 .shop-btn:hover {
-  background: var(--furnora-green);
-  color: white;
+  background: transparent;
+  color: #2c1a0e;
+}
+
+.shop-btn:hover svg {
+  transform: translateX(4px);
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .offers-grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+  }
+  .section-title {
+    font-size: 30px;
+  }
 }
