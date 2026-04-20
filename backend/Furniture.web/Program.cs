@@ -161,6 +161,10 @@ namespace Furniture.web
             builder.Services.AddScoped<ISearchService, SearchService>();
             builder.Services.AddHttpClient("PythonService");
 
+            builder.Services.AddHttpClient("AIService");
+            builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+            builder.Services.AddHttpClient<IImageValidationService, ImageValidationService>();
+            builder.Services.AddScoped<IImageValidationService, ImageValidationService>();
             
              // HttpClient -- Paymob
             builder.Services.AddHttpClient("Paymob", client =>

@@ -16,11 +16,14 @@ namespace Furniture.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IRecommendationService _recommendationService;
+
         private const int MaxProductImages = 5;
 
-        public ProductService(IUnitOfWork unitOfWork , IMapper mapper)
+        public ProductService(IUnitOfWork unitOfWork , IMapper mapper,  IRecommendationService recommendationService)
         {
             _unitOfWork = unitOfWork;
+            _recommendationService  = recommendationService;
             _mapper = mapper;
         }
 
@@ -54,6 +57,8 @@ namespace Furniture.Services
             var repo = _unitOfWork.GetRepository<Product, int>();
             var product = await repo.GetByIdAsync(id);
             if (product is null) throw new Exception($"Product with id {id} not found");
+
+            await _recommendationService.DeleteProductEmbeddingAsync(id);
 
             repo.Remove(product);
             await _unitOfWork.SaveChangesAsync();

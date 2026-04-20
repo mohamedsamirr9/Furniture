@@ -14,8 +14,9 @@ namespace Furniture.presentation.Controllers
     public class ProductImagesController : ControllerBase
     {
         private readonly IProductImageService _productImageService;
+        private readonly IImageValidationService _imageValidationService;
 
-        public ProductImagesController(IProductImageService productImageService)
+        public ProductImagesController(IProductImageService productImageService , IImageValidationService imageValidationService)
         {
             _productImageService = productImageService;
         }
