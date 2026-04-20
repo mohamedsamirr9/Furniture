@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/Furniture/browser",
+  "framework": "angular",
+  "installCommand": "npm install"
+}

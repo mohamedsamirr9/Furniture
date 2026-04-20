@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface ReviewCreateDto {
   rating: number;
@@ -13,7 +14,7 @@ export interface ReviewCreateDto {
   providedIn: 'root'
 })
 export class ReviewService {
-  private apiUrl = 'http://localhost:5227/api/reviews';
+  private apiUrl = `${environment.apiUrl}/reviews`;
 
   constructor(private http: HttpClient) {}
 
@@ -30,6 +31,6 @@ export class ReviewService {
   }
 
   getProductReviews(productId: number): Observable<any[]> {
-    return this.http.get<any[]>(`http://localhost:5227/api/products/${productId}/reviews`);
+    return this.http.get<any[]>(`${environment.apiUrl}/products/${productId}/reviews`);
   }
 }
