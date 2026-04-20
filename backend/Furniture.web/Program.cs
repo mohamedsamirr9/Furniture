@@ -78,6 +78,8 @@ namespace Furniture.web
             // swagger authorization
             builder.Services.AddSwaggerGen(options =>
             {
+                options.EnableAnnotations();
+                
                 options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
                     Name = "Authorization",
@@ -159,8 +161,15 @@ namespace Furniture.web
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<ISearchService, SearchService>();
-            builder.Services.AddHttpClient("PythonService");
+            builder.Services.AddScoped<IImageValidationService, ImageValidationService>();
 
+            builder.Services.AddHttpClient("PythonService");
+            builder.Services.AddHttpClient();
+
+            builder.Services.AddHttpClient("AIService");
+            builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+            builder.Services.AddHttpClient<IImageValidationService, ImageValidationService>();
+            builder.Services.AddScoped<IImageValidationService, ImageValidationService>();
             
              // HttpClient -- Paymob
             builder.Services.AddHttpClient("Paymob", client =>

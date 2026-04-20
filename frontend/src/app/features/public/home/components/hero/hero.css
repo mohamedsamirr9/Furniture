@@ -1,74 +1,128 @@
 .hero {
-  height: 100vh;
-  background: url('/assets/images/hero/1.jpg') center/cover
-    no-repeat;
+  height: 95vh;
+  background: url('/assets/images/hero/2.jpg') center/cover no-repeat;
   position: relative;
   display: flex;
   justify-content: center;
+  margin-top: 0;
   align-items: center;
+  padding-top: 5rem; /* ✅ قللناها من 8rem */
 }
 
-/* dark overlay */
-/* .hero::before {
+.hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
-} */
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.hero-eyebrow {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1rem;
+}
 
 .hero-content {
   position: relative;
   z-index: 2;
   color: white;
+  max-width: 970px;
+  padding: 0 1rem;
 }
 
-.hero-content h1 {
-  font-size: 48px;
-  font-weight: 700;
-  margin-bottom: 30px;
+.hero-title {
+  font-family: 'Cormorant Garant', serif;
+  font-weight: 10;
+  font-size: clamp(60px, 10vw, 130px);
+  letter-spacing: 0.08em;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+  color: white;
 }
 
-/* HERO ACTIONS */
+.hero-subtitle {
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 480px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+}
+
 .hero-actions {
-  margin-top: 20px;
+  margin-top: 0;
+  display: flex; /* ✅ مهم عشان الـ flex-direction يشتغل */
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.btn-primary-hero, .btn-secondary-hero {
-  padding: 15px 35px;
-  border-radius: 40px;
-  font-weight: 600;
+.btn-primary-hero,
+.btn-secondary-hero {
+  padding: 14px 36px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   text-decoration: none;
   transition: all 0.3s ease;
-  font-size: 1.1rem;
   display: inline-block;
 }
 
 .btn-primary-hero {
-  background: var(--furnora-main);
-  color: white;
-  border: 2px solid var(--furnora-main);
+  background: white;
+  color: #2c1a0e;
+  border: 2px solid white;
 }
 
 .btn-primary-hero:hover {
   background: transparent;
-  color: var(--furnora-main);
+  color: white;
 }
 
 .btn-secondary-hero {
-  background: rgba(255, 255, 255, 0.15);
+  background: transparent;
   color: white;
   border: 2px solid white;
 }
 
 .btn-secondary-hero:hover {
   background: white;
-  color: black;
+  color: #2c1a0e;
 }
 
+.hero-scroll {
+  margin-top: 3rem;
+  color: rgba(255,255,255,0.7);
+  font-size: 1.2rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* ✅ الـ responsive المصلح */
 @media (max-width: 576px) {
+  .hero {
+    height: 100svh;
+    padding-top: 4rem;
+  }
+  .hero-subtitle {
+    font-size: 0.9rem;
+  }
   .hero-actions {
     flex-direction: column;
-    width: 100%;
-    padding: 0 40px;
+    align-items: center;
+  }
+  .btn-primary-hero,
+  .btn-secondary-hero {
+    width: 80%;
+    text-align: center;
   }
 }
