@@ -17,7 +17,6 @@ namespace Furniture.presentation.Controllers
     {
         private readonly IProductImageService _productImageService;
         private readonly IImageValidationService _imageValidationService;
-        private readonly IImageValidationService _imageValidationService;
 
         public ProductImagesController(IProductImageService productImageService,  IImageValidationService imageValidationService)
         {

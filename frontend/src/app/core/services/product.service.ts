@@ -26,7 +26,7 @@ export interface ImageSearchResponse {
 })
 export class ProductService {
   private readonly apiRoot = environment.apiUrl;
-  private readonly productsUrl = `${this.apiRoot}/products`;
+  private readonly productsUrl = `${this.apiRoot}/product`;
 
   constructor(private http: HttpClient) {}
 
@@ -64,9 +64,7 @@ export class ProductService {
   }
 
   searchProducts(query: string, offset: number = 0, limit: number = 10): Observable<any> {
-    return this.http.get<any>(
-      `${this.productsUrl}?title=${query}&offset=${offset}&limit=${limit}`,
-    );
+    return this.http.get<any>(`${this.productsUrl}?title=${query}&offset=${offset}&limit=${limit}`);
   }
 
   createProduct(data: any): Observable<any> {
@@ -91,11 +89,16 @@ export class ProductService {
   }
 
   uploadImages(files: File[]): Observable<string[]> {
-    if (!files || files.length === 0) return new Observable<string[]>((s) => { s.next([]); s.complete(); });
-    return forkJoin(files.map((f) => this.uploadImage(f).pipe(map((res: any) => res.secure_url as string))));
+    if (!files || files.length === 0)
+      return new Observable<string[]>((s) => {
+        s.next([]);
+        s.complete();
+      });
+    return forkJoin(
+      files.map((f) => this.uploadImage(f).pipe(map((res: any) => res.secure_url as string))),
+    );
   }
 
- 
   searchByImage(file: File, topK: number = 10): Observable<any> {
     const formData = new FormData();
     formData.append('image', file);
@@ -103,7 +106,6 @@ export class ProductService {
     return this.http.post<any>(`${this.apiRoot}/search?topK=${topK}`, formData);
   }
 
- 
   validateImageFile(file: File): { valid: boolean; error?: string } {
     const maxSize = 10 * 1024 * 1024; // 10MB
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];

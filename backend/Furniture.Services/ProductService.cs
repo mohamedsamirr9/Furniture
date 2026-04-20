@@ -81,13 +81,16 @@ namespace Furniture.Services
 
         public async Task UpdateAsync(int id, ProductCreateUpdateDto dto)
         {
-            
             if (dto.ImageUrls != null && dto.ImageUrls.Any())
             {
                 var summary = await _imageValidationService.ValidateUrlsAsync(dto.ImageUrls);
                 if (!summary.AllApproved)
                     throw new ImageValidationException(summary);
             }
+
+            if (dto.ImageUrls != null && dto.ImageUrls.Count > MaxProductImages)
+                throw new Exception($"A product can have at most {MaxProductImages} images.");
+
             var repo = _unitOfWork.GetRepository<Product, int>();
             var spec = new ProductWithDetailsSpecifications(id);
             var product = await repo.GetByIdAsync(spec);
@@ -95,16 +98,14 @@ namespace Furniture.Services
             if (product is null) throw new Exception($"Product with id {id} not found");
 
             _mapper.Map(dto, product);
-            product.Images.Clear();
 
+            product.Images.Clear();
             foreach (var url in dto.ImageUrls ?? Enumerable.Empty<string>())
                 product.Images.Add(new ProductImage { ImageUrl = url });
 
             repo.Update(product);
             await _unitOfWork.SaveChangesAsync();
         }
-
-        
 
         public async Task DeleteAsync(int id)
         {
@@ -183,32 +184,6 @@ namespace Furniture.Services
             var result = _mapper.Map<ProductDetailsDto>(product);
             LocalizeProductDetails(product, result, language);
             return result;
-        }
-
-        public async Task UpdateAsync(int id, ProductCreateUpdateDto dto)
-        {
-            var repo = _unitOfWork.GetRepository<Product, int>();
-            var spec = new ProductWithDetailsSpecifications(id);
-            var product = await repo.GetByIdAsync(spec);
-
-            if (product is null) throw new Exception($"Product with id {id} not found");
-
-            if (dto.ImageUrls != null && dto.ImageUrls.Count > MaxProductImages)
-                throw new Exception($"A product can have at most {MaxProductImages} images.");
-
-            _mapper.Map(dto, product);
-
-            product.Images.Clear();
-            if (dto.ImageUrls != null && dto.ImageUrls.Any())
-            {
-                foreach (var url in dto.ImageUrls)
-                {
-                    product.Images.Add(new ProductImage { ImageUrl = url });
-                }
-            }
-
-            repo.Update(product);
-            await _unitOfWork.SaveChangesAsync();
         }
 
         private static void LocalizeProductList(Product entity, ProductListDto dto, string language)
