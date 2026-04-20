@@ -9,9 +9,10 @@ namespace Furniture.Servises_Abstraction
 {
     public interface IProductService 
     {
-        Task<PaginatedProductsDto> GetAllAsync(ProductQueryParams queryParams);
-        Task<ProductDetailsDto?> GetByIdAsync(int id);
-        Task<ProductDetailsDto> CreateAsync(ProductCreateUpdateDto dto);
+        Task<PaginatedProductsDto> GetAllAsync(ProductQueryParams queryParams, string language = "en");
+        Task<PaginatedProductsDto> GetSellerProductsAsync(string sellerId, ProductQueryParams queryParams, string language = "en");
+        Task<ProductDetailsDto?> GetByIdAsync(int id, string language = "en");
+        Task<ProductDetailsDto> CreateAsync(ProductCreateUpdateDto dto, string language = "en");
         Task UpdateAsync(int id, ProductCreateUpdateDto dto);
         Task DeleteAsync(int id);
     }

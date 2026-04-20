@@ -1,34 +1,50 @@
-<section class="categories py-5 text-center">
+
+<section class="categories-section">
   <div class="container">
-    <h2 class="mb-5">Shop By Category</h2>
+    <div class="section-header">
+      <p class="section-eyebrow">✦ Collections</p>
+      <h2 class="section-title">{{ 'PRODUCT.SHOP_BY_CATEGORY' | translate }}</h2>
+    </div>
 
-    <div class="row justify-content-center g-4">
-      <div class="col-6 col-md-3">
-        <div class="category-card">
-          <img src="/assets/images/categories/bedroom.jpg" />
-          <p>Bedroom</p>
+    <div class="categories-grid">
+      <div class="category-card">
+        <div class="img-wrapper">
+          <img src="/assets/images/categories/bedroom.jpg" alt="Bedroom" />
+          <div class="card-overlay">
+            <span class="explore-text">Explore →</span>
+          </div>
         </div>
+        <p class="cat-name">{{ 'CATEGORY.BEDROOM' | translate }}</p>
       </div>
 
-      <div class="col-6 col-md-3">
-        <div class="category-card">
-          <img src="/assets/images/categories/salon.jpg" />
-          <p>Salon</p>
+      <div class="category-card">
+        <div class="img-wrapper">
+          <img src="/assets/images/categories/salon.jpg" alt="Salon" />
+          <div class="card-overlay">
+            <span class="explore-text">Explore →</span>
+          </div>
         </div>
+        <p class="cat-name">{{ 'CATEGORY.SALON' | translate }}</p>
       </div>
 
-      <div class="col-6 col-md-3">
-        <div class="category-card">
-          <img src="/assets/images/categories/kitchen.jpg" />
-          <p>Kitchen</p>
+      <div class="category-card">
+        <div class="img-wrapper">
+          <img src="/assets/images/categories/kitchen.jpg" alt="Kitchen" />
+          <div class="card-overlay">
+            <span class="explore-text">Explore →</span>
+          </div>
         </div>
+        <p class="cat-name">{{ 'CATEGORY.KITCHEN' | translate }}</p>
       </div>
 
-      <div class="col-6 col-md-3">
-        <div class="category-card">
-          <img src="/assets/images/categories/bathroom.jpg" />
-          <p>Bathroom</p>
+      <div class="category-card">
+        <div class="img-wrapper">
+          <img src="/assets/images/categories/bathroom.jpg" alt="Bathroom" />
+          <div class="card-overlay">
+            <span class="explore-text">Explore →</span>
+          </div>
         </div>
+        <p class="cat-name">{{ 'CATEGORY.BATHROOM' | translate }}</p>
       </div>
     </div>
   </div>

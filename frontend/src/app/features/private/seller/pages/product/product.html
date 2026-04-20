@@ -1,23 +1,23 @@
 <div class="page-header">
-  <h1>Product</h1>
-  <button class="add-btn" (click)="openAddModal()">+ Add Product</button>
+  <h1>{{ 'DASHBOARD.PRODUCT_TITLE' | translate }}</h1>
+  <button class="add-btn" (click)="openAddModal()">{{ 'BUTTONS.ADD_PRODUCT' | translate }}</button>
 </div>
 <hr class="divider" />
 
 <!-- Loading -->
-<div *ngIf="isLoading" class="loading-text">Loading products...</div>
+<div *ngIf="isLoading" class="loading-text">{{ 'ALERTS.LOADING' | translate }}</div>
 
 <!-- Product Table -->
 <div class="table-card" *ngIf="!isLoading">
-  <h2 class="card-title">Your Products</h2>
+  <h2 class="card-title">{{ 'DASHBOARD.YOUR_PRODUCTS' | translate }}</h2>
   <table class="table">
     <thead>
       <tr>
-        <th>Product</th>
-        <th>Stock</th>
-        <th>Price</th>
-        <th>Status</th>
-        <th style="text-align: center;">Actions</th>
+        <th>{{ 'DASHBOARD.PRODUCT_TITLE' | translate }}</th>
+        <th>{{ 'DASHBOARD.STOCK' | translate }}</th>
+        <th>{{ 'DASHBOARD.PRICE' | translate }}</th>
+        <th>{{ 'DASHBOARD.STATUS' | translate }}</th>
+        <th style="text-align: center;">{{ 'DASHBOARD.ACTIONS' | translate }}</th>
       </tr>
     </thead>
     <tbody>
@@ -30,7 +30,7 @@
         <td><strong>{{ product.price | currency }}</strong></td>
         <td>
           <span [ngClass]="product.stockQuantity > 0 ? 'badge-green' : 'alert-error'" style="padding: 4px 8px; border-radius: 4px; font-size: 0.85em;">
-            {{ product.stockQuantity > 0 ? 'Available' : 'Out of Stock' }}
+            {{ product.stockQuantity > 0 ? ('DASHBOARD.AVAILABLE' | translate) : ('DASHBOARD.OUT_OF_STOCK' | translate) }}
           </span>
         </td>
         <td class="actions">
@@ -46,7 +46,7 @@
 <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>{{ isEditing ? 'Edit Product' : 'Add Product' }}</h2>
+      <h2>{{ (isEditing ? 'FORM.EDIT_PRODUCT' : 'FORM.ADD_PRODUCT') | translate }}</h2>
       <span class="modal-close" (click)="closeModal()">&times;</span>
     </div>
 
@@ -55,60 +55,95 @@
     <div class="alert alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="name">Name *</label>
-        <input id="name" type="text" formControlName="name" placeholder="Product name" />
-        <small class="error-text" *ngIf="productForm.get('name')?.touched && productForm.get('name')?.invalid">
-          Name is required.
-        </small>
-      </div>
-
-      <div class="form-group">
-        <label for="imageFile">Product Image</label>
-        <input id="imageFile" type="file"  (change)="onFileSelected($event)" accept="image/*" [disabled]="isUploading" />
-        <small class="uploading-text" *ngIf="isUploading" style="color: blue; display: block; margin-top: 5px;">Uploading image to servers...</small>
-        <div *ngIf="productForm.get('imageUrl')?.value && !isUploading" class="image-preview" style="margin-top: 10px;">
-          <img [src]="productForm.get('imageUrl')?.value" alt="Preview" style="max-height: 80px; border-radius: 4px;" />
+      <div class="form-row" style="display: flex; gap: 15px; margin-bottom: 15px;">
+        <div class="form-group" style="flex: 1;">
+          <label for="nameEn">{{ 'FORM.NAME_EN' | translate }} *</label>
+          <input id="nameEn" type="text" formControlName="nameEn" placeholder="{{ 'FORM.NAME_EN' | translate }}" />
+          <small class="error-text" *ngIf="productForm.get('nameEn')?.touched && productForm.get('nameEn')?.invalid">
+            {{ 'ALERTS.NAME_REQUIRED_EN' | translate }}
+          </small>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label for="nameAr">{{ 'FORM.NAME_AR' | translate }}</label>
+          <input id="nameAr" type="text" formControlName="nameAr" placeholder="{{ 'FORM.NAME_AR' | translate }}" dir="rtl" />
         </div>
       </div>
 
       <div class="form-group">
-        <label for="description">Description</label>
-        <textarea id="description" formControlName="description" rows="3" placeholder="Product description"></textarea>
+        <label for="imageFile">{{ 'FORM.PRODUCT_IMAGE' | translate }}</label>
+        <input
+          id="imageFile"
+          type="file"
+          multiple
+          (change)="onFilesSelected($event)"
+          accept="image/*"
+          [disabled]="isUploading || totalImagesCount >= maxImages"
+        />
+        <small class="uploading-text" *ngIf="isUploading" style="color: blue; display: block; margin-top: 5px;">
+          {{ 'ALERTS.UPLOADING' | translate }}
+        </small>
+        <small class="uploading-text" style="display: block; margin-top: 6px; color: #6b7280;">
+          {{ totalImagesCount }}/{{ maxImages }} images
+        </small>
+
+        <div class="images-grid" *ngIf="existingImages.length > 0 || selectedPreviews.length > 0" style="margin-top: 10px;">
+          <div class="img-tile" *ngFor="let url of existingImages">
+            <img [src]="url" [alt]="'FORM.PREVIEW' | translate" />
+            <button type="button" class="img-remove" (click)="removeExistingImage(url)">×</button>
+          </div>
+          <div class="img-tile" *ngFor="let preview of selectedPreviews; let i = index">
+            <img [src]="preview" [alt]="'FORM.PREVIEW' | translate" />
+            <button type="button" class="img-remove" (click)="removeSelectedImage(i)">×</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row" style="display: flex; gap: 15px; margin-bottom: 15px;">
+        <div class="form-group" style="flex: 1;">
+          <label for="descriptionEn">{{ 'FORM.DESCRIPTION_EN' | translate }} *</label>
+          <textarea id="descriptionEn" formControlName="descriptionEn" rows="3" placeholder="{{ 'FORM.DESCRIPTION_EN' | translate }}"></textarea>
+          <small class="error-text" *ngIf="productForm.get('descriptionEn')?.touched && productForm.get('descriptionEn')?.invalid">
+            {{ 'ALERTS.DESC_REQUIRED_EN' | translate }}
+          </small>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label for="descriptionAr">{{ 'FORM.DESCRIPTION_AR' | translate }}</label>
+          <textarea id="descriptionAr" formControlName="descriptionAr" rows="3" placeholder="{{ 'FORM.DESCRIPTION_AR' | translate }}" dir="rtl"></textarea>
+        </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="price">Price *</label>
+          <label for="price">{{ 'FORM.PRICE' | translate }} *</label>
           <input id="price" type="number" formControlName="price" step="0.01" min="0" />
           <small class="error-text" *ngIf="productForm.get('price')?.touched && productForm.get('price')?.invalid">
-            Price must be greater than 0.
+            {{ 'ALERTS.PRICE_MIN' | translate }}
           </small>
         </div>
 
         <div class="form-group">
-          <label for="stockQuantity">Stock Quantity *</label>
+          <label for="stockQuantity">{{ 'FORM.STOCK' | translate }} *</label>
           <input id="stockQuantity" type="number" formControlName="stockQuantity" min="0" />
         </div>
       </div>
 
       <div class="form-group">
-        <label for="categoryId">Category *</label>
+        <label for="categoryId">{{ 'FORM.CATEGORY' | translate }} *</label>
         <select id="categoryId" formControlName="categoryId">
-          <option [ngValue]="null" disabled>Select a category</option>
+          <option [ngValue]="null" disabled>{{ 'FORM.SELECT_CATEGORY' | translate }}</option>
           <option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option>
         </select>
         <small class="error-text" *ngIf="productForm.get('categoryId')?.touched && productForm.get('categoryId')?.invalid">
-          Category is required.
+          {{ 'ALERTS.CATEGORY_REQUIRED' | translate }}
         </small>
       </div>
 
 
 
       <div class="form-actions">
-        <button type="button" class="btn-cancel" (click)="closeModal()">Cancel</button>
+        <button type="button" class="btn-cancel" (click)="closeModal()">{{ 'BUTTONS.CANCEL' | translate }}</button>
         <button type="submit" class="btn-submit" [disabled]="isSubmitting">
-          {{ isSubmitting ? 'Saving...' : (isEditing ? 'Update Product' : 'Add Product') }}
+          {{ isSubmitting ? ('ALERTS.LOADING' | translate) : (isEditing ? ('BUTTONS.UPDATE_PRODUCT' | translate) : ('BUTTONS.ADD_PRODUCT' | translate)) }}
         </button>
       </div>
     </form>

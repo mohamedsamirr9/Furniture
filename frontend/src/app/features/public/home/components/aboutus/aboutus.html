@@ -1,97 +1,68 @@
-<section class="about-us py-5">
-  <div class="container text-center">
-    <!-- Title -->
-    <h2 class="fw-bold mb-3">About Us</h2>
-    <p class="text-muted w-75 mx-auto mb-5">
-      Lorem ipsum facilisi nunc sagittis integer viverra ullamcorper turpis quis sit semper massa
-      fermentum ac faucibus odio in consectetur arcu.
-    </p>
+<section class="about-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">✦ Our Story</p>
+      <h2 class="section-title">{{ 'ABOUT.TITLE' | translate }}</h2>
+      <p class="section-desc">{{ 'ABOUT.SUBTITLE' | translate }}</p>
+    </div>
 
-    <!-- Features -->
-    <div class="row g-4">
-      <!-- Item 1 -->
-      <div class="col-md-4">
-        <div class="about-box">
-          <div class="icon-circle">
-            <i class="bi bi-folder2-open"></i>
-          </div>
-          <h5 class="fw-bold mt-3">Quality First</h5>
-          <p class="text-muted">Premium materials and expert joinery.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="icon-wrapper">
+          <i class="bi bi-folder2-open"></i>
         </div>
+        <h5 class="feature-title">{{ 'ABOUT.QUALITY' | translate }}</h5>
+        <p class="feature-desc">{{ 'ABOUT.QUALITY_DESC' | translate }}</p>
       </div>
 
-      <!-- Item 2 -->
-      <div class="col-md-4">
-        <div class="about-box">
-          <div class="icon-circle">
-            <i class="bi bi-recycle"></i>
-          </div>
-          <h5 class="fw-bold mt-3">Sustainable</h5>
-          <p class="text-muted">Eco-friendly sourcing and production.</p>
+      <div class="feature-card">
+        <div class="icon-wrapper">
+          <i class="bi bi-recycle"></i>
         </div>
+        <h5 class="feature-title">{{ 'ABOUT.SUSTAINABLE' | translate }}</h5>
+        <p class="feature-desc">{{ 'ABOUT.SUSTAINABLE_DESC' | translate }}</p>
       </div>
 
-      <!-- Item 3 -->
-      <div class="col-md-4">
-        <div class="about-box">
-          <div class="icon-circle">
-            <i class="bi bi-heart"></i>
-          </div>
-          <h5 class="fw-bold mt-3">Made with Love</h5>
-          <p class="text-muted">Handcrafted by skilled artisans.</p>
+      <div class="feature-card">
+        <div class="icon-wrapper">
+          <i class="bi bi-heart"></i>
         </div>
+        <h5 class="feature-title">{{ 'ABOUT.MADE_WITH_LOVE' | translate }}</h5>
+        <p class="feature-desc">{{ 'ABOUT.MADE_WITH_LOVE_DESC' | translate }}</p>
       </div>
     </div>
   </div>
 </section>
-<section class="feedback py-5">
+
+<section class="feedback-section">
   <div class="container">
-    <!-- Title -->
-    <h2 class="fw-bold mb-3">Our Customer Feedbacks</h2>
+    <div class="section-header">
+      <p class="section-eyebrow">✦ Testimonials</p>
+      <h2 class="section-title">{{ 'ABOUT.FEEDBACK_TITLE' | translate }}</h2>
+    </div>
 
-    <div class="row align-items-center">
-      <!-- Feedback Card -->
-      <div class="col-lg-6 mb-4 mb-lg-0">
-        <div class="feedback-card">
-          <p class="text-muted">
-            A beautiful piece of furniture is like a quiet escape. It transforms your space and
-            turns an ordinary room into a place you truly belong. It's never just about wood or
-            fabric, it's about comfort and detail.
-          </p>
-
-          <div class="d-flex justify-content-between align-items-center mt-4">
-            <h6 class="fw-bold m-0">Bratlee Hamint</h6>
-
-            <button class="next-btn">
-              <i class="bi bi-arrow-right"></i>
-            </button>
+    <div class="feedback-grid">
+      <div class="feedback-card">
+      
+        <p class="feedback-text">{{ 'ABOUT.SUBTITLE' | translate }}</p>
+        <div class="feedback-footer">
+          <div class="customer-info">
+            <div class="customer-avatar">B</div>
+            <span class="customer-name">Bratlee Hamint</span>
           </div>
+          <button class="next-btn" [attr.aria-label]="'BUTTONS.NEXT' | translate">
+            <i class="bi bi-arrow-right"></i>
+          </button>
         </div>
       </div>
 
-      <!-- Images -->
-      <div class="col-lg-6">
-        <div class="row g-3">
-          <div class="col-6">
-            <img
-              src="/assets/images/feedbacks/1.jpg"
-              class="img-fluid rounded feedback-img"
-            />
-          </div>
-
-          <div class="col-6">
-            <img
-              src="/assets/images/feedbacks/2.jpg"
-              class="img-fluid rounded feedback-img"
-            />
-          </div>
-
-          <div class="col-12">
-            <img
-              src="/assets/images/feedbacks/3.jpg"
-              class="img-fluid rounded feedback-img"
-            />
-          </div>
+      <div class="feedback-images">
+        <div class="images-top">
+          <img src="/assets/images/feedbacks/1.jpg" alt="feedback 1" />
+          <img src="/assets/images/feedbacks/2.jpg" alt="feedback 2" />
+        </div>
+        <div class="images-bottom">
+          <img src="/assets/images/feedbacks/4.jpg" alt="feedback 3" />
         </div>
       </div>
     </div>

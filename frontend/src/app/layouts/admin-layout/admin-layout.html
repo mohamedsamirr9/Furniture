@@ -1,32 +1,35 @@
 <div class="admin-layout">
 
   <aside class="sidebar">
-    <div class="sidebar-logo">Furnora</div>
+    <div class="sidebar-logo">{{ 'NAV.BRAND' | translate }}</div>
 
     <nav class="sidebar-nav">
       <a class="nav-item" routerLink="/admin/dashboard" routerLinkActive="active">
-  ⊞ Dashboard
-</a>
-<a class="nav-item" routerLink="/admin/categories" routerLinkActive="active">
-  🗂️ Categories
-</a>
-<a class="nav-item" routerLink="/admin/products" routerLinkActive="active">
-  🪑 Products
-</a>
-<a class="nav-item" routerLink="/admin/orders" routerLinkActive="active">
-  📦 Orders
-</a>
-<a class="nav-item" routerLink="/admin/complaints" routerLinkActive="active">
-  💬 Complaints
-</a>
-<a class="nav-item" routerLink="/admin/users" routerLinkActive="active">
-  👥 Users
-</a>
+        ⊞ {{ 'NAV.DASHBOARD' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/admin/categories" routerLinkActive="active">
+        🗂️ {{ 'NAV.CATEGORIES' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/admin/products" routerLinkActive="active">
+        🪑 {{ 'NAV.PRODUCTS' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/admin/orders" routerLinkActive="active">
+        📦 {{ 'NAV.ORDERS' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/admin/complaints" routerLinkActive="active">
+        💬 {{ 'NAV.COMPLAINTS' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/admin/users" routerLinkActive="active">
+        👥 {{ 'NAV.USERS' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/admin/shipping-rules" routerLinkActive="active">
+        🚚 {{ 'ADMIN.SHIPPING_RULES' | translate }}
+      </a>
     </nav>
 
     <div class="sidebar-footer">
-      <div class="collapse-btn">› Collapse</div>
-      <div class="signout-btn" (click)="signOut()">→ Sign Out</div>
+      <div class="collapse-btn">› {{ 'NAV.COLLAPSE' | translate }}</div>
+      <div class="signout-btn" (click)="signOut()">→ {{ 'NAV.SIGNOUT' | translate }}</div>
     </div>
   </aside>
 

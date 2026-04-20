@@ -1,4 +1,4 @@
-﻿using Furniture.Domain.Models.Enum;
+using Furniture.Domain.Models.Enum;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -12,15 +12,25 @@ namespace Furniture.Domain.Models
     public class ApplicationUser: IdentityUser
     {
         public string Name { get; set; } = null!;
-        public Roles Role { get; set; }
         public string? Address { get; set; }
-        public DateTime RegisterdAt { get; set; } = DateTime.UtcNow;
-        public string? OTP { get; set; }
-        public DateTime? OTPExpiry { get; set; } 
+
+        public string? ProfileImage { get; set; }
+        public string? NationalIdImage { get; set; }
+
+        public Roles Role { get; set; }
+
+        public bool IsVerified { get; set; } = false;
         public bool IsConfirmed { get; set; } = false;
 
-        public DateTime? DeletedAt { get; set; }
+        public string? OTP { get; set; }
+        public DateTime? OTPExpiry { get; set; }
+
         public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
+
+        public DateTime RegisteredAt { get; set; } = DateTime.UtcNow;
+
+        public ICollection<RefrashToken> RefreshTokens { get; set; } = new List<RefrashToken>();
 
 
         //rel
@@ -30,6 +40,7 @@ namespace Furniture.Domain.Models
         public ICollection<Order> Orders { get; set; } = new List<Order>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<Complaint> Complaints { get; set; } = new List<Complaint>();
+        public ICollection<ComplaintReply> ComplaintReplies { get; set; } = new List<ComplaintReply>();
 
         public Cart Cart { get; set; } = null!;
 

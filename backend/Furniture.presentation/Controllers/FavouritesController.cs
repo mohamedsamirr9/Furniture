@@ -1,4 +1,5 @@
 using Furniture.Servises_Abstraction;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace Furniture.presentation.Controllers
 {
     [ApiController]
     [Route("api/favourites")]
+    [Authorize(Roles = "buyer")]
     public class FavouritesController : ControllerBase
     {
         private readonly IFavouriteService _favouriteService;
@@ -20,7 +22,7 @@ namespace Furniture.presentation.Controllers
             _favouriteService = favouriteService;
         }
 
-        private string GetUserId() => "seller-1";
+        private string GetUserId() => User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
 
         // GET /api/favourites
         [HttpGet]

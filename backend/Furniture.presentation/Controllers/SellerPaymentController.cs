@@ -8,11 +8,11 @@ namespace Furniture.presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SellersController : ControllerBase
+    public class SellerPaymentController : ControllerBase
     {
         private readonly ISellerPaymentService _sellerPaymentService;
 
-        public SellersController(ISellerPaymentService sellerPaymentService)
+        public SellerPaymentController(ISellerPaymentService sellerPaymentService)
         {
             _sellerPaymentService = sellerPaymentService;
         }

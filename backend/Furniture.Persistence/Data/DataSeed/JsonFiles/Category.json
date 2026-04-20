@@ -1,14 +1,20 @@
 [
   {
-    "name": "Living Room",
-    "description": "Furniture designed for living rooms including sofas, coffee tables, and TV units."
+    "NameEn": "Living Room",
+    "NameAr": "غرفة المعيشة",
+    "DescriptionEn": "Furniture designed for living rooms including sofas, coffee tables, and TV units.",
+    "DescriptionAr": "أثاث مصمم لغرف المعيشة يشمل الكنب وطاولات القهوة ووحدات التلفزيون."
   },
   {
-    "name": "Bedroom",
-    "description": "Bedroom essentials such as beds, wardrobes, dressers, and nightstands."
+    "NameEn": "Bedroom",
+    "NameAr": "غرفة النوم",
+    "DescriptionEn": "Bedroom essentials such as beds, wardrobes, dressers, and nightstands.",
+    "DescriptionAr": "أساسيات غرفة النوم مثل الأسرّة والخزائن والتسريحات وطاولات السرير."
   },
   {
-    "name": "Dining Room",
-    "description": "Dining furniture including tables, chairs, buffets, and cabinets."
+    "NameEn": "Dining Room",
+    "NameAr": "غرفة الطعام",
+    "DescriptionEn": "Dining furniture including tables, chairs, buffets, and cabinets.",
+    "DescriptionAr": "أثاث غرفة الطعام يشمل الطاولات والكراسي والبوفيهات والخزائن."
   }
 ]

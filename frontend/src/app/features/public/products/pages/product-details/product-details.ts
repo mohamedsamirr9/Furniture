@@ -1,21 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CartService } from '../../../../../core/services/cart.service';
 import { ProductService } from '../../../../../core/services/product.service';
 import { WishlistService } from '../../../../../core/services/wishlist.service';   
 import { ReviewService } from '../../../../../core/services/review.service';
+import { Product } from '../../../../../core/models/product.model';
 
 import { Subscription } from 'rxjs';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-product-details',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './product-details.html',
   styleUrl: './product-details.css',
 })
 export class ProductDetails implements OnInit {
-  product: any = null;
+  product: Product | null = null;
+  selectedImage = '';
+  readonly fallbackImage = 'assets/images/placeholder-product.png';
   isLoading: boolean = false;
   notFoundMessage: string = '';
 
@@ -36,7 +41,8 @@ export class ProductDetails implements OnInit {
     private productService: ProductService,
     private wishlistService: WishlistService,
     private reviewService: ReviewService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -50,7 +56,7 @@ export class ProductDetails implements OnInit {
       }
     });
 
-    this.wishlistSub = this.wishlistService.wishlist$.subscribe(items => {
+    this.wishlistSub = this.wishlistService.wishlist$.subscribe((items: any[]) => {
       if (this.product) {
         this.checkWishlistStatus(items);
       }
@@ -64,14 +70,15 @@ export class ProductDetails implements OnInit {
   }
 
   checkWishlistStatus(items?: any[]): void {
-    if (!this.product) return;
+    const currentProduct = this.product;
+    if (!currentProduct) return;
     
     // If items aren't provided, get current value
     if (!items) {
-      this.wishlistService.wishlist$.subscribe(curr => items = curr).unsubscribe();
+      this.wishlistService.wishlist$.subscribe((curr: any[]) => items = curr).unsubscribe();
     }
     
-    this.isInWishlist = items?.some(item => item.productId === this.product.id) || false;
+    this.isInWishlist = items?.some(item => item.productId === currentProduct.id) || false;
   }
 
   loadProduct(id: number) {
@@ -79,7 +86,16 @@ export class ProductDetails implements OnInit {
     this.notFoundMessage = '';
     this.productService.getProductById(id).subscribe({
       next: (res: any) => {
-        this.product = res;
+        const images: string[] = res.images || res.Images || [];
+        this.product = {
+          ...res,
+          categoryName: res.categoryName || res.CategoryName,
+          sellerId: res.sellerId || res.SellerId,
+          sellerName: res.sellerName || res.SellerName,
+          averageRating: res.averageRating || 0,
+          images,
+        };
+        this.selectedImage = this.product?.images?.[0] || this.fallbackImage;
         this.checkWishlistStatus();
         this.isLoading = false;
       },
@@ -142,20 +158,38 @@ export class ProductDetails implements OnInit {
     this.wishlistService.removeFromWishlist(this.product.id).subscribe({
       next: () => {
         this.isInWishlist = false;
-        this.showWishlistMessage('Removed from wishlist!');
+        this.showWishlistMessage('WISHLIST.REMOVED');
       },
-      error: (err) => console.error('Failed to remove from wishlist', err)
+      error: (err: any) => console.error('Failed to remove from wishlist', err)
     });
   } else {
     this.wishlistService.addToWishlist(this.product.id).subscribe({
       next: () => {
         this.isInWishlist = true;
-        this.showWishlistMessage('Added to wishlist!');
+        this.showWishlistMessage('WISHLIST.ADDED');
       },
-      error: (err) => console.error('Failed to add to wishlist', err)
+      error: (err: any) => console.error('Failed to add to wishlist', err)
     });
   }
 }
+
+  selectImage(imageUrl: string) {
+    this.selectedImage = imageUrl;
+  }
+
+  navigateToSeller() {
+    if (!this.product?.sellerId) return;
+    this.router.navigate(['/sellers', this.product.sellerId]);
+  }
+
+  get displayImages(): string[] {
+    return this.product?.images?.length ? this.product.images : [this.fallbackImage];
+  }
+
+  isActiveImage(imageUrl: string): boolean {
+    return this.selectedImage === imageUrl;
+  }
+
 showWishlistMessage(message: string) {
   this.wishlistMessage = message;
   setTimeout(() => this.wishlistMessage = '', 3000);

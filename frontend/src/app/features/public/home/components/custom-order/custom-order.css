@@ -1,0 +1,333 @@
+
+.custom-order-section {
+  background: #faf7f4;
+  padding: 100px 60px;
+  overflow: hidden;
+}
+
+.custom-order-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+
+.image-side {
+  position: relative;
+  animation: slideInLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.img-wrapper {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(44, 26, 14, 0.18);
+}
+
+.custom-img {
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.img-wrapper:hover .custom-img {
+  transform: scale(1.04);
+}
+
+.img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(44, 26, 14, 0.35) 100%
+  );
+}
+
+
+.only-badge {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2c1a0e;
+  letter-spacing: 0.03em;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  animation: fadeInUp 0.6s 0.4s both;
+}
+
+/* Floating card top-right */
+.floating-card {
+  position: absolute;
+  top: -20px;
+  right: -24px;
+  background: #2c1a0e;
+  color: white;
+  border-radius: 16px;
+  padding: 18px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 20px 50px rgba(44, 26, 14, 0.3);
+  animation: fadeInDown 0.6s 0.5s both;
+}
+
+.floating-num {
+  font-size: 28px;
+  font-weight: 800;
+  font-family: 'Cormorant Garant', serif;
+  line-height: 1;
+}
+
+.floating-label {
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.7;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+  white-space: nowrap;
+}
+
+/* ── Content Side ── */
+.content-side {
+  animation: slideInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ede8e3;
+  color: #2c1a0e;
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  letter-spacing: 0.03em;
+}
+
+.title {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+  font-family: 'Cormorant Garant', serif;
+}
+
+.accent {
+  color: #2c1a0e;
+  font-style: italic;
+}
+
+.desc {
+  color: #7a6a5a;
+  font-size: 15px;
+  line-height: 1.8;
+  margin-bottom: 36px;
+  max-width: 440px;
+}
+
+/* ── Steps ── */
+.steps {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 40px;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid #e8e0d8;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.step-item:last-child {
+  border-bottom: none;
+}
+
+.step-item:hover {
+  padding-left: 8px;
+}
+
+.step-item:hover .step-num {
+  background: #2c1a0e;
+  color: white;
+  transform: scale(1.1);
+}
+
+.step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ede8e3;
+  color: #2c1a0e;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.step-text {
+  font-size: 15px;
+  color: #3d2b1f;
+  font-weight: 500;
+}
+
+/* ── CTA Button ── */
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #2c1a0e;
+  color: #fff;
+  border: 2px solid #2c1a0e;
+  border-radius: 999px;
+  padding: 15px 32px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #faf7f4;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 0;
+}
+
+.cta-btn:hover::before {
+  transform: translateX(0);
+}
+
+.cta-btn:hover {
+  color: #2c1a0e;
+}
+
+.cta-btn span,
+.cta-btn svg {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.cta-btn:hover svg {
+  transform: translateX(4px);
+}
+
+/* ── Animations ── */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Responsive ── */
+@media (max-width: 991px) {
+  .custom-order-section {
+    padding: 60px 24px;
+  }
+  .custom-order-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .floating-card {
+    right: 10px;
+    top: -15px;
+  }
+  .title {
+    font-size: 30px;
+  }
+}
+@media (max-width: 575px) {
+  .custom-order-section {
+    padding: 50px 16px;
+  }
+  .floating-card {
+    display: none;
+  }
+  .custom-img {
+    height: 300px;
+  }
+  .title {
+    font-size: 26px;
+  }
+  .desc {
+    font-size: 14px;
+    max-width: 100%;
+  }
+  .cta-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -4,10 +4,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-my-orders',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './my-orders.html',
   styleUrls: ['./my-orders.css']
 })
@@ -27,7 +29,7 @@ export class MyOrdersComponent implements OnInit {
         this.orders = Array.isArray(data) ? data : (data.items || data.data || []);
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         this.errorMsg = 'Failed to load your orders. Please try again later.';
         this.isLoading = false;
         console.error('Error loading orders', err);

@@ -1,0 +1,192 @@
+<div class="seller-profile-root">
+  <div *ngIf="loading" class="profile-header">
+    <p>Loading seller profile...</p>
+  </div>
+
+  <div *ngIf="!loading && error" class="profile-header">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="editMode && saveError" class="inline-alert inline-alert-danger">{{ saveError }}</div>
+
+  <ng-container *ngIf="!loading && seller">
+    <div class="profile-header">
+      <div class="profile-header-top" *ngIf="editMode">
+        <span class="dashboard-profile-label">Your profile</span>
+        <button type="button" class="btn-edit-dashboard" (click)="toggleEdit()" *ngIf="!isEditing">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Edit
+        </button>
+      </div>
+
+      <div class="profile-header-inner">
+        <div class="profile-main">
+          <div
+            class="avatar-hover-wrap"
+            [class.avatar-editable]="editMode && !isEditing"
+            [attr.aria-busy]="avatarUploading"
+          >
+            <div class="avatar-wrap">
+              <img
+                *ngIf="shouldShowProfileImage()"
+                [src]="seller.profileImageUrl"
+                [alt]="seller.name"
+                class="avatar avatar-img"
+                (error)="onProfileAvatarError()"
+              />
+              <div
+                *ngIf="!shouldShowProfileImage()"
+                class="avatar avatar-fallback"
+                [ngStyle]="getAvatarBackgroundStyle(seller.name)"
+                aria-hidden="true"
+              >
+                <span class="avatar-fallback-letter">{{ getAvatarInitial(seller.name) }}</span>
+              </div>
+            </div>
+            <div class="avatar-upload-layer" *ngIf="editMode && !isEditing">
+              <label class="avatar-upload-hit" [class.is-busy]="avatarUploading">
+                <input
+                  type="file"
+                  class="sr-only"
+                  accept="image/jpeg,image/png,image/webp,image/jpg"
+                  [disabled]="avatarUploading"
+                  (change)="onAvatarFileInput($event)"
+                />
+                <span class="avatar-upload-icon" *ngIf="!avatarUploading" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                  </svg>
+                </span>
+                <span *ngIf="avatarUploading" class="avatar-upload-busy">…</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="profile-info" *ngIf="!isEditing || !editMode">
+            <h1 class="seller-name">{{ seller.name }}</h1>
+            <div class="profile-meta">
+              <span class="meta-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                {{ seller.location }}
+              </span>
+              <span class="meta-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                Joined {{ seller.joinDate }}
+              </span>
+              <span class="meta-item rating">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#3d6b4f" stroke="#3d6b4f" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                {{ seller.rating }} ({{ seller.reviewsCount }} reviews)
+              </span>
+              <span class="meta-item" *ngIf="editMode && seller.email">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                {{ seller.email }}
+              </span>
+            </div>
+            <p class="seller-bio">{{ seller.bio }}</p>
+            <div class="specialties">
+              <span class="tag" *ngFor="let tag of seller.specialties">{{ tag }}</span>
+            </div>
+          </div>
+
+          <form class="profile-info profile-edit-form" [formGroup]="profileForm" *ngIf="editMode && isEditing" (ngSubmit)="saveProfile()">
+            <div class="form-group">
+              <label for="sp-name">Name</label>
+              <input id="sp-name" type="text" formControlName="name" class="form-control" />
+              <div *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched" class="field-error">Name is required.</div>
+            </div>
+            <div class="form-group">
+              <label for="sp-location">Location</label>
+              <input id="sp-location" type="text" formControlName="location" class="form-control" />
+              <div *ngIf="profileForm.get('location')?.invalid && profileForm.get('location')?.touched" class="field-error">Location is required.</div>
+            </div>
+            <div class="form-group">
+              <label for="sp-bio">Bio</label>
+              <textarea id="sp-bio" formControlName="bio" class="form-control" rows="4"></textarea>
+              <div *ngIf="profileForm.get('bio')?.invalid && profileForm.get('bio')?.touched" class="field-error">Bio must be at least 10 characters.</div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="send-btn" [disabled]="isSaving">
+                {{ isSaving ? 'Saving…' : 'Save changes' }}
+              </button>
+              <button type="button" class="cancel-btn" (click)="cancelEdit()" [disabled]="isSaving">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3d6b4f" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span class="stat-value">{{ seller.completedOrders }}</span>
+            <span class="stat-label">Completed</span>
+          </div>
+          <div class="stat-card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3d6b4f" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <span class="stat-value">{{ seller.rating }}</span>
+            <span class="stat-label">Rating</span>
+          </div>
+          <div class="stat-card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3d6b4f" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span class="stat-value">{{ seller.reviewsCount }}</span>
+            <span class="stat-label">Reviews</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="portfolio-section">
+      <div class="portfolio-header">
+        <div class="portfolio-title-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3d6b4f" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <h2 class="portfolio-title">Portfolio &amp; Work</h2>
+          <span class="portfolio-count">{{ seller.portfolio.length }} pieces showcased</span>
+        </div>
+        <a *ngIf="showRequestCustomCta" routerLink="/customer" class="btn-request">Request Custom Piece</a>
+      </div>
+
+      <div class="portfolio-grid">
+        <a
+          class="portfolio-card"
+          *ngFor="let item of seller.portfolio"
+          [routerLink]="['/products', item.id]"
+        >
+          <div class="portfolio-img-wrap">
+            <img [src]="item.imageUrl" [alt]="item.title" class="portfolio-img" />
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-category">{{ item.category }}</span>
+            <h3 class="portfolio-name">{{ item.title }}</h3>
+            <p class="portfolio-desc">{{ item.description }}</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </ng-container>
+</div>

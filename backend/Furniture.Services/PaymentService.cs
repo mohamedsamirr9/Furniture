@@ -155,7 +155,7 @@ namespace Furniture.Services.Implementations
                 merchant_order_id = order.Id.ToString(),
                 items = order.OrderItems!.Select(oi => new
                 {
-                    name = oi.Product?.Name ?? "Product",
+                    name = oi.Product?.NameEn ?? "Product",
                     amount_cents = (int)(oi.UnitPrice * 100),
                     quantity = oi.Quantity
                 }).ToList(),

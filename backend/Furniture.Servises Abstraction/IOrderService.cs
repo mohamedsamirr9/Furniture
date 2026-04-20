@@ -26,4 +26,11 @@ public interface IOrderService
     Task<PaginatedOrdersDTO> GetAllOrdersPaginatedAsync(int pageIndex, int pageSize);
 
     #endregion
+
+    #region Seller
+
+    Task<List<OrderDTO>> GetOrdersForSellerAsync(string sellerId);
+    Task<OrderDTO?> GetOrderByIdForSellerAsync(int orderId, string sellerId);
+
+    #endregion
 }

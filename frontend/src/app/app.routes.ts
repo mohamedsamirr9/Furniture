@@ -3,6 +3,8 @@ import { PrivateLayoutComponent } from './layouts/private-layout/private-layout'
 import { AdminLayout } from './layouts/admin-layout/admin-layout';
 import { SellerLayout } from './layouts/seller-layout/seller-layout';
 
+import { authGuard } from './core/guards/auth.guard';
+
 export const routes: Routes = [
   {
     path: '',
@@ -15,6 +17,8 @@ export const routes: Routes = [
   {
     path: 'customer',
     component: PrivateLayoutComponent,
+    canActivate: [authGuard],
+    data: { expectedRoles: ['buyer'] },
     children: [
       {
         path: '',
@@ -25,6 +29,8 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminLayout,
+    canActivate: [authGuard],
+    data: { expectedRoles: ['admin'] },
     children: [
       {
         path: '',
@@ -35,6 +41,8 @@ export const routes: Routes = [
   {
     path: 'seller',
     component: SellerLayout,
+    canActivate: [authGuard],
+    data: { expectedRoles: ['seller'] },
     children: [
       {
         path: '',

@@ -1,93 +1,73 @@
-<nav class="customer-container navbar navbar-expand-lg navbar-dark">
-  <a class="navbar-brand logo" href="#">Furnora</a>
+<nav class="customer-container navbar navbar-expand-lg">
+  <a class="navbar-brand logo" routerLink="/">
+    <span class="logo-icon">F</span>
+    <!-- {{ 'NAV.BRAND' | translate }} -->
+  </a>
 
   <button
     class="navbar-toggler"
     type="button"
     data-bs-toggle="collapse"
     data-bs-target="#navbarNavAltMarkup"
+    [attr.aria-label]="'NAV.TOGGLE_LANG' | translate"
   >
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="links collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav w-100 d-flex justify-content-between text-center">
-      <a
-        class="nav-item nav-link flex-fill"
-        [ngClass]="isDarkPage ? 'dark-nav' : ''"
-        routerLink="/"
-      >
-        Home
-      </a>
+    <div class="navbar-nav w-100 d-flex justify-content-center gap-4 text-center flex-grow-1">
+     <a class="nav-item nav-link" routerLink="/">
+  {{ 'NAV.HOME' | translate }}
+</a>
+<a class="nav-item nav-link" routerLink="/products">
+  {{ 'NAV.CATALOG' | translate }}
+</a>
+<a class="nav-item nav-link" routerLink="/about">
+  {{ 'NAV.ABOUT_US' | translate }}
+</a>
+<a class="nav-item nav-link" routerLink="/custom-product">
+  {{ 'NAV.CUSTOM_PRODUCT' | translate }}
+</a>
+    </div>
 
-      <a
-        class="nav-item nav-link flex-fill"
-        [ngClass]="isDarkPage ? 'dark-nav' : ''"
-        routerLink="/about"
-      >
-        About Us
-      </a>
+    <div class="nav-icons d-flex align-items-center gap-3">
+     
+     
 
-      <a
-        class="nav-item nav-link flex-fill"
-        [ngClass]="isDarkPage ? 'dark-nav' : ''"
-        routerLink="/categories"
-      >
-        Categories
-      </a>
-
-      <a
-        class="nav-item nav-link flex-fill"
-        [ngClass]="isDarkPage ? 'dark-nav' : ''"
-        routerLink="/customer"
-      >
-        Custome Product
-      </a>
-
-      <a
-        class="nav-item nav-link flex-fill"
-        [ngClass]="isDarkPage ? 'dark-nav' : ''"
-        routerLink="/orders"
-      >
-        Orders
-      </a>
-
-      <a
-        class="nav-item nav-link position-relative wishlist-link ms-auto me-3"
-        [ngClass]="isDarkPage ? 'dark-nav' : ''"
-        routerLink="/wishlist"
-      >
+     
+      <a class="nav-icon-link position-relative" routerLink="/wishlist" [attr.aria-label]="'NAV.WISHLIST' | translate">
         <i class="bi bi-heart fs-5"></i>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="(wishlistService.wishlistCount$ | async) || 0 > 0">
+        <span class="badge-dot" *ngIf="(wishlistService.wishlistCount$ | async) || 0 > 0">
           {{ wishlistService.wishlistCount$ | async }}
         </span>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="(wishlistService.wishlistCount$ | async) === 0">
-          0
-        </span>
+        <span class="badge-dot" *ngIf="(wishlistService.wishlistCount$ | async) === 0">0</span>
       </a>
 
-      <a
-        class="nav-item nav-link position-relative cart-link me-3"
-        [ngClass]="isDarkPage ? 'dark-nav' : ''"
-        routerLink="/cart"
-      >
-        <i class="bi bi-cart3 fs-5"></i>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="(cartService.cartCount$ | async) || 0 > 0">
+      
+      <a class="nav-icon-link position-relative" routerLink="/cart" [attr.aria-label]="'NAV.CART' | translate">
+        <i class="bi bi-bag fs-5"></i>
+        <span class="badge-dot" *ngIf="(cartService.cartCount$ | async) || 0 > 0">
           {{ cartService.cartCount$ | async }}
         </span>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="(cartService.cartCount$ | async) === 0">
-          0
-        </span>
+        <span class="badge-dot" *ngIf="(cartService.cartCount$ | async) === 0">0</span>
       </a>
 
-      <a
-        class="nav-item nav-link user-link"
-        [ngClass]="isDarkPage ? 'dark-nav' : ''"
-        routerLink="/login"
-        aria-label="Log In"
-      >
-        <i class="bi bi-person fs-5"></i>
+      
+      <a class="nav-icon-link lang-toggle" style="cursor:pointer" (click)="toggleLanguage()" [attr.aria-label]="'NAV.TOGGLE_LANG' | translate">
+        <span class="fs-6 fw-semibold">{{ currentLang === 'en' ? 'AR' : 'EN' }}</span>
       </a>
+
+    
+      <ng-container *ngIf="authService.currentUser$ | async as user; else guest">
+        <a class="nav-icon-link" routerLink="/customer/profile">
+          <i class="bi bi-person fs-5"></i>
+        </a>
+      </ng-container>
+      <ng-template #guest>
+        <a class="nav-icon-link" routerLink="/login">
+          <i class="bi bi-person fs-5"></i>
+        </a>
+      </ng-template>
     </div>
   </div>
 </nav>

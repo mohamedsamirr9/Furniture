@@ -65,3 +65,22 @@
   color: #35903A;
   background: #ecfdf5;
 }
+
+.view-details-btn {
+  border: 1.5px solid #111827;
+  background: #fff;
+  color: #111827;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+
+.view-details-btn:hover {
+  background: #111827;
+  color: #fff;
+}

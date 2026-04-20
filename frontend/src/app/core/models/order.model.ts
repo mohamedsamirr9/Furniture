@@ -4,16 +4,19 @@ export interface OrderItem {
   productImage: string;
   unitPrice: number;
   quantity: number;
-  total: number;
+  total?: number;
 }
 
 export interface Order {
   id: number;
+  subTotal: number;
+  shippingCost: number;
   totalPrice: number;
   orderDate: string;
   status: string;
   shippingAddress: string;
   createdAt: string;
+  userName?: string;
   description?: string;
   imageUrl?: string;
   isCustom?: boolean;
@@ -21,11 +24,13 @@ export interface Order {
 }
 
 export interface CreateOrder {
+  city: string;
   shippingAddress: string;
   notes?: string;
 }
 export interface CreateOrderFromOffer {
   offerId: number;
+  city: string;
   shippingAddress: string;
   notes?: string;
 }

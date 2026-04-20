@@ -18,7 +18,7 @@ namespace Furniture.Services.Mappings
 
             CreateMap<OrderItem, OrderItemDTO>()
                 .ForMember(dest => dest.ProductName,
-                    opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : null))
+                    opt => opt.MapFrom(src => src.Product != null ? src.Product.NameEn : null))
                 .ForMember(dest => dest.ProductImage,
                     opt => opt.MapFrom(src => src.Product != null && src.Product.Images != null && src.Product.Images.Any()
                         ? src.Product.Images.First().ImageUrl

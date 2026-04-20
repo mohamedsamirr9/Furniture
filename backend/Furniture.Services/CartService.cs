@@ -11,12 +11,15 @@ namespace Furniture.Services
     public class CartService : ICartService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;          
+        private readonly IMapper _mapper; 
+        private readonly IRecommendationService _recommendationService;
 
-        public CartService(IUnitOfWork unitOfWork, IMapper mapper) 
+        public CartService(IUnitOfWork unitOfWork, IMapper mapper, IRecommendationService recommendationService) 
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _recommendationService = recommendationService;
+            
         }
 
         #region GET CART
@@ -87,6 +90,10 @@ namespace Furniture.Services
             }
 
             await _unitOfWork.SaveChangesAsync();
+            
+            _ = _recommendationService.UpdateUserEmbeddingAsync(
+                userId, dto.ProductId, "cart");
+
 
             return await GetCartAsync(userId);
         }

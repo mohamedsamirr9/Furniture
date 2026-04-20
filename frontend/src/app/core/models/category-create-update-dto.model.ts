@@ -1,5 +1,7 @@
 export interface CategoryCreateUpdateDto {
-  name: string;
-  description?: string;
+  nameEn: string;
+  nameAr?: string;
+  descriptionEn: string;
+  descriptionAr?: string;
   image?: string;
 }

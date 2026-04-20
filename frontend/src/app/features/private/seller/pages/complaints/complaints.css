@@ -43,6 +43,14 @@
   border-bottom: 1px solid #f3f4f6;
 }
 
+.clickable-row {
+  cursor: pointer;
+}
+
+.clickable-row:hover {
+  background: #fafafa;
+}
+
 .badge {
   font-size: 12px;
   font-weight: 600;
@@ -63,4 +71,68 @@
 .badge-gray {
   background: #e5e7eb;
   color: #374151;
+}
+
+.badge-green {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.status-select,
+.reply-input {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 12px;
+  width: 100%;
+}
+
+.reply-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.action-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  background: #3d6b4f;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.latest-reply small {
+  color: #6b7280;
+  font-size: 11px;
+}
+
+.reply-msg {
+  margin: 0;
+  font-size: 12px;
+}
+
+.image-thumb-btn {
+  margin-top: 8px;
+  display: block;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.image-thumb {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1.5px solid #e5e7eb;
 }

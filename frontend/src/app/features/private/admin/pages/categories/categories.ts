@@ -5,9 +5,11 @@ import { CategoryService } from '../../../../../core/services/category.service';
 
 import { CategoryCreateUpdateDto } from '../../../../../core/models/category-create-update-dto.model';
 
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-categories',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './categories.html',
   styleUrl: './categories.css',
 })
@@ -27,6 +29,7 @@ export class Categories implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private fb: FormBuilder,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -36,8 +39,10 @@ export class Categories implements OnInit {
 
   initForm(): void {
     this.categoryForm = this.fb.group({
-      name: ['', Validators.required],
-      description: [''],
+      nameEn: ['', Validators.required],
+      nameAr: [''],
+      descriptionEn: ['', Validators.required],
+      descriptionAr: [''],
       image: [''],
     });
   }
@@ -71,8 +76,10 @@ export class Categories implements OnInit {
     this.isEditing = false;
     this.editingCategoryId = null;
     this.categoryForm.reset({
-      name: '',
-      description: '',
+      nameEn: '',
+      nameAr: '',
+      descriptionEn: '',
+      descriptionAr: '',
       image: '',
     });
     this.clearMessages();
@@ -88,8 +95,10 @@ export class Categories implements OnInit {
     this.categoryService.getCategoryById(cat.id).subscribe({
       next: (details: any) => {
         this.categoryForm.patchValue({
-          name: details.name,
-          description: details.description || '',
+          nameEn: details.nameEn,
+          nameAr: details.nameAr || '',
+          descriptionEn: details.descriptionEn || '',
+          descriptionAr: details.descriptionAr || '',
           image: details.image || '',
         });
         this.showModal = true;
@@ -98,8 +107,10 @@ export class Categories implements OnInit {
         console.error('Error fetching category details', err);
         // Fallback: use list data
         this.categoryForm.patchValue({
-          name: cat.name,
-          description: cat.description || '',
+          nameEn: cat.nameEn || cat.name,
+          nameAr: cat.nameAr || '',
+          descriptionEn: cat.descriptionEn || '',
+          descriptionAr: cat.descriptionAr || '',
           image: cat.image || '',
         });
         this.showModal = true;
@@ -121,31 +132,38 @@ export class Categories implements OnInit {
     this.isSubmitting = true;
     this.clearMessages();
 
-    const dto: CategoryCreateUpdateDto = this.categoryForm.value;
+    const formValue = this.categoryForm.value;
+    const dto: CategoryCreateUpdateDto = {
+      nameEn: formValue.nameEn,
+      nameAr: formValue.nameAr,
+      descriptionEn: formValue.descriptionEn,
+      descriptionAr: formValue.descriptionAr,
+      image: formValue.image
+    };
 
     if (this.isEditing && this.editingCategoryId !== null) {
       this.categoryService.updateCategory(this.editingCategoryId, dto).subscribe({
         next: () => {
-          this.successMessage = 'Category updated successfully!';
+          this.successMessage = 'ALERTS.UPDATE_SUCCESS';
           this.isSubmitting = false;
           this.loadCategories();
           setTimeout(() => this.closeModal(), 1200);
         },
         error: (err: any) => {
-          this.errorMessage = err.error?.message || 'Failed to update category.';
+          this.errorMessage = err.error?.message || 'ALERTS.ERROR';
           this.isSubmitting = false;
         },
       });
     } else {
       this.categoryService.createCategory(dto).subscribe({
         next: () => {
-          this.successMessage = 'Category created successfully!';
+          this.successMessage = 'ALERTS.CREATE_SUCCESS';
           this.isSubmitting = false;
           this.loadCategories();
           setTimeout(() => this.closeModal(), 1200);
         },
         error: (err: any) => {
-          this.errorMessage = err.error?.message || 'Failed to create category.';
+          this.errorMessage = err.error?.message || 'ALERTS.ERROR';
           this.isSubmitting = false;
         },
       });
@@ -153,7 +171,8 @@ export class Categories implements OnInit {
   }
 
   deleteCategory(id: number): void {
-    if (confirm('Are you sure you want to delete this category?')) {
+    const confirmMsg = this.translate.instant('ALERTS.DELETE_CONFIRM');
+    if (confirm(confirmMsg)) {
       this.categoryService.deleteCategory(id).subscribe({
         next: () => {
           this.loadCategories();

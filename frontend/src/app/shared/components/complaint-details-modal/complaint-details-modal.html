@@ -1,0 +1,79 @@
+<div class="modal-overlay" *ngIf="isOpen" (click)="onClose()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Complaint Details</h2>
+      <button class="close-btn" type="button" (click)="onClose()">&times;</button>
+    </div>
+
+    <div class="modal-body" *ngIf="loading">Loading complaint details...</div>
+    <div class="modal-body error-text" *ngIf="!loading && error">{{ error }}</div>
+
+    <div class="modal-body" *ngIf="!loading && !error && complaint">
+      <div class="detail-row">
+        <strong>#{{ complaint.id }}</strong>
+      </div>
+
+      <div class="detail-row">
+        <span class="badge" [ngClass]="getStatusClass(complaint.status)">
+          {{ getStatusDisplay(complaint.status) }}
+        </span>
+      </div>
+
+      <div class="detail-row">
+        <strong>Message</strong>
+        <p class="desc-text">{{ complaint.description }}</p>
+      </div>
+
+      <div class="detail-grid">
+        <div><strong>Created:</strong> {{ complaint.createdAt | date:'medium' }}</div>
+        <div><strong>Buyer:</strong> {{ complaint.userName || complaint.userId }}</div>
+        <div *ngIf="complaint.orderId"><strong>Order:</strong> ORD-{{ complaint.orderId }}</div>
+        <div *ngIf="role === 'admin' && complaint.sellerId">
+          <strong>Seller:</strong>
+          {{ complaint.sellerName || complaint.sellerId }}
+        </div>
+      </div>
+
+      <div class="image-section" *ngIf="complaint.imageUrl">
+        <strong>Attachment</strong>
+        <img [src]="complaint.imageUrl" alt="Complaint attachment" class="detail-image" />
+      </div>
+
+      <div class="replies-section">
+        <strong>Replies</strong>
+        <div class="reply-item" *ngFor="let reply of complaint.replies">
+          <p class="reply-message">{{ reply.message }}</p>
+          <small>{{ reply.responderName }} • {{ reply.createdAt | date:'short' }}</small>
+        </div>
+        <p class="no-replies" *ngIf="complaint.replies.length === 0">No replies yet.</p>
+      </div>
+
+      <div class="actions-section" *ngIf="canReply || canUpdateStatus">
+        <div class="status-actions" *ngIf="canUpdateStatus && nextStatus">
+          <strong>Next Status</strong>
+          <div class="action-row">
+            <span class="next-status-chip">{{ getStatusDisplay(nextStatus) }}</span>
+            <button type="button" class="action-btn" [disabled]="isStatusUpdating" (click)="onSubmitStatus()">
+              {{ isStatusUpdating ? 'Updating...' : 'Update Status' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="reply-form" *ngIf="canReply && complaint.status !== 'Closed'">
+          <strong>Reply</strong>
+          <div class="action-row">
+            <input
+              type="text"
+              [(ngModel)]="replyMessage"
+              placeholder="Write reply..."
+              class="reply-input"
+            />
+            <button type="button" class="action-btn" [disabled]="isReplySubmitting" (click)="onSubmitReply()">
+              {{ isReplySubmitting ? 'Sending...' : 'Send' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
