@@ -84,6 +84,14 @@
   margin-bottom: 4px;
 }
 
+.complaint-image {
+  width: 120px;
+  max-width: 100%;
+  border-radius: 10px;
+  border: 1.5px solid #e5e7eb;
+  margin: 6px 0;
+}
+
 .complaint-date {
   font-size: 13px;
   color: #6b7280;
@@ -95,6 +103,24 @@
   padding: 6px 18px;
   border-radius: 999px;
   border: 1.5px solid;
+}
+
+.card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.details-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #111827;
+  color: #fff;
+  cursor: pointer;
 }
 
 .badge-red {

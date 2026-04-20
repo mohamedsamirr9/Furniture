@@ -1,44 +1,60 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ProductService } from '../../../../../core/services/product.service';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { ProductService, ImageSearchResult } from '../../../../../core/services/product.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ProductQueryParams } from '../../../../../core/models/product-query-params.model';
+import { Product } from '../../../../../core/models/product.model';
 
 import { TranslateModule } from '@ngx-translate/core';
 
+type SearchMode = 'text' | 'image';
+
 @Component({
   selector: 'app-products-list',
+  standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, TranslateModule],
   templateUrl: './products-list.html',
   styleUrl: './products-list.css',
 })
 export class ProductsList implements OnInit, OnDestroy {
+  private productService = inject(ProductService);
+  private router = inject(Router);
+  public route = inject(ActivatedRoute);
+
+  // Products data
   products: any[] = [];
   categories: any[] = [];
 
-  // Template-bound state (restored from query params)
+  // Query params state
   searchTerm = '';
   selectedCategoryId: number | null = null;
   minPrice: number | null = null;
   maxPrice: number | null = null;
-  sortOption: string = '';
+  sortOption = '';
   pageIndex = 1;
   pageSize = 10;
   totalCount = 0;
 
   loading = false;
 
+  // ======= IMAGE SEARCH STATE =======
+  searchMode: SearchMode = 'text';
+  selectedImage: File | null = null;
+  imagePreview: string | null = null;
+  imageSearchResults: ImageSearchResult[] = [];
+  imageSearchLoading = false;
+  imageSearchError: string | null = null;
+  imageSearched = false;
+  isDragOver = false;
+  // =================================
+
   private searchSubject = new Subject<string>();
   private subscriptions: Subscription[] = [];
 
-  constructor(
-    private productService: ProductService,
-    private router: Router,
-    public route: ActivatedRoute,
-  ) {}
+  constructor() {}
 
   ngOnInit() {
     this.loadCategories();
@@ -48,7 +64,10 @@ export class ProductsList implements OnInit, OnDestroy {
       this.searchSubject
         .pipe(debounceTime(400), distinctUntilChanged())
         .subscribe((value) => {
-          this.updateQueryParams({ search: value || null, page: 1 });
+          // Only trigger text search, not image search
+          if (this.searchMode === 'text') {
+            this.updateQueryParams({ search: value || null, page: 1 });
+          }
         })
     );
 
@@ -63,13 +82,20 @@ export class ProductsList implements OnInit, OnDestroy {
         this.maxPrice = params['maxPrice'] ? +params['maxPrice'] : null;
         this.sortOption = params['sort'] || '';
 
-        this.loadProducts();
+        // Only load products if in text search mode
+        if (this.searchMode === 'text') {
+          this.loadProducts();
+        }
       })
     );
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach((s) => s.unsubscribe());
+    // Clean up object URL to prevent memory leaks
+    if (this.imagePreview && this.imagePreview.startsWith('blob:')) {
+      URL.revokeObjectURL(this.imagePreview);
+    }
   }
 
   /** Navigate with merged query params, stripping null/empty values */
@@ -85,14 +111,123 @@ export class ProductsList implements OnInit, OnDestroy {
     });
   }
 
-  // --- Search ---
+  // --- Search Type Toggle ---
+  switchToTextSearch() {
+    this.searchMode = 'text';
+    this.clearImageSearch();
+    // Restore text search from query params
+    this.loadProducts();
+  }
+
+  switchToImageSearch() {
+    this.searchMode = 'image';
+    // Clear text search results when switching to image mode
+    this.products = [];
+    this.totalCount = 0;
+  }
+
+  // --- Text Search ---
   onSearchInput(value: string) {
     this.searchTerm = value;
-    this.searchSubject.next(value);
+    if (this.searchMode === 'text') {
+      this.searchSubject.next(value);
+    }
   }
 
   search() {
-    this.updateQueryParams({ search: this.searchTerm || null, page: 1 });
+    if (this.searchMode === 'text') {
+      this.updateQueryParams({ search: this.searchTerm || null, page: 1 });
+    }
+  }
+
+  // --- Image Search Handlers ---
+  onImageSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+    this.handleImageFile(file);
+  }
+
+  onImageDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver = true;
+  }
+
+  onImageDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver = false;
+    const files = event.dataTransfer?.files;
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+    this.handleImageFile(file);
+  }
+
+  private handleImageFile(file: File) {
+    // Validate
+    const validation = this.productService.validateImageFile(file);
+    if (!validation.valid) {
+      this.imageSearchError = validation.error || 'Invalid file';
+      return;
+    }
+
+    this.imageSearchError = null;
+    this.selectedImage = file;
+    
+    // Create preview
+    this.productService.fileToBase64(file).then((base64) => {
+      this.imagePreview = base64;
+    }).catch(() => {
+      this.imagePreview = null;
+    });
+
+    // Clear previous results
+    this.imageSearchResults = [];
+    this.imageSearched = false;
+  }
+
+  clearImageSearch() {
+    this.selectedImage = null;
+    this.imagePreview = null;
+    this.imageSearchResults = [];
+    this.imageSearchError = null;
+    this.imageSearched = false;
+    this.isDragOver = false;
+  }
+
+  searchByImage() {
+    if (!this.selectedImage) return;
+
+    this.imageSearchLoading = true;
+    this.imageSearchError = null;
+    this.imageSearchResults = [];
+
+    this.productService.searchByImage(this.selectedImage, 10).subscribe({
+      next: (response: any) => {
+        // Handle both wrapped response {success, message, data} and direct array
+        if (Array.isArray(response)) {
+          // Direct array response from backend
+          this.imageSearchResults = response;
+        } else if (response.success && response.data) {
+          // Wrapped response format
+          this.imageSearchResults = response.data;
+        } else if (response.data) {
+          // Has data but different format
+          this.imageSearchResults = response.data;
+        } else {
+          this.imageSearchError = 'Search failed';
+        }
+        this.imageSearchLoading = false;
+        this.imageSearched = true;
+      },
+      error: (err) => {
+        console.error('Image search error:', err);
+        this.imageSearchError = 'Failed to search. Please try again.';
+        this.imageSearchLoading = false;
+        this.imageSearched = true;
+      },
+    });
   }
 
   // --- Category ---
@@ -153,14 +288,16 @@ export class ProductsList implements OnInit, OnDestroy {
 
     this.productService.getProducts(filters).subscribe({
       next: (res: any) => {
-        const data = res.data || res;
+        const data = res.Data || res.data || res;
         this.products = data.map((product: any) => ({
           ...product,
+          categoryName: product.categoryName || product.CategoryName || '',
+          sellerName: product.sellerName || product.SellerName || '',
           averageRating: product.reviews && product.reviews.length > 0
             ? product.reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / product.reviews.length
             : 0
-        }));
-        this.totalCount = res.totalCount || 0;
+        })) as Product[];
+        this.totalCount = res.TotalCount || res.totalCount || 0;
         this.loading = false;
       },
       error: (err) => {

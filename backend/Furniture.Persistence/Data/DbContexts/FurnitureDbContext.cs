@@ -324,6 +324,26 @@ namespace Furniture.Persistence.Data.DbContexts
                       .HasForeignKey(c => c.OrderId);
             });
 
+            modelBuilder.Entity<ComplaintReply>(entity =>
+            {
+                entity.HasKey(r => r.Id);
+                entity.Property(r => r.Message)
+                      .HasMaxLength(2000)
+                      .IsRequired();
+                entity.Property(r => r.CreatedAt)
+                      .HasDefaultValueSql("GETDATE()");
+
+                entity.HasOne(r => r.Complaint)
+                      .WithMany(c => c.Replies)
+                      .HasForeignKey(r => r.ComplaintId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(r => r.Responder)
+                      .WithMany(u => u.ComplaintReplies)
+                      .HasForeignKey(r => r.ResponderId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
             //payment
             modelBuilder.Entity<Payment>(entity =>
             {
@@ -411,6 +431,15 @@ namespace Furniture.Persistence.Data.DbContexts
                       .HasForeignKey(sr => sr.CategoryId)
                       .OnDelete(DeleteBehavior.Restrict);
             });
+            
+            modelBuilder.Entity<UserPreference>(entity =>
+            {
+                  entity.HasKey(x => x.Id);
+                  entity.Property(x => x.EmbeddingVector).HasColumnType("nvarchar(max)");
+                  entity.HasOne(x => x.User)
+                        .WithOne()
+                        .HasForeignKey<UserPreference>(x => x.UserId);
+            });
 
 
 
@@ -427,6 +456,7 @@ namespace Furniture.Persistence.Data.DbContexts
         public DbSet<Favourite> Favourites { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Complaint> Complaints { get; set; }
+        public DbSet<ComplaintReply> ComplaintReplies { get; set; }
         public DbSet<Payment> Payments { get; set; }
 
         public DbSet<ShippingRule> ShippingRules { get; set; }
@@ -436,7 +466,7 @@ namespace Furniture.Persistence.Data.DbContexts
 
         public DbSet<SellerProfile> SellerProfiles { get; set; } = null!;
         public DbSet<SellerPayout> SellerPayouts { get; set; } = null!;
-
+        public DbSet<UserPreference> UserPreferences { get; set; }
 
     }
 }

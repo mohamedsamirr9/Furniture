@@ -25,8 +25,22 @@
       ></textarea>
     </div>
 
+    <div class="form-group">
+      <label>Attachment (optional)</label>
+      <input type="file" accept="image/*" (change)="onImageSelected($event)" />
+      <div class="image-preview" *ngIf="imagePreviewUrl">
+        <img [src]="imagePreviewUrl" alt="Complaint attachment preview" />
+        <button type="button" class="clear-image-btn" (click)="clearImage()">Remove</button>
+      </div>
+    </div>
+
+    <p class="upload-status" *ngIf="uploadingImage">Uploading image...</p>
+    <p class="error-text" *ngIf="error">{{ error }}</p>
+
     <div class="submit-wrapper">
-      <button class="submit-btn" (click)="onSubmit()">{{ 'SELLER.SUBMIT' | translate }}</button>
+      <button class="submit-btn" [disabled]="submitting || uploadingImage" (click)="onSubmit()">
+        {{ 'SELLER.SUBMIT' | translate }}
+      </button>
     </div>
   </div>
 </div>

@@ -15,12 +15,15 @@ namespace Furniture.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IImageValidationService _imageValidationService;
+        private readonly IRecommendationService _recommendationService;
 
-        public ProductImageService(IUnitOfWork unitOfWork , IMapper mapper, IImageValidationService imageValidationService )
+
+        public ProductImageService(IUnitOfWork unitOfWork , IMapper mapper,IRecommendationService recommendationService, IImageValidationService imageValidationService )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _imageValidationService = imageValidationService;
+            _recommendationService = recommendationService;
         }
         // public async Task AddImageAsync(int productId, string imageUrl)
         // {
@@ -69,7 +72,12 @@ namespace Furniture.Services
 
             await imageRepo.AddAsync(image);
             await _unitOfWork.SaveChangesAsync();
+            
+            _ = _recommendationService.GenerateAndSaveEmbeddingAsync(
+                productId, imageUrl, product.DescriptionEn);
         }
+        
+        
 
         public async Task DeleteImageAsync(int imageId)
         {

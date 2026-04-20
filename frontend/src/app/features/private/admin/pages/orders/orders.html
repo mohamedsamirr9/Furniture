@@ -15,6 +15,7 @@
         <th>{{ 'ADMIN.SHIPPING' | translate }}</th>
         <th>{{ 'ADMIN.STATUS' | translate }}</th>
         <th>{{ 'ADMIN.TOTAL' | translate }}</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -38,7 +39,24 @@
           </select>
         </td>
         <td><strong>{{ (order.totalPrice || order.total) | currency }}</strong></td>
+        <td>
+          <button
+            type="button"
+            class="view-details-btn"
+            (click)="viewOrderDetails(order.id || order.orderId)"
+          >
+            {{ 'MY_ORDERS.VIEW_DETAILS' | translate }}
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>
 </div>
+
+<app-order-details-modal
+  [isOpen]="showOrderDetailsModal"
+  [loading]="orderDetailsLoading"
+  [error]="orderDetailsError"
+  [order]="selectedOrder"
+  (close)="closeOrderDetails()"
+/>

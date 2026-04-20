@@ -1,4 +1,4 @@
-﻿using Furniture.Domain.Models;
+using Furniture.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,10 @@ namespace Furniture.Services.Specifications
             AddInclude(c => c.User);
             AddInclude(c => c.Order);
             AddInclude("Order.OrderItems.Product");
+            AddInclude("Order.OrderItems.Seller");
             AddInclude("Order.Offer");
+            AddInclude("Order.Offer.Seller");
+            AddInclude("Replies.Responder");
         }
     }
 }

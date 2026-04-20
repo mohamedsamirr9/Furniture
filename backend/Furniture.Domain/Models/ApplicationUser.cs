@@ -1,4 +1,4 @@
-﻿using Furniture.Domain.Models.Enum;
+using Furniture.Domain.Models.Enum;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -40,6 +40,7 @@ namespace Furniture.Domain.Models
         public ICollection<Order> Orders { get; set; } = new List<Order>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<Complaint> Complaints { get; set; } = new List<Complaint>();
+        public ICollection<ComplaintReply> ComplaintReplies { get; set; } = new List<ComplaintReply>();
 
         public Cart Cart { get; set; } = null!;
 

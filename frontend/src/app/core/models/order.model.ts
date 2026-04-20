@@ -4,7 +4,7 @@ export interface OrderItem {
   productImage: string;
   unitPrice: number;
   quantity: number;
-  total: number;
+  total?: number;
 }
 
 export interface Order {
@@ -16,6 +16,7 @@ export interface Order {
   status: string;
   shippingAddress: string;
   createdAt: string;
+  userName?: string;
   description?: string;
   imageUrl?: string;
   isCustom?: boolean;

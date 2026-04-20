@@ -22,6 +22,7 @@ namespace Furniture.shared.Dtos.ProductDtos
         public DateTime CreatedAt { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = string.Empty;
+        public string SellerId { get; set; } = string.Empty;
         public string SellerName { get; set; } = string.Empty;
 
         public List<string> Images { get; set; } = new();

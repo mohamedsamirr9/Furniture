@@ -157,6 +157,7 @@ namespace Furniture.web
             builder.Services.AddScoped<ICustomRequestService, CustomRequestService>();
             builder.Services.AddScoped<IComplaintService, ComplaintService>();
             builder.Services.AddScoped<IShippingService, ShippingService>();
+            builder.Services.AddScoped<ISellerService, SellerService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<ISearchService, SearchService>();
@@ -165,6 +166,10 @@ namespace Furniture.web
             builder.Services.AddHttpClient("PythonService");
             builder.Services.AddHttpClient();
 
+            builder.Services.AddHttpClient("AIService");
+            builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+            builder.Services.AddHttpClient<IImageValidationService, ImageValidationService>();
+            builder.Services.AddScoped<IImageValidationService, ImageValidationService>();
             
              // HttpClient -- Paymob
             builder.Services.AddHttpClient("Paymob", client =>

@@ -30,7 +30,7 @@ public interface IOrderService
     #region Seller
 
     Task<List<OrderDTO>> GetOrdersForSellerAsync(string sellerId);
-    
+    Task<OrderDTO?> GetOrderByIdForSellerAsync(int orderId, string sellerId);
 
     #endregion
 }

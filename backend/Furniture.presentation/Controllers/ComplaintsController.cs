@@ -1,4 +1,4 @@
-﻿using Furniture.Domain.Models;
+using Furniture.Domain.Models;
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos.ComplaintsDto;
 using Microsoft.AspNetCore.Authorization;
@@ -43,9 +43,9 @@ namespace Furniture.web
         public async Task<ActionResult<ComplaintDetailDto>> Get(int id) 
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            //var userId = "seller-1";
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
-            var result= await _complaintService.GetByIdAsync(id);
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(role)) return Unauthorized();
+            var result= await _complaintService.GetByIdAsync(id, userId, role);
             return Ok(result);
         }
         [Authorize (Roles ="buyer")]
@@ -75,10 +75,65 @@ namespace Furniture.web
         public async Task<IActionResult> Close(int id)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            //var userId = "seller-1";
             if (userId == null) return Unauthorized();
-            var rule = User.FindFirst(ClaimTypes.Role)?.Value;
-            await _complaintService.CloseAsync(id, userId);
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+            if (string.IsNullOrWhiteSpace(role)) return Unauthorized();
+            await _complaintService.CloseAsync(id, userId, role);
+            return NoContent();
+        }
+
+        [Authorize(Roles = "seller,admin")]
+        [HttpPatch("{id:int}/status")]
+        public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateComplaintStatusDto dto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(role)) return Unauthorized();
+
+            await _complaintService.UpdateStatusAsync(id, userId, role, dto);
+            return NoContent();
+        }
+
+        [Authorize(Roles = "seller,admin")]
+        [HttpPost("{id:int}/replies")]
+        public async Task<ActionResult<ComplaintReplyDto>> Reply(int id, [FromBody] ReplyComplaintDto dto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(role)) return Unauthorized();
+
+            var response = await _complaintService.ReplyAsync(id, userId, role, dto);
+            return Ok(response);
+        }
+
+        [Authorize(Roles = "seller,admin")]
+        [HttpGet("{id:int}/replies")]
+        public async Task<ActionResult<IEnumerable<ComplaintReplyDto>>> GetReplies(int id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(role)) return Unauthorized();
+
+            var detail = await _complaintService.GetByIdAsync(id, userId, role);
+            return Ok(detail.Replies);
+        }
+
+        [Authorize(Roles = "admin,seller,buyer")]
+        [HttpGet("{id:int}/detail")]
+        public async Task<ActionResult<ComplaintDetailDto>> GetDetail(int id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(role)) return Unauthorized();
+
+            var result = await _complaintService.GetByIdAsync(id, userId, role);
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "admin,seller,buyer")]
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete(int id)
+        {
             return NoContent();
         }
     }

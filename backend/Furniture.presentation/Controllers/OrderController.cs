@@ -229,6 +229,21 @@ namespace Furniture.API.Controllers
             return Ok(orders);
         }
 
+        [HttpGet("seller/{orderId:int}")]
+        [Authorize(Roles = "seller")]
+        public async Task<IActionResult> GetOrderByIdForSeller(int orderId)
+        {
+            var sellerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(sellerId))
+                return Unauthorized();
+
+            var order = await _orderService.GetOrderByIdForSellerAsync(orderId, sellerId);
+            if (order == null)
+                return NotFound(new { message = "Order not found" });
+
+            return Ok(order);
+        }
+
         #endregion
     }
 

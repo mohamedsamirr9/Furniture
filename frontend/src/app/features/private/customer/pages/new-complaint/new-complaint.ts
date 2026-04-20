@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { finalize } from 'rxjs';
 import { Order } from '../../../../../core/models/order.model';
 import { ComplaintService } from '../../../../../core/services/complaint.service';
 import { OrderService } from '../../../../../core/services/order.service';
@@ -19,10 +20,13 @@ export class NewComplaint implements OnInit {
     orderId: '',
     description: '',
   };
+  selectedImageFile: File | null = null;
+  imagePreviewUrl = '';
 
   orders: Order[] = [];
   loading = false;
   submitting = false;
+  uploadingImage = false;
   error = '';
 
   constructor(
@@ -56,12 +60,64 @@ export class NewComplaint implements OnInit {
       return;
     }
 
+    if (this.uploadingImage) {
+      return;
+    }
+
     this.submitting = true;
     this.error = '';
 
+    if (this.selectedImageFile) {
+      this.uploadingImage = true;
+      this.complaintService
+        .uploadImage(this.selectedImageFile)
+        .pipe(finalize(() => (this.uploadingImage = false)))
+        .subscribe({
+          next: (res) => this.submitComplaint(res.secure_url),
+          error: (err: any) => {
+            this.error = 'Failed to upload complaint image';
+            this.submitting = false;
+            console.error('Error uploading complaint image:', err);
+          },
+        });
+      return;
+    }
+
+    this.submitComplaint();
+  }
+
+  onImageSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+    if (!allowedTypes.includes(file.type.toLowerCase())) {
+      this.error = 'Only JPEG, PNG, and WebP images are allowed';
+      return;
+    }
+
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      this.error = 'Image size must be less than 10MB';
+      return;
+    }
+
+    this.error = '';
+    this.selectedImageFile = file;
+    this.imagePreviewUrl = URL.createObjectURL(file);
+  }
+
+  clearImage() {
+    this.selectedImageFile = null;
+    this.imagePreviewUrl = '';
+  }
+
+  private submitComplaint(imageUrl?: string) {
     const complaintData = {
-      orderId: parseInt(this.formData.orderId),
+      orderId: parseInt(this.formData.orderId, 10),
       description: this.formData.description,
+      imageUrl,
     };
 
     this.complaintService.createComplaint(complaintData).subscribe({

@@ -10,7 +10,9 @@ export interface Product {
     stockQuantity: number;
     categoryId: number;
     categoryName?: string;
+    sellerId?: string;
     sellerName?: string;
+    averageRating: number;
     mainImage?: string;
     images?: string[];
 }
