@@ -1,62 +1,152 @@
 .navbar {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
+  background: white;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.08);
+  padding: 0.75rem 2rem;
+}
 
-  background: transparent;
-  box-shadow: none;
-}
-.navbar .links a {
-  color: white;
-  font-weight: 600;
-}
 .logo {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--furnora-main);
-}
-.dark-nav {
-  color: black !important;
-  font-weight: 600;
-}
-.navbar-nav {
+  display: flex;
   align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c1a0e;
+  text-decoration: none;
+  letter-spacing: 0.02em;
 }
-.cart-link {
-  display: flex !important;
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: #2c1a0e;
+  color: white;
+  border-radius: 6px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  color: white !important;
-  text-decoration: none;
-  padding: 0.5rem 1rem !important;
-}
-.cart-link.dark-nav {
-  color: black !important;
-}
-.cart-link i {
-  font-size: 1.4rem;
-}
-.cart-link .badge {
-  font-size: 0.7rem;
-  padding: 0.35em 0.5em;
-}
-.navbar .btn-main {
-  margin-left: 0.5rem;
+  font-size: 14px;
+  font-weight: 800;
+  flex-shrink: 0;
 }
 
-@media (max-width: 991.98px) {
+.navbar-nav .nav-link {
+  color: #3d2b1f;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  padding: 0.5rem 0.25rem;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+.navbar-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: #2c1a0e;
+  transition: width 0.25s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #2c1a0e;
+}
+
+.navbar-nav .nav-link:hover::after {
+  width: 100%;
+}
+
+/* ✅ ديسكتوب فقط — التمركز في المنتصف */
+@media (min-width: 992px) {
   .navbar-nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .nav-icons {
+    margin-left: auto;
+  }
+}
+
+.nav-icons {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-icon-link {
+  color: #2c1a0e;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+  position: relative;
+  padding: 0 0.3rem;
+}
+
+.nav-icon-link:hover {
+  opacity: 0.6;
+  color: #2c1a0e;
+}
+
+.badge-dot {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #c0392b;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+}
+
+.lang-toggle span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #2c1a0e;
+}
+
+/* ✅ موبايل */
+@media (max-width: 991.98px) {
+  .navbar {
+    padding: 0.75rem 1rem;
+  }
+  .navbar-nav {
+    position: static;      /* ✅ مهم جداً */
+    transform: none;       /* ✅ مهم جداً */
+    width: 100%;
+    text-align: center;
     padding: 1rem 0;
+    gap: 0.25rem !important;
   }
-  .cart-link {
-    margin: 10px auto !important;
+  .nav-icons {
+    margin: 0.75rem auto;
+    justify-content: center;
+    gap: 1.2rem !important;
   }
-  .navbar .btn-main {
-    margin: 10px auto !important;
-    display: block;
-    width: fit-content;
-  }
+}
+
+/* ✅ RTL */
+:host-context([dir="rtl"]) .navbar-nav {
+  flex-direction: row-reverse;
+}
+
+:host-context([dir="rtl"]) .nav-icons {
+  margin-left: 0;
+  margin-right: auto;
 }

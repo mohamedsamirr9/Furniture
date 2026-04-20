@@ -1,9 +1,12 @@
 using Furniture.shared.Dtos.ProductDtos;
 
-namespace Furniture.Servises_Abstraction;
-
-
+namespace Furniture.Servises_Abstraction
+{
     public interface IImageValidationService
     {
-        Task<ImageValidationResultDto> ValidateImageAsync(Stream imageStream, string fileName);
+        Task<ImageValidationResult> ValidateAsync(Stream imageStream, string fileName, string contentType);
+        Task<ImageValidationSummary> ValidateUrlsAsync(IEnumerable<string> imageUrls); 
     }
+
+   
+}

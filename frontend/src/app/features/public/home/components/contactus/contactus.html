@@ -1,42 +1,81 @@
-<section class="contact-section py-5">
+<section class="contact-section">
   <div class="container">
-    <h2 class="text-center mb-5 section-title">{{ 'HOME.CONTACT.TITLE' | translate }}</h2>
-    
-    <div class="row justify-content-center align-items-center g-5">
-      <div class="col-lg-6">
-        <div class="contact-form">
-          <input type="text" [placeholder]="'FORMS.NAME' | translate" class="form-control custom-input mb-3" />
-          <input type="email" [placeholder]="'FORMS.EMAIL' | translate" class="form-control custom-input mb-3" />
-          <textarea [placeholder]="'FORMS.MESSAGE' | translate" class="form-control custom-input mb-3" rows="6"></textarea>
-        </div>
-      </div>
-
-      <div class="col-lg-4">
-        <div class="contact-info d-flex flex-column gap-4">
-          <div class="info-item d-flex align-items-center gap-3">
-            <div class="icon-circle">
-              <i class="bi bi-envelope-fill"></i>
-            </div>
-            <span>hello@damietta.com</span>
-          </div>
-          <div class="info-item d-flex align-items-center gap-3">
-            <div class="icon-circle">
-              <i class="bi bi-telephone-fill"></i>
-            </div>
-            <span>+20 123 456 7890</span>
-          </div>
-          <div class="info-item d-flex align-items-center gap-3">
-            <div class="icon-circle">
-              <i class="bi bi-geo-alt-fill"></i>
-            </div>
-            <span>{{ 'FOOTER.ADDRESS' | translate }}</span>
-          </div>
-        </div>
-      </div>
+    <div class="section-header">
+      <p class="section-eyebrow">✦ Get In Touch</p>
+      <h2 class="section-title">{{ 'HOME.CONTACT.TITLE' | translate }}</h2>
+      <p class="section-desc">{{ 'HOME.CONTACT.SUBTITLE' | translate }}</p>
     </div>
 
-    <div class="text-center mt-5">
-      <button class="contact-btn">{{ 'HOME.CONTACT.SEND' | translate }}</button>
+    <div class="contact-grid">
+      <!-- Form -->
+      <div class="contact-form">
+        <input
+          type="text"
+          [placeholder]="'FORMS.NAME' | translate"
+          class="custom-input"
+        />
+        <input
+          type="email"
+          [placeholder]="'FORMS.EMAIL' | translate"
+          class="custom-input"
+        />
+        <textarea
+          [placeholder]="'FORMS.MESSAGE' | translate"
+          class="custom-input"
+          rows="6"
+        ></textarea>
+
+        <button class="contact-btn">
+          <span>{{ 'HOME.CONTACT.SEND' | translate }}</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Info -->
+      <div class="contact-info">
+        <div class="info-card">
+          <div class="info-item">
+            <div class="icon-wrapper">
+              <i class="bi bi-envelope-fill"></i>
+            </div>
+            <div class="info-text">
+              <span class="info-label">{{ 'HOME.CONTACT.EMAIL_LABEL' | translate }}</span>
+              <span class="info-value">hello@damietta.com</span>
+            </div>
+          </div>
+
+          <div class="info-divider"></div>
+
+          <div class="info-item">
+            <div class="icon-wrapper">
+              <i class="bi bi-telephone-fill"></i>
+            </div>
+            <div class="info-text">
+              <span class="info-label">{{ 'HOME.CONTACT.PHONE_LABEL' | translate }}</span>
+              <span class="info-value">+20 123 456 7890</span>
+            </div>
+          </div>
+
+          <div class="info-divider"></div>
+
+          <div class="info-item">
+            <div class="icon-wrapper">
+              <i class="bi bi-geo-alt-fill"></i>
+            </div>
+            <div class="info-text">
+              <span class="info-label">{{ 'HOME.CONTACT.LOCATION_LABEL' | translate }}</span>
+              <span class="info-value">{{ 'FOOTER.ADDRESS' | translate }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-note">
+          <i class="bi bi-clock"></i>
+          <span>{{ 'HOME.CONTACT.REPLY_NOTE' | translate }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>

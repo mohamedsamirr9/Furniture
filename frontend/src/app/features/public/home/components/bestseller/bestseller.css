@@ -1,23 +1,194 @@
-.best-sellers {
-  background: #fafafa;
+.best-sellers-section {
+  background: #faf7f4;
+  padding: 100px 40px;
 }
 
+/* Header */
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+  animation: fadeInUp 0.7s both;
+}
+
+.section-eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #a08060;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-family: 'Cormorant Garant', serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+
+.section-desc {
+  color: #7a6a5a;
+  font-size: 15px;
+  margin: 0;
+}
+
+/* Grid */
+.sellers-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Card */
 .seller-card {
+  border-radius: 16px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 4px 24px rgba(44, 26, 14, 0.08);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.4s ease;
+  animation: fadeInUp 0.7s both;
+}
+
+.seller-card:nth-child(1) { animation-delay: 0.1s; }
+.seller-card:nth-child(2) { animation-delay: 0.2s; }
+
+.seller-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(44, 26, 14, 0.15);
+}
+
+/* Image */
+.img-wrapper {
   position: relative;
   overflow: hidden;
-  border-radius: 12px;
 }
 
-.seller-card img {
+.img-wrapper img {
   width: 100%;
-  height: 320px;
+  height: 360px;
   object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.seller-card:hover .img-wrapper img {
+  transform: scale(1.05);
+}
+
+.img-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(44, 26, 14, 0);
+  transition: background 0.4s ease;
+}
+
+.seller-card:hover .img-overlay {
+  background: rgba(44, 26, 14, 0.4);
+}
+
+/* Hover content */
+.card-hover-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 2;
+}
+
+.seller-card:hover .card-hover-content {
+  opacity: 1;
 }
 
 .view-btn {
-  background: var(--furnora-main);
-  margin-top: 20px;
-  color: white;
-  border-radius: 25px;
-  padding: 8px 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  color: #2c1a0e;
+  border: none;
+  border-radius: 999px;
+  padding: 13px 28px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transform: translateY(12px);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+.seller-card:hover .view-btn {
+  transform: translateY(0);
+}
+
+.view-btn:hover {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+}
+
+.view-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.view-btn:hover svg {
+  transform: translateX(4px);
+}
+
+/* Card Footer */
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: white;
+  border-top: 1px solid #ede8e3;
+}
+
+.card-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c1a0e;
+  letter-spacing: 0.02em;
+}
+
+.card-arrow {
+  font-size: 18px;
+  color: #a08060;
+  transition: transform 0.3s ease;
+}
+
+.seller-card:hover .card-arrow {
+  transform: translateX(4px);
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sellers-grid {
+    grid-template-columns: 1fr;
+  }
+  .section-title {
+    font-size: 30px;
+  }
+  .best-sellers-section {
+    padding: 60px 24px;
+  }
 }

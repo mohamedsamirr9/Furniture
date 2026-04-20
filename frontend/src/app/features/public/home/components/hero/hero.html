@@ -1,11 +1,18 @@
-<!-- HERO -->
 <section class="hero">
   <div class="hero-content text-center">
-    <h1>{{ 'HOME.HERO.TITLE' | translate }}</h1>
+    
+    <p class="hero-eyebrow">{{ 'HOME.HERO.EYEBROW' | translate }}</p>
+    
+    <h1 class="hero-title">FURNORA</h1>
+    <p class="hero-subtitle">{{ 'HOME.HERO.SUBTITLE' | translate }}</p>
 
     <div class="hero-actions d-flex justify-content-center gap-3">
       <a routerLink="/products" class="btn-primary-hero">{{ 'HOME.HERO.EXPLORE' | translate }}</a>
-      <a routerLink="/register" class="btn-secondary-hero">{{ 'HOME.HERO.BECOME_SELLER' | translate }}</a>
+      <a routerLink="/customer" class="btn-secondary-hero">{{ 'HOME.HERO.CUSTOM_ORDER' | translate }}</a>
+    </div>
+
+    <div class="hero-scroll">
+      <i class="bi bi-arrow-down"></i>
     </div>
   </div>
 </section>
