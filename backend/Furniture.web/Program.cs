@@ -20,6 +20,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Threading.Tasks;
 using Furniture.Application.Services;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Furniture.web
 {
@@ -148,6 +149,8 @@ namespace Furniture.web
             builder.Services.AddAutoMapper(x => x.AddProfile<ShippingMapping>());
 
             builder.Services.AddAutoMapper(x => x.AddProfile<MappingProduct>());
+            builder.Services.AddAutoMapper(x => x.AddProfile<MappingChat>());
+
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IProductImageService, ProductImageService>();
@@ -162,6 +165,8 @@ namespace Furniture.web
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<ISearchService, SearchService>();
             builder.Services.AddScoped<IImageValidationService, ImageValidationService>();
+            builder.Services.AddScoped<IChatService, ChatService>();
+
 
             builder.Services.AddHttpClient("PythonService");
             builder.Services.AddHttpClient();

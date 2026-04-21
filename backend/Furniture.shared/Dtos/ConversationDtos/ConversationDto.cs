@@ -14,7 +14,7 @@ namespace Furniture.shared.Dtos.ConversationDtos
         public string CustomerId { get; set; } = null!;
         public string CustomerName { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
-        public string LastMessage { get; set; } 
+        public MessageDto? LastMessage { get; set; } 
         public int UnreadCount { get; set; }
 
     }
