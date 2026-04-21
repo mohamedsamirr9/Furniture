@@ -1,138 +1,32 @@
-.page-header h1 {
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-.page-header hr {
-  border: none;
-  border-top: 1px solid #e5e7eb;
-  margin-bottom: 32px;
-}
+:host { font-family: 'DM Sans', sans-serif; }
 
-.table-card {
-  background: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 28px;
-}
+.page-header h1 { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 600; color: #1a1209; margin-bottom: 12px; }
+.page-header hr { border: none; border-top: 1px solid #ede5d8; margin-bottom: 32px; }
 
-.card-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 20px;
-}
+.table-card { background: #ffffff; border: 1px solid #ede5d8; border-radius: 16px; padding: 28px; box-shadow: 0 2px 12px rgba(44,26,14,0.05); }
+.card-title { font-size: 16px; font-weight: 700; color: #1a1209; margin-bottom: 20px; }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
+.table { width: 100%; border-collapse: collapse; }
+.table th { text-align: left; font-size: 12px; color: #a08060; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; padding: 10px 16px; border-bottom: 1px solid #ede5d8; }
+.table td { padding: 16px; font-size: 14px; color: #3a2a1e; border-bottom: 1px solid #f5efe8; vertical-align: middle; }
+.table tr:last-child td { border-bottom: none; }
+.table tr:hover td { background: #fdfaf7; }
 
-.table th {
-  text-align: left;
-  font-size: 14px;
-  color: #6b7280;
-  font-weight: 400;
-  padding: 10px 16px;
-  border-bottom: 1px solid #e5e7eb;
-}
+.badge { font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 999px; display: inline-block; }
+.badge-red { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+.badge-outline { border: 1px solid #e0d8d0; color: #5a4a3a; background: transparent; }
+.badge-gray { background: #f5efe8; color: #7a6a58; border: 1px solid #e0d8d0; }
+.badge-green { background: #f0faf1; color: #2a6b2e; border: 1px solid #a7d9aa; }
 
-.table td {
-  padding: 18px 16px;
-  font-size: 14px;
-  border-bottom: 1px solid #f3f4f6;
-}
+.reply-msg { margin: 0; font-size: 12px; color: #3a2a1e; }
+.latest-reply small { color: #a08060; font-size: 11px; }
 
-.clickable-row {
-  cursor: pointer;
-}
+.action-btn { border: none; border-radius: 8px; padding: 7px 14px; background: #2c1a0e; color: #f5e8d0; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; }
+.action-btn:hover { background: #3d2b1f; }
 
-.clickable-row:hover {
-  background: #fafafa;
-}
+.view-details-btn { border: 1.5px solid #2c1a0e; background: transparent; color: #2c1a0e; border-radius: 8px; padding: 7px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; transition: all 0.2s; }
+.view-details-btn:hover { background: #2c1a0e; color: #f5e8d0; }
 
-.badge {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 5px 14px;
-  border-radius: 999px;
-}
-
-.badge-red {
-  background: #ef4444;
-  color: #fff;
-}
-
-.badge-outline {
-  border: 1.5px solid #e5e7eb;
-  color: #374151;
-}
-
-.badge-gray {
-  background: #e5e7eb;
-  color: #374151;
-}
-
-.badge-green {
-  background: #d1fae5;
-  color: #065f46;
-}
-
-.status-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.status-select,
-.reply-input {
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  padding: 6px 8px;
-  font-size: 12px;
-  width: 100%;
-}
-
-.reply-form {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.action-btn {
-  border: none;
-  border-radius: 8px;
-  padding: 6px 10px;
-  background: #3d6b4f;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.latest-reply small {
-  color: #6b7280;
-  font-size: 11px;
-}
-
-.reply-msg {
-  margin: 0;
-  font-size: 12px;
-}
-
-.image-thumb-btn {
-  margin-top: 8px;
-  display: block;
-  border: none;
-  background: transparent;
-  padding: 0;
-  cursor: pointer;
-}
-
-.image-thumb {
-  width: 56px;
-  height: 56px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1.5px solid #e5e7eb;
-}
+.empty-state { text-align: center; padding: 48px 0; color: #a08060; font-size: 14px; }
