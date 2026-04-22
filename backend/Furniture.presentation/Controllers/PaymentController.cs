@@ -3,7 +3,6 @@ using Furniture.shared.Dtos.Payment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Text.Json;
 
 namespace Furniture.presentation.Controllers
 {
@@ -66,21 +65,29 @@ namespace Furniture.presentation.Controllers
 
         [HttpPost("webhook")]
         [AllowAnonymous]
-        public async Task<IActionResult> PaymobWebhook(
-            [FromBody] JsonElement payload,
-            [FromQuery] string hmac)
+        public async Task<IActionResult> PaymobWebhook([FromQuery] string hmac)
         {
-            var callback = MapFromWebhookPayload(payload);
-            var resolvedHmac = !string.IsNullOrWhiteSpace(hmac)
-                ? hmac
-                : GetString(payload, "hmac");
-
-            if (string.IsNullOrEmpty(resolvedHmac))
+            if (string.IsNullOrWhiteSpace(hmac))
                 return Unauthorized(new { message = "HMAC is missing" });
+
+            var callback = MapFromWebhookQuery();
+
+            // Paymob can send unsuccessful attempts; acknowledge without updating state.
+            if (!callback.Success)
+                return Ok(new { message = "Webhook ignored (payment not successful)" });
+
+            if (callback.OrderId <= 0)
+                return BadRequest(new { message = "Invalid or missing order id" });
+
+            if (string.IsNullOrWhiteSpace(callback.TransactionId))
+                return BadRequest(new { message = "Invalid or missing transaction id" });
+
+            if (string.IsNullOrWhiteSpace(callback.MerchantOrderId))
+                return BadRequest(new { message = "Invalid or missing merchant_order_id" });
 
             try
             {
-                var success = await _paymentService.HandlePaymentCallbackAsync(callback, resolvedHmac);
+                var success = await _paymentService.HandlePaymentCallbackAsync(callback, hmac);
 
                 return success
                     ? Ok(new { message = "Webhook processed successfully" })
@@ -129,120 +136,32 @@ namespace Furniture.presentation.Controllers
             SourceDataSubType = Request.Query["source_data.sub_type"].ToString(),
             SourceDataType   = Request.Query["source_data.type"].ToString()
         };
-
-        private static PaymobCallbackDTO MapFromWebhookPayload(JsonElement payload)
+        
+        private PaymobCallbackDTO MapFromWebhookQuery() => new()
         {
-            var source = payload;
-            if (payload.TryGetProperty("obj", out var obj))
-            {
-                source = obj;
-            }
-
-            var sourceData = source.TryGetProperty("source_data", out var sd)
-                ? sd
-                : default;
-
-            var orderElement = source.TryGetProperty("order", out var orderValue)
-                ? orderValue
-                : default;
-
-            var orderId = GetOrderId(orderElement);
-            var merchantOrderId = GetString(source, "merchant_order_id");
-
-            if (string.IsNullOrWhiteSpace(merchantOrderId) &&
-                orderElement.ValueKind == JsonValueKind.Object)
-            {
-                merchantOrderId = GetString(orderElement, "merchant_order_id");
-            }
-
-            return new PaymobCallbackDTO
-            {
-                Success = GetBool(source, "success"),
-                Id = GetString(source, "id"),
-                OrderId = orderId,
-                MerchantOrderId = merchantOrderId,
-                TransactionId = GetString(source, "transaction_id"),
-                AmountCents = GetString(source, "amount_cents"),
-                CreatedAt = GetString(source, "created_at"),
-                Currency = GetString(source, "currency"),
-                ErrorOccured = GetString(source, "error_occured"),
-                HasParentTransaction = GetString(source, "has_parent_transaction"),
-                IntegrationId = GetString(source, "integration_id"),
-                IsCaptured = GetString(source, "is_captured"),
-                IsRefundedTransaction = GetString(source, "is_refunded_transaction"),
-                IsStandalonePayment = GetString(source, "is_standalone_payment"),
-                IsVoided = GetString(source, "is_voided"),
-                OwnerUsername = GetString(source, "owner"),
-                PendingStatus = GetString(source, "pending"),
-                SourceDataPan = sourceData.ValueKind == JsonValueKind.Object ? GetString(sourceData, "pan") : string.Empty,
-                SourceDataSubType = sourceData.ValueKind == JsonValueKind.Object ? GetString(sourceData, "sub_type") : string.Empty,
-                SourceDataType = sourceData.ValueKind == JsonValueKind.Object ? GetString(sourceData, "type") : string.Empty
-            };
-        }
-
-        private static int GetOrderId(JsonElement orderElement)
-        {
-            if (orderElement.ValueKind == JsonValueKind.Number &&
-                orderElement.TryGetInt32(out var numericOrderId))
-            {
-                return numericOrderId;
-            }
-
-            if (orderElement.ValueKind == JsonValueKind.String &&
-                int.TryParse(orderElement.GetString(), out var stringOrderId))
-            {
-                return stringOrderId;
-            }
-
-            if (orderElement.ValueKind == JsonValueKind.Object)
-            {
-                if (orderElement.TryGetProperty("id", out var idProp))
-                {
-                    if (idProp.ValueKind == JsonValueKind.Number &&
-                        idProp.TryGetInt32(out var nestedNumericOrderId))
-                    {
-                        return nestedNumericOrderId;
-                    }
-
-                    if (idProp.ValueKind == JsonValueKind.String &&
-                        int.TryParse(idProp.GetString(), out var nestedStringOrderId))
-                    {
-                        return nestedStringOrderId;
-                    }
-                }
-            }
-
-            return 0;
-        }
-
-        private static string GetString(JsonElement element, string propertyName)
-        {
-            if (!element.TryGetProperty(propertyName, out var propertyValue))
-                return string.Empty;
-
-            return propertyValue.ValueKind switch
-            {
-                JsonValueKind.String => propertyValue.GetString() ?? string.Empty,
-                JsonValueKind.Number => propertyValue.GetRawText(),
-                JsonValueKind.True => "true",
-                JsonValueKind.False => "false",
-                _ => string.Empty
-            };
-        }
-
-        private static bool GetBool(JsonElement element, string propertyName)
-        {
-            if (!element.TryGetProperty(propertyName, out var propertyValue))
-                return false;
-
-            return propertyValue.ValueKind switch
-            {
-                JsonValueKind.True => true,
-                JsonValueKind.False => false,
-                JsonValueKind.String => bool.TryParse(propertyValue.GetString(), out var parsed) && parsed,
-                _ => false
-            };
-        }
+            Success = bool.TryParse(Request.Query["success"], out var s) && s,
+            Id = Request.Query["id"].ToString(),
+            OrderId = int.TryParse(Request.Query["order"], out var orderId) ? orderId : 0,
+            MerchantOrderId = Request.Query["merchant_order_id"].ToString(),
+            TransactionId = !string.IsNullOrWhiteSpace(Request.Query["transaction_id"])
+                ? Request.Query["transaction_id"].ToString()
+                : Request.Query["id"].ToString(),
+            AmountCents = Request.Query["amount_cents"].ToString(),
+            CreatedAt = Request.Query["created_at"].ToString(),
+            Currency = Request.Query["currency"].ToString(),
+            ErrorOccured = Request.Query["error_occured"].ToString(),
+            HasParentTransaction = Request.Query["has_parent_transaction"].ToString(),
+            IntegrationId = Request.Query["integration_id"].ToString(),
+            IsCaptured = Request.Query["is_captured"].ToString(),
+            IsRefundedTransaction = Request.Query["is_refunded_transaction"].ToString(),
+            IsStandalonePayment = Request.Query["is_standalone_payment"].ToString(),
+            IsVoided = Request.Query["is_voided"].ToString(),
+            OwnerUsername = Request.Query["owner"].ToString(),
+            PendingStatus = Request.Query["pending"].ToString(),
+            SourceDataPan = Request.Query["source_data.pan"].ToString(),
+            SourceDataSubType = Request.Query["source_data.sub_type"].ToString(),
+            SourceDataType = Request.Query["source_data.type"].ToString()
+        };
         
         
         #endregion
