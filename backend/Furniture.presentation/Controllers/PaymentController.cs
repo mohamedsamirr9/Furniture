@@ -63,6 +63,7 @@ namespace Furniture.presentation.Controllers
 
         
 
+        [HttpGet("webhook")]
         [HttpPost("webhook")]
         [AllowAnonymous]
         public async Task<IActionResult> PaymobWebhook([FromQuery] string hmac)
