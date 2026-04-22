@@ -11,6 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './custom-request.html',
   styleUrl: './custom-request.css',
+
 })
 export class CustomRequestComponent implements OnInit {
   requestForm: FormGroup;

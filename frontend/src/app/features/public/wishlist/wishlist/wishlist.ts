@@ -12,6 +12,10 @@ import { Subscription } from 'rxjs';
   imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './wishlist.html',
   styleUrl: './wishlist.css',
+  host: {
+  'style': 'display: block; background-color: #f9f4ef; min-height: 100vh;'
+}
+
 })
 export class WishlistComponent implements OnInit, OnDestroy {
   loading = true;

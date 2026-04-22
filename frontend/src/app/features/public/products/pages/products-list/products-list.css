@@ -4,7 +4,9 @@
    GLOBAL
 ══════════════════════════════════════ */
 :host { font-family: 'DM Sans', sans-serif; }
-
+body {
+  background-color: #faf7f4;
+}
 /* ══════════════════════════════════════
    PAGE HEADER
 ══════════════════════════════════════ */

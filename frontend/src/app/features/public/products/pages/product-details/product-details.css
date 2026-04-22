@@ -22,7 +22,7 @@
    MAIN IMAGE
 ══════════════════════════════ */
 .main-image-wrapper {
-  background: #f6f1ec;
+  background: #faf7f4;
   border-radius: 24px;
   overflow: hidden;
   border: 1px solid #ede8e3;
@@ -73,7 +73,7 @@
 
 .category-tag {
   display: inline-block;
-  background: #ede8e3;
+  background: #faf7f4;
   color: #5a3e28;
   font-size: 0.7rem;
   font-weight: 700;

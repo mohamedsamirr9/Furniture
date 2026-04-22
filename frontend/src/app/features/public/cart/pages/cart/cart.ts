@@ -12,7 +12,10 @@ import { Cart } from '../../../../../core/models/cart.model';
   standalone: true,
   imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './cart.html',
-  styleUrl: './cart.css'
+  styleUrl: './cart.css',
+  host: {
+  'style': 'display: block; background-color: #f9f4ef; min-height: 100vh;'
+}
 })
 export class CartComponent implements OnInit {
   cart$: Observable<Cart | null>;
