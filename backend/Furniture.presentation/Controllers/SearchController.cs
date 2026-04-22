@@ -16,7 +16,6 @@ namespace Furniture.API.Controllers
             _searchService = searchService;
         }
 
-        
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> SearchByImage(
@@ -37,24 +36,5 @@ namespace Furniture.API.Controllers
             }
         }
 
-        
-        [HttpPost("build-index")]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> BuildIndex()
-        {
-            try
-            {
-                var result = await _searchService.BuildIndexAsync();
-                return Ok(result);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex) when (ex.Message.Contains("unavailable") || ex.Message.Contains("Python"))
-            {
-                return StatusCode(503, ex.Message);
-            }
-        }
     }
 }

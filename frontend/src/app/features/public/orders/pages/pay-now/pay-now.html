@@ -1,0 +1,42 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="h4 m-0">Complete payment</h2>
+        <button class="btn btn-outline-dark" (click)="goToOrders()">My orders</button>
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-danger d-flex justify-content-between align-items-center">
+        <span>{{ errorMessage }}</span>
+        <button class="btn btn-sm btn-outline-danger" (click)="checkAgain()" [disabled]="isLoading || isVerifying">
+          Try again
+        </button>
+      </div>
+
+      <div *ngIf="isLoading" class="alert alert-info">
+        Preparing payment...
+      </div>
+
+      <div *ngIf="!isLoading && safePaymentUrl" class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+          <iframe
+            title="Payment"
+            [src]="safePaymentUrl"
+            style="width: 100%; height: 75vh; border: 0;"
+            referrerpolicy="no-referrer"
+            allow="payment *"
+          ></iframe>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <small class="text-muted">
+            {{ isVerifying ? 'Waiting for confirmation…' : 'If you completed payment, click “Check status”.' }}
+          </small>
+          <button class="btn btn-dark" (click)="checkAgain()" [disabled]="isLoading || isVerifying">
+            Check status
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

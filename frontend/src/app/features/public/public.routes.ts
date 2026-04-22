@@ -7,6 +7,7 @@ import { ProductsList } from './products/pages/products-list/products-list';
 import { ProductDetails } from './products/pages/product-details/product-details';
 import { CartComponent } from './cart/pages/cart/cart';
 import { CheckoutComponent } from './orders/pages/checkout/checkout';
+import { PayNowComponent } from './orders/pages/pay-now/pay-now';
 import { OrderConfirmedComponent } from './orders/pages/order-confirmed/order-confirmed';
 import { MyOrdersComponent } from './orders/pages/my-orders/my-orders';
 import { OrderDetailsComponent } from './orders/pages/order-details/order-details';
@@ -24,6 +25,7 @@ export const PUBLIC_ROUTES: Routes = [
       { path: 'products/:id', component: ProductDetails },
       { path: 'cart', component: CartComponent, canActivate: [authGuard] },
       { path: 'checkout', component: CheckoutComponent, canActivate: [authGuard] },
+      { path: 'orders/pay', component: PayNowComponent, canActivate: [authGuard] },
       { path: 'orders/confirmed', component: OrderConfirmedComponent, canActivate: [authGuard] },
       { path: 'orders/:id', component: OrderDetailsComponent, canActivate: [authGuard] },
       { path: 'orders', component: MyOrdersComponent, canActivate: [authGuard] },
