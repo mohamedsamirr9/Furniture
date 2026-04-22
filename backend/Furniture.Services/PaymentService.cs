@@ -416,6 +416,17 @@ namespace Furniture.Services.Implementations
 
         private bool VerifyHmac(PaymobCallbackDTO callback, string receivedHmac)
         {
+            var hmacEnabled = _config["Paymob:HMAC_ENABLED"];
+            if (hmacEnabled?.ToLower() == "false")
+            {
+                _logger.LogWarning(
+                    "HMAC verification is disabled in configuration. " +
+                    "Accepting callback without HMAC verification. " +
+                    "OrderId={OrderId}, TransactionId={TransactionId}",
+                    callback.order, callback.id);
+                return true;
+            }
+
             var hmacSecret = _config["Paymob:HmacSecret"];
             if (string.IsNullOrEmpty(hmacSecret))
             {
