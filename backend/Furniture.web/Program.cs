@@ -1,4 +1,5 @@
 using System.Text;
+using System.Security.Cryptography;
 using Furniture.Services;
 using Furniture.Domain.InterfacesRepositories;
 using Furniture.Domain.Models;
