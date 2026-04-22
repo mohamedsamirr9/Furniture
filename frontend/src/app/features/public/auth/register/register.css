@@ -6,19 +6,19 @@
 .register-page .left {
   padding-left: 0 !important;
   display: flex;
-  align-items: center;        /* تمركز عمودي */
+  align-items: center;       
   justify-content: flex-start;
 }
 
 .form-wrapper {
-  margin-left: 60px;  /* 👈 كانت 100px، خليها أصغر */
+  margin-left: 60px;  
   max-width: 540px;
   width: 100%;
 }
 
 .register-page form {
   max-width: 540px;
-  margin-left: 0;  /* 👈 شيل أي margin من الفورم نفسه */
+  margin-left: 0;  
   width: 100%;
 }
 
@@ -55,7 +55,7 @@
   align-items: center;
   background: #f8f5f1;
   border-radius: 10px;
-  padding: 10px 12px;  /* 👈 أصغر */
+  padding: 10px 12px;  
   gap: 10px;
   border: 1.5px solid #e2d9d1;
   transition: 0.3s;

@@ -1,8 +1,9 @@
 import { OrderService } from '../../../../../core/services/order.service';
 import { Order } from '../../../../../core/models/order.model';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+
 
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -11,7 +12,8 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './my-orders.html',
-  styleUrls: ['./my-orders.css']
+  styleUrls: ['./my-orders.css'],
+   encapsulation: ViewEncapsulation.None
 })
 export class MyOrdersComponent implements OnInit {
   orders: Order[] = [];

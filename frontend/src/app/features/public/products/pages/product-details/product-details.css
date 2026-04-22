@@ -2,9 +2,7 @@
 
 :host { font-family: 'DM Sans', sans-serif; }
 
-/* ══════════════════════════════
-   BACK LINK
-══════════════════════════════ */
+
 .back-link {
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
@@ -18,9 +16,7 @@
   transform: translateX(-4px);
 }
 
-/* ══════════════════════════════
-   MAIN IMAGE
-══════════════════════════════ */
+
 .main-image-wrapper {
   background: #faf7f4;
   border-radius: 24px;
@@ -41,9 +37,7 @@
   transform: scale(1.03);
 }
 
-/* ══════════════════════════════
-   THUMBNAILS
-══════════════════════════════ */
+
 .thumb-gallery {
   display: flex;
   gap: 10px;
@@ -64,9 +58,7 @@
 .thumb-btn:hover { border-color: #c8a97a; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(44,26,14,0.1); }
 .thumb-btn.active { border-color: #2c1a0e; box-shadow: 0 0 0 3px rgba(44,26,14,0.1); }
 
-/* ══════════════════════════════
-   PRODUCT INFO PANEL
-══════════════════════════════ */
+
 .product-info-panel {
   padding: 8px 0;
 }
@@ -146,9 +138,7 @@
   letter-spacing: -1px;
 }
 
-/* ══════════════════════════════
-   ALERTS
-══════════════════════════════ */
+
 .custom-alert {
   padding: 10px 16px;
   border-radius: 12px;
@@ -160,9 +150,7 @@
 .alert-ok { background: #f0ebe5; color: #2c1a0e; border: 1px solid #d4c4b0; }
 .alert-err { background: #fdf2f2; color: #9b2335; border: 1px solid #f5c6cb; }
 
-/* ══════════════════════════════
-   ADD TO CART BUTTON
-══════════════════════════════ */
+
 .btn-add-cart {
   width: 100%;
   max-width: 380px;
@@ -190,9 +178,7 @@
 }
 .btn-add-cart:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* ══════════════════════════════
-   REVIEWS SECTION
-══════════════════════════════ */
+
 .reviews-section {
   border-top: 1px solid #ede8e3;
 }

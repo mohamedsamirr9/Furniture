@@ -1,31 +1,206 @@
-/* ===== Order Confirmed Page Responsive Styles ===== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 
+:root {
+  --bg:           #f0ece4;
+  --card-bg:      #faf8f4;
+  --border:       #ddd8ce;
+  --accent:       #7c4f2a;
+  --accent-hover: #5e3a1e;
+  --text-dark:    #2b2018;
+  --text-mid:     #7a6a5a;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'DM Sans', sans-serif;
+}
+
+/* ─── Page wrapper ─── */
+.confirmed-page {
+  background-color: var(--bg);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  padding-top: 4rem;
+}
+
+/* ─── Check icon animation ─── */
+@keyframes popIn {
+  0%   { transform: scale(0); opacity: 0; }
+  70%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+@keyframes drawCheck {
+  0%   { opacity: 0; transform: scale(0.5) rotate(-10deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes ringPulse {
+  0%   { box-shadow: 0 0 0 0px #e0d5c5, 0 0 0 0px #ece7de; }
+  100% { box-shadow: 0 0 0 14px #e0d5c5, 0 0 0 26px #ece7de; }
+}
+
+/* ─── Check icon ─── */
+.check-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 90px;
+  background-color: #7c4f2a;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0px #e0d5c5, 0 0 0 0px #ece7de;
+  margin-bottom: 0.5rem;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
+             ringPulse 0.6s ease-out 0.4s forwards;
+}
+
+.check-icon-wrapper .bi-check-lg {
+  font-size: 2.8rem;
+  color: #fff;
+  line-height: 1;
+  animation: drawCheck 0.4s ease-out 0.3s both;
+}
+
+/* ─── Title ─── */
+h1.display-6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: -0.02em;
+}
+
+/* ─── Subtitle ─── */
+p.text-muted.fs-5 {
+  color: var(--text-mid) !important;
+  font-size: 0.95rem !important;
+  font-weight: 300;
+}
+
+/* ─── Order card ─── */
+.confirmed-card {
+  background-color: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 1.1rem;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(80, 50, 20, 0.07);
+}
+
+.confirmed-card-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+}
+
+.confirmed-cell-left {
+  flex: 1;
+  padding-right: 1.5rem;
+  border-right: 1px solid var(--border);
+}
+
+.confirmed-cell-right {
+  flex: 1;
+  padding-left: 1.5rem;
+  text-align: right;
+}
+
+.confirmed-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  margin-bottom: 0.35rem;
+  display: block;
+}
+
+.confirmed-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.confirmed-total {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+/* ─── Buttons ─── */
+.btn-confirmed-primary {
+  display: block;
+  padding: 1rem;
+  width: 70%;         
+  margin: 0 auto;
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 2px 12px rgba(124, 79, 42, 0.3);
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-confirmed-primary:hover {
+  background-color: var(--accent-hover);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.btn-confirmed-outline {
+  display: block;
+  width: 100%;
+  padding: 0.6rem;
+  background-color: transparent;
+  color: var(--text-dark);
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.btn-confirmed-outline:hover {
+  color: var(--accent);
+}
+
+/* ─── Responsive ─── */
 @media (max-width: 575.98px) {
-  .container.py-5 {
-    padding-top: 2rem !important;
-    padding-bottom: 2rem !important;
+  .confirmed-page {
+    padding-top: 2rem;
+  }
+
+  .check-icon-wrapper {
+    width: 72px;
+    height: 72px;
+  }
+
+  .check-icon-wrapper .bi-check-lg {
+    font-size: 2.2rem;
   }
 
   h1.display-6 {
     font-size: 1.5rem;
   }
 
-  .bi-check-circle-fill {
-    font-size: 4rem !important;
+  .confirmed-cell-left,
+  .confirmed-cell-right {
+    padding: 0.75rem;
   }
 
-  .card.rounded-4 {
-    border-radius: 1rem !important;
-    padding: 1.25rem !important;
-  }
-
-  .fs-3 {
-    font-size: 1.5rem !important;
-  }
-
-  .btn.py-3 {
-    padding-top: 0.75rem !important;
-    padding-bottom: 0.75rem !important;
+  .confirmed-value,
+  .confirmed-total {
     font-size: 0.95rem;
+  }
+
+  .btn-confirmed-primary,
+  .btn-confirmed-outline {
+    font-size: 0.85rem;
+    padding: 0.8rem;
   }
 }
