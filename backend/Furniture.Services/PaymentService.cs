@@ -63,7 +63,13 @@ namespace Furniture.Services.Implementations
             if (!callback.Success)
                 return false;
 
-            var payment = await GetPaymentByMerchantOrderIdAsync(callback.MerchantOrderId);
+            var payment = await GetPaymentByPaymobOrderIdAsync(callback.OrderId.ToString());
+
+            if (payment == null)
+                payment = await GetPaymentByMerchantOrderIdStoredAsync(callback.MerchantOrderId);
+
+            if (payment == null)
+                payment = await GetPaymentByMerchantOrderIdParsedAsync(callback.MerchantOrderId);
 
             if (payment == null)
                 return false;
@@ -125,13 +131,21 @@ namespace Furniture.Services.Implementations
                 .GetByIdAsync(spec);
         }
 
-        private async Task<Payment?> GetPaymentByMerchantOrderIdAsync(string merchantOrderId)
+        private async Task<Payment?> GetPaymentByMerchantOrderIdStoredAsync(string merchantOrderId)
+        {
+            if (string.IsNullOrWhiteSpace(merchantOrderId))
+                return null;
+
+            var spec = new PaymentByMerchantOrderIdSpecification(merchantOrderId);
+            return await _unitOfWork.GetRepository<Payment, int>()
+                .GetByIdAsync(spec);
+        }
+
+        private async Task<Payment?> GetPaymentByMerchantOrderIdParsedAsync(string merchantOrderId)
         {
             var orderId = TryExtractOrderIdFromMerchantOrderId(merchantOrderId);
             if (!orderId.HasValue)
-            {
                 return null;
-            }
 
             var spec = new PaymentByOrderIdSpecification(orderId.Value);
             return await _unitOfWork.GetRepository<Payment, int>()
@@ -210,10 +224,13 @@ namespace Furniture.Services.Implementations
             string paymentToken,
             string paymobOrderId)
         {
+            var merchantOrderId = $"order-{order.Id}-{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}";
+
             if (existingPayment != null)
             {
                 existingPayment.PaymobTransactionId = paymentToken;
                 existingPayment.PaymobOrderId = paymobOrderId;
+                existingPayment.MerchantOrderId = merchantOrderId;
                 existingPayment.CreatedAt = DateTime.UtcNow;
                 _unitOfWork.GetRepository<Payment, int>().Update(existingPayment);
             }
@@ -228,6 +245,7 @@ namespace Furniture.Services.Implementations
                     Status = PaymentStatus.Pending,
                     PaymobTransactionId = paymentToken,
                     PaymobOrderId = paymobOrderId,
+                    MerchantOrderId = merchantOrderId,
                     CreatedAt = DateTime.UtcNow
                 };
                 await _unitOfWork.GetRepository<Payment, int>().AddAsync(payment);
