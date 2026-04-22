@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
@@ -13,11 +13,19 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class Navbar implements OnInit {
+export class Navbar implements OnInit, OnDestroy {
   currentLang: string = 'en';
+  dropdownOpen = false;
+
+  private outsideClickListener = (e: MouseEvent) => {
+    const wrapper = document.querySelector('.profile-dropdown-wrapper');
+    if (wrapper && !wrapper.contains(e.target as Node)) {
+      this.dropdownOpen = false;
+    }
+  };
 
   constructor(
-    private router: Router, 
+    private router: Router,
     public cartService: CartService,
     public wishlistService: WishlistService,
     public authService: AuthService
@@ -29,9 +37,28 @@ export class Navbar implements OnInit {
       this.cartService.loadCart().subscribe();
       this.wishlistService.getWishlist().subscribe();
     }
+    document.addEventListener('click', this.outsideClickListener);
+  }
+
+  ngOnDestroy(): void {
+    document.removeEventListener('click', this.outsideClickListener);
+  }
+
+  toggleDropdown(): void {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  closeDropdown(): void {
+    this.dropdownOpen = false;
+  }
+
+  getUserInitial(user: any): string {
+    return user?.name?.charAt(0)?.toUpperCase() ||
+           user?.email?.charAt(0)?.toUpperCase() || 'U';
   }
 
   logout(): void {
+    this.closeDropdown();
     this.authService.logout();
     this.router.navigate(['/login']);
   }
