@@ -61,7 +61,7 @@ namespace Furniture.Services.Implementations
             if (!callback.Success)
                 return false;
 
-            var payment = await GetPaymentByPaymobOrderIdAsync(callback.OrderId.ToString());
+            var payment = await GetPaymentByMerchantOrderIdAsync(callback.MerchantOrderId);
 
             if (payment == null)
                 return false;
@@ -121,6 +121,45 @@ namespace Furniture.Services.Implementations
             var spec = new PaymentByPaymobOrderIdSpecification(paymobOrderId);
             return await _unitOfWork.GetRepository<Payment, int>()
                 .GetByIdAsync(spec);
+        }
+
+        private async Task<Payment?> GetPaymentByMerchantOrderIdAsync(string merchantOrderId)
+        {
+            var orderId = TryExtractOrderIdFromMerchantOrderId(merchantOrderId);
+            if (!orderId.HasValue)
+            {
+                return null;
+            }
+
+            var spec = new PaymentByOrderIdSpecification(orderId.Value);
+            return await _unitOfWork.GetRepository<Payment, int>()
+                .GetByIdAsync(spec);
+        }
+
+        private static int? TryExtractOrderIdFromMerchantOrderId(string merchantOrderId)
+        {
+            if (string.IsNullOrWhiteSpace(merchantOrderId))
+            {
+                return null;
+            }
+
+            var parts = merchantOrderId.Split('-', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length < 3)
+            {
+                return null;
+            }
+
+            if (!parts[0].Equals("order", StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
+            }
+
+            if (!int.TryParse(parts[1], out var orderId))
+            {
+                return null;
+            }
+
+            return orderId;
         }
  
         private async Task<List<SellerPayout>> BuildSellerPayoutsAsync(Order order, int orderId)

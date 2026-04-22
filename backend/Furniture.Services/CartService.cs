@@ -91,7 +91,7 @@ namespace Furniture.Services
 
             await _unitOfWork.SaveChangesAsync();
             
-            _ = _recommendationService.UpdateUserEmbeddingAsync(
+            await _recommendationService.UpdateUserEmbeddingAsync(
                 userId, dto.ProductId, "cart");
 
 

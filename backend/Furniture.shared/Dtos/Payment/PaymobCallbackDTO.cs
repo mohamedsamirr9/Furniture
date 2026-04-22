@@ -13,6 +13,9 @@ namespace Furniture.shared.Dtos.Payment
         [JsonPropertyName("order")]
         public int OrderId { get; set; }
 
+        [JsonPropertyName("merchant_order_id")]
+        public string MerchantOrderId { get; set; } = string.Empty;
+
         [JsonPropertyName("transaction_id")]
         public string TransactionId { get; set; } = string.Empty;
 

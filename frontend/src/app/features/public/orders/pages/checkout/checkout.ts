@@ -117,7 +117,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }).subscribe({
         next: (response: any) => {
           this.isLoading = false;
-          this.router.navigate(['/orders/confirmed'], { state: { orderResponse: response } });
+          const orderId = response?.orderId ?? response?.OrderId ?? response?.id;
+          this.router.navigate(['/orders/pay'], {
+            state: {
+              orderId,
+              orderResponse: response
+            }
+          });
         },
         error: (err: any) => {
           this.isLoading = false;
@@ -134,7 +140,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           this.isLoading = false;
           this.cartService.clearCart().subscribe(() => {
-            this.router.navigate(['/orders/confirmed'], { state: { orderResponse: response } });
+            const orderId = response?.orderId ?? response?.OrderId ?? response?.id;
+            this.router.navigate(['/orders/pay'], {
+              state: {
+                orderId,
+                orderResponse: response
+              }
+            });
           });
         },
         error: (err: any) => {
