@@ -3,6 +3,7 @@ using Furniture.shared.Dtos.Payment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 
 namespace Furniture.presentation.Controllers
 {
@@ -11,10 +12,12 @@ namespace Furniture.presentation.Controllers
     public class PaymentsController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
+        private readonly ILogger<PaymentsController> _logger;
 
-        public PaymentsController(IPaymentService paymentService)
+        public PaymentsController(IPaymentService paymentService, ILogger<PaymentsController> logger)
         {
             _paymentService = paymentService;
+            _logger = logger;
         }
 
         
@@ -42,22 +45,41 @@ namespace Furniture.presentation.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> PaymobCallback([FromQuery] string hmac)
         {
-            if (string.IsNullOrWhiteSpace(hmac))
-                return Unauthorized(new { message = "HMAC is missing" });
-
             var callback = MapFromQuery();
+
+            if (!callback.Success)
+            {
+                _logger.LogInformation("Paymob callback: payment not successful, acknowledging");
+                return Ok(new { message = "Callback acknowledged (payment not successful)" });
+            }
+
+            if (callback.OrderId <= 0)
+                _logger.LogWarning("Paymob callback: missing or invalid order id");
+
+            if (string.IsNullOrWhiteSpace(callback.TransactionId))
+                _logger.LogWarning("Paymob callback: missing transaction id");
+
+            if (string.IsNullOrWhiteSpace(callback.MerchantOrderId))
+                _logger.LogWarning("Paymob callback: missing merchant_order_id");
+
+            if (callback.OrderId <= 0 && string.IsNullOrWhiteSpace(callback.MerchantOrderId))
+            {
+                _logger.LogWarning("Paymob callback: no order id or merchant order id, cannot process");
+                return Ok(new { message = "Callback acknowledged (insufficient data)" });
+            }
 
             try
             {
-                var success = await _paymentService.HandlePaymentCallbackAsync(callback, hmac);
+                var success = await _paymentService.HandlePaymentCallbackAsync(callback, hmac ?? string.Empty);
 
                 return success
                     ? Ok(new { message = "Payment processed successfully" })
-                    : BadRequest(new { message = "Payment processing failed" });
+                    : Ok(new { message = "Callback acknowledged but payment not found" });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = ex.Message });
+                _logger.LogError(ex, "Paymob callback: error processing");
+                return Ok(new { message = "Callback acknowledged (processing error)" });
             }
         }
 
@@ -68,35 +90,41 @@ namespace Furniture.presentation.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> PaymobWebhook([FromQuery] string hmac)
         {
-            if (string.IsNullOrWhiteSpace(hmac))
-                return Unauthorized(new { message = "HMAC is missing" });
-
             var callback = MapFromWebhookQuery();
 
-            // Paymob can send unsuccessful attempts; acknowledge without updating state.
             if (!callback.Success)
-                return Ok(new { message = "Webhook ignored (payment not successful)" });
+            {
+                _logger.LogInformation("Paymob webhook: payment not successful, acknowledging");
+                return Ok(new { message = "Webhook acknowledged (payment not successful)" });
+            }
 
             if (callback.OrderId <= 0)
-                return BadRequest(new { message = "Invalid or missing order id" });
+                _logger.LogWarning("Paymob webhook: missing or invalid order id - acknowledging anyway");
 
             if (string.IsNullOrWhiteSpace(callback.TransactionId))
-                return BadRequest(new { message = "Invalid or missing transaction id" });
+                _logger.LogWarning("Paymob webhook: missing transaction_id - acknowledging anyway");
 
             if (string.IsNullOrWhiteSpace(callback.MerchantOrderId))
-                return BadRequest(new { message = "Invalid or missing merchant_order_id" });
+                _logger.LogWarning("Paymob webhook: missing merchant_order_id - acknowledging anyway");
+
+            if (callback.OrderId <= 0 && string.IsNullOrWhiteSpace(callback.MerchantOrderId))
+            {
+                _logger.LogWarning("Paymob webhook: no order id or merchant order id provided, cannot process");
+                return Ok(new { message = "Webhook acknowledged (insufficient data)" });
+            }
 
             try
             {
-                var success = await _paymentService.HandlePaymentCallbackAsync(callback, hmac);
+                var success = await _paymentService.HandlePaymentCallbackAsync(callback, hmac ?? string.Empty);
 
                 return success
                     ? Ok(new { message = "Webhook processed successfully" })
-                    : BadRequest(new { message = "Webhook processing failed" });
+                    : Ok(new { message = "Webhook acknowledged but payment not found or already processed" });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = ex.Message });
+                _logger.LogError(ex, "Paymob webhook: error processing callback");
+                return Ok(new { message = "Webhook acknowledged (processing error)" });
             }
         }
 
