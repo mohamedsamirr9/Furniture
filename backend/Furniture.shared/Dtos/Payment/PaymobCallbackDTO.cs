@@ -1,61 +1,25 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace Furniture.shared.Dtos.Payment
 {
     public class PaymobCallbackDTO
     {
-        [FromQuery(Name = "success")]
-        public bool Success { get; set; }
-
-        [FromQuery(Name = "id")]
-        public string Id { get; set; } = string.Empty;
-
-        [FromQuery(Name = "order")]
-        public int OrderId { get; set; }
-
-        [FromQuery(Name = "merchant_order_id")]
-        public string MerchantOrderId { get; set; } = string.Empty;
-
-        [FromQuery(Name = "amount_cents")]
-        public string AmountCents { get; set; } = string.Empty;
-
-        [FromQuery(Name = "created_at")]
-        public string CreatedAt { get; set; } = string.Empty;
-
-        [FromQuery(Name = "currency")]
-        public string Currency { get; set; } = string.Empty;
-
-        [FromQuery(Name = "error_occured")]
-        public string ErrorOccured { get; set; } = string.Empty;
-
-        [FromQuery(Name = "has_parent_transaction")]
-        public string HasParentTransaction { get; set; } = string.Empty;
-
-        [FromQuery(Name = "integration_id")]
-        public string IntegrationId { get; set; } = string.Empty;
-
-        [FromQuery(Name = "is_captured")]
-        public string IsCaptured { get; set; } = string.Empty;
-
-        [FromQuery(Name = "is_standalone_payment")]
-        public string IsStandalonePayment { get; set; } = string.Empty;
-
-        [FromQuery(Name = "is_voided")]
-        public string IsVoided { get; set; } = string.Empty;
-
-        [FromQuery(Name = "owner")]
-        public string OwnerUsername { get; set; } = string.Empty;
-
-        [FromQuery(Name = "pending")]
-        public string PendingStatus { get; set; } = string.Empty;
-
-        [FromQuery(Name = "source_data.pan")] // لاحظ النقطة هنا
-        public string SourceDataPan { get; set; } = string.Empty;
-
-        [FromQuery(Name = "source_data.sub_type")]
-        public string SourceDataSubType { get; set; } = string.Empty;
-
-        [FromQuery(Name = "source_data.type")]
-        public string SourceDataType { get; set; } = string.Empty;
+        public bool success { get; set; }
+        public string id { get; set; } = string.Empty;
+        public int order { get; set; } 
+        public string merchant_order_id { get; set; } = string.Empty;
+        public string amount_cents { get; set; } = string.Empty;
+        public string created_at { get; set; } = string.Empty;
+        public string currency { get; set; } = string.Empty;
+        public string error_occured { get; set; } = string.Empty;
+        public string has_parent_transaction { get; set; } = string.Empty;
+        public string integration_id { get; set; } = string.Empty;
+        public string is_captured { get; set; } = string.Empty;
+        public string is_standalone_payment { get; set; } = string.Empty;
+        public string is_voided { get; set; } = string.Empty;
+        public string owner { get; set; } = string.Empty;
+        public string pending { get; set; } = string.Empty;
+        
+        public string source_data_pan { get; set; } = string.Empty;
+        public string source_data_sub_type { get; set; } = string.Empty;
+        public string source_data_type { get; set; } = string.Empty;
     }
 }

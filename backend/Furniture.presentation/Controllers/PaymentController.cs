@@ -49,24 +49,23 @@ namespace Furniture.presentation.Controllers
 
             _logger.LogInformation(
                 "Paymob callback received: OrderId={OrderId}, MerchantOrderId={MerchantOrderId}, Success={Success}, Id={TransactionId}",
-                callback.OrderId, callback.MerchantOrderId, callback.Success, callback.Id);
-
-            if (!callback.Success)
+                callback.order, callback.merchant_order_id, callback.success, callback.id); 
+            if (!callback.success)
             {
                 _logger.LogInformation("Paymob callback: payment not successful, acknowledging");
                 return Ok(new { message = "Callback acknowledged (payment not successful)" });
             }
 
-            if (callback.OrderId <= 0)
+            if (callback.order <= 0)
                 _logger.LogWarning("Paymob callback: missing or invalid order id");
 
-            if (string.IsNullOrWhiteSpace(callback.TransactionId))
+            if (string.IsNullOrWhiteSpace(callback.id))
                 _logger.LogWarning("Paymob callback: missing transaction id");
 
-            if (string.IsNullOrWhiteSpace(callback.MerchantOrderId))
+            if (string.IsNullOrWhiteSpace(callback.merchant_order_id))
                 _logger.LogWarning("Paymob callback: missing merchant_order_id");
 
-            if (callback.OrderId <= 0 && string.IsNullOrWhiteSpace(callback.MerchantOrderId))
+            if (callback.order <= 0 && string.IsNullOrWhiteSpace(callback.merchant_order_id))  
             {
                 _logger.LogWarning("Paymob callback: no order id or merchant order id, cannot process");
                 return Ok(new { message = "Callback acknowledged (insufficient data)" });
@@ -102,24 +101,23 @@ namespace Furniture.presentation.Controllers
 
             _logger.LogInformation(
                 "Paymob webhook received: OrderId={OrderId}, MerchantOrderId={MerchantOrderId}, Success={Success}, Id={TransactionId}",
-                callback.OrderId, callback.MerchantOrderId, callback.Success, callback.Id);
-
-            if (!callback.Success)
+                callback.order, callback.merchant_order_id, callback.success, callback.id); 
+            if (!callback.success)
             {
                 _logger.LogInformation("Paymob webhook: payment not successful, acknowledging");
                 return Ok(new { message = "Webhook acknowledged (payment not successful)" });
             }
 
-            if (callback.OrderId <= 0)
+            if (callback.order <= 0)
                 _logger.LogWarning("Paymob webhook: missing or invalid order id - acknowledging anyway");
 
-            if (string.IsNullOrWhiteSpace(callback.TransactionId))
+            if (string.IsNullOrWhiteSpace(callback.id))
                 _logger.LogWarning("Paymob webhook: missing transaction_id - acknowledging anyway");
 
-            if (string.IsNullOrWhiteSpace(callback.MerchantOrderId))
+            if (string.IsNullOrWhiteSpace(callback.merchant_order_id))
                 _logger.LogWarning("Paymob webhook: missing merchant_order_id - acknowledging anyway");
 
-            if (callback.OrderId <= 0 && string.IsNullOrWhiteSpace(callback.MerchantOrderId))
+            if (callback.order <= 0 && string.IsNullOrWhiteSpace(callback.merchant_order_id))
             {
                 _logger.LogWarning("Paymob webhook: no order id or merchant order id provided, cannot process");
                 return Ok(new { message = "Webhook acknowledged (insufficient data)" });
@@ -160,52 +158,48 @@ namespace Furniture.presentation.Controllers
         
         private PaymobCallbackDTO MapFromQuery() => new()
         {
-            Success          = bool.TryParse(Request.Query["success"], out var s) && s,
-            Id               = Request.Query["id"].ToString(),
-            OrderId          = int.TryParse(Request.Query["order"], out var o) ? o : 0,
-            MerchantOrderId  = Request.Query["merchant_order_id"].ToString(),
-            TransactionId    = Request.Query["id"].ToString(),
-            AmountCents      = Request.Query["amount_cents"].ToString(),
-            CreatedAt        = Request.Query["created_at"].ToString(),
-            Currency         = Request.Query["currency"].ToString(),
-            ErrorOccured     = Request.Query["error_occured"].ToString(),
-            HasParentTransaction  = Request.Query["has_parent_transaction"].ToString(),
-            IntegrationId    = Request.Query["integration_id"].ToString(),
-            IsCaptured       = Request.Query["is_captured"].ToString(),
-            IsRefundedTransaction = Request.Query["is_refunded_transaction"].ToString(),
-            IsStandalonePayment   = Request.Query["is_standalone_payment"].ToString(),
-            IsVoided         = Request.Query["is_voided"].ToString(),
-            OwnerUsername    = Request.Query["owner"].ToString(),
-            PendingStatus    = Request.Query["pending"].ToString(),
-            SourceDataPan    = Request.Query["source_data.pan"].ToString(),
-            SourceDataSubType = Request.Query["source_data.sub_type"].ToString(),
-            SourceDataType   = Request.Query["source_data.type"].ToString()
+            success              = bool.TryParse(Request.Query["success"], out var s) && s,
+            id                   = Request.Query["id"].ToString(),
+            order                = int.TryParse(Request.Query["order"], out var o) ? o : 0,
+            merchant_order_id    = Request.Query["merchant_order_id"].ToString(),
+            amount_cents         = Request.Query["amount_cents"].ToString(),
+            created_at           = Request.Query["created_at"].ToString(),
+            currency             = Request.Query["currency"].ToString(),
+            error_occured        = Request.Query["error_occured"].ToString(),
+            has_parent_transaction = Request.Query["has_parent_transaction"].ToString(),
+            integration_id       = Request.Query["integration_id"].ToString(),
+            is_captured          = Request.Query["is_captured"].ToString(),
+            is_standalone_payment = Request.Query["is_standalone_payment"].ToString(),
+            is_voided            = Request.Query["is_voided"].ToString(),
+            owner                = Request.Query["owner"].ToString(),
+            pending              = Request.Query["pending"].ToString(),
+            source_data_pan      = Request.Query["source_data.pan"].ToString(),
+            source_data_sub_type = Request.Query["source_data.sub_type"].ToString(),
+            source_data_type     = Request.Query["source_data.type"].ToString()
         };
         
         private PaymobCallbackDTO MapFromWebhookQuery() => new()
         {
-            Success = bool.TryParse(Request.Query["success"], out var s) && s,
-            Id = Request.Query["id"].ToString(),
-            OrderId = int.TryParse(Request.Query["order"], out var orderId) ? orderId : 0,
-            MerchantOrderId = Request.Query["merchant_order_id"].ToString(),
-            TransactionId = !string.IsNullOrWhiteSpace(Request.Query["transaction_id"])
-                ? Request.Query["transaction_id"].ToString()
-                : Request.Query["id"].ToString(),
-            AmountCents = Request.Query["amount_cents"].ToString(),
-            CreatedAt = Request.Query["created_at"].ToString(),
-            Currency = Request.Query["currency"].ToString(),
-            ErrorOccured = Request.Query["error_occured"].ToString(),
-            HasParentTransaction = Request.Query["has_parent_transaction"].ToString(),
-            IntegrationId = Request.Query["integration_id"].ToString(),
-            IsCaptured = Request.Query["is_captured"].ToString(),
-            IsRefundedTransaction = Request.Query["is_refunded_transaction"].ToString(),
-            IsStandalonePayment = Request.Query["is_standalone_payment"].ToString(),
-            IsVoided = Request.Query["is_voided"].ToString(),
-            OwnerUsername = Request.Query["owner"].ToString(),
-            PendingStatus = Request.Query["pending"].ToString(),
-            SourceDataPan = Request.Query["source_data.pan"].ToString(),
-            SourceDataSubType = Request.Query["source_data.sub_type"].ToString(),
-            SourceDataType = Request.Query["source_data.type"].ToString()
+          success = bool.TryParse(Request.Query["success"], out var s) && s,
+            id = Request.Query["id"].ToString(),
+            order = int.TryParse(Request.Query["order"], out var oId) ? oId : 0,
+            merchant_order_id = Request.Query["merchant_order_id"].ToString(),
+            
+            amount_cents = Request.Query["amount_cents"].ToString(),
+            created_at = Request.Query["created_at"].ToString(),
+            currency = Request.Query["currency"].ToString(),
+            error_occured = Request.Query["error_occured"].ToString(),
+            has_parent_transaction = Request.Query["has_parent_transaction"].ToString(),
+            integration_id = Request.Query["integration_id"].ToString(),
+            is_captured = Request.Query["is_captured"].ToString(),
+            is_standalone_payment = Request.Query["is_standalone_payment"].ToString(),
+            is_voided = Request.Query["is_voided"].ToString(),
+            owner = Request.Query["owner"].ToString(),
+            pending = Request.Query["pending"].ToString(),
+            
+            source_data_pan = Request.Query["source_data.pan"].ToString(),
+            source_data_sub_type = Request.Query["source_data.sub_type"].ToString(),
+            source_data_type = Request.Query["source_data.type"].ToString()
         };
         
         
