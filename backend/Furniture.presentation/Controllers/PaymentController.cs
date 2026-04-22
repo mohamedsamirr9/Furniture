@@ -47,6 +47,10 @@ namespace Furniture.presentation.Controllers
         {
             var callback = MapFromQuery();
 
+            _logger.LogInformation(
+                "Paymob callback received: OrderId={OrderId}, MerchantOrderId={MerchantOrderId}, Success={Success}, Id={TransactionId}",
+                callback.OrderId, callback.MerchantOrderId, callback.Success, callback.Id);
+
             if (!callback.Success)
             {
                 _logger.LogInformation("Paymob callback: payment not successful, acknowledging");
@@ -70,7 +74,11 @@ namespace Furniture.presentation.Controllers
 
             try
             {
+                _logger.LogDebug("Processing callback with HMAC present: {HasHmac}", !string.IsNullOrEmpty(hmac));
                 var success = await _paymentService.HandlePaymentCallbackAsync(callback, hmac ?? string.Empty);
+
+                _logger.LogInformation(
+                    "Paymob callback processed: Success={Success}", success);
 
                 return success
                     ? Ok(new { message = "Payment processed successfully" })
@@ -91,6 +99,10 @@ namespace Furniture.presentation.Controllers
         public async Task<IActionResult> PaymobWebhook([FromQuery] string hmac)
         {
             var callback = MapFromWebhookQuery();
+
+            _logger.LogInformation(
+                "Paymob webhook received: OrderId={OrderId}, MerchantOrderId={MerchantOrderId}, Success={Success}, Id={TransactionId}",
+                callback.OrderId, callback.MerchantOrderId, callback.Success, callback.Id);
 
             if (!callback.Success)
             {
@@ -115,7 +127,11 @@ namespace Furniture.presentation.Controllers
 
             try
             {
+                _logger.LogDebug("Processing webhook with HMAC present: {HasHmac}", !string.IsNullOrEmpty(hmac));
                 var success = await _paymentService.HandlePaymentCallbackAsync(callback, hmac ?? string.Empty);
+
+                _logger.LogInformation(
+                    "Paymob webhook processed: Success={Success}", success);
 
                 return success
                     ? Ok(new { message = "Webhook processed successfully" })

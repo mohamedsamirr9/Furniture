@@ -8,6 +8,7 @@ using Furniture.Services.Specifications;
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos.Payment;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Furniture.Services.Implementations
 {
@@ -17,17 +18,20 @@ namespace Furniture.Services.Implementations
         private readonly IConfiguration _config;
         private readonly HttpClient _httpClient;
         private readonly ISellerPaymentService _sellerPaymentService;
+        private readonly ILogger<PaymentService> _logger;
 
         public PaymentService(
             IUnitOfWork unitOfWork,
             IConfiguration config,
             IHttpClientFactory httpClientFactory,
-            ISellerPaymentService sellerPaymentService)
+            ISellerPaymentService sellerPaymentService,
+            ILogger<PaymentService> logger)
         {
             _unitOfWork = unitOfWork;
             _config = config;
             _httpClient = httpClientFactory.CreateClient("Paymob");
             _sellerPaymentService = sellerPaymentService;
+            _logger = logger;
         }
 
         
@@ -55,30 +59,65 @@ namespace Furniture.Services.Implementations
             return BuildPaymentResponse(orderId, order, paymentToken);
         }
 
-        public async Task<bool> HandlePaymentCallbackAsync(PaymobCallbackDTO callback, string hmac)
+       public async Task<bool> HandlePaymentCallbackAsync(PaymobCallbackDTO callback, string hmac)
         {
+            _logger.LogInformation(
+                "Paymob callback received: OrderId={OrderId}, Success={Success}, TransactionId={TransactionId}",
+                callback.OrderId, callback.Success, callback.Id);
+
             if (!VerifyHmac(callback, hmac))
+            {
+                _logger.LogWarning("HMAC verification failed for OrderId={OrderId}", callback.OrderId);
                 return false;
+            }
 
             if (!callback.Success)
+            {
+                _logger.LogInformation("Payment not successful for OrderId={OrderId}", callback.OrderId);
                 return false;
+            }
 
             var payment = await GetPaymentByPaymobOrderIdAsync(callback.OrderId.ToString());
 
             if (payment == null && !string.IsNullOrWhiteSpace(callback.MerchantOrderId))
+            {
                 payment = await GetPaymentByMerchantOrderIdStoredAsync(callback.MerchantOrderId);
+            }
 
             if (payment == null)
+            {
+                _logger.LogWarning(
+                    "Payment not found for OrderId={PaymobOrderId}, MerchantOrderId={MerchantOrderId}",
+                    callback.OrderId, callback.MerchantOrderId);
                 return false;
+            }
+
+            _logger.LogInformation(
+                "Found payment {PaymentId} for OrderId={InternalOrderId}, Status={Status}",
+                payment.Id, payment.OrderId, payment.Status);
 
             if (payment.Status == PaymentStatus.Completed)
+            {
+                _logger.LogInformation(
+                    "Payment already completed for OrderId={InternalOrderId}, acknowledging duplicate",
+                    payment.OrderId);
                 return true;
+            }
+
+            var existingPaymentForOrder = await GetExistingPaymentAsync(payment.OrderId);
+            if (existingPaymentForOrder != null && existingPaymentForOrder.Status == PaymentStatus.Completed)
+            {
+                _logger.LogInformation(
+                    "Internal OrderId={InternalOrderId} already has completed payment, acknowledging duplicate callback",
+                    payment.OrderId);
+                return true;
+            }
 
             await CompletePaymentAsync(payment, callback);
-
             await _unitOfWork.SaveChangesAsync();
-
             await _sellerPaymentService.ProcessPayoutsForOrderAsync(payment.OrderId);
+
+            _logger.LogInformation("Payment completed successfully for OrderId={InternalOrderId}", payment.OrderId);
 
             return true;
         }
@@ -190,7 +229,6 @@ namespace Furniture.Services.Implementations
             {
                 existingPayment.PaymobTransactionId = paymentToken;
                 existingPayment.PaymobOrderId = paymobOrderId;
-                existingPayment.MerchantOrderId = merchantOrderId;
                 existingPayment.CreatedAt = DateTime.UtcNow;
                 _unitOfWork.GetRepository<Payment, int>().Update(existingPayment);
             }
@@ -375,17 +413,21 @@ namespace Furniture.Services.Implementations
             var result = await response.Content.ReadFromJsonAsync<PaymobPaymentKeyResponse>();
             return result!.Token;
         }
- 
 
-#if DEBUG
-        private bool VerifyHmac(PaymobCallbackDTO callback, string receivedHmac)
-            => true;
-#else
         private bool VerifyHmac(PaymobCallbackDTO callback, string receivedHmac)
         {
             var hmacSecret = _config["Paymob:HmacSecret"];
             if (string.IsNullOrEmpty(hmacSecret))
+            {
+                _logger.LogError("HMAC verification failed: HmacSecret is not configured");
                 return false;
+            }
+
+            if (string.IsNullOrEmpty(receivedHmac))
+            {
+                _logger.LogWarning("HMAC verification failed: received HMAC is empty");
+                return false;
+            }
 
             var dataString = string.Concat(
                 callback.AmountCents,
@@ -412,8 +454,16 @@ namespace Furniture.Services.Implementations
                 hmac.ComputeHash(Encoding.UTF8.GetBytes(dataString)))
                 .Replace("-", "").ToLower();
 
-            return computedHmac == receivedHmac.ToLower();
+            var isValid = computedHmac == receivedHmac.ToLower();
+
+            if (!isValid)
+            {
+                _logger.LogWarning(
+                    "HMAC verification failed. Expected: {Expected}, Received: {Received}, Data: {Data}",
+                    computedHmac, receivedHmac, dataString);
+            }
+
+            return isValid;
         }
-#endif
     }
 }
