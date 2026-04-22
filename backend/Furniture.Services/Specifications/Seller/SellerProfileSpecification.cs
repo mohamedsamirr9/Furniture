@@ -4,7 +4,6 @@ namespace Furniture.Services.Specifications.Seller;
 
 public class SellerProfileSpecification : BaseSpecificationscs<SellerProfile, int>
 {
-    // جلب كل الـ Sellers
     public SellerProfileSpecification()
         : base(null)
     {
@@ -12,7 +11,6 @@ public class SellerProfileSpecification : BaseSpecificationscs<SellerProfile, in
         AddOrderByDescending(s => s.CreatedAt);
     }
 
-    // جلب Sellers بحالة معينة
     public SellerProfileSpecification(bool isVerified)
         : base(s => s.IsVerified == isVerified)
     {

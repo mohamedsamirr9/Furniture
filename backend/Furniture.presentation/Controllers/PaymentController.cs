@@ -17,7 +17,7 @@ namespace Furniture.presentation.Controllers
             _paymentService = paymentService;
         }
 
-       
+        
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentRequestDTO dto)
@@ -38,19 +38,56 @@ namespace Furniture.presentation.Controllers
         }
 
         
-        [HttpPost("callback")]
+        [HttpGet("callback")]
         [AllowAnonymous]
-        public async Task<IActionResult> PaymobCallback([FromBody] PaymobCallbackDTO callback)
+        public async Task<IActionResult> PaymobCallback([FromQuery] string hmac)
         {
-            var success = await _paymentService.HandlePaymentCallbackAsync(callback);
+            if (string.IsNullOrWhiteSpace(hmac))
+                return Unauthorized(new { message = "HMAC is missing" });
 
-            if (success)
-                return Ok(new { message = "Payment processed successfully" });
+            var callback = MapFromQuery();
 
-            return BadRequest(new { message = "Payment processing failed" });
+            try
+            {
+                var success = await _paymentService.HandlePaymentCallbackAsync(callback, hmac);
+
+                return success
+                    ? Ok(new { message = "Payment processed successfully" })
+                    : BadRequest(new { message = "Payment processing failed" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         
+
+        [HttpPost("webhook")]
+        [AllowAnonymous]
+        public async Task<IActionResult> PaymobWebhook(
+            [FromBody] PaymobCallbackDTO callback,
+            [FromQuery] string hmac)
+        {
+            if (string.IsNullOrEmpty(hmac))
+                return Unauthorized(new { message = "HMAC is missing" });
+
+            try
+            {
+                var success = await _paymentService.HandlePaymentCallbackAsync(callback, hmac);
+
+                return success
+                    ? Ok(new { message = "Webhook processed successfully" })
+                    : BadRequest(new { message = "Webhook processing failed" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        
+
         [HttpGet("verify/{orderId:int}")]
         [Authorize]
         public async Task<IActionResult> VerifyPayment(int orderId)
@@ -58,5 +95,36 @@ namespace Furniture.presentation.Controllers
             var isPaid = await _paymentService.VerifyPaymentAsync(orderId);
             return Ok(new { isPaid });
         }
+
+       
+        #region Private Helpers
+
+        
+        private PaymobCallbackDTO MapFromQuery() => new()
+        {
+            Success          = bool.TryParse(Request.Query["success"], out var s) && s,
+            Id               = Request.Query["id"].ToString(),
+            OrderId          = int.TryParse(Request.Query["order"], out var o) ? o : 0,
+            TransactionId    = Request.Query["id"].ToString(),
+            AmountCents      = Request.Query["amount_cents"].ToString(),
+            CreatedAt        = Request.Query["created_at"].ToString(),
+            Currency         = Request.Query["currency"].ToString(),
+            ErrorOccured     = Request.Query["error_occured"].ToString(),
+            HasParentTransaction  = Request.Query["has_parent_transaction"].ToString(),
+            IntegrationId    = Request.Query["integration_id"].ToString(),
+            IsCaptured       = Request.Query["is_captured"].ToString(),
+            IsRefundedTransaction = Request.Query["is_refunded_transaction"].ToString(),
+            IsStandalonePayment   = Request.Query["is_standalone_payment"].ToString(),
+            IsVoided         = Request.Query["is_voided"].ToString(),
+            OwnerUsername    = Request.Query["owner"].ToString(),
+            PendingStatus    = Request.Query["pending"].ToString(),
+            SourceDataPan    = Request.Query["source_data.pan"].ToString(),
+            SourceDataSubType = Request.Query["source_data.sub_type"].ToString(),
+            SourceDataType   = Request.Query["source_data.type"].ToString()
+        };
+        
+        
+        #endregion
+        
     }
 }

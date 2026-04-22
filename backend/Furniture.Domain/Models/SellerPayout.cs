@@ -1,7 +1,6 @@
 using Furniture.Domain.Models.Enum;
 
 namespace Furniture.Domain.Models
-
 {
     public class SellerPayout
     {
@@ -13,12 +12,16 @@ namespace Furniture.Domain.Models
         public decimal NetAmount { get; set; }
         public PayoutStatus Status { get; set; }
         public DateTime? PaidAt { get; set; }
+        
         public string? PaymobTransactionId { get; set; }
+        
+        public string? PayoutTransactionId { get; set; }
+        public string? FailureReason { get; set; }
+        public DateTime? ProcessedAt { get; set; }
+        
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        
-        
+
         public SellerProfile SellerProfile { get; set; } = null!;
         public Order Order { get; set; } = null!;
-
     }
 }

@@ -168,8 +168,18 @@ namespace Furniture.web
             // Paymob
             builder.Services.AddHttpClient("Paymob", client =>
             {
-                client.BaseAddress = new Uri("https://accept.paymob.com/api/");
-                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.BaseAddress = new Uri("https://accept.paymob.com/");
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+
+            builder.Services.AddHttpClient("PaymobPayouts", client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+
+            builder.Services.AddHttpClient("PaymobPayoutsAuth", client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(30);
             });
 
             // =========================
@@ -209,6 +219,7 @@ namespace Furniture.web
             builder.Services.AddScoped<IShippingCalculatorService, ShippingCalculatorService>();
 
             builder.Services.AddScoped<ISellerService, SellerService>();
+            builder.Services.AddScoped<ISellerPaymentService, SellerPaymentService>();
 
             // =========================
             // AI Integration Services

@@ -4,14 +4,10 @@ namespace Furniture.shared.Dtos.Seller;
 
 public class CreateSellerProfileDTO
 {
-    [Required]
     public string StoreName { get; set; } = null!;
-        
     public string? StoreDescription { get; set; }
-        
-    [Required]
-    public string BankName { get; set; } = null!;
-        
-    [Required]
-    public string BankAccountNumber { get; set; } = null!;
+    public string? BankName { get; set; }
+    public string? BankAccountNumber { get; set; }
+    public string? BankCode { get; set; }    
+    public string? NationalId { get; set; }  
 }

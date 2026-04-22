@@ -7,28 +7,21 @@ using System.Security.Claims;
 namespace Furniture.presentation.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class SellerPaymentController : ControllerBase
+    [Route("api/sellers")]
+    [Authorize]
+    public class SellerPaymentsController : ControllerBase
     {
         private readonly ISellerPaymentService _sellerPaymentService;
 
-        public SellerPaymentController(ISellerPaymentService sellerPaymentService)
+        public SellerPaymentsController(ISellerPaymentService sellerPaymentService)
         {
             _sellerPaymentService = sellerPaymentService;
         }
 
-        // ============================================
-        // Seller Endpoints
-        // ============================================
 
-        /// <summary>
-        /// Seller يسجل بيانات متجره
-        /// POST: api/sellers/profile
-        /// </summary>
         [HttpPost("profile")]
-        [Authorize(Roles = "Seller")]
-        public async Task<IActionResult> CreateProfile(
-            [FromBody] CreateSellerProfileDTO dto)
+        [Authorize(Roles = "seller")]
+        public async Task<IActionResult> CreateProfile([FromBody] CreateSellerProfileDTO dto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
@@ -45,12 +38,8 @@ namespace Furniture.presentation.Controllers
             }
         }
 
-        /// <summary>
-        /// Seller يشوف بيانات متجره
-        /// GET: api/sellers/profile
-        /// </summary>
         [HttpGet("profile")]
-        [Authorize(Roles = "Seller")]
+        [Authorize(Roles = "seller")]
         public async Task<IActionResult> GetMyProfile()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -65,12 +54,8 @@ namespace Furniture.presentation.Controllers
             return Ok(result);
         }
 
-        /// <summary>
-        /// Seller يشوف أرباحه
-        /// GET: api/sellers/earnings
-        /// </summary>
         [HttpGet("earnings")]
-        [Authorize(Roles = "Seller")]
+        [Authorize(Roles = "seller")]
         public async Task<IActionResult> GetEarnings()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -88,40 +73,26 @@ namespace Furniture.presentation.Controllers
             }
         }
 
-        // ============================================
-        // Admin Endpoints
-        // ============================================
+        
 
-        /// <summary>
-        /// Admin يشوف كل الـ Sellers
-        /// GET: api/sellers/admin/all
-        /// </summary>
         [HttpGet("admin/all")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAllSellers()
         {
             var result = await _sellerPaymentService.GetAllSellersAsync();
             return Ok(result);
         }
 
-        /// <summary>
-        /// Admin يشوف Sellers في انتظار الموافقة
-        /// GET: api/sellers/admin/pending
-        /// </summary>
         [HttpGet("admin/pending")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetPendingSellers()
         {
             var result = await _sellerPaymentService.GetPendingSellersAsync();
             return Ok(result);
         }
 
-        /// <summary>
-        /// Admin يوافق على Seller
-        /// PUT: api/sellers/admin/5/verify
-        /// </summary>
         [HttpPut("admin/{sellerId:int}/verify")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> VerifySeller(int sellerId)
         {
             try
@@ -131,9 +102,28 @@ namespace Furniture.presentation.Controllers
                 if (!result)
                     return NotFound(new { message = "Seller not found" });
 
-                return Ok(new { message = "Seller verified and Sub-merchant created!" });
+                return Ok(new { message = "Seller verified successfully" });
             }
             catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("admin/payouts/{payoutId:int}/retry")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> RetryPayout(int payoutId)
+        {
+            try
+            {
+                var result = await _sellerPaymentService.RetryFailedPayoutAsync(payoutId);
+
+                if (!result)
+                    return BadRequest(new { message = "Payout not found or not in failed state" });
+
+                return Ok(new { message = "Payout retried successfully" });
+            }
+            catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }

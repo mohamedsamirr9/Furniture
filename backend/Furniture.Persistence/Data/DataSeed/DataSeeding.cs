@@ -57,11 +57,27 @@ namespace Furniture.Persistence.Data.DataSeed
                 IsConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
+            
+            var buyer = new ApplicationUser
+            {
+                Id = "buyer-1",
+                UserName = "buyer@test.com",
+                Email = "buyer@test.com",
+                Name = "Test Buyer",
+                Address = "Cairo",
+                Role = Roles.buyer,
+                EmailConfirmed = true,
+                IsConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+            
 
             var adminResult = await _userManager.CreateAsync(admin, "Admin@123");
             var sellerResult = await _userManager.CreateAsync(seller, "Seller@123");
+            var buyerResult = await _userManager.CreateAsync(buyer, "Buyer@123");
 
-            if (!adminResult.Succeeded || !sellerResult.Succeeded)
+
+            if (!adminResult.Succeeded || !sellerResult.Succeeded  || !buyerResult.Succeeded)
             {
                 throw new Exception(
                     string.Join(", ",
@@ -102,26 +118,39 @@ namespace Furniture.Persistence.Data.DataSeed
 
         private async Task SeedDataFromJsonAsync<T>(string fileName, DbSet<T> dbset) where T : class
         {
-            var filePath = @"..\Furniture.Persistence\Data\DataSeed\JsonFiles\"+fileName;
-            if (!File.Exists(filePath)) throw new FileNotFoundException();
+            var filePath = Path.GetFullPath(Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "..",
+                "Furniture.Persistence",
+                "Data",
+                "DataSeed",
+                "JsonFiles",
+                fileName));
+
+            Console.WriteLine($"Looking for seed file at: {filePath}");
+
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException($"Seed file not found: {filePath}");
+
             try
             {
-                using var dataStream = File.OpenRead(filePath);
-                var data =await JsonSerializer.DeserializeAsync<List<T>>(dataStream, new JsonSerializerOptions()
+                await using var dataStream = File.OpenRead(filePath);
+
+                var data = await JsonSerializer.DeserializeAsync<List<T>>(
+                    dataStream,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                if (data is not null && data.Any())
                 {
-                    PropertyNameCaseInsensitive = true,
-                });
-                if(data is not null)
-                {
-                   await dbset.AddRangeAsync(data);
+                    await dbset.AddRangeAsync(data);
                 }
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine($"Error while reading json: {ex}");
-                return;
             }
-        }
-    }
+        }    }
 }

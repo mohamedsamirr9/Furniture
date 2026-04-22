@@ -4,7 +4,6 @@ namespace Furniture.Services.Specifications
 {
     public class SellerPayoutSpecification : BaseSpecificationscs<SellerPayout, int>
     {
-        // جلب Payouts لـ Seller معين
         public SellerPayoutSpecification(int sellerProfileId)
             : base(p => p.SellerProfileId == sellerProfileId)
         {
