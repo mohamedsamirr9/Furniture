@@ -131,6 +131,14 @@ namespace Furniture.presentation.Controllers
                 _logger.LogInformation(
                     "Paymob webhook processed: Success={Success}", success);
 
+                    if (HttpContext.Request.Method == "GET")
+                {
+                    var parts = callback.merchant_order_id.Split('-');
+                    string internalOrderId = parts.Length > 1 ? parts[1] : callback.order.ToString();
+
+                    return Redirect($"https://furniture-mauve-iota.vercel.app/orders/{internalOrderId}");
+                }
+
                 return success
                     ? Ok(new { message = "Webhook processed successfully" })
                     : Ok(new { message = "Webhook acknowledged but payment not found or already processed" });
