@@ -92,64 +92,67 @@ namespace Furniture.presentation.Controllers
 
         
 
-        [HttpGet("webhook")]
-        [HttpPost("webhook")]
-        [AllowAnonymous]
-        public async Task<IActionResult> PaymobWebhook([FromQuery] string hmac)
+       [HttpGet("webhook")]
+[HttpPost("post-webhook")] // يفضل فصل المسميات برمجياً لكن سأبقيها كما هي إذا كنتِ تفضلين ذلك
+[AllowAnonymous]
+public async Task<IActionResult> PaymobWebhook([FromQuery] string hmac)
+{
+    var callback = MapFromWebhookQuery();
+
+    _logger.LogInformation(
+        "Paymob webhook received: OrderId={OrderId}, MerchantOrderId={MerchantOrderId}, Success={Success}, Id={TransactionId}",
+        callback.order, callback.merchant_order_id, callback.success, callback.id);
+
+    var parts = callback.merchant_order_id?.Split('-');
+    string internalOrderId = (parts != null && parts.Length > 1) ? parts[1] : callback.order.ToString();
+
+    if (!callback.success)
+    {
+        _logger.LogInformation("Paymob webhook: payment not successful");
+
+        if (HttpContext.Request.Method == "GET")
         {
-            var callback = MapFromWebhookQuery();
 
-            _logger.LogInformation(
-                "Paymob webhook received: OrderId={OrderId}, MerchantOrderId={MerchantOrderId}, Success={Success}, Id={TransactionId}",
-                callback.order, callback.merchant_order_id, callback.success, callback.id); 
-            if (!callback.success)
-            {
-                _logger.LogInformation("Paymob webhook: payment not successful, acknowledging");
-                return Ok(new { message = "Webhook acknowledged (payment not successful)" });
-            }
-
-            if (callback.order <= 0)
-                _logger.LogWarning("Paymob webhook: missing or invalid order id - acknowledging anyway");
-
-            if (string.IsNullOrWhiteSpace(callback.id))
-                _logger.LogWarning("Paymob webhook: missing transaction_id - acknowledging anyway");
-
-            if (string.IsNullOrWhiteSpace(callback.merchant_order_id))
-                _logger.LogWarning("Paymob webhook: missing merchant_order_id - acknowledging anyway");
-
-            if (callback.order <= 0 && string.IsNullOrWhiteSpace(callback.merchant_order_id))
-            {
-                _logger.LogWarning("Paymob webhook: no order id or merchant order id provided, cannot process");
-                return Ok(new { message = "Webhook acknowledged (insufficient data)" });
-            }
-
-            try
-            {
-                _logger.LogDebug("Processing webhook with HMAC present: {HasHmac}", !string.IsNullOrEmpty(hmac));
-                var success = await _paymentService.HandlePaymentCallbackAsync(callback, hmac ?? string.Empty);
-
-                _logger.LogInformation(
-                    "Paymob webhook processed: Success={Success}", success);
-
-                    if (HttpContext.Request.Method == "GET")
-                {
-                    var parts = callback.merchant_order_id.Split('-');
-                    string internalOrderId = parts.Length > 1 ? parts[1] : callback.order.ToString();
-
-                    return Redirect($"https://furniture-mauve-iota.vercel.app/orders/{internalOrderId}");
-                }
-
-                return success
-                    ? Ok(new { message = "Webhook processed successfully" })
-                    : Ok(new { message = "Webhook acknowledged but payment not found or already processed" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Paymob webhook: error processing callback");
-                return Ok(new { message = "Webhook acknowledged (processing error)" });
-            }
+            return Redirect($"http://localhost:4200/orders/pay?orderId={internalOrderId}&status=failed");
         }
 
+        return Ok(new { message = "Webhook acknowledged (payment not successful)" });
+    }
+
+    if (callback.order <= 0 && string.IsNullOrWhiteSpace(callback.merchant_order_id))
+    {
+        _logger.LogWarning("Paymob webhook: no order id provided");
+        return Ok(new { message = "Webhook acknowledged (insufficient data)" });
+    }
+
+    try
+    {
+        _logger.LogDebug("Processing webhook with HMAC present: {HasHmac}", !string.IsNullOrEmpty(hmac));
+        var success = await _paymentService.HandlePaymentCallbackAsync(callback, hmac ?? string.Empty);
+
+        _logger.LogInformation("Paymob webhook processed: Success={Success}", success);
+
+        if (HttpContext.Request.Method == "GET")
+        {
+            return Redirect($"http://localhost:4200/orders/{internalOrderId}?status=success");
+        }
+
+        return success
+            ? Ok(new { message = "Webhook processed successfully" })
+            : Ok(new { message = "Webhook acknowledged but already processed" });
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Paymob webhook: error processing callback");
+        
+        if (HttpContext.Request.Method == "GET")
+        {
+             return Redirect($"http://localhost:4200/orders/pay?orderId={internalOrderId}&status=error");
+        }
+        
+        return Ok(new { message = "Webhook acknowledged (processing error)" });
+    }
+}
         
 
         [HttpGet("verify/{orderId:int}")]

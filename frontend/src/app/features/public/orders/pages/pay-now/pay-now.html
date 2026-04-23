@@ -6,37 +6,32 @@
         <button class="btn btn-outline-dark" (click)="goToOrders()">My orders</button>
       </div>
 
-      <div *ngIf="errorMessage" class="alert alert-danger d-flex justify-content-between align-items-center">
-        <span>{{ errorMessage }}</span>
-        <button class="btn btn-sm btn-outline-danger" (click)="checkAgain()" [disabled]="isLoading || isVerifying">
-          Try again
+      <div
+        *ngIf="errorMessage"
+        class="alert alert-danger d-flex align-items-center justify-content-between shadow-sm mb-3"
+      >
+        <div>
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          <strong>Payment Issue:</strong> {{ errorMessage }}
+        </div>
+        <button *ngIf="!isLoading" class="btn btn-sm btn-danger" (click)="startPaymentFlow()">
+          Try Again
         </button>
       </div>
 
-      <div *ngIf="isLoading" class="alert alert-info">
-        Preparing payment...
-      </div>
+      <div *ngIf="isLoading" class="alert alert-info">Preparing payment...</div>
 
       <div *ngIf="!isLoading && safePaymentUrl" class="card border-0 shadow-sm">
         <div class="card-body p-0">
           <iframe
             title="Payment"
             [src]="safePaymentUrl"
-            style="width: 100%; height: 75vh; border: 0;"
+            style="width: 100%; height: 75vh; border: 0"
             referrerpolicy="no-referrer"
             allow="payment *"
           ></iframe>
-        </div>
-        <div class="card-footer d-flex justify-content-between align-items-center">
-          <small class="text-muted">
-            {{ isVerifying ? 'Waiting for confirmation…' : 'If you completed payment, click “Check status”.' }}
-          </small>
-          <button class="btn btn-dark" (click)="checkAgain()" [disabled]="isLoading || isVerifying">
-            Check status
-          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
-
