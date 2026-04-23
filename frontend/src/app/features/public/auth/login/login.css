@@ -160,3 +160,51 @@
     padding: 20px !important;
   }
 }
+
+/* SPINNER */
+.login-page .spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ERROR TEXT (field validation) */
+.login-page .error-text {
+  font-size: 12px;
+  color: #c0392b;
+  padding-left: 4px;
+}
+
+/* INPUT ERROR BORDER */
+.login-page .input-error {
+  border-color: #e74c3c !important;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.1) !important;
+}
+
+/* SERVER ERROR ALERT */
+.login-page .alert-error {
+  background: #fdf0ee;
+  border: 1.5px solid #e74c3c;
+  color: #c0392b;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* DISABLED BUTTON */
+.login-page .btn-main:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

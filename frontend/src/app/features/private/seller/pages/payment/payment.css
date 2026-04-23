@@ -1,34 +1,349 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-:host { font-family: 'DM Sans', sans-serif; }
+:host {
+  font-family: 'DM Sans', sans-serif;
+  display: block;
+  padding: 0;
+}
+
+/* ── Page Header ── */
+.page-header {
+  margin-bottom: 32px;
+}
+
+.page-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #7a6652;
+  background: #f0ebe3;
+  border: 1px solid #e0d5c8;
+  border-radius: 999px;
+  padding: 5px 12px;
+  margin-bottom: 16px;
+}
 
 .page-header h1 {
   font-family: 'Playfair Display', serif;
-  font-size: 32px;
+  font-size: 40px;
   font-weight: 600;
   color: #1a1209;
-  margin: 0 0 20px;
+  margin: 0 0 8px;
+  line-height: 1.1;
 }
 
-.divider {
-  border: none;
-  border-top: 1px solid #ede5d8;
-  margin: 0 -40px 32px -40px;
+.page-sub {
+  font-size: 14px;
+  color: #8a7560;
+  margin: 0;
+  max-width: 460px;
 }
 
-.table-card {
-  background: #ffffff;
-  border: 1px solid #ede5d8;
+/* ── Summary Row ── */
+.summary-row {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.summary-card {
   border-radius: 16px;
-  padding: 28px;
-  box-shadow: 0 2px 12px rgba(44,26,14,0.05);
+  padding: 24px 28px;
+  position: relative;
+  overflow: hidden;
 }
 
-.card-title {
-  font-size: 16px;
+.summary-card.dark {
+  background: #2c1a0e;
+  color: #f5ede0;
+}
+
+.summary-card.light {
+  background: #ffffff;
+  border: 1px solid #e8dfd4;
+  color: #1a1209;
+}
+
+.summary-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.summary-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.12);
+}
+
+.summary-card.light .summary-icon {
+  background: #f0ebe3;
+  color: #7a6652;
+}
+
+.summary-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* ── Content Row ── */
+.content-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ── Bank Card ── */
+.bank-card {
+  background: #ffffff;
+  border: 1px solid #e8dfd4;
+  border-radius: 20px;
+  padding: 32px;
+}
+
+.bank-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;
+}
+
+.bank-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1209;
+  margin: 0 0 6px;
+}
+
+.bank-sub {
+  font-size: 13px;
+  color: #8a7560;
+  margin: 0;
+}
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f0faf4;
+  color: #2d7a4f;
+  border: 1px solid #a7dfbf;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group.full {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8a7560;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.form-input {
+  border: 1px solid #e0d5c8;
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: #1a1209;
+  background: #fdfaf7;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.bank-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #f0ebe3;
+  gap: 16px;
+}
+
+.bank-disclaimer {
+  font-size: 12px;
+  color: #a08060;
+  margin: 0;
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+.save-btn {
+  background: #2c1a0e;
+  color: #f5ede0;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.save-btn:hover {
+  background: #4a2e18;
+}
+
+/* ── Payouts Card ── */
+.payouts-card {
+  background: #ffffff;
+  border: 1px solid #e8dfd4;
+  border-radius: 20px;
+  padding: 28px;
+}
+
+.payouts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.payouts-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1209;
+  margin: 0;
+}
+
+.payouts-period {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #a08060;
+}
+
+.payout-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 16px;
+}
+
+.payout-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  background: #fdfaf7;
+  border-radius: 10px;
+}
+
+.payout-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.payout-id {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1209;
+}
+
+.payout-date {
+  font-size: 12px;
+  color: #a08060;
+}
+
+.payout-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.payout-amount {
+  font-size: 15px;
   font-weight: 700;
   color: #1a1209;
-  margin-bottom: 20px;
+  font-family: 'Playfair Display', serif;
+}
+
+.payout-status {
+  font-size: 11px;
+  font-weight: 700;
+  color: #c47a2e;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.view-history {
+  display: block;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 500;
+  color: #7a6652;
+  text-decoration: none;
+  cursor: pointer;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0ebe3;
+}
+
+.view-history:hover {
+  color: #2c1a0e;
+}
+
+/* ── Payments Table ── */
+.table-section {
+  margin-top: 4px;
+}
+
+.table-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1209;
+  margin: 0 0 14px;
 }
 
 .table {
@@ -38,26 +353,30 @@
 
 .table th {
   text-align: left;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: #a08060;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  padding: 10px 16px;
+  padding: 8px 10px;
   border-bottom: 1px solid #ede5d8;
 }
 
 .table td {
-  padding: 18px 16px;
-  font-size: 14px;
+  padding: 14px 10px;
+  font-size: 13px;
   color: #1a1209;
   border-bottom: 1px solid #f5efe8;
 }
 
+.table tr:last-child td {
+  border-bottom: none;
+}
+
 .badge {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  padding: 5px 14px;
+  padding: 4px 12px;
   border-radius: 999px;
   display: inline-block;
 }
@@ -72,4 +391,45 @@
   background: #fef2f2;
   color: #991b1b;
   border: 1px solid #fecaca;
+}
+/* ── Add Payout Form ── */
+.add-payout-form {
+  margin: 12px 0 16px;
+  padding: 14px;
+  background: #fdfaf7;
+  border: 1px dashed #d8cfc5;
+  border-radius: 12px;
+}
+
+.add-payout-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.form-input.small {
+  padding: 8px 10px;
+  font-size: 13px;
+  flex: 1;
+}
+
+.add-btn {
+  background: #2c1a0e;
+  color: #f5ede0;
+  border: none;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  font-weight: 300;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.add-btn:hover {
+  background: #4a2e18;
 }

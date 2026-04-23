@@ -5,7 +5,12 @@
 ══════════════════════════════════════ */
 :host { font-family: 'DM Sans', sans-serif; }
 body {
+  background-color: #daccbb;
+}
+:host {
+  display: block;
   background-color: #faf7f4;
+  min-height: 100vh;
 }
 /* ══════════════════════════════════════
    PAGE HEADER
@@ -164,7 +169,7 @@ body {
   position: sticky;
   top: 90px;
   background: #fdfaf7;
-  border: 1px solid #ede5d8;
+  border: 1px solid #d8cdb9;
   border-radius: 20px;
   padding: 2rem 1.75rem;
   min-height: 520px;

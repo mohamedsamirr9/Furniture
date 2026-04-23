@@ -16,6 +16,7 @@ export class Verify {
   otp: string[] = ['', '', '', '', '', ''];
   email: string = '';
   isLoading = false;
+  source: string = ''; 
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
@@ -26,6 +27,7 @@ export class Verify {
   ) {
     this.route.queryParams.subscribe(params => {
       this.email = params['email'] || '';
+      this.source = params['source'] || '';
     });
   }
 
@@ -60,10 +62,14 @@ export class Verify {
     this.successMessage = null;
 
     this.authService.verifyOtp(this.email, otpCode).subscribe({
-      next: () => {
+     next: () => {
         this.isLoading = false;
-        this.successMessage = 'Email verified successfully! Redirecting to login...';
-        setTimeout(() => this.router.navigate(['/login']), 2000);
+        if (this.source === 'forgot-password') {
+          this.successMessage = 'Code verified! Redirecting to login...';
+          setTimeout(() => this.router.navigate(['/login']), 2000);
+        } else {
+          this.router.navigate(['/success']);
+        }
       },
       error: (err: any) => {
         this.isLoading = false;

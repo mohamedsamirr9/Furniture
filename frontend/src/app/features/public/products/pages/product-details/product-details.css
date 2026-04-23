@@ -2,7 +2,11 @@
 
 :host { font-family: 'DM Sans', sans-serif; }
 
-
+:host {
+  display: block;
+  background-color: #faf7f4;
+  min-height: 100vh;
+}
 .back-link {
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
