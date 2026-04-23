@@ -30,6 +30,7 @@ namespace Furniture.Persistence.Data.DataSeed
         {
             try
             {
+                await _dbContext.Database.MigrateAsync();
                 if (!await _userManager.Users.AnyAsync())
             {
                 var admin = new ApplicationUser
