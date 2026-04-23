@@ -86,7 +86,7 @@
                 Joined {{ seller.joinDate }}
               </span>
               <span class="meta-item rating">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#3d6b4f" stroke="#3d6b4f" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#8B6F4E" stroke="#8B6F4E" stroke-width="2">
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                 </svg>
                 {{ seller.rating }} ({{ seller.reviewsCount }} reviews)
@@ -132,7 +132,7 @@
 
         <div class="stats">
           <div class="stat-card">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3d6b4f" stroke-width="2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B6F4E" stroke-width="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
               <circle cx="12" cy="7" r="4"/>
             </svg>
@@ -140,14 +140,14 @@
             <span class="stat-label">Completed</span>
           </div>
           <div class="stat-card">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3d6b4f" stroke-width="2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B6F4E" stroke-width="2">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
             </svg>
             <span class="stat-value">{{ seller.rating }}</span>
             <span class="stat-label">Rating</span>
           </div>
           <div class="stat-card">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3d6b4f" stroke-width="2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B6F4E" stroke-width="2">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
             <span class="stat-value">{{ seller.reviewsCount }}</span>
@@ -160,7 +160,7 @@
     <div class="portfolio-section">
       <div class="portfolio-header">
         <div class="portfolio-title-wrap">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3d6b4f" stroke-width="2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B6F4E" stroke-width="2">
             <rect x="3" y="3" width="18" height="18" rx="2"/>
             <circle cx="8.5" cy="8.5" r="1.5"/>
             <polyline points="21 15 16 10 5 21"/>
@@ -168,25 +168,36 @@
           <h2 class="portfolio-title">Portfolio &amp; Work</h2>
           <span class="portfolio-count">{{ seller.portfolio.length }} pieces showcased</span>
         </div>
-        <a *ngIf="showRequestCustomCta" routerLink="/customer" class="btn-request">Request Custom Piece</a>
+
+        <div class="portfolio-actions">
+          <button
+            type="button"
+            class="btn-add-work"
+            *ngIf="editMode"
+            (click)="openAddWork()"
+          >
+            + Add Work
+          </button>
+          <a *ngIf="showRequestCustomCta" routerLink="/customer" class="btn-request">
+            Request Custom Piece
+          </a>
+        </div>
       </div>
 
-      <div class="portfolio-grid">
-        <a
-          class="portfolio-card"
-          *ngFor="let item of seller.portfolio"
-          [routerLink]="['/products', item.id]"
-        >
-          <div class="portfolio-img-wrap">
-            <img [src]="item.imageUrl" [alt]="item.title" class="portfolio-img" />
-          </div>
-          <div class="portfolio-info">
-            <span class="portfolio-category">{{ item.category }}</span>
-            <h3 class="portfolio-name">{{ item.title }}</h3>
-            <p class="portfolio-desc">{{ item.description }}</p>
-          </div>
-        </a>
-      </div>
+<div class="portfolio-grid">
+  <div
+    class="portfolio-card"
+    *ngFor="let item of seller.portfolio"
+    [routerLink]="['/products', item.id]"
+    style="cursor:pointer"
+  >
+    <div class="portfolio-img-wrap">
+      <img [src]="item.imageUrl" [alt]="item.title" class="portfolio-img" />
     </div>
-  </ng-container>
+    <div class="portfolio-info">
+      <span class="portfolio-category">{{ item.category }}</span>
+      <h3 class="portfolio-name">{{ item.title }}</h3>
+      <p class="portfolio-desc">{{ item.description }}</p>
+    </div>
+  </div>
 </div>

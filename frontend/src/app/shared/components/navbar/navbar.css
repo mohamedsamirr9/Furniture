@@ -132,7 +132,6 @@
 
 :host-context([dir="rtl"]) .navbar-nav { flex-direction: row-reverse; }
 :host-context([dir="rtl"]) .nav-icons { margin-left: 0; margin-right: auto; }
-
 /* ─── Profile Dropdown ─── */
 .profile-dropdown-wrapper {
   position: relative;
@@ -149,19 +148,20 @@
 .profile-btn.active { opacity: 0.6; }
 
 .profile-dropdown {
+ 
+  width: 245px;
   position: absolute;
   top: calc(100% + 16px);
   right: 0;
-  width: 245px;
+  left: auto;
   background: #FFFDF9;
-  border: 1px solid #EDE5D8;
+  border: 1px solid #D4C4A8;
   border-radius: 18px;
   box-shadow:
-    0 4px 6px rgba(44, 26, 14, 0.04),
-    0 12px 40px rgba(44, 26, 14, 0.10);
+    0 4px 6px rgba(44, 26, 14, 0.06),
+    0 16px 48px rgba(44, 26, 14, 0.16);
   padding: 10px;
   z-index: 9999;
-
   opacity: 0;
   transform: translateY(-12px) scale(0.95);
   pointer-events: none;
@@ -177,7 +177,6 @@
   pointer-events: all;
 }
 
-/* ── little arrow tip ── */
 .profile-dropdown::before {
   content: '';
   position: absolute;
@@ -186,8 +185,8 @@
   width: 12px;
   height: 12px;
   background: #FFFDF9;
-  border-left: 1px solid #EDE5D8;
-  border-top: 1px solid #EDE5D8;
+  border-left: 1px solid #D4C4A8;
+  border-top: 1px solid #D4C4A8;
   border-radius: 3px 0 0 0;
   transform: rotate(45deg);
 }
@@ -205,15 +204,28 @@
   height: 40px;
   min-width: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #F0EBE0, #E8DDD0);
-  color: #8B6F4E;
+  background: linear-gradient(135deg, #C8A882, #A07850);
+  color: #fff;
   font-size: 16px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(139, 111, 78, 0.15);
+  box-shadow: 0 2px 10px rgba(139, 111, 78, 0.35);
   animation: avatarPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+:host-context([dir="rtl"]) .profile-dropdown {
+  right: auto;
+  left: 0;
+}
+
+:host-context([dir="rtl"]) .profile-dropdown::before {
+  right: auto;
+  left: 18px;
+}
+
+:host-context([dir="rtl"]) .dropdown-item:hover {
+  transform: translateX(-3px);
 }
 
 @keyframes avatarPop {
@@ -229,8 +241,8 @@
 }
 
 .dropdown-user-name {
-  font-size: 13px;
-  font-weight: 650;
+  font-size: 13.5px;
+  font-weight: 700;
   color: #1a1a1a;
   white-space: nowrap;
   overflow: hidden;
@@ -238,8 +250,8 @@
 }
 
 .dropdown-user-email {
-  font-size: 11px;
-  color: #bbb;
+  font-size: 11.5px;
+  color: #888;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -248,7 +260,7 @@
 /* Divider */
 .dropdown-divider {
   height: 1px;
-  background: linear-gradient(to right, transparent, #EDE5D8, transparent);
+  background: linear-gradient(to right, transparent, #D4C4A8, transparent);
   margin: 4px 4px;
 }
 
@@ -261,7 +273,7 @@
   border-radius: 11px;
   font-size: 13.5px;
   font-weight: 500;
-  color: #3d2b1f;
+  color: #2c1a0e;
   text-decoration: none;
   background: transparent;
   border: none;
@@ -269,8 +281,6 @@
   cursor: pointer;
   font-family: inherit;
   transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
-
-  /* staggered entrance */
   opacity: 0;
   animation: itemSlideIn 0.3s ease forwards;
 }
@@ -286,7 +296,7 @@
 }
 
 .dropdown-item:hover {
-  background: #F7F2EA;
+  background: #F0E8D8;
   color: #1a1a1a;
   transform: translateX(3px);
 }
@@ -300,35 +310,39 @@
   width: 30px;
   height: 30px;
   border-radius: 8px;
-  background: #F2ECE3;
+  background: #EDE0CC;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9B7F5E;
+  color: #7A5C38;
   font-size: 13px;
   flex-shrink: 0;
   transition: background 0.18s, transform 0.18s;
 }
 
 .dropdown-item:hover .dropdown-item-icon {
-  background: #EAE0D2;
+  background: #DFD0B8;
   transform: scale(1.08);
 }
 
-/* Logout */
-.dropdown-logout { color: #c0392b; }
+/* ── Sign Out ── */
+.dropdown-logout {
+  color: #6d4b17;
+  font-weight: 600;
+}
 
 .dropdown-logout .dropdown-item-icon {
-  color: #c0392b;
-  background: #FEF0EE;
+  color: #a97116;
+  background: #F5E6E3;
 }
 
 .dropdown-logout:hover {
-  background: #FEF0EE;
-  color: #a93226;
+  background: #f5e9df;
+  color: #844716;
+  transform: translateX(3px);
 }
 
 .dropdown-logout:hover .dropdown-item-icon {
-  background: #FADDDA;
+  background: #eed2bc;
   transform: scale(1.08) rotate(-8deg);
 }

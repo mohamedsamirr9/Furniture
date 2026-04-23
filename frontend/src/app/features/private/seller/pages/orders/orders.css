@@ -1,25 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:host { font-family: 'DM Sans', sans-serif; }
+
 .page-header h1 {
+  font-family: 'Playfair Display', serif;
   font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 20px;
+  font-weight: 600;
+  color: #1a1209;
+  margin: 0 0 20px;
 }
 
 .divider {
   border: none;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #ede5d8;
   margin: 0 -40px 32px -40px;
 }
 
 .table-card {
   background: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: 14px;
+  border: 1px solid #ede5d8;
+  border-radius: 16px;
   padding: 28px;
+  box-shadow: 0 2px 12px rgba(44,26,14,0.05);
 }
 
 .card-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
+  color: #1a1209;
   margin-bottom: 20px;
 }
 
@@ -30,57 +38,69 @@
 
 .table th {
   text-align: left;
-  font-size: 14px;
-  color: #6b7280;
-  font-weight: 400;
+  font-size: 12px;
+  font-weight: 700;
+  color: #a08060;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
   padding: 10px 16px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #ede5d8;
 }
 
 .table td {
   padding: 18px 16px;
   font-size: 14px;
-  border-bottom: 1px solid #f3f4f6;
+  color: #1a1209;
+  border-bottom: 1px solid #f5efe8;
+  vertical-align: middle;
 }
 
 .badge {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   padding: 5px 14px;
   border-radius: 999px;
+  display: inline-block;
+  font-family: 'DM Sans', sans-serif;
+  border: 1.5px solid #e0d8d0;
+  color: #5a4a3a;
+  background: transparent;
+  cursor: pointer;
 }
 
 .badge-outline {
-  border: 1.5px solid #e5e7eb;
-  color: #374151;
+  border: 1.5px solid #e0d8d0;
+  color: #5a4a3a;
+  background: transparent;
 }
 
 .badge-red {
-  background: #ef4444;
-  color: #fff;
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
 }
 
 .badge-green {
-  border: 1.5px solid #35903A;
-  color: #35903A;
-  background: #ecfdf5;
+  background: #f5efe8;
+  color: #2c1a0e;
+  border: 1px solid #d4c4b0;
 }
 
 .view-details-btn {
-  border: 1.5px solid #111827;
+  border: 1.5px solid #2c1a0e;
   background: #fff;
-  color: #111827;
+  color: #2c1a0e;
   border-radius: 8px;
   padding: 8px 14px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  font-family: inherit;
+  font-family: 'DM Sans', sans-serif;
   white-space: nowrap;
   transition: background 0.15s, color 0.15s;
 }
 
 .view-details-btn:hover {
-  background: #111827;
-  color: #fff;
+  background: #2c1a0e;
+  color: #f5e8d0;
 }

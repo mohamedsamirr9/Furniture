@@ -1,16 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:host { font-family: 'DM Sans', sans-serif; }
+
 .seller-layout {
   display: flex;
   min-height: 100vh;
-  background: #f3f4f6;
+  background: #fdf8f3;
 }
 
 .sidebar {
-  width: 280px;
+  width: 260px;
   background: #ffffff;
   display: flex;
   flex-direction: column;
   padding: 24px 16px;
-  border-inline-end: 1px solid #e5e7eb;
+  border-inline-end: 1px solid #ede5d8;
   position: fixed;
   height: 100vh;
   top: 0;
@@ -18,13 +22,14 @@
 }
 
 .sidebar-logo {
+  font-family: 'Playfair Display', serif;
   font-size: 24px;
-  font-weight: 800;
-  color: #35903A;
+  font-weight: 600;
+  color: #2c1a0e;
   padding-inline-start: 12px;
   padding-bottom: 20px;
   margin-bottom: 20px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #ede5d8;
 }
 
 .sidebar-nav {
@@ -39,31 +44,33 @@
   align-items: center;
   gap: 10px;
   padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 15px;
-  color: #374151;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #7a6a58;
   text-decoration: none;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
+  font-family: 'DM Sans', sans-serif;
 }
 
 .nav-item:hover {
-  background: #f0faf1;
-  color: #35903A;
+  background: #f5efe8;
+  color: #2c1a0e;
 }
 
 .nav-item.active {
-  background: #f0faf1;
-  color: #35903A;
+  background: #f5efe8;
+  color: #2c1a0e;
   font-weight: 600;
 }
 
 .sidebar-footer {
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #ede5d8;
   padding-top: 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .collapse-btn,
@@ -72,21 +79,22 @@
   align-items: center;
   gap: 10px;
   padding: 10px 16px;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 14px;
-  color: #6b7280;
+  color: #a08060;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
+  font-family: 'DM Sans', sans-serif;
 }
 
 .collapse-btn:hover,
 .signout-btn:hover {
-  background: #f3f4f6;
-  color: #1a1a1a;
+  background: #f5efe8;
+  color: #2c1a0e;
 }
 
 .main-content {
-  margin-inline-start: 280px;
+  margin-inline-start: 260px;
   flex: 1;
   padding: 40px;
 }

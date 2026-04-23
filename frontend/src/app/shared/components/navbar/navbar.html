@@ -61,25 +61,25 @@
 
             <div class="dropdown-divider"></div>
 
-            <a class="dropdown-item" routerLink="/customer/profile" (click)="closeDropdown()">
-              <span class="dropdown-item-icon"><i class="bi bi-person-circle"></i></span>
-              My Profile
-            </a>
-            <a class="dropdown-item" routerLink="/customer/orders" (click)="closeDropdown()">
-              <span class="dropdown-item-icon"><i class="bi bi-box-seam"></i></span>
-              My Orders
-            </a>
-            <a class="dropdown-item" routerLink="/customer/complaints" (click)="closeDropdown()">
-              <span class="dropdown-item-icon"><i class="bi bi-chat-square-text"></i></span>
-              Complaints
-            </a>
+          <a class="dropdown-item" routerLink="/customer/profile" (click)="closeDropdown()">
+  <span class="dropdown-item-icon"><i class="bi bi-person-circle"></i></span>
+  {{ 'NAV.MY_PROFILE' | translate }}
+</a>
+<a class="dropdown-item" routerLink="/customer/orders" (click)="closeDropdown()">
+  <span class="dropdown-item-icon"><i class="bi bi-box-seam"></i></span>
+  {{ 'NAV.MY_ORDERS' | translate }}
+</a>
+<a class="dropdown-item" routerLink="/customer/complaints" (click)="closeDropdown()">
+  <span class="dropdown-item-icon"><i class="bi bi-chat-square-text"></i></span>
+  {{ 'NAV.COMPLAINTS' | translate }}
+</a>
 
-            <div class="dropdown-divider"></div>
+<div class="dropdown-divider"></div>
 
-            <button class="dropdown-item dropdown-logout" (click)="logout()">
-              <span class="dropdown-item-icon"><i class="bi bi-box-arrow-right"></i></span>
-              Sign Out
-            </button>
+<button class="dropdown-item dropdown-logout" (click)="logout()">
+  <span class="dropdown-item-icon"><i class="bi bi-box-arrow-right"></i></span>
+  {{ 'NAV.SIGN_OUT' | translate }}
+</button>
           </div>
         </div>
       </ng-container>

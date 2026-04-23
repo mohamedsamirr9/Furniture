@@ -18,7 +18,10 @@
     "COLLAPSE": "طي",
     "CATALOG": "الكتالوج",
     "OFFERS": "العروض",
-    "SEARCH": "بحث"
+    "SEARCH": "بحث",
+    "MY_PROFILE": "ملفي الشخصي",
+  "MY_ORDERS": "طلباتي",
+  "SIGN_OUT": "تسجيل الخروج"
   },
   "BUTTONS": {
     "SAVE": "حفظ",
@@ -70,6 +73,41 @@
     "REVENUE": "الإيرادات",
     "OPEN_COMPLAINTS": "الشكاوى المفتوحة"
   },
+  "COMPLAINTS": {
+  "SUPPORT": "الدعم",
+  "TITLE": "شكاواي",
+  "SUBTITLE": "قدّم وتابع شكاواك. فريقنا يرد خلال 48 ساعة باهتمام.",
+  "NEW_COMPLAINT": "شكوى جديدة",
+  "SUBMITTED_ON": "تم التقديم في",
+  "LATEST_RESPONSE": "آخر رد:",
+  "VIEW_DETAILS": "عرض التفاصيل",
+  "EMPTY": "لا توجد شكاوى",
+  "STATUS": {
+    "OPEN": "مفتوحة",
+    "IN_PROGRESS": "قيد المعالجة",
+    "RESOLVED": "تم الحل",
+    "CLOSED": "مغلقة"
+  }
+},
+"MODAL": {
+  "TITLE": "تفاصيل الشكوى",
+  "LOADING": "جاري تحميل تفاصيل الشكوى...",
+  "MESSAGE": "الرسالة",
+  "CREATED": "تاريخ الإنشاء",
+  "BUYER": "المشتري",
+  "ORDER": "الطلب",
+  "SELLER": "البائع",
+  "ATTACHMENT": "المرفق",
+  "REPLIES": "الردود",
+  "NO_REPLIES": "لا توجد ردود بعد.",
+  "NEXT_STATUS": "الحالة التالية",
+  "UPDATE_STATUS": "تحديث الحالة",
+  "UPDATING": "جاري التحديث...",
+  "REPLY": "الرد",
+  "REPLY_PLACEHOLDER": "اكتب ردك...",
+  "SEND": "إرسال",
+  "SENDING": "جاري الإرسال..."
+},
   "ALERTS": {
     "LOADING": "جاري التحميل...",
     "UPLOADING": "جاري رفع الصورة...",
