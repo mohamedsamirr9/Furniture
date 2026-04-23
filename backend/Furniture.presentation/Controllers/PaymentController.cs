@@ -3,7 +3,7 @@ using Furniture.shared.Dtos.Payment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace Furniture.presentation.Controllers
 {
@@ -12,10 +12,12 @@ namespace Furniture.presentation.Controllers
     public class PaymentsController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
+        private readonly ILogger<PaymentsController> _logger;
 
-        public PaymentsController(IPaymentService paymentService)
+        public PaymentsController(IPaymentService paymentService, ILogger<PaymentsController> logger)
         {
             _paymentService = paymentService;
+            _logger = logger;
         }
 
         
@@ -43,55 +45,114 @@ namespace Furniture.presentation.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> PaymobCallback([FromQuery] string hmac)
         {
-            if (string.IsNullOrWhiteSpace(hmac))
-                return Unauthorized(new { message = "HMAC is missing" });
-
             var callback = MapFromQuery();
+
+            _logger.LogInformation(
+                "Paymob callback received: OrderId={OrderId}, MerchantOrderId={MerchantOrderId}, Success={Success}, Id={TransactionId}",
+                callback.order, callback.merchant_order_id, callback.success, callback.id); 
+            if (!callback.success)
+            {
+                _logger.LogInformation("Paymob callback: payment not successful, acknowledging");
+                return Ok(new { message = "Callback acknowledged (payment not successful)" });
+            }
+
+            if (callback.order <= 0)
+                _logger.LogWarning("Paymob callback: missing or invalid order id");
+
+            if (string.IsNullOrWhiteSpace(callback.id))
+                _logger.LogWarning("Paymob callback: missing transaction id");
+
+            if (string.IsNullOrWhiteSpace(callback.merchant_order_id))
+                _logger.LogWarning("Paymob callback: missing merchant_order_id");
+
+            if (callback.order <= 0 && string.IsNullOrWhiteSpace(callback.merchant_order_id))  
+            {
+                _logger.LogWarning("Paymob callback: no order id or merchant order id, cannot process");
+                return Ok(new { message = "Callback acknowledged (insufficient data)" });
+            }
 
             try
             {
-                var success = await _paymentService.HandlePaymentCallbackAsync(callback, hmac);
+                _logger.LogDebug("Processing callback with HMAC present: {HasHmac}", !string.IsNullOrEmpty(hmac));
+                var success = await _paymentService.HandlePaymentCallbackAsync(callback, hmac ?? string.Empty);
+
+                _logger.LogInformation(
+                    "Paymob callback processed: Success={Success}", success);
 
                 return success
                     ? Ok(new { message = "Payment processed successfully" })
-                    : BadRequest(new { message = "Payment processing failed" });
+                    : Ok(new { message = "Callback acknowledged but payment not found" });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = ex.Message });
+                _logger.LogError(ex, "Paymob callback: error processing");
+                return Ok(new { message = "Callback acknowledged (processing error)" });
             }
         }
 
         
 
-        [HttpPost("webhook")]
-        [AllowAnonymous]
-        public async Task<IActionResult> PaymobWebhook(
-            [FromBody] JsonElement payload,
-            [FromQuery] string hmac)
+       [HttpGet("webhook")]
+[HttpPost("post-webhook")] // يفضل فصل المسميات برمجياً لكن سأبقيها كما هي إذا كنتِ تفضلين ذلك
+[AllowAnonymous]
+public async Task<IActionResult> PaymobWebhook([FromQuery] string hmac)
+{
+    var callback = MapFromWebhookQuery();
+
+    _logger.LogInformation(
+        "Paymob webhook received: OrderId={OrderId}, MerchantOrderId={MerchantOrderId}, Success={Success}, Id={TransactionId}",
+        callback.order, callback.merchant_order_id, callback.success, callback.id);
+
+    var parts = callback.merchant_order_id?.Split('-');
+    string internalOrderId = (parts != null && parts.Length > 1) ? parts[1] : callback.order.ToString();
+
+    if (!callback.success)
+    {
+        _logger.LogInformation("Paymob webhook: payment not successful");
+
+        if (HttpContext.Request.Method == "GET")
         {
-            var callback = MapFromWebhookPayload(payload);
-            var resolvedHmac = !string.IsNullOrWhiteSpace(hmac)
-                ? hmac
-                : GetString(payload, "hmac");
 
-            if (string.IsNullOrEmpty(resolvedHmac))
-                return Unauthorized(new { message = "HMAC is missing" });
-
-            try
-            {
-                var success = await _paymentService.HandlePaymentCallbackAsync(callback, resolvedHmac);
-
-                return success
-                    ? Ok(new { message = "Webhook processed successfully" })
-                    : BadRequest(new { message = "Webhook processing failed" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = ex.Message });
-            }
+            return Redirect($"http://localhost:4200/orders/pay?orderId={internalOrderId}&status=failed");
         }
 
+        return Ok(new { message = "Webhook acknowledged (payment not successful)" });
+    }
+
+    if (callback.order <= 0 && string.IsNullOrWhiteSpace(callback.merchant_order_id))
+    {
+        _logger.LogWarning("Paymob webhook: no order id provided");
+        return Ok(new { message = "Webhook acknowledged (insufficient data)" });
+    }
+
+    try
+    {
+        _logger.LogDebug("Processing webhook with HMAC present: {HasHmac}", !string.IsNullOrEmpty(hmac));
+        var success = await _paymentService.HandlePaymentCallbackAsync(callback, hmac ?? string.Empty);
+
+        _logger.LogInformation("Paymob webhook processed: Success={Success}", success);
+
+        if (HttpContext.Request.Method == "GET")
+        {
+            return Redirect($"http://localhost:4200/orders/{internalOrderId}?status=success");
+        }
+
+        return success
+            ? Ok(new { message = "Webhook processed successfully" })
+            : Ok(new { message = "Webhook acknowledged but already processed" });
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Paymob webhook: error processing callback");
+        
+        if (HttpContext.Request.Method == "GET")
+        {
+             return Redirect($"http://localhost:4200/orders/pay?orderId={internalOrderId}&status=error");
+        }
+        
+        return Ok(new { message = "Webhook acknowledged (processing error)" });
+    }
+}
         
 
         [HttpGet("verify/{orderId:int}")]
@@ -108,141 +169,49 @@ namespace Furniture.presentation.Controllers
         
         private PaymobCallbackDTO MapFromQuery() => new()
         {
-            Success          = bool.TryParse(Request.Query["success"], out var s) && s,
-            Id               = Request.Query["id"].ToString(),
-            OrderId          = int.TryParse(Request.Query["order"], out var o) ? o : 0,
-            MerchantOrderId  = Request.Query["merchant_order_id"].ToString(),
-            TransactionId    = Request.Query["id"].ToString(),
-            AmountCents      = Request.Query["amount_cents"].ToString(),
-            CreatedAt        = Request.Query["created_at"].ToString(),
-            Currency         = Request.Query["currency"].ToString(),
-            ErrorOccured     = Request.Query["error_occured"].ToString(),
-            HasParentTransaction  = Request.Query["has_parent_transaction"].ToString(),
-            IntegrationId    = Request.Query["integration_id"].ToString(),
-            IsCaptured       = Request.Query["is_captured"].ToString(),
-            IsRefundedTransaction = Request.Query["is_refunded_transaction"].ToString(),
-            IsStandalonePayment   = Request.Query["is_standalone_payment"].ToString(),
-            IsVoided         = Request.Query["is_voided"].ToString(),
-            OwnerUsername    = Request.Query["owner"].ToString(),
-            PendingStatus    = Request.Query["pending"].ToString(),
-            SourceDataPan    = Request.Query["source_data.pan"].ToString(),
-            SourceDataSubType = Request.Query["source_data.sub_type"].ToString(),
-            SourceDataType   = Request.Query["source_data.type"].ToString()
+            success              = bool.TryParse(Request.Query["success"], out var s) && s,
+            id                   = Request.Query["id"].ToString(),
+            order                = int.TryParse(Request.Query["order"], out var o) ? o : 0,
+            merchant_order_id    = Request.Query["merchant_order_id"].ToString(),
+            amount_cents         = Request.Query["amount_cents"].ToString(),
+            created_at           = Request.Query["created_at"].ToString(),
+            currency             = Request.Query["currency"].ToString(),
+            error_occured        = Request.Query["error_occured"].ToString(),
+            has_parent_transaction = Request.Query["has_parent_transaction"].ToString(),
+            integration_id       = Request.Query["integration_id"].ToString(),
+            is_captured          = Request.Query["is_captured"].ToString(),
+            is_standalone_payment = Request.Query["is_standalone_payment"].ToString(),
+            is_voided            = Request.Query["is_voided"].ToString(),
+            owner                = Request.Query["owner"].ToString(),
+            pending              = Request.Query["pending"].ToString(),
+            source_data_pan      = Request.Query["source_data.pan"].ToString(),
+            source_data_sub_type = Request.Query["source_data.sub_type"].ToString(),
+            source_data_type     = Request.Query["source_data.type"].ToString()
         };
-
-        private static PaymobCallbackDTO MapFromWebhookPayload(JsonElement payload)
+        
+        private PaymobCallbackDTO MapFromWebhookQuery() => new()
         {
-            var source = payload;
-            if (payload.TryGetProperty("obj", out var obj))
-            {
-                source = obj;
-            }
-
-            var sourceData = source.TryGetProperty("source_data", out var sd)
-                ? sd
-                : default;
-
-            var orderElement = source.TryGetProperty("order", out var orderValue)
-                ? orderValue
-                : default;
-
-            var orderId = GetOrderId(orderElement);
-            var merchantOrderId = GetString(source, "merchant_order_id");
-
-            if (string.IsNullOrWhiteSpace(merchantOrderId) &&
-                orderElement.ValueKind == JsonValueKind.Object)
-            {
-                merchantOrderId = GetString(orderElement, "merchant_order_id");
-            }
-
-            return new PaymobCallbackDTO
-            {
-                Success = GetBool(source, "success"),
-                Id = GetString(source, "id"),
-                OrderId = orderId,
-                MerchantOrderId = merchantOrderId,
-                TransactionId = GetString(source, "transaction_id"),
-                AmountCents = GetString(source, "amount_cents"),
-                CreatedAt = GetString(source, "created_at"),
-                Currency = GetString(source, "currency"),
-                ErrorOccured = GetString(source, "error_occured"),
-                HasParentTransaction = GetString(source, "has_parent_transaction"),
-                IntegrationId = GetString(source, "integration_id"),
-                IsCaptured = GetString(source, "is_captured"),
-                IsRefundedTransaction = GetString(source, "is_refunded_transaction"),
-                IsStandalonePayment = GetString(source, "is_standalone_payment"),
-                IsVoided = GetString(source, "is_voided"),
-                OwnerUsername = GetString(source, "owner"),
-                PendingStatus = GetString(source, "pending"),
-                SourceDataPan = sourceData.ValueKind == JsonValueKind.Object ? GetString(sourceData, "pan") : string.Empty,
-                SourceDataSubType = sourceData.ValueKind == JsonValueKind.Object ? GetString(sourceData, "sub_type") : string.Empty,
-                SourceDataType = sourceData.ValueKind == JsonValueKind.Object ? GetString(sourceData, "type") : string.Empty
-            };
-        }
-
-        private static int GetOrderId(JsonElement orderElement)
-        {
-            if (orderElement.ValueKind == JsonValueKind.Number &&
-                orderElement.TryGetInt32(out var numericOrderId))
-            {
-                return numericOrderId;
-            }
-
-            if (orderElement.ValueKind == JsonValueKind.String &&
-                int.TryParse(orderElement.GetString(), out var stringOrderId))
-            {
-                return stringOrderId;
-            }
-
-            if (orderElement.ValueKind == JsonValueKind.Object)
-            {
-                if (orderElement.TryGetProperty("id", out var idProp))
-                {
-                    if (idProp.ValueKind == JsonValueKind.Number &&
-                        idProp.TryGetInt32(out var nestedNumericOrderId))
-                    {
-                        return nestedNumericOrderId;
-                    }
-
-                    if (idProp.ValueKind == JsonValueKind.String &&
-                        int.TryParse(idProp.GetString(), out var nestedStringOrderId))
-                    {
-                        return nestedStringOrderId;
-                    }
-                }
-            }
-
-            return 0;
-        }
-
-        private static string GetString(JsonElement element, string propertyName)
-        {
-            if (!element.TryGetProperty(propertyName, out var propertyValue))
-                return string.Empty;
-
-            return propertyValue.ValueKind switch
-            {
-                JsonValueKind.String => propertyValue.GetString() ?? string.Empty,
-                JsonValueKind.Number => propertyValue.GetRawText(),
-                JsonValueKind.True => "true",
-                JsonValueKind.False => "false",
-                _ => string.Empty
-            };
-        }
-
-        private static bool GetBool(JsonElement element, string propertyName)
-        {
-            if (!element.TryGetProperty(propertyName, out var propertyValue))
-                return false;
-
-            return propertyValue.ValueKind switch
-            {
-                JsonValueKind.True => true,
-                JsonValueKind.False => false,
-                JsonValueKind.String => bool.TryParse(propertyValue.GetString(), out var parsed) && parsed,
-                _ => false
-            };
-        }
+          success = bool.TryParse(Request.Query["success"], out var s) && s,
+            id = Request.Query["id"].ToString(),
+            order = int.TryParse(Request.Query["order"], out var oId) ? oId : 0,
+            merchant_order_id = Request.Query["merchant_order_id"].ToString(),
+            
+            amount_cents = Request.Query["amount_cents"].ToString(),
+            created_at = Request.Query["created_at"].ToString(),
+            currency = Request.Query["currency"].ToString(),
+            error_occured = Request.Query["error_occured"].ToString(),
+            has_parent_transaction = Request.Query["has_parent_transaction"].ToString(),
+            integration_id = Request.Query["integration_id"].ToString(),
+            is_captured = Request.Query["is_captured"].ToString(),
+            is_standalone_payment = Request.Query["is_standalone_payment"].ToString(),
+            is_voided = Request.Query["is_voided"].ToString(),
+            owner = Request.Query["owner"].ToString(),
+            pending = Request.Query["pending"].ToString(),
+            
+            source_data_pan = Request.Query["source_data.pan"].ToString(),
+            source_data_sub_type = Request.Query["source_data.sub_type"].ToString(),
+            source_data_type = Request.Query["source_data.type"].ToString()
+        };
         
         
         #endregion

@@ -41,7 +41,7 @@ export class PayNowComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
   ) {
     const nav = this.router.getCurrentNavigation();
     if (nav?.extras.state) {
@@ -52,49 +52,45 @@ export class PayNowComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Fallback to query param: /orders/pay?orderId=123
-    if (!this.orderId) {
-      const raw = this.route.snapshot.queryParamMap.get('orderId');
-      const parsed = raw ? Number(raw) : NaN;
-      if (!Number.isNaN(parsed) && parsed > 0) this.orderId = parsed;
-    }
+    const status = this.route.snapshot.queryParamMap.get('status');
 
-    // If we have orderResponse, derive orderId from it.
-    if (!this.orderId && this.orderResponse) {
-      this.orderId =
-        this.orderResponse.orderId ??
-        this.orderResponse.OrderId ??
-        this.orderResponse.id ??
-        null;
-    }
+    this.extractOrderId();
 
-    if (!this.orderId) {
+    if (status === 'failed') {
       this.isLoading = false;
-      this.errorMessage = 'Missing order id.';
+      this.errorMessage = 'Payment failed. Please try again.';
       return;
     }
 
-    this.paymentService.createPayment(this.orderId).pipe(takeUntil(this.destroy$)).subscribe({
-      next: (res) => {
-        // Backend is PascalCase; HttpClient keeps keys as-is.
-        const url = (res as any).paymentUrl ?? (res as any).PaymentUrl;
-        this.paymentUrl = typeof url === 'string' ? url : null;
+    if (this.orderId) {
+      this.startPaymentFlow();
+    } else {
+      this.isLoading = false;
+      this.errorMessage = 'Missing order id.';
+    }
+  }
+  startPaymentFlow(): void {
+    this.isLoading = true;
+    this.errorMessage = null;
 
-        if (!this.paymentUrl) {
+    this.paymentService
+      .createPayment(this.orderId!)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          const url = (res as any).paymentUrl ?? (res as any).PaymentUrl;
+          if (url) {
+            this.safePaymentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+          } else {
+            this.errorMessage = 'paymentUrl is missing in the response.';
+          }
           this.isLoading = false;
-          this.errorMessage = 'Payment URL is missing from server response.';
-          return;
-        }
-
-        this.safePaymentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.paymentUrl);
-        this.isLoading = false;
-        this.startVerifyPolling();
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = err?.error?.message || 'Failed to start payment.';
-      },
-    });
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMessage = err?.error?.message || 'An error occurred while initiating payment.';
+        },
+      });
   }
 
   ngOnDestroy(): void {
@@ -102,53 +98,13 @@ export class PayNowComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  startVerifyPolling(): void {
-    if (!this.orderId) return;
-
-    this.isVerifying = true;
-    this.errorMessage = null;
-    this.isPaid = null;
-
-    const maxAttempts = 40; // ~2 minutes at 3s interval
-
-    timer(0, 3000)
-      .pipe(
-        takeUntil(this.destroy$),
-        takeWhile((attempt) => attempt < maxAttempts, true),
-        switchMap(() => this.paymentService.verifyPayment(this.orderId!))
-      )
-      .subscribe({
-        next: (res) => {
-          const paid = (res as any).isPaid ?? (res as any).IsPaid;
-          this.isPaid = !!paid;
-
-          if (this.isPaid) {
-            this.isVerifying = false;
-            this.router.navigate(['/orders/confirmed'], {
-              state: {
-                orderResponse: this.orderResponse ?? { orderId: this.orderId },
-              },
-            });
-          }
-        },
-        error: (err) => {
-          this.isVerifying = false;
-          this.errorMessage = err?.error?.message || 'Failed to verify payment status.';
-        },
-        complete: () => {
-          if (!this.isPaid) {
-            this.isVerifying = false;
-          }
-        },
-      });
-  }
-
-  checkAgain(): void {
-    this.startVerifyPolling();
-  }
-
   goToOrders(): void {
     this.router.navigate(['/orders']);
   }
+  extractOrderId(): void {
+    const raw = this.route.snapshot.queryParamMap.get('orderId');
+    if (!this.orderId) {
+      this.orderId = raw ? Number(raw) : (this.orderResponse?.id ?? null);
+    }
+  }
 }
-

@@ -1,4 +1,6 @@
 using System.Net.Http.Json;
+using System.Security.Cryptography; 
+using System.Text;
 using Furniture.Domain.InterfacesRepositories;
 using Furniture.Domain.Models;
 using Furniture.Domain.Models.Enum;
@@ -6,6 +8,7 @@ using Furniture.Services.Specifications;
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos.Payment;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Furniture.Services.Implementations
 {
@@ -15,17 +18,20 @@ namespace Furniture.Services.Implementations
         private readonly IConfiguration _config;
         private readonly HttpClient _httpClient;
         private readonly ISellerPaymentService _sellerPaymentService;
+        private readonly ILogger<PaymentService> _logger;
 
         public PaymentService(
             IUnitOfWork unitOfWork,
             IConfiguration config,
             IHttpClientFactory httpClientFactory,
-            ISellerPaymentService sellerPaymentService)
+            ISellerPaymentService sellerPaymentService,
+            ILogger<PaymentService> logger)
         {
             _unitOfWork = unitOfWork;
             _config = config;
             _httpClient = httpClientFactory.CreateClient("Paymob");
             _sellerPaymentService = sellerPaymentService;
+            _logger = logger;
         }
 
         
@@ -53,27 +59,65 @@ namespace Furniture.Services.Implementations
             return BuildPaymentResponse(orderId, order, paymentToken);
         }
 
-        public async Task<bool> HandlePaymentCallbackAsync(PaymobCallbackDTO callback, string hmac)
+       public async Task<bool> HandlePaymentCallbackAsync(PaymobCallbackDTO callback, string hmac)
         {
+            _logger.LogInformation(
+                "Paymob callback received: OrderId={OrderId}, Success={Success}, TransactionId={TransactionId}",
+                callback.order, callback.success, callback.id);
+
             if (!VerifyHmac(callback, hmac))
+            {
+                _logger.LogWarning("HMAC verification failed for OrderId={OrderId}", callback.order);
                 return false;
+            }
 
-            if (!callback.Success)
+            if (!callback.success)
+            {
+                _logger.LogInformation("Payment not successful for OrderId={OrderId}", callback.order);
                 return false;
+            }
 
-            var payment = await GetPaymentByMerchantOrderIdAsync(callback.MerchantOrderId);
+            var payment = await GetPaymentByPaymobOrderIdAsync(callback.order.ToString());
+
+            if (payment == null && !string.IsNullOrWhiteSpace(callback.merchant_order_id))
+            {
+                payment = await GetPaymentByMerchantOrderIdStoredAsync(callback.merchant_order_id);
+            }
 
             if (payment == null)
+            {
+                _logger.LogWarning(
+                    "Payment not found for OrderId={PaymobOrderId}, MerchantOrderId={MerchantOrderId}",
+                    callback.order, callback.merchant_order_id);
                 return false;
+            }
+
+            _logger.LogInformation(
+                "Found payment {PaymentId} for OrderId={InternalOrderId}, Status={Status}",
+                payment.Id, payment.OrderId, payment.Status);
 
             if (payment.Status == PaymentStatus.Completed)
+            {
+                _logger.LogInformation(
+                    "Payment already completed for OrderId={InternalOrderId}, acknowledging duplicate",
+                    payment.OrderId);
                 return true;
+            }
+
+            var existingPaymentForOrder = await GetExistingPaymentAsync(payment.OrderId);
+            if (existingPaymentForOrder != null && existingPaymentForOrder.Status == PaymentStatus.Completed)
+            {
+                _logger.LogInformation(
+                    "Internal OrderId={InternalOrderId} already has completed payment, acknowledging duplicate callback",
+                    payment.OrderId);
+                return true;
+            }
 
             await CompletePaymentAsync(payment, callback);
-
             await _unitOfWork.SaveChangesAsync();
-
             await _sellerPaymentService.ProcessPayoutsForOrderAsync(payment.OrderId);
+
+            _logger.LogInformation("Payment completed successfully for OrderId={InternalOrderId}", payment.OrderId);
 
             return true;
         }
@@ -123,45 +167,16 @@ namespace Furniture.Services.Implementations
                 .GetByIdAsync(spec);
         }
 
-        private async Task<Payment?> GetPaymentByMerchantOrderIdAsync(string merchantOrderId)
+        private async Task<Payment?> GetPaymentByMerchantOrderIdStoredAsync(string merchantOrderId)
         {
-            var orderId = TryExtractOrderIdFromMerchantOrderId(merchantOrderId);
-            if (!orderId.HasValue)
-            {
+            if (string.IsNullOrWhiteSpace(merchantOrderId))
                 return null;
-            }
 
-            var spec = new PaymentByOrderIdSpecification(orderId.Value);
+            var spec = new PaymentByMerchantOrderIdSpecification(merchantOrderId);
             return await _unitOfWork.GetRepository<Payment, int>()
                 .GetByIdAsync(spec);
         }
 
-        private static int? TryExtractOrderIdFromMerchantOrderId(string merchantOrderId)
-        {
-            if (string.IsNullOrWhiteSpace(merchantOrderId))
-            {
-                return null;
-            }
-
-            var parts = merchantOrderId.Split('-', StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length < 3)
-            {
-                return null;
-            }
-
-            if (!parts[0].Equals("order", StringComparison.OrdinalIgnoreCase))
-            {
-                return null;
-            }
-
-            if (!int.TryParse(parts[1], out var orderId))
-            {
-                return null;
-            }
-
-            return orderId;
-        }
- 
         private async Task<List<SellerPayout>> BuildSellerPayoutsAsync(Order order, int orderId)
         {
             var payouts = new List<SellerPayout>();
@@ -208,6 +223,8 @@ namespace Furniture.Services.Implementations
             string paymentToken,
             string paymobOrderId)
         {
+            var merchantOrderId = $"order-{order.Id}-{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}";
+
             if (existingPayment != null)
             {
                 existingPayment.PaymobTransactionId = paymentToken;
@@ -226,6 +243,7 @@ namespace Furniture.Services.Implementations
                     Status = PaymentStatus.Pending,
                     PaymobTransactionId = paymentToken,
                     PaymobOrderId = paymobOrderId,
+                    MerchantOrderId = merchantOrderId,
                     CreatedAt = DateTime.UtcNow
                 };
                 await _unitOfWork.GetRepository<Payment, int>().AddAsync(payment);
@@ -280,7 +298,7 @@ namespace Furniture.Services.Implementations
         {
             payment.Status = PaymentStatus.Completed;
             payment.PaidAt = DateTime.UtcNow;
-            payment.PaymobTransactionId = callback.TransactionId;
+            payment.PaymobTransactionId = callback.id;
             _unitOfWork.GetRepository<Payment, int>().Update(payment);
 
             var order = await _unitOfWork.GetRepository<Order, int>()
@@ -299,7 +317,7 @@ namespace Furniture.Services.Implementations
             foreach (var payout in payouts.Where(p => p.Status == PayoutStatus.Pending))
             {
                 payout.Status = PayoutStatus.Processing;
-                payout.PaymobTransactionId = callback.TransactionId;
+                payout.PaymobTransactionId = callback.id;
                 _unitOfWork.GetRepository<SellerPayout, int>().Update(payout);
             }
         }
@@ -395,45 +413,68 @@ namespace Furniture.Services.Implementations
             var result = await response.Content.ReadFromJsonAsync<PaymobPaymentKeyResponse>();
             return result!.Token;
         }
- 
 
-#if DEBUG
-        private bool VerifyHmac(PaymobCallbackDTO callback, string receivedHmac)
-            => true;
-#else
         private bool VerifyHmac(PaymobCallbackDTO callback, string receivedHmac)
         {
+            var hmacEnabled = _config["Paymob:HMAC_ENABLED"];
+            if (hmacEnabled?.ToLower() == "false")
+            {
+                _logger.LogWarning(
+                    "HMAC verification is disabled in configuration. " +
+                    "Accepting callback without HMAC verification. " +
+                    "OrderId={OrderId}, TransactionId={TransactionId}",
+                    callback.order, callback.id);
+                return true;
+            }
+
             var hmacSecret = _config["Paymob:HmacSecret"];
             if (string.IsNullOrEmpty(hmacSecret))
+            {
+                _logger.LogError("HMAC verification failed: HmacSecret is not configured");
                 return false;
+            }
+
+            if (string.IsNullOrEmpty(receivedHmac))
+            {
+                _logger.LogWarning("HMAC verification failed: received HMAC is empty");
+                return false;
+            }
 
             var dataString = string.Concat(
-                callback.AmountCents,
-                callback.CreatedAt,
-                callback.Currency,
-                callback.ErrorOccured,
-                callback.HasParentTransaction,
-                callback.Id,
-                callback.IntegrationId,
-                callback.IsCaptured,
-                callback.IsRefundedTransaction,
-                callback.IsStandalonePayment,
-                callback.IsVoided,
-                callback.OrderId,
-                callback.OwnerUsername,
-                callback.PendingStatus,
-                callback.SourceDataPan,
-                callback.SourceDataSubType,
-                callback.SourceDataType,
-                callback.Success);
+                callback.amount_cents,
+                callback.created_at,
+                callback.currency,
+                callback.error_occured,
+                callback.has_parent_transaction,
+                callback.id,
+                callback.integration_id,
+                callback.is_captured,
+                callback.is_refunded_transaction,
+                callback.is_standalone_payment,
+                callback.is_voided,
+                callback.order,
+                callback.owner,
+                callback.pending,
+                callback.source_data_pan,
+                callback.source_data_sub_type,
+                callback.source_data_type,
+                callback.success);
 
             using var hmac = new HMACSHA512(Encoding.UTF8.GetBytes(hmacSecret));
             var computedHmac = BitConverter.ToString(
                 hmac.ComputeHash(Encoding.UTF8.GetBytes(dataString)))
                 .Replace("-", "").ToLower();
 
-            return computedHmac == receivedHmac.ToLower();
+            var isValid = computedHmac == receivedHmac.ToLower();
+
+            if (!isValid)
+            {
+                _logger.LogWarning(
+                    "HMAC verification failed. Expected: {Expected}, Received: {Received}, Data: {Data}",
+                    computedHmac, receivedHmac, dataString);
+            }
+
+            return isValid;
         }
-#endif
     }
 }
