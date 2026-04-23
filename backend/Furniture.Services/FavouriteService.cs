@@ -45,9 +45,15 @@ namespace Furniture.Services
             await _unitOfWork.GetRepository<Favourite, int>().AddAsync(favourite);
             await _unitOfWork.SaveChangesAsync();
 
-            _ = _recommendationService.UpdateUserEmbeddingAsync(
-                userId, productId, "favorite");
-
+            try
+            {
+                await _recommendationService.UpdateUserEmbeddingAsync(userId, productId, "favorite");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to update recommendation embedding: {ex.Message}");
+                
+            }
             var specs = new FavouritesByUserSpecification(userId);
             var prods = await _unitOfWork.GetRepository<Favourite, int>().GetAllAsync(specs);
             var added = prods.First(f => f.ProductId == productId);

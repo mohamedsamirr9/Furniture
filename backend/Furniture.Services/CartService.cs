@@ -90,14 +90,19 @@ namespace Furniture.Services
             }
 
             await _unitOfWork.SaveChangesAsync();
-            
-            _ = _recommendationService.UpdateUserEmbeddingAsync(
-                userId, dto.ProductId, "cart");
 
+            try
+            {
+                await _recommendationService.UpdateUserEmbeddingAsync(userId, dto.ProductId, "cart");
+            }
+            
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to update recommendation embedding: {ex.Message}");
+            }
 
             return await GetCartAsync(userId);
         }
-
 
         #endregion
 
