@@ -1,10 +1,11 @@
-
+using System.Text;
+using System.Security.Cryptography;
+using Furniture.Services;
 using Furniture.Domain.InterfacesRepositories;
 using Furniture.Domain.Models;
 using Furniture.Persistence.Data.DataSeed;
 using Furniture.Persistence.Data.DbContexts;
 using Furniture.Persistence.Repositories;
-using Furniture.Services;
 using Furniture.Services.Implementations;
 using Furniture.Services.Mapping;
 using Furniture.Services.Mappings;
@@ -31,7 +32,10 @@ namespace Furniture.web
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // =========================
+            // Basic
+            // =========================
+            builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddControllers();
@@ -95,8 +99,6 @@ namespace Furniture.web
             // swagger authorization
             builder.Services.AddSwaggerGen(options =>
             {
-                options.EnableAnnotations();
-                
                 options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
                     Name = "Authorization",
@@ -108,25 +110,77 @@ namespace Furniture.web
                 });
 
                 options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
                 {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] {}
-        }
-    });
+                    {
+                        new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                        {
+                            Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                            {
+                                Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
 
 var allowedOrigins = builder.Configuration
     .GetSection("AllowedOrigins")
     .Get<string[]>();
+            // =========================
+            // Database
+            // =========================
+            builder.Services.AddDbContext<FurnitureDbContext>(options =>
+            {
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            // =========================
+            // Identity
+            // =========================
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<FurnitureDbContext>()
+                .AddDefaultTokenProviders();
+
+            // =========================
+            // JWT Authentication
+            // =========================
+            var jwt = builder.Configuration.GetSection("Jwt");
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwt["Issuer"],
+                    ValidAudience = jwt["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwt["Key"]!))
+                };
+            });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("VerifiedUser", policy =>
+                    policy.RequireClaim("IsVerified", "True"));
+
+                options.AddPolicy("SellerOnly", policy =>
+                    policy.RequireRole("Seller"));
+            });
+
+            // =========================
             // CORS
+            // =========================
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
@@ -143,20 +197,85 @@ var allowedOrigins = builder.Configuration
 
             // SignalR
             builder.Services.AddSignalR();
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddAutoMapper(x =>
+
+            // =========================
+            // AutoMapper
+            // =========================
+            builder.Services.AddAutoMapper(cfg =>
             {
-                x.AddProfile<MappingCategory>();
-                x.AddProfile<MappingReview>();
+                cfg.AddProfile<MappingCategory>();
+                cfg.AddProfile<MappingReview>();
+                cfg.AddProfile<MappingOffer>();
+                cfg.AddProfile<MappingCart>();
+                cfg.AddProfile<MappingCustomRequest>();
+                cfg.AddProfile<MappingOrder>();
+                cfg.AddProfile<MappingProduct>();
+                cfg.AddProfile<MappingComplaint>();
+                cfg.AddProfile<MappingFavourite>();
+                cfg.AddProfile<MappingUser>();
+                cfg.AddProfile<ShippingMapping>();
             });
 
-            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            // =========================
+            // Http Clients
+            // =========================
+
+            // Embedding / Recommendation Service
+            builder.Services.AddHttpClient("AIService", client =>
+            {
+                client.BaseAddress = new Uri(
+                    builder.Configuration["AIRecommendation:BaseUrl"]!);
+                client.Timeout = TimeSpan.FromSeconds(60);
+            });
+
+            // Image Validation Service
+            builder.Services.AddHttpClient("ImageValidationService", client =>
+            {
+                client.BaseAddress = new Uri(
+                    builder.Configuration["ImageValidation:BaseUrl"]!);
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+
+            // Visual Search Service
+            builder.Services.AddHttpClient("VisualSearchService", client =>
+            {
+                client.BaseAddress = new Uri(
+                    builder.Configuration["VisualSearch:BaseUrl"]!);
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+
+            // Paymob
+            builder.Services.AddHttpClient("Paymob", client =>
+            {
+                client.BaseAddress = new Uri("https://accept.paymob.com/");
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+
+            builder.Services.AddHttpClient("PaymobPayouts", client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+
+            builder.Services.AddHttpClient("PaymobPayoutsAuth", client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+
+            // =========================
+            // Repositories / UnitOfWork
+            // =========================
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // =========================
+            // Helpers
+            // =========================
+            builder.Services.AddScoped<JwtHelper>();
+
+            // =========================
+            // Core Services
+            // =========================
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
-            builder.Services.AddScoped<IReviewService, ReviewService>();
-            builder.Services.AddAutoMapper(x => x.AddProfile<MappingCategory>());
-            builder.Services.AddAutoMapper(x => x.AddProfile<MappingOffer>());
-            builder.Services.AddAutoMapper(x => x.AddProfile<MappingCart>());
-            builder.Services.AddAutoMapper(x => x.AddProfile<MappingCustomRequest>());
+
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<JwtHelper>();
@@ -178,16 +297,27 @@ var allowedOrigins = builder.Configuration
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IProductImageService, ProductImageService>();
+
             builder.Services.AddScoped<IFavouriteService, FavouriteService>();
-            builder.Services.AddScoped<IOfferService, OfferService>();
             builder.Services.AddScoped<ICartService, CartService>();
-            builder.Services.AddScoped<ICustomRequestService, CustomRequestService>();
-            builder.Services.AddScoped<IComplaintService, ComplaintService>();
-            builder.Services.AddScoped<IShippingService, ShippingService>();
-            builder.Services.AddScoped<ISellerService, SellerService>();
+
+            builder.Services.AddScoped<IOfferService, OfferService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IPaymentService, PaymentService>();
-            builder.Services.AddScoped<ISearchService, SearchService>();
+
+            builder.Services.AddScoped<IReviewService, ReviewService>();
+            builder.Services.AddScoped<IComplaintService, ComplaintService>();
+            builder.Services.AddScoped<ICustomRequestService, CustomRequestService>();
+
+            builder.Services.AddScoped<IShippingService, ShippingService>();
+            builder.Services.AddScoped<IShippingCalculatorService, ShippingCalculatorService>();
+
+            builder.Services.AddScoped<ISellerService, SellerService>();
+            builder.Services.AddScoped<ISellerPaymentService, SellerPaymentService>();
+
+            // =========================
+            // AI Integration Services
+            // =========================
             builder.Services.AddScoped<IImageValidationService, ImageValidationService>();
             builder.Services.AddScoped<IChatService, ChatService>();
 
@@ -197,26 +327,22 @@ var allowedOrigins = builder.Configuration
 
             builder.Services.AddHttpClient("AIService");
             builder.Services.AddScoped<IRecommendationService, RecommendationService>();
-            builder.Services.AddHttpClient<IImageValidationService, ImageValidationService>();
-            builder.Services.AddScoped<IImageValidationService, ImageValidationService>();
-            
-             // HttpClient -- Paymob
-            builder.Services.AddHttpClient("Paymob", client =>
-            {
-                client.BaseAddress = new Uri("https://accept.paymob.com/api/");
-                client.DefaultRequestHeaders.Add("Accept", "application/json");
-            });
+            builder.Services.AddScoped<ISearchService, SearchService>();
 
-            builder.Services.AddScoped<IShippingCalculatorService, ShippingCalculatorService>();
-            
             var app = builder.Build();
 
+            // =========================
             // Data Seeding
-            await using var scope= app.Services.CreateAsyncScope();
-            var DataSeedingService = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
-           await DataSeedingService.InitializeAsync();
-           
-            // Configure the HTTP request pipeline.
+            // =========================
+            await using (var scope = app.Services.CreateAsyncScope())
+            {
+                var dataSeedingService = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
+                await dataSeedingService.InitializeAsync();
+            }
+
+            // =========================
+            // Middleware
+            // =========================
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -224,7 +350,6 @@ var allowedOrigins = builder.Configuration
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Furniture API v1");
                 });
-                //  app.MapOpenApi();
             }
 
             app.UseHttpsRedirection();
@@ -236,8 +361,6 @@ var allowedOrigins = builder.Configuration
             app.MapControllers();
 app.MapHub<ChatHub>("/api/chatHub");
             app.Run();
-
         }
     }
 }
-

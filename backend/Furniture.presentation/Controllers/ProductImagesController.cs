@@ -36,39 +36,33 @@ namespace Furniture.presentation.Controllers
         
         
         [Authorize(Roles = "seller")]
-        [HttpPost("api/products/{id}/images")]
+        [HttpPost("{id}/images")]  
         public async Task<IActionResult> AddImage(int id, IFormFile file)
         {
             if (file == null || file.Length == 0)
                 return BadRequest("No image file provided");
 
-            ImageValidationResult validationResult;
             try
             {
+                
                 using var stream = file.OpenReadStream();
-                validationResult = await _imageValidationService.ValidateAsync(
-                    stream, file.FileName, file.ContentType);
+                await _productImageService.AddImageAsync(
+                    id, stream, file.FileName, file.ContentType);
+
+                return Ok(new { message = "Image validated and added successfully" });
+            }
+            catch (Exception ex) when (ex.Message.Contains("rejected"))
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex) when (ex.Message.Contains("not found"))
+            {
+                return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
-                return StatusCode(503, $"Image validation service unavailable: {ex.Message}");
+                return StatusCode(503, new { message = ex.Message });
             }
-
-            if (!validationResult.IsApproved)
-            {
-                return BadRequest(new
-                {
-                    message = "Image rejected: AI-generated content detected",
-                    aiProbability = validationResult.AiProbability,
-                    decision = validationResult.Decision
-                });
-            }
-            
-            return Ok(new
-            {
-                message = "Image validated and added successfully",
-                aiProbability = validationResult.AiProbability
-            });
         }
         // DELETE /api/images/{id}
         [Authorize(Roles ="admin, seller")]

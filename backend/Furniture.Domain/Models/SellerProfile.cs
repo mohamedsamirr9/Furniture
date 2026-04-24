@@ -10,6 +10,8 @@ namespace Furniture.Domain.Models
         public string? PaymobMerchantId { get; set; }
         public string? BankAccountNumber { get; set; }
         public string? BankName { get; set; }
+        public string? BankCode { get; set; }      
+        public string? NationalId { get; set; } 
         public decimal CommissionRate { get; set; } = 10m;
         public bool IsVerified { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
