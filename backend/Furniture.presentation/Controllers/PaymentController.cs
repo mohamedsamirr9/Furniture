@@ -93,7 +93,7 @@ namespace Furniture.presentation.Controllers
         
 
        [HttpGet("webhook")]
-[HttpPost("post-webhook")] // يفضل فصل المسميات برمجياً لكن سأبقيها كما هي إذا كنتِ تفضلين ذلك
+[HttpPost("post-webhook")] 
 [AllowAnonymous]
 public async Task<IActionResult> PaymobWebhook([FromQuery] string hmac)
 {
@@ -113,7 +113,7 @@ public async Task<IActionResult> PaymobWebhook([FromQuery] string hmac)
         if (HttpContext.Request.Method == "GET")
         {
 
-            return Redirect($"http://localhost:4200/orders/pay?orderId={internalOrderId}&status=failed");
+            return Redirect($"https://furniture-mauve-iota.vercel.app/orders/pay?orderId={internalOrderId}&status=failed");
         }
 
         return Ok(new { message = "Webhook acknowledged (payment not successful)" });
@@ -134,7 +134,7 @@ public async Task<IActionResult> PaymobWebhook([FromQuery] string hmac)
 
         if (HttpContext.Request.Method == "GET")
         {
-            return Redirect($"http://localhost:4200/orders/{internalOrderId}?status=success");
+            return Redirect($"https://furniture-mauve-iota.vercel.app/orders/{internalOrderId}?status=success");
         }
 
         return success
@@ -147,7 +147,7 @@ public async Task<IActionResult> PaymobWebhook([FromQuery] string hmac)
         
         if (HttpContext.Request.Method == "GET")
         {
-             return Redirect($"http://localhost:4200/orders/pay?orderId={internalOrderId}&status=error");
+             return Redirect($"https://furniture-mauve-iota.vercel.app/orders/pay?orderId={internalOrderId}&status=error");
         }
         
         return Ok(new { message = "Webhook acknowledged (processing error)" });

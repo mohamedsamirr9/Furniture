@@ -6,7 +6,7 @@
   justify-content: center;
   margin-top: 0;
   align-items: center;
-  padding-top: 5rem; /* ✅ قللناها من 8rem */
+  padding-top: 5rem; 
 }
 
 .hero::before {
@@ -55,7 +55,7 @@
 
 .hero-actions {
   margin-top: 0;
-  display: flex; /* ✅ مهم عشان الـ flex-direction يشتغل */
+  display: flex; 
   justify-content: center;
   gap: 12px;
   flex-wrap: wrap;

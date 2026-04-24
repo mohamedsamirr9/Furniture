@@ -2,29 +2,29 @@
 
   <aside class="sidebar">
     <div class="sidebar-logo">{{ 'NAV.BRAND' | translate }}</div>
-<a class="nav-item" routerLink="/seller/profile" routerLinkActive="active">
-  👤 Profile
-</a>
-    <nav class="sidebar-nav">
-        <a class="nav-item" routerLink="/seller/dashboard" routerLinkActive="active">
-          ⊞ {{ 'SELLER_SIDEBAR.DASHBOARD' | translate }}
-        </a>
 
-        <a class="nav-item" routerLink="/seller/product" routerLinkActive="active">
-          🪑 {{ 'SELLER_SIDEBAR.PRODUCT' | translate }}
-        </a>
-        <a class="nav-item" routerLink="/seller/orders" routerLinkActive="active">
-          📦 {{ 'SELLER_SIDEBAR.ORDERS' | translate }}
-        </a>
-        <a class="nav-item" routerLink="/seller/offers" routerLinkActive="active">
-          💼 {{ 'SELLER_SIDEBAR.OFFERS' | translate }}
-        </a>
-        <a class="nav-item" routerLink="/seller/payment" routerLinkActive="active">
-          💳 {{ 'SELLER_SIDEBAR.PAYMENT' | translate }}
-        </a>
-        <a class="nav-item" routerLink="/seller/complaints" routerLinkActive="active">
-          💬 {{ 'SELLER_SIDEBAR.COMPLAINTS' | translate }}
-        </a>
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/seller/profile" routerLinkActive="active">
+        👤 Profile
+      </a>
+      <a class="nav-item" routerLink="/seller/dashboard" routerLinkActive="active">
+        ⊞ {{ 'SELLER_SIDEBAR.DASHBOARD' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/seller/product" routerLinkActive="active">
+        🪑 {{ 'SELLER_SIDEBAR.PRODUCT' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/seller/orders" routerLinkActive="active">
+        📦 {{ 'SELLER_SIDEBAR.ORDERS' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/seller/offers" routerLinkActive="active">
+        💼 {{ 'SELLER_SIDEBAR.OFFERS' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/seller/payment" routerLinkActive="active">
+        💳 {{ 'SELLER_SIDEBAR.PAYMENT' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/seller/complaints" routerLinkActive="active">
+        💬 {{ 'SELLER_SIDEBAR.COMPLAINTS' | translate }}
+      </a>
     </nav>
 
     <div class="sidebar-footer">
@@ -36,5 +36,7 @@
   <main class="main-content">
     <router-outlet />
   </main>
+
+  <app-chat-widget></app-chat-widget>
 
 </div>

@@ -17,9 +17,7 @@ export class SellerProfileDisplayComponent implements OnChanges {
   @Input() seller: SellerProfileViewModel | null = null;
   @Input() loading = false;
   @Input() error = '';
-  /** Dashboard: enables edit UI, avatar upload, and save to API. */
   @Input() editMode = false;
-  /** Public storefront CTA (hidden on dashboard). */
   @Input() showRequestCustomCta = true;
 
   @Output() profileUpdated = new EventEmitter<SellerProfileViewModel>();
@@ -71,15 +69,9 @@ export class SellerProfileDisplayComponent implements OnChanges {
   }
 
   getAvatarBackgroundStyle(name?: string): { [key: string]: string } {
-    const key = (name ?? '').trim() || '?';
-    let hash = 0;
-    for (let i = 0; i < key.length; i++) {
-      hash = key.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const hue = Math.abs(hash) % 360;
     return {
-      'background-color': `hsl(${hue}, 52%, 46%)`,
-      color: '#ffffff',
+      'background-color': '#2c1a0e',
+      color: '#f5e8d0',
     };
   }
 
@@ -96,6 +88,10 @@ export class SellerProfileDisplayComponent implements OnChanges {
     this.isEditing = false;
     this.patchFormFromSeller();
     this.saveError = '';
+  }
+
+  openAddWork(): void {
+    // هنا تضيف اللوجيك بتاعك
   }
 
   saveProfile(): void {
@@ -120,8 +116,7 @@ export class SellerProfileDisplayComponent implements OnChanges {
         },
         error: (err) => {
           console.error(err);
-          this.saveError =
-            err?.error?.message ?? 'Unable to save profile. Please try again.';
+          this.saveError = err?.error?.message ?? 'Unable to save profile. Please try again.';
         },
       });
   }
@@ -139,9 +134,7 @@ export class SellerProfileDisplayComponent implements OnChanges {
         switchMap((res) =>
           this.sellerService.updateMyProfile({ profileImageUrl: res.secure_url })
         ),
-        finalize(() => {
-          this.avatarUploading = false;
-        })
+        finalize(() => { this.avatarUploading = false; })
       )
       .subscribe({
         next: (vm) => {
@@ -150,9 +143,7 @@ export class SellerProfileDisplayComponent implements OnChanges {
         },
         error: (err) => {
           console.error(err);
-          this.saveError =
-            err?.error?.message ??
-            'Image upload or profile update failed. Please try again.';
+          this.saveError = err?.error?.message ?? 'Image upload or profile update failed. Please try again.';
         },
       });
   }

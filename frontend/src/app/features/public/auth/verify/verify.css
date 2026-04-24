@@ -1,36 +1,185 @@
-.brand {
-  color: var(--furnora-green);
+.verify-page {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f5efe8;
 }
 
-.otp-input {
+.verify-page .left {
+  padding-left: 0 !important;
+}
+
+.verify-page .form-wrapper {
+  margin-left: 100px;
+  max-width: 520px;
+  width: 100%;
+}
+
+.verify-page .title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #2d1f16;
+}
+
+.verify-page .subtitle {
+  color: #8a7f77;
+  margin-bottom: 10px;
+}
+
+.verify-page .email-text {
+  color: #2d1f16;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+/* OTP INPUTS */
+.verify-page .otp-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.verify-page .otp-input {
   width: 60px;
   height: 60px;
   text-align: center;
   font-size: 1.5rem;
   font-weight: bold;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-.otp-input:focus {
-  border-color: #a3a380;
-  box-shadow: 0 0 0 0.25rem rgba(163, 163, 128, 0.25);
+  background: #f8f5f1;
+  border: 1.5px solid #e2d9d1;
+  border-radius: 12px;
   outline: none;
+  transition: 0.3s;
+  color: #2d1f16;
 }
 
-.btn-verify {
-  background-color: var(--furnora-green);
+.verify-page .otp-input:focus {
+  border-color: #6b4b35;
+  box-shadow: 0 0 0 2px rgba(107, 75, 53, 0.1);
+}
+
+.verify-page .otp-input.filled {
+  border-color: #6b4b35;
+  background: #f0e8e0;
+}
+
+/* BUTTON */
+.verify-page .btn-main {
+  background: linear-gradient(135deg, #6b4b35, #8a6245);
+  color: white;
+  padding: 14px;
+  border-radius: 12px;
   border: none;
-  border-radius: 25px;
-  font-size: 1.1rem;
+  font-weight: 500;
+  font-size: 15px;
+  transition: 0.3s;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.btn-verify:hover {
-  background-color: #7a7d65;
+.verify-page .btn-main:hover { opacity: 0.9; }
+.verify-page .btn-main:disabled { opacity: 0.7; cursor: not-allowed; }
+
+/* SPINNER */
+.verify-page .spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ALERTS */
+.verify-page .alert-error {
+  background: #fdf0ee;
+  border: 1.5px solid #e74c3c;
+  color: #c0392b;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.verify-page .alert-success {
+  background: #f0f7ee;
+  border: 1.5px solid #6b4b35;
+  color: #4a3728;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* LINK */
+.verify-page .link {
+  color: #6b4b35;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.verify-page .link:hover { text-decoration: underline; }
+
+/* RIGHT */
+.verify-page .right {
+  padding: 40px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.verify-page .image-card {
+  position: relative;
+  width: 92%;
+  height: 88%;
+  border-radius: 25px;
+  overflow: hidden;
+}
+
+.verify-page .image-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.verify-page .overlay {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  padding: 20px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.25);
+  color: white;
+}
+
+.verify-page .overlay span { font-size: 12px; opacity: 0.8; }
+.verify-page .overlay h3 { margin: 10px 0; }
+.verify-page .overlay p { font-size: 14px; opacity: 0.9; }
+
+.verify-page input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #f8f5f1 inset !important;
+  -webkit-text-fill-color: #2d1f16 !important;
 }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+@media (max-width: 768px) {
+  .verify-page .form-wrapper { margin-left: 0; padding: 30px 20px; max-width: 100%; }
+  .verify-page .title { font-size: 32px; }
+  .verify-page .left { padding: 20px !important; }
+  .verify-page .otp-input { width: 45px; height: 45px; font-size: 1.2rem; }
 }

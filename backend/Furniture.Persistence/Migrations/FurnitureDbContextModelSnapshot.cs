@@ -296,6 +296,34 @@ namespace Furniture.Persistence.Migrations
                     b.ToTable("ComplaintReplies");
                 });
 
+            modelBuilder.Entity("Furniture.Domain.Models.Conversation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SellerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("SellerId");
+
+                    b.ToTable("Conversations");
+                });
+
             modelBuilder.Entity("Furniture.Domain.Models.CustomRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -351,6 +379,43 @@ namespace Furniture.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("Favourites");
+                });
+
+            modelBuilder.Entity("Furniture.Domain.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int>("ConversationId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("SentAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Offer", b =>
@@ -1044,6 +1109,25 @@ namespace Furniture.Persistence.Migrations
                     b.Navigation("Responder");
                 });
 
+            modelBuilder.Entity("Furniture.Domain.Models.Conversation", b =>
+                {
+                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "Customer")
+                        .WithMany("ConversationsAsCustomer")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "Seller")
+                        .WithMany("ConversationsAsSeller")
+                        .HasForeignKey("SellerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Seller");
+                });
+
             modelBuilder.Entity("Furniture.Domain.Models.CustomRequest", b =>
                 {
                     b.HasOne("Furniture.Domain.Models.ApplicationUser", "Buyer")
@@ -1072,6 +1156,25 @@ namespace Furniture.Persistence.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Furniture.Domain.Models.Message", b =>
+                {
+                    b.HasOne("Furniture.Domain.Models.Conversation", "Conversation")
+                        .WithMany("Messages")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Offer", b =>
@@ -1327,6 +1430,10 @@ namespace Furniture.Persistence.Migrations
 
                     b.Navigation("Complaints");
 
+                    b.Navigation("ConversationsAsCustomer");
+
+                    b.Navigation("ConversationsAsSeller");
+
                     b.Navigation("CustomRequests");
 
                     b.Navigation("Favourites");
@@ -1359,6 +1466,11 @@ namespace Furniture.Persistence.Migrations
             modelBuilder.Entity("Furniture.Domain.Models.Complaint", b =>
                 {
                     b.Navigation("Replies");
+                });
+
+            modelBuilder.Entity("Furniture.Domain.Models.Conversation", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.CustomRequest", b =>

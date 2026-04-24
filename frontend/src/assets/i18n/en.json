@@ -18,8 +18,46 @@
     "COLLAPSE": "Collapse",
     "CATALOG": "Catalog",
     "OFFERS": "Offers",
-    "SEARCH": "Search"
+    "SEARCH": "Search",
+    "MY_PROFILE": "My Profile",
+  "MY_ORDERS": "My Orders",
+  "SIGN_OUT": "Sign Out"
   },
+"COMPLAINTS": {
+  "SUPPORT": "SUPPORT",
+  "TITLE": "My Complaints",
+  "SUBTITLE": "Submit and track your complaints. Our atelier team replies within 48 hours, with care.",
+  "NEW_COMPLAINT": "New Complaint",
+  "SUBMITTED_ON": "Submitted on",
+  "LATEST_RESPONSE": "Latest response:",
+  "VIEW_DETAILS": "View Details",
+  "EMPTY": "No complaints found",
+  "STATUS": {
+    "OPEN": "OPEN",
+    "IN_PROGRESS": "IN PROGRESS",
+    "RESOLVED": "RESOLVED",
+    "CLOSED": "CLOSED"
+  }
+},
+"MODAL": {
+  "TITLE": "Complaint Details",
+  "LOADING": "Loading complaint details...",
+  "MESSAGE": "MESSAGE",
+  "CREATED": "CREATED",
+  "BUYER": "BUYER",
+  "ORDER": "ORDER",
+  "SELLER": "SELLER",
+  "ATTACHMENT": "ATTACHMENT",
+  "REPLIES": "REPLIES",
+  "NO_REPLIES": "No replies yet.",
+  "NEXT_STATUS": "NEXT STATUS",
+  "UPDATE_STATUS": "Update Status",
+  "UPDATING": "Updating...",
+  "REPLY": "REPLY",
+  "REPLY_PLACEHOLDER": "Write a reply...",
+  "SEND": "Send",
+  "SENDING": "Sending..."
+},
   "BUTTONS": {
     "SAVE": "Save",
     "CANCEL": "Cancel",
@@ -452,23 +490,40 @@
       "LOCATION_LABEL": "Location"
     }
   },
-  "CUSTOMER": {
-    "REQUEST": {
-      "TITLE": "Custom Furniture Request",
-      "DESC": "Tell us what you're looking for and our skilled artisans will bring it to life.",
-      "BUDGET": "Budget ($)",
-      "DESC_LABEL": "Description & Special Requirements",
-      "UPLOAD_TEXT": "Click to upload reference image",
-      "UPLOAD_HINT": "PNG, JPG up to 10MB",
-      "CHANGE_IMAGE": "Click to change image",
-      "SUBMITTED_TITLE": "Request Submitted!",
-      "SUBMIT_ANOTHER": "Submit Another Request",
-      "BUDGET_PLACEHOLDER": "Enter your maximum budget...",
-      "DESC_PLACEHOLDER": "Describe what you want (e.g. 3-seater sofa in blue velvet)...",
-      "IMAGE_LABEL": "Reference Image",
-      "MY_REQUESTS": "My Requests",
-      "EMPTY": "You haven't made any custom requests yet."
-    },
+"CUSTOMER": {
+  "REQUEST": {
+    "TITLE": "Custom Furniture",
+    "TITLE_ITALIC": "Request",
+    "DESC": "Tell us what you're looking for and our skilled artisans will bring it to life.",
+    "BESPOKE_BADGE": "BESPOKE ATELIER",
+    "HERO_DESC": "Tell us what you're looking for and our skilled artisans will bring it to life — shaped, finished, and delivered to fit your space exactly.",
+    "STEP1_NUM": "01 · BRIEF",
+    "STEP1_LABEL": "Share your vision",
+    "STEP2_NUM": "02 · CRAFT",
+    "STEP2_LABEL": "Artisans build",
+    "STEP3_NUM": "03 · DELIVER",
+    "STEP3_LABEL": "To your door",
+    "THE_BRIEF": "THE BRIEF",
+    "SHARE_DETAILS": "Share the details",
+    "SHARE_DETAILS_DESC": "The more specific your description, the closer we can get to your vision. Reference images help us match your taste in materials, tone, and silhouette.",
+    "BUDGET": "Budget ($)",
+    "BUDGET_PLACEHOLDER": "Enter your maximum budget...",
+    "DESC_LABEL": "Description & Special Requirements",
+    "DESC_PLACEHOLDER": "Describe what you want (e.g. 3-seater sofa in blue velvet)...",
+    "IMAGE_LABEL": "Reference Image",
+    "UPLOAD_TEXT": "Click to upload reference image",
+    "UPLOAD_HINT": "PNG, JPG up to 10MB",
+    "CHANGE_IMAGE": "Click to change image",
+    "SUBMIT_NOTE": "We'll reply within 24 hours with a personalised quote.",
+    "SUBMITTED_TITLE": "Request Submitted!",
+    "SUBMIT_ANOTHER": "Submit Another Request",
+    "YOUR_ATELIER": "YOUR ATELIER",
+    "MY_REQUESTS": "My Requests",
+    "EMPTY_TITLE": "Nothing here yet",
+    "EMPTY": "You haven't made any custom requests yet.",
+    "EMPTY_DESC": "You haven't made any custom requests yet. Send your first brief above and we'll get to work."
+  },
+
     "COMPLAINTS": {
       "TITLE": "My Complaints",
       "SUBTITLE": "Submit and track your complaints",

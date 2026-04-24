@@ -1,53 +1,71 @@
 <div class="container-fluid vh-100 login-page">
   <div class="row h-100">
+
     <!-- LEFT -->
-    <div class="col-md-6 d-flex flex-column justify-content-center px-5">
-      <h3 class="brand mb-4" (click)="goHome()" style="cursor: pointer">{{ 'NAV.BRAND' | translate }}</h3>
+    <div class="col-md-6 d-flex align-items-center left">
+      <div class="form-wrapper">
 
-      <h2 class="fw-bold">{{ 'AUTH.WELCOME' | translate }}</h2>
-      <p class="text-muted mb-4">{{ 'AUTH.SIGN_IN_DESC' | translate }}</p>
+        <h1 class="title">{{ 'AUTH.WELCOME' | translate }}</h1>
+        <p class="subtitle">{{ 'AUTH.SIGN_IN_DESC' | translate }}</p>
 
-      <div *ngIf="errorMessage" class="alert alert-danger shadow-sm py-2 mb-3">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        {{ errorMessage }}
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+          <label>Email</label>
+          <div class="input-group-custom mb-1"
+               [class.input-error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+            <i class="bi bi-envelope"></i>
+            <input type="email" formControlName="email" placeholder="you@example.com">
+          </div>
+          <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-text mb-2">
+            <span *ngIf="loginForm.get('email')?.hasError('required')">Email is required.</span>
+            <span *ngIf="loginForm.get('email')?.hasError('email')">Enter a valid email.</span>
+          </div>
+          <div *ngIf="!(loginForm.get('email')?.invalid && loginForm.get('email')?.touched)" class="mb-3"></div>
+
+          <label>Password</label>
+          <div class="input-group-custom mb-1"
+               [class.input-error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            <i class="bi bi-lock"></i>
+            <input type="password" formControlName="password" placeholder="********">
+          </div>
+          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-text mb-1">
+            <span *ngIf="loginForm.get('password')?.hasError('required')">Password is required.</span>
+            <span *ngIf="loginForm.get('password')?.hasError('minlength')">Minimum 6 characters.</span>
+          </div>
+
+          <div class="text-end mb-4">
+          <a routerLink="/forgot-password" class="link small">Forgot password?</a>
+          </div>
+
+          <!-- Error Message من السيرفر -->
+          <div *ngIf="errorMessage" class="alert-error mb-3">
+            <i class="bi bi-exclamation-circle"></i> {{ errorMessage }}
+          </div>
+
+          <button class="btn-main w-100" [disabled]="isLoading">
+            <span *ngIf="isLoading" class="spinner"></span>
+            <span *ngIf="!isLoading">{{ 'AUTH.SIGN_IN' | translate }} →</span>
+          </button>
+
+          <p class="text-center mt-4">
+            Don't have an account?
+            <a routerLink="/register" class="link">Sign up</a>
+          </p>
+
+        </form>
       </div>
-
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <label class="form-label">{{ 'AUTH.EMAIL' | translate }}</label>
-          <input type="email" formControlName="email" class="form-control input" placeholder="you@example.com" [class.is-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" />
-        </div>
-
-        <div class="mb-2">
-          <label class="form-label">{{ 'AUTH.PASSWORD' | translate }}</label>
-          <input type="password" formControlName="password" class="form-control input" placeholder="********" [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" />
-        </div>
-
-        <div class="text-end mb-4">
-          <a href="#" class="link small">{{ 'AUTH.FORGOT_PASS' | translate }}</a>
-        </div>
-
-        <button type="submit" class="btn btn-main w-100 mb-3 d-flex align-items-center justify-content-center gap-2" [disabled]="loginForm.invalid || isLoading">
-          <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status"></span>
-          {{ isLoading ? ('ALERTS.LOADING' | translate) : ('AUTH.SIGN_IN' | translate) }}
-        </button>
-
-        <p class="text-center">
-          {{ 'AUTH.NO_ACCOUNT' | translate }}
-          <a routerLink="/register" class="link">{{ 'AUTH.SIGN_UP' | translate }}</a>
-        </p>
-      </form>
     </div>
 
     <!-- RIGHT -->
-    <div
-      class="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center right text-center"
-    >
-      <div class="square mb-4"></div>
-      <h3 class="fw-bold">{{ 'AUTH.FIND_PERFECT' | translate }}</h3>
-      <p class="text-muted w-75">
-        {{ 'AUTH.BROWSE_THOUSANDS' | translate }}
-      </p>
+    <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center right">
+      <div class="image-card">
+        <img src="/assets/images/login.jpg">
+        <div class="overlay">
+          <span>CURATED COLLECTION</span>
+          <h3>{{ 'AUTH.FIND_PERFECT' | translate }}</h3>
+          <p>{{ 'AUTH.BROWSE_THOUSANDS' | translate }}</p>
+        </div>
+      </div>
     </div>
 
   </div>

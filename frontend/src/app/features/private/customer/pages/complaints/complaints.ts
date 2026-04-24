@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { Complaint, ComplaintDetail } from '../../../../../core/models/complaint.model';
 import { ComplaintService } from '../../../../../core/services/complaint.service';
 import { ComplaintDetailsModalComponent } from '../../../../../shared/components/complaint-details-modal/complaint-details-modal';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-complaints',
-  imports: [CommonModule, ComplaintDetailsModalComponent],
+  imports: [TranslateModule,CommonModule, ComplaintDetailsModalComponent],
   templateUrl: './complaints.html',
   styleUrl: './complaints.css',
 })
