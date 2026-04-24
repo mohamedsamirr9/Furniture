@@ -431,7 +431,52 @@ namespace Furniture.Persistence.Data.DbContexts
                       .HasForeignKey(sr => sr.CategoryId)
                       .OnDelete(DeleteBehavior.Restrict);
             });
+            
+            modelBuilder.Entity<UserPreference>(entity =>
+            {
+                  entity.HasKey(x => x.Id);
+                  entity.Property(x => x.EmbeddingVector).HasColumnType("nvarchar(max)");
+                  entity.HasOne(x => x.User)
+                        .WithOne()
+                        .HasForeignKey<UserPreference>(x => x.UserId);
+            });
 
+            modelBuilder.Entity<Conversation>(entity =>{
+                entity.HasKey(c => c.Id);
+
+                entity.HasOne(c => c.Seller)
+                    .WithMany(u=>u.ConversationsAsSeller)
+                    .HasForeignKey(c => c.SellerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c=> c.Customer)
+                .WithMany(u=>u.ConversationsAsCustomer)
+                .HasForeignKey(c=>c.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<Message>(entity =>
+            {
+                entity.HasKey(m => m.Id);
+
+                entity.Property(m=>m.Content)
+                .IsRequired()
+                .HasMaxLength(2000);
+
+                entity.Property(m => m.SentAt)
+                .HasDefaultValueSql("GETDATE()");
+
+                entity.HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(m => m.Sender)
+                  .WithMany()
+                  .HasForeignKey(m => m.SenderId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            });
 
 
         }
@@ -457,6 +502,8 @@ namespace Furniture.Persistence.Data.DbContexts
 
         public DbSet<SellerProfile> SellerProfiles { get; set; } = null!;
         public DbSet<SellerPayout> SellerPayouts { get; set; } = null!;
+        public DbSet<UserPreference> UserPreferences { get; set; }        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
 
     }

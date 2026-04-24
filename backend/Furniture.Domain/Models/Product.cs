@@ -19,7 +19,7 @@ namespace Furniture.Domain.Models
         public bool IsAvailable { get; set; }
         //public bool IsCustomized { get; set; }
         public DateTime CreatedAt { get; set; }
-
+        public string? EmbeddingVector { get; set; }
         //rel
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;

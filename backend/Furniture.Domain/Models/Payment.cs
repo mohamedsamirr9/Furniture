@@ -1,4 +1,4 @@
-﻿using Furniture.Domain.Models.Enum;
+using Furniture.Domain.Models.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +19,7 @@ namespace Furniture.Domain.Models
 
         public string? PaymobTransactionId { get; set; }
         public string? PaymobOrderId { get; set; }
+        public string? MerchantOrderId { get; set; }
 
         public DateTime? PaidAt { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

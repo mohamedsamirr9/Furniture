@@ -1,10 +1,13 @@
 using Furniture.shared.Dtos.Payment;
 
-namespace Furniture.Servises_Abstraction;
-
-public interface IPaymentService
+namespace Furniture.Servises_Abstraction
 {
-    Task<PaymentResponseDTO> CreatePaymentAsync(int orderId, string userId);
-    Task<bool> HandlePaymentCallbackAsync(PaymobCallbackDTO callback);
-    Task<bool> VerifyPaymentAsync(int orderId);
+    public interface IPaymentService
+    {
+        Task<PaymentResponseDTO> CreatePaymentAsync(int orderId, string userId);
+
+        Task<bool> HandlePaymentCallbackAsync(PaymobCallbackDTO callback, string hmac);
+
+        Task<bool> VerifyPaymentAsync(int orderId);
+    }
 }

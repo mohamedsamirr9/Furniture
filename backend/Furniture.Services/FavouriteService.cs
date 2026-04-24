@@ -16,11 +16,13 @@ namespace Furniture.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IRecommendationService _recommendationService;
 
-        public  FavouriteService(IUnitOfWork unitOfWork , IMapper mapper)
+        public  FavouriteService(IUnitOfWork unitOfWork , IMapper mapper,  IRecommendationService recommendationService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _recommendationService = recommendationService;
         }
         public async Task<FavouriteDto> AddToFavouritesAsync(string userId, int productId)
         {
@@ -43,11 +45,14 @@ namespace Furniture.Services
             await _unitOfWork.GetRepository<Favourite, int>().AddAsync(favourite);
             await _unitOfWork.SaveChangesAsync();
 
-            var specs = new FavouritesByUserSpecification(userId);
-            var prods = await _unitOfWork.GetRepository<Favourite, int>().GetAllAsync(specs);
-            var added = prods.First(f => f.ProductId == productId);
+    var specs = new FavouritesByUserSpecification(userId);
+    var prods = await _unitOfWork.GetRepository<Favourite, int>().GetAllAsync(specs);
+    var added = prods.First(f => f.ProductId == productId);
+    var result = _mapper.Map<FavouriteDto>(added);
 
-            return _mapper.Map<FavouriteDto>(added);
+    _ = Task.Run(() => _recommendationService.UpdateUserEmbeddingAsync(userId, productId, "favorite"));
+
+    return result;
 
         }
 

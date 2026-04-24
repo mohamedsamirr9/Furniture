@@ -7,143 +7,109 @@ using Furniture.shared.Dtos.SearchWithImage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Furniture.Application.Services
+public class SearchService : ISearchService
 {
-    public class SearchService : ISearchService
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly HttpClient _httpClient;
+    private readonly ILogger<SearchService> _logger;
+
+    public SearchService(
+        IUnitOfWork unitOfWork,
+        IHttpClientFactory httpClientFactory,
+        ILogger<SearchService> logger)
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly HttpClient _httpClient;
-        private readonly ILogger<SearchService> _logger;
+        _unitOfWork = unitOfWork;
+        _httpClient = httpClientFactory.CreateClient("VisualSearchService");
+        _logger     = logger;
+    }
 
-        private const string PythonServiceUrl = "https://raniaxyz-furniture-visual-search.hf.space";
+    public async Task<IEnumerable<ProductSearchResultDto>> SearchByImageAsync(
+        IFormFile image, int topK = 5)
+    {
+        var pythonResults = await CallVisualSearchAsync(image, topK);
 
-        public SearchService(
-            IUnitOfWork unitOfWork,
-            IHttpClientFactory httpClientFactory,
-            ILogger<SearchService> logger)
-        {
-            _unitOfWork  = unitOfWork;
-            _httpClient  = httpClientFactory.CreateClient("PythonService");
-            _logger      = logger;
-        }
+        if (!pythonResults.Any())
+            return Enumerable.Empty<ProductSearchResultDto>();
 
-        public async Task<IEnumerable<ProductSearchResultDto>> SearchByImageAsync(IFormFile image, int topK = 5)
-        {
-            var pythonResults = await CallPythonSearchAsync(image, topK);
-    
-            foreach (var r in pythonResults)
+        var productIds = pythonResults
+            .Where(r => r != null && !string.IsNullOrEmpty(r.ProductId))
+            .Select(r => ParseProductId(r.ProductId))
+            .Where(id => id > 0)
+            .ToList();
+
+        var spec     = new ProductsByIdsSpecification(productIds);
+        var products = await _unitOfWork
+            .GetRepository<Product, int>()
+            .GetAllAsync(spec);
+
+        return pythonResults
+            .Select(pr =>
             {
-                Console.WriteLine($"  ProductId: '{r.ProductId}', Similarity: {r.Similarity}");
-            }
+                var productId = ParseProductId(pr.ProductId);
+                var product   = products.FirstOrDefault(p => p.Id == productId);
+                if (product == null) return null;
 
-            if (!pythonResults.Any())
-                return Enumerable.Empty<ProductSearchResultDto>();
-
-            var productIds = pythonResults
-                .Where(r => r != null && !string.IsNullOrEmpty(r.ProductId))
-                .Select(r => ParseProductId(r.ProductId))
-                .Where(id => id > 0)
-                .ToList();
-
-
-            var spec = new ProductsByIdsSpecification(productIds);
-            var products = await _unitOfWork
-                .GetRepository<Product, int>()
-                .GetAllAsync(spec);
-
-
-            return pythonResults
-                .Select(pr =>
+                return new ProductSearchResultDto
                 {
-                    var productId = ParseProductId(pr.ProductId);
-                    var product = products.FirstOrDefault(p => p.Id == productId);
-                    if (product == null) return null;
+                    ProductId  = product.Id,
+                    Name       = product.NameEn,
+                    Price      = product.Price,
+                    Similarity = pr.Similarity,
+                    ImageUrl   = product.Images.FirstOrDefault()?.ImageUrl
+                };
+            })
+            .Where(r => r != null)!;
+    }
 
-                    return new ProductSearchResultDto
-                    {
-                        ProductId = product.Id,
-                        Name = product.NameEn,
-                        Price = product.Price,
-                        Similarity = pr.Similarity,
-                        ImageUrl = product.Images.FirstOrDefault()?.ImageUrl
-                    };
-                })
-                .Where(r => r != null)!;
-        }
-        public async Task<BuildIndexResponseDto> BuildIndexAsync()
+    private async Task<List<PythonSearchResult>> CallVisualSearchAsync(
+        IFormFile image, int topK)
+    {
+        try
         {
-            var images = await _unitOfWork
-                .GetRepository<ProductImage, int>()
-                .GetAllAsync();
+            using var content     = new MultipartFormDataContent();
+            using var stream      = image.OpenReadStream();
+            using var fileContent = new StreamContent(stream);
 
-            if (!images.Any())
-                throw new InvalidOperationException("No product images found in database.");
+            fileContent.Headers.ContentType =
+                new System.Net.Http.Headers.MediaTypeHeaderValue(
+                    image.ContentType ?? "image/jpeg");
 
-            var payload = new BuildIndexRequestDto
-            {
-                Products = images.Select(img => new ProductImageDto
-                {
-                    ProductId = img.ProductId,
-                    ImageUrl = img.ImageUrl.Contains("?")
-                        ? img.ImageUrl
-                        : img.ImageUrl + "?w=400&q=80"
-                }).ToList()
-            };
+            content.Add(fileContent, "file", image.FileName);
 
-            var response = await _httpClient.PostAsJsonAsync(
-                $"{PythonServiceUrl}/build-index-from-urls", payload);
-
-            var responseContent = await response.Content.ReadAsStringAsync();
+            var response = await _httpClient.PostAsync(
+                $"/search?top_k={topK}", content);
 
             if (!response.IsSuccessStatusCode)
-                throw new Exception($"Python service error: {responseContent}");
+            {
+                _logger.LogWarning(
+                    "Visual search returned {Status}", response.StatusCode);
+                return new();
+            }
 
-            return System.Text.Json.JsonSerializer.Deserialize<BuildIndexResponseDto>(responseContent)
-                   ?? throw new Exception("Empty response from Python service.");
+            var result = await response.Content
+                .ReadFromJsonAsync<PythonSearchResponse>();
+
+            return result?.Results ?? new();
         }
-        private async Task<List<PythonSearchResult>> CallPythonSearchAsync(IFormFile image, int topK)
+        catch (Exception ex)
         {
-            try
-            {
-                using var content     = new MultipartFormDataContent();
-                using var stream      = image.OpenReadStream();
-                using var fileContent = new StreamContent(stream);
-                fileContent.Headers.ContentType =
-                    new System.Net.Http.Headers.MediaTypeHeaderValue(
-                        image.ContentType ?? "image/jpeg");
-                content.Add(fileContent, "file", image.FileName);
+            _logger.LogError(ex, "Failed to reach Visual Search service.");
+            throw new Exception("Search service unavailable.", ex);
+        }
+    }
 
-                var response = await _httpClient.PostAsync(
-                    $"{PythonServiceUrl}/search?top_k={topK}", content);
+    private static int ParseProductId(string productId)
+    {
+        if (string.IsNullOrEmpty(productId)) return 0;
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.LogWarning("Python search returned {Status}", response.StatusCode);
-                    return new();
-                }
-
-                var result = await response.Content
-                    .ReadFromJsonAsync<PythonSearchResponse>();
-
-                return result?.Results ?? new();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to reach Python search service.");
-                throw new Exception("Search service unavailable.", ex);
-            }
+        if (productId.Contains('_'))
+        {
+            var parts = productId.Split('_');
+            if (int.TryParse(parts.Last(), out var id)) return id;
         }
 
-        private static int ParseProductId(string productId)
-        {
-            if (string.IsNullOrEmpty(productId))
-                return 0;
-            if (productId.Contains('_'))
-            {
-                var parts = productId.Split('_');
-                if (int.TryParse(parts.Last(), out var id)) return id;
-            }
-            if (int.TryParse(productId, out var directId)) return directId;
-            return 0;
-        }    }
+        if (int.TryParse(productId, out var directId)) return directId;
+
+        return 0;
+    }
 }
