@@ -9,7 +9,7 @@ namespace Furniture.presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-   // [Authorize]
+    [Authorize(Roles = "buyer")]
     public class CartController : ControllerBase
     {
         private readonly ICartService _cartService;
@@ -19,9 +19,10 @@ namespace Furniture.presentation.Controllers
             _cartService = cartService;
         }
 
-        private string GetUserId() =>
-            User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-
+private string GetUserId()
+{
+    return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+}
 
         [HttpGet]
         public async Task<IActionResult> GetCart()

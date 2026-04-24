@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +8,6 @@ namespace Furniture.shared.Dtos.ProductDtos
 {
     public class ProductImageCreateDto
     {
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }

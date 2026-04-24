@@ -1,0 +1,154 @@
+<div class="container mt-5 py-4">
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="d-flex justify-content-center my-5">
+    <div class="spinner-border text-dark" role="status">
+      <span class="visually-hidden">{{ 'ALERTS.LOADING' | translate }}</span>
+    </div>
+  </div>
+
+  <!-- Not found state -->
+  <div *ngIf="notFoundMessage && !isLoading" class="text-center py-5">
+    <i class="bi bi-exclamation-circle text-danger display-1 mb-3 d-block"></i>
+    <h2 class="fw-bold">{{ notFoundMessage === 'Product not found.' ? ('ALERTS.PRODUCT_NOT_FOUND' | translate) : notFoundMessage }}</h2>
+    <a routerLink="/products" class="btn btn-outline-dark mt-3 px-4 rounded-pill">{{ 'BUTTONS.VIEW_DETAILS' | translate }}</a>
+  </div>
+
+  <!-- Product Details -->
+  <ng-container *ngIf="product && !isLoading">
+    <div class="row mb-4">
+      <div class="col-12">
+        <a
+          routerLink="/products"
+          class="text-decoration-none text-dark d-flex align-items-center gap-2 back-link"
+        >
+          <i class="bi bi-arrow-left fs-4"></i>
+          <span>{{ 'PRODUCT.ALL_PRODUCTS' | translate }}</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="row g-5 align-items-center">
+    <div class="col-md-6">
+      <div class="product-image-wrapper rounded-4 overflow-hidden shadow-sm">
+        <img [src]="selectedImage || fallbackImage" class="img-fluid w-100" [alt]="product.name" />
+      </div>
+      <div class="thumb-gallery" *ngIf="displayImages.length > 1">
+        <button
+          type="button"
+          class="thumb-btn"
+          *ngFor="let image of displayImages"
+          [class.active]="isActiveImage(image)"
+          (click)="selectImage(image)"
+        >
+          <img [src]="image" [alt]="product.name + ' thumbnail'" />
+        </button>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <div class="w-100">
+          <span class="category-badge" *ngIf="product.categoryName">{{ product.categoryName }}</span>
+          <h1 class="product-name fw-bold display-6 mt-2 mb-1">{{ product.name }}</h1>
+          <button
+            *ngIf="product.sellerId && product.sellerName"
+            type="button"
+            class="seller-link p-0 border-0 bg-transparent"
+            (click)="navigateToSeller()"
+          >
+            by {{ product.sellerName }}
+          </button>
+        </div>
+        <button class="btn btn-outline-dark rounded-circle p-2 border-0 shadow-sm"
+                (click)="toggleWishlist()"
+                [ngClass]="{'text-danger': isInWishlist}">
+          <i class="bi fs-4" [ngClass]="isInWishlist ? 'bi-heart-fill' : 'bi-heart'"></i>
+        </button>
+      </div>
+
+      <p class="w-75 text-muted fs-5 mb-4 leading-relaxed">
+        {{ product.description }}
+      </p>
+
+      <h2 class="fw-bold mb-5">${{ product.price }}</h2>
+
+      <div class="d-grid col-lg-8 w-100 d-flex flex-column justify-content-center align-items-center">
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="alert alert-danger w-75 py-2 shadow-sm mb-3" role="alert">
+          <i class="bi bi-x-circle-fill me-2"></i> {{ errorMessage }}
+        </div>
+        
+        <!-- Success Message -->
+        <div *ngIf="addedSuccess" class="alert alert-success w-75 py-2 shadow-sm mb-3" role="alert">
+          <i class="bi bi-check-circle-fill me-2"></i> {{ 'ALERTS.SUCCESS' | translate }}
+        </div>
+        <!-- Wishlist Success Message -->
+<div *ngIf="wishlistMessage" class="alert alert-success w-75 py-2 shadow-sm mb-3">
+  {{ wishlistMessage | translate }}
+</div>
+
+        <button class="btn btn-add-cart w-75 py-3 rounded-pill text-white fw-bold shadow-sm d-flex justify-content-center align-items-center gap-2" 
+                (click)="addToCart()" [disabled]="isAdding || product.stockQuantity <= 0">
+          <span *ngIf="isAdding" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          {{ isAdding ? ('ALERTS.LOADING' | translate) : (product.stockQuantity > 0 ? ('BUTTONS.ADD_TO_CART' | translate) : ('DASHBOARD.OUT_OF_STOCK' | translate)) }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Customer Reviews Section -->
+    <div class="row mt-5 pt-5 mb-5 border-top">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="fw-bold mb-0">{{ 'PRODUCT.REVIEWS' | translate }}</h2>
+          <div *ngIf="productReviews.length > 0" class="avg-rating-pill d-flex align-items-center px-4 py-2 rounded-pill shadow-sm">
+            <span class="fs-4 fw-bold me-2 text-dark">{{ averageRating | number:'1.1-1' }}</span>
+            <div class="stars-mini me-2">
+              <i class="bi bi-star-fill text-warning"></i>
+            </div>
+            <span class="text-muted small">({{ productReviews.length }} {{ 'PRODUCT.REVIEW_COUNT' | translate }})</span>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+    <div *ngIf="isLoadingReviews" class="text-center py-5">
+      <div class="spinner-border text-dark" role="status"></div>
+      <p class="mt-2 text-muted">{{ 'PRODUCT.REVIEWS_LOADING' | translate }}</p>
+    </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!isLoadingReviews && productReviews.length === 0" class="text-center py-5 rounded-4 bg-light border border-light-subtle">
+          <i class="bi bi-chat-heart display-1 text-muted opacity-25 mb-3 d-block"></i>
+          <h4 class="fw-bold text-dark">{{ 'PRODUCT.NO_REVIEWS' | translate }}</h4>
+          <p class="text-muted">{{ 'PRODUCT.FIRST_REVIEW' | translate }}</p>
+        </div>
+
+        <!-- Reviews List -->
+        <div *ngIf="!isLoadingReviews && productReviews.length > 0" class="reviews-grid">
+          <div *ngFor="let review of productReviews" class="review-card p-4 rounded-4 mb-3 shadow-sm border-0 transition-all">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <h6 class="fw-bold mb-1 text-dark">{{ review.userName }}</h6>
+                <div class="text-muted small">{{ review.createdAt | date:'longDate' }}</div>
+              </div>
+              <div class="star-rating-display d-flex gap-1 fs-5">
+                <i *ngFor="let star of [1,2,3,4,5]" 
+                   class="bi" 
+                   [class.bi-star-fill]="review.rating >= star" 
+                   [class.bi-star]="review.rating < star"
+                   [class.text-warning]="review.rating >= star"
+                   [class.text-secondary-subtle]="review.rating < star"></i>
+              </div>
+            </div>
+            <p class="mb-0 text-dark lh-base" *ngIf="review.message">
+              {{ review.message }}
+            </p>
+            <p class="mb-0 text-muted small fst-italic" *ngIf="!review.message">
+              {{ 'PRODUCT.NO_COMMENT' | translate }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </ng-container>
+</div>

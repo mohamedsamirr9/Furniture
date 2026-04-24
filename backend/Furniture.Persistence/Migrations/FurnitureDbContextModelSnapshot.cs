@@ -57,6 +57,9 @@ namespace Furniture.Persistence.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -67,6 +70,9 @@ namespace Furniture.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("NationalIdImage")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -91,7 +97,10 @@ namespace Furniture.Persistence.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("RegisterdAt")
+                    b.Property<string>("ProfileImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RegisteredAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
@@ -187,7 +196,12 @@ namespace Furniture.Persistence.Migrations
                     b.Property<DateTime>("Created_At")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("DescriptionAr")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("DescriptionEn")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -195,7 +209,11 @@ namespace Furniture.Persistence.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameAr")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -244,6 +262,40 @@ namespace Furniture.Persistence.Migrations
                     b.ToTable("Complaints");
                 });
 
+            modelBuilder.Entity("Furniture.Domain.Models.ComplaintReply", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ComplaintId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("ResponderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComplaintId");
+
+                    b.HasIndex("ResponderId");
+
+                    b.ToTable("ComplaintReplies");
+                });
+
             modelBuilder.Entity("Furniture.Domain.Models.CustomRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -263,6 +315,9 @@ namespace Furniture.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -271,34 +326,6 @@ namespace Furniture.Persistence.Migrations
                     b.HasIndex("BuyerId");
 
                     b.ToTable("CustomRequests");
-                });
-
-            modelBuilder.Entity("Furniture.Domain.Models.Delivery", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ShipperId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId")
-                        .IsUnique();
-
-                    b.HasIndex("ShipperId");
-
-                    b.ToTable("Deliveries");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Favourite", b =>
@@ -374,6 +401,10 @@ namespace Furniture.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -389,8 +420,17 @@ namespace Furniture.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<decimal>("ShippingCost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("ShippingRuleId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("SubTotal")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -400,6 +440,8 @@ namespace Furniture.Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ShippingRuleId");
 
                     b.HasIndex("UserId");
 
@@ -417,12 +459,18 @@ namespace Furniture.Persistence.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("SellerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("OrderId", "ProductId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("SellerId");
 
                     b.ToTable("OrderItems");
                 });
@@ -438,23 +486,35 @@ namespace Furniture.Persistence.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Method")
+                        .HasColumnType("int");
+
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("PaymentDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymobOrderId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymobTransactionId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("OrderId")
+                        .IsUnique();
 
                     b.ToTable("Payments");
                 });
@@ -475,14 +535,26 @@ namespace Furniture.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("DescriptionAr")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("DescriptionEn")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("EmbeddingVector")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameAr")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
@@ -529,6 +601,35 @@ namespace Furniture.Persistence.Migrations
                     b.ToTable("ProductImages");
                 });
 
+            modelBuilder.Entity("Furniture.Domain.Models.RefrashToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("Furniture.Domain.Models.Review", b =>
                 {
                     b.Property<int>("Id")
@@ -565,7 +666,7 @@ namespace Furniture.Persistence.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("Furniture.Domain.Models.ShippingBid", b =>
+            modelBuilder.Entity("Furniture.Domain.Models.SellerPayout", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -573,48 +674,170 @@ namespace Furniture.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("CommissionAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ShipperId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ShippingRequestId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ShipperId");
-
-                    b.HasIndex("ShippingRequestId");
-
-                    b.ToTable("ShippingBids");
-                });
-
-            modelBuilder.Entity("Furniture.Domain.Models.ShippingRequest", b =>
-                {
-                    b.Property<int>("Id")
+                    b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("FailureReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("NetAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("OrderItemsTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymobTransactionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PayoutTransactionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SellerProfileId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId")
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("SellerProfileId");
+
+                    b.ToTable("SellerPayouts");
+                });
+
+            modelBuilder.Entity("Furniture.Domain.Models.SellerProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BankAccountNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BankCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BankName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("CommissionRate")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NationalId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymobMerchantId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StoreDescription")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("StoreName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("ShippingRequests");
+                    b.ToTable("SellerProfiles");
+                });
+
+            modelBuilder.Entity("Furniture.Domain.Models.ShippingRule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("ShippingRules");
+                });
+
+            modelBuilder.Entity("Furniture.Domain.Models.UserPreference", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Budget")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmbeddingVector")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoomSize")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Style")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserPreferences");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -799,6 +1022,25 @@ namespace Furniture.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Furniture.Domain.Models.ComplaintReply", b =>
+                {
+                    b.HasOne("Furniture.Domain.Models.Complaint", "Complaint")
+                        .WithMany("Replies")
+                        .HasForeignKey("ComplaintId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "Responder")
+                        .WithMany("ComplaintReplies")
+                        .HasForeignKey("ResponderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Complaint");
+
+                    b.Navigation("Responder");
+                });
+
             modelBuilder.Entity("Furniture.Domain.Models.CustomRequest", b =>
                 {
                     b.HasOne("Furniture.Domain.Models.ApplicationUser", "Buyer")
@@ -808,25 +1050,6 @@ namespace Furniture.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Buyer");
-                });
-
-            modelBuilder.Entity("Furniture.Domain.Models.Delivery", b =>
-                {
-                    b.HasOne("Furniture.Domain.Models.Order", "Order")
-                        .WithOne("Delivery")
-                        .HasForeignKey("Furniture.Domain.Models.Delivery", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "Shipper")
-                        .WithMany()
-                        .HasForeignKey("ShipperId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Shipper");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Favourite", b =>
@@ -857,7 +1080,7 @@ namespace Furniture.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Furniture.Domain.Models.Order", "Order")
-                        .WithOne()
+                        .WithOne("Offer")
                         .HasForeignKey("Furniture.Domain.Models.Offer", "OrderId");
 
                     b.HasOne("Furniture.Domain.Models.ApplicationUser", "Seller")
@@ -875,11 +1098,18 @@ namespace Furniture.Persistence.Migrations
 
             modelBuilder.Entity("Furniture.Domain.Models.Order", b =>
                 {
+                    b.HasOne("Furniture.Domain.Models.ShippingRule", "ShippingRule")
+                        .WithMany("Orders")
+                        .HasForeignKey("ShippingRuleId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Furniture.Domain.Models.ApplicationUser", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ShippingRule");
 
                     b.Navigation("User");
                 });
@@ -898,16 +1128,24 @@ namespace Furniture.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "Seller")
+                        .WithMany()
+                        .HasForeignKey("SellerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Order");
 
                     b.Navigation("Product");
+
+                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Payment", b =>
                 {
                     b.HasOne("Furniture.Domain.Models.Order", "Order")
-                        .WithMany("Payments")
-                        .HasForeignKey("OrderId")
+                        .WithOne("Payment")
+                        .HasForeignKey("Furniture.Domain.Models.Payment", "OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -944,6 +1182,17 @@ namespace Furniture.Persistence.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Furniture.Domain.Models.RefrashToken", b =>
+                {
+                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Furniture.Domain.Models.Review", b =>
                 {
                     b.HasOne("Furniture.Domain.Models.Product", "Product")
@@ -963,34 +1212,56 @@ namespace Furniture.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Furniture.Domain.Models.ShippingBid", b =>
+            modelBuilder.Entity("Furniture.Domain.Models.SellerPayout", b =>
                 {
-                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "Shipper")
-                        .WithMany()
-                        .HasForeignKey("ShipperId")
+                    b.HasOne("Furniture.Domain.Models.Order", "Order")
+                        .WithMany("SellerPayouts")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Furniture.Domain.Models.ShippingRequest", "ShippingRequest")
-                        .WithMany("Bids")
-                        .HasForeignKey("ShippingRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Shipper");
-
-                    b.Navigation("ShippingRequest");
-                });
-
-            modelBuilder.Entity("Furniture.Domain.Models.ShippingRequest", b =>
-                {
-                    b.HasOne("Furniture.Domain.Models.Order", "Order")
-                        .WithOne("ShippingRequest")
-                        .HasForeignKey("Furniture.Domain.Models.ShippingRequest", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("Furniture.Domain.Models.SellerProfile", "SellerProfile")
+                        .WithMany("Payouts")
+                        .HasForeignKey("SellerProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Order");
+
+                    b.Navigation("SellerProfile");
+                });
+
+            modelBuilder.Entity("Furniture.Domain.Models.SellerProfile", b =>
+                {
+                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "User")
+                        .WithOne("SellerProfile")
+                        .HasForeignKey("Furniture.Domain.Models.SellerProfile", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Furniture.Domain.Models.ShippingRule", b =>
+                {
+                    b.HasOne("Furniture.Domain.Models.Category", "Category")
+                        .WithMany("ShippingRules")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Furniture.Domain.Models.UserPreference", b =>
+                {
+                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "User")
+                        .WithOne()
+                        .HasForeignKey("Furniture.Domain.Models.UserPreference", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1049,6 +1320,8 @@ namespace Furniture.Persistence.Migrations
                     b.Navigation("Cart")
                         .IsRequired();
 
+                    b.Navigation("ComplaintReplies");
+
                     b.Navigation("Complaints");
 
                     b.Navigation("CustomRequests");
@@ -1061,7 +1334,11 @@ namespace Furniture.Persistence.Migrations
 
                     b.Navigation("Products");
 
+                    b.Navigation("RefreshTokens");
+
                     b.Navigation("Reviews");
+
+                    b.Navigation("SellerProfile");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Cart", b =>
@@ -1072,6 +1349,13 @@ namespace Furniture.Persistence.Migrations
             modelBuilder.Entity("Furniture.Domain.Models.Category", b =>
                 {
                     b.Navigation("Products");
+
+                    b.Navigation("ShippingRules");
+                });
+
+            modelBuilder.Entity("Furniture.Domain.Models.Complaint", b =>
+                {
+                    b.Navigation("Replies");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.CustomRequest", b =>
@@ -1081,13 +1365,13 @@ namespace Furniture.Persistence.Migrations
 
             modelBuilder.Entity("Furniture.Domain.Models.Order", b =>
                 {
-                    b.Navigation("Delivery");
+                    b.Navigation("Offer");
 
                     b.Navigation("OrderItems");
 
-                    b.Navigation("Payments");
+                    b.Navigation("Payment");
 
-                    b.Navigation("ShippingRequest");
+                    b.Navigation("SellerPayouts");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Product", b =>
@@ -1103,9 +1387,14 @@ namespace Furniture.Persistence.Migrations
                     b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("Furniture.Domain.Models.ShippingRequest", b =>
+            modelBuilder.Entity("Furniture.Domain.Models.SellerProfile", b =>
                 {
-                    b.Navigation("Bids");
+                    b.Navigation("Payouts");
+                });
+
+            modelBuilder.Entity("Furniture.Domain.Models.ShippingRule", b =>
+                {
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

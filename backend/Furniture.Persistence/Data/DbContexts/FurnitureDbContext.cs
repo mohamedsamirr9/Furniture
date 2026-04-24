@@ -1,4 +1,4 @@
-﻿using Furniture.Domain.Models;
+using Furniture.Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -24,11 +24,17 @@ namespace Furniture.Persistence.Data.DbContexts
             {
                 entity.HasKey(c => c.Id);
 
-                entity.Property(c => c.Name)
+                entity.Property(c => c.NameEn)
                       .IsRequired()
                       .HasMaxLength(200);
 
-                entity.Property(c => c.Description)
+                entity.Property(c => c.NameAr)
+                      .HasMaxLength(200);
+
+                entity.Property(c => c.DescriptionEn)
+                      .HasMaxLength(500);
+
+                entity.Property(c => c.DescriptionAr)
                       .HasMaxLength(500);
 
                 entity.Property(c => c.Image)
@@ -40,11 +46,17 @@ namespace Furniture.Persistence.Data.DbContexts
             {
                 entity.HasKey(p => p.Id);
 
-                entity.Property(p => p.Name)
+                entity.Property(p => p.NameEn)
                       .IsRequired()
                       .HasMaxLength(300);
 
-                entity.Property(p => p.Description)
+                entity.Property(p => p.NameAr)
+                      .HasMaxLength(300);
+
+                entity.Property(p => p.DescriptionEn)
+                      .HasMaxLength(2000);
+
+                entity.Property(p => p.DescriptionAr)
                       .HasMaxLength(2000);
 
                 entity.Property(p => p.Price)
@@ -102,7 +114,7 @@ namespace Furniture.Persistence.Data.DbContexts
                     Tb.HasCheckConstraint("PhoneCheck", "PhoneNumber LIKE '01%' AND PhoneNumber NOT LIKE '%[^0-9]%'");
                 });
 
-                entity.Property(u => u.RegisterdAt)
+                entity.Property(u => u.RegisteredAt)
                       .HasDefaultValueSql("GETDATE()");
 
                 entity.Property(u => u.IsDeleted)
@@ -168,15 +180,11 @@ namespace Furniture.Persistence.Data.DbContexts
                       .HasForeignKey(o => o.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                // Order → ShippingRequest (1-1)
-                entity.HasOne(o => o.ShippingRequest)
-                      .WithOne(sr => sr.Order)
-                      .HasForeignKey<ShippingRequest>(sr => sr.OrderId);
-
-                //  Order → Delivery (1-1)
-                entity.HasOne(o => o.Delivery)
-                      .WithOne(d => d.Order)
-                      .HasForeignKey<Delivery>(d => d.OrderId);
+                entity.HasOne(o => o.ShippingRule)
+                     .WithMany(sr => sr.Orders)
+                     .HasForeignKey(o => o.ShippingRuleId)
+                     .OnDelete(DeleteBehavior.Restrict)
+                     .IsRequired(false);
             });
 
             //order item
@@ -198,6 +206,11 @@ namespace Furniture.Persistence.Data.DbContexts
                 entity.HasOne(oi => oi.Product)
                       .WithMany(p => p.OrderItems)
                       .HasForeignKey(oi => oi.ProductId)
+                      .OnDelete(DeleteBehavior.Restrict);
+                
+                entity.HasOne(oi => oi.Seller)
+                      .WithMany()
+                      .HasForeignKey(oi => oi.SellerId)
                       .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -224,7 +237,7 @@ namespace Furniture.Persistence.Data.DbContexts
 
                 //  Offer → Order 
                 entity.HasOne(o => o.Order)
-                      .WithOne()
+                      .WithOne(ord => ord.Offer)
                       .HasForeignKey<Offer>(o => o.OrderId)
                       .IsRequired(false);
             });
@@ -241,42 +254,6 @@ namespace Furniture.Persistence.Data.DbContexts
                       .WithMany(u => u.CustomRequests)
                       .HasForeignKey(cr => cr.BuyerId)
                       .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            //shipping request
-            modelBuilder.Entity<ShippingRequest>(entity =>
-            {
-                entity.HasKey(sr => sr.Id);
-
-                entity.HasMany(sr => sr.Bids)
-                      .WithOne(b => b.ShippingRequest)
-                      .HasForeignKey(b => b.ShippingRequestId);
-            });
-
-            //shipping bid
-            modelBuilder.Entity<ShippingBid>(entity =>
-            {
-                entity.HasKey(sb => sb.Id);
-                entity.Property(sb => sb.Price)
-                 .HasColumnType("decimal(18,2)");
-
-                //  ShippingBid → Shipper
-                entity.HasOne(sb => sb.Shipper)
-               .WithMany()
-               .HasForeignKey(sb => sb.ShipperId)
-               .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            //delivery
-            modelBuilder.Entity<Delivery>(entity =>
-            {
-                entity.HasKey(d => d.Id);
-
-                //  Delivery → Shipper
-                entity.HasOne(sb => sb.Shipper)
-               .WithMany()
-               .HasForeignKey(sb => sb.ShipperId)
-               .OnDelete(DeleteBehavior.Restrict);
             });
 
             //favourite
@@ -347,23 +324,125 @@ namespace Furniture.Persistence.Data.DbContexts
                       .HasForeignKey(c => c.OrderId);
             });
 
+            modelBuilder.Entity<ComplaintReply>(entity =>
+            {
+                entity.HasKey(r => r.Id);
+                entity.Property(r => r.Message)
+                      .HasMaxLength(2000)
+                      .IsRequired();
+                entity.Property(r => r.CreatedAt)
+                      .HasDefaultValueSql("GETDATE()");
+
+                entity.HasOne(r => r.Complaint)
+                      .WithMany(c => c.Replies)
+                      .HasForeignKey(r => r.ComplaintId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(r => r.Responder)
+                      .WithMany(u => u.ComplaintReplies)
+                      .HasForeignKey(r => r.ResponderId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
             //payment
             modelBuilder.Entity<Payment>(entity =>
             {
-                entity.HasKey(p => p.Id);
+                  entity.HasKey(p => p.Id);
 
-                entity.Property(p => p.Amount)
+                  entity.Property(p => p.Amount)
+                        .HasColumnType("decimal(18,2)");
+
+                  // Payment → Order (1-1) 
+                  entity.HasOne(p => p.Order)
+                        .WithOne(o => o.Payment)
+                        .HasForeignKey<Payment>(p => p.OrderId)
+                        .OnDelete(DeleteBehavior.Cascade);
+            });
+            
+            //seller profile
+            modelBuilder.Entity<SellerProfile>(entity =>
+            {
+                  entity.HasKey(s => s.Id);
+
+                  entity.Property(s => s.StoreName)
+                        .IsRequired()
+                        .HasMaxLength(200);
+
+                  entity.Property(s => s.StoreDescription)
+                        .HasMaxLength(1000);
+
+                  entity.Property(s => s.CommissionRate)
+                        .HasColumnType("decimal(5,2)");
+
+                  entity.Property(s => s.CreatedAt)
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                  entity.HasOne(s => s.User)
+                        .WithOne(u => u.SellerProfile)
+                        .HasForeignKey<SellerProfile>(s => s.UserId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                  entity.HasIndex(s => s.UserId).IsUnique();
+            });
+
+            //seller payout
+            modelBuilder.Entity<SellerPayout>(entity =>
+            {
+                  entity.HasKey(p => p.Id);
+
+                  entity.Property(p => p.OrderItemsTotal)
+                        .HasColumnType("decimal(18,2)");
+
+                  entity.Property(p => p.CommissionAmount)
+                        .HasColumnType("decimal(18,2)");
+
+                  entity.Property(p => p.NetAmount)
+                        .HasColumnType("decimal(18,2)");
+
+                  entity.Property(p => p.CreatedAt)
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                  entity.HasOne(p => p.SellerProfile)
+                        .WithMany(s => s.Payouts)
+                        .HasForeignKey(p => p.SellerProfileId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                  entity.HasOne(p => p.Order)
+                        .WithMany(o => o.SellerPayouts)
+                        .HasForeignKey(p => p.OrderId)
+                        .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            //ShippingRule 
+            modelBuilder.Entity<ShippingRule>(entity =>
+            {
+                entity.HasKey(sr => sr.Id);
+
+                entity.Property(sr => sr.City)
+                      .IsRequired()
+                      .HasMaxLength(200);
+
+                entity.Property(sr => sr.Price)
                       .HasColumnType("decimal(18,2)");
 
-                entity.Property(p => p.PaymentDate)
-                      .HasDefaultValueSql("GETUTCDATE()");
-
-                //  Payment → Order (1-M)
-                entity.HasOne(p => p.Order)
-                      .WithMany(o => o.Payments)
-                      .HasForeignKey(p => p.OrderId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                // ShippingRule → Category (M-1)
+                entity.HasOne(sr => sr.Category)
+                      .WithMany(c => c.ShippingRules)
+                      .HasForeignKey(sr => sr.CategoryId)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
+            
+            modelBuilder.Entity<UserPreference>(entity =>
+            {
+                  entity.HasKey(x => x.Id);
+                  entity.Property(x => x.EmbeddingVector).HasColumnType("nvarchar(max)");
+                  entity.HasOne(x => x.User)
+                        .WithOne()
+                        .HasForeignKey<UserPreference>(x => x.UserId);
+            });
+
+
+
         }
         //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Cart> Carts { get; set; }
@@ -377,13 +456,17 @@ namespace Furniture.Persistence.Data.DbContexts
         public DbSet<Favourite> Favourites { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Complaint> Complaints { get; set; }
+        public DbSet<ComplaintReply> ComplaintReplies { get; set; }
         public DbSet<Payment> Payments { get; set; }
 
-        public DbSet<ShippingRequest> ShippingRequests { get; set; }
-        public DbSet<ShippingBid> ShippingBids { get; set; }
-        public DbSet<Delivery> Deliveries { get; set; }
+        public DbSet<ShippingRule> ShippingRules { get; set; }
         public DbSet<CustomRequest> CustomRequests { get; set; }
+        public DbSet<RefrashToken> RefreshTokens { get; set; }
 
+
+        public DbSet<SellerProfile> SellerProfiles { get; set; } = null!;
+        public DbSet<SellerPayout> SellerPayouts { get; set; } = null!;
+        public DbSet<UserPreference> UserPreferences { get; set; }
 
     }
 }

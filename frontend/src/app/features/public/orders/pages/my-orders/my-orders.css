@@ -1,0 +1,88 @@
+/* ===== My Orders Page Responsive Styles ===== */
+
+@media (max-width: 575.98px) {
+  .container.py-5 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  h1.display-6 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Mobile order cards */
+.order-card-mobile {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.order-card-mobile:active {
+  background-color: #f0f0f0;
+}
+
+/* Custom Order Enhancements */
+.order-img-container {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f8f9fa;
+  border: 1px solid #eee;
+  flex-shrink: 0;
+}
+
+.order-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.custom-request-snippet {
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.badge.bg-info {
+  background-color: #e3f2fd !important;
+  color: #0d47a1 !important;
+  border: 1px solid #bbdefb;
+}
+
+.order-card-mobile:hover, 
+.order-card-mobile:active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.order-card-mobile .order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.order-card-mobile .order-card-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Tablets - tighter table spacing */
+@media (min-width: 768px) and (max-width: 991px) {
+  .table td, .table th {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    font-size: 0.9rem;
+  }
+
+  .btn-sm {
+    font-size: 0.8rem;
+    padding: 0.4rem 1rem;
+  }
+}

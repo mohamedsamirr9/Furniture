@@ -1,0 +1,64 @@
+<div class="modal-overlay" *ngIf="isOpen" (click)="onClose()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ 'ORDER.DETAILS' | translate }}</h2>
+      <button class="close-btn" type="button" (click)="onClose()" aria-label="Close">&times;</button>
+    </div>
+
+    <div class="modal-body" *ngIf="loading">{{ 'ADMIN.LOADING' | translate }}</div>
+    <div class="modal-body error-text" *ngIf="!loading && error">{{ error }}</div>
+
+    <div class="modal-body" *ngIf="!loading && !error && order">
+      <div class="detail-row">
+        <strong>ORD-{{ order.id }}</strong>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <strong>{{ 'ADMIN.CUSTOMER' | translate }}</strong>
+          <div>{{ order.userName || ('AUTH.CUSTOMER' | translate) }}</div>
+        </div>
+        <div>
+          <strong>{{ 'ORDER.PLACED_ON' | translate }}</strong>
+          <div>{{ order.orderDate | date: 'medium' }}</div>
+        </div>
+        <div>
+          <strong>{{ 'ADMIN.STATUS' | translate }}</strong>
+          <div>
+            <span class="badge badge-outline">{{ 'STATUS.' + (order.status | uppercase) | translate }}</span>
+          </div>
+        </div>
+        <div>
+          <strong>{{ 'ADMIN.TOTAL' | translate }}</strong>
+          <div>{{ order.totalPrice | currency }}</div>
+        </div>
+      </div>
+
+      <div class="items-section">
+        <strong>{{ 'ORDER.ITEMS_TITLE' | translate }}</strong>
+
+        <div class="item-row" *ngFor="let line of order.orderItems || []">
+          <div class="item-thumb-wrap">
+            <img
+              *ngIf="line.productImage"
+              [src]="line.productImage"
+              [alt]="line.productName || ''"
+              class="item-thumb"
+            />
+            <div class="item-thumb-placeholder" *ngIf="!line.productImage">—</div>
+          </div>
+          <div class="item-meta">
+            <div class="item-name">{{ line.productName || ('ADMIN.NA' | translate) }}</div>
+            <div class="item-sub">
+              {{ 'ORDER.QTY' | translate }}: {{ line.quantity }}
+              · {{ 'ORDER.UNIT_PRICE' | translate }}: {{ line.unitPrice | currency }}
+              · {{ lineTotal(line) | currency }}
+            </div>
+          </div>
+        </div>
+
+        <p class="no-items" *ngIf="!(order.orderItems?.length)">{{ 'ORDER.NO_ITEMS' | translate }}</p>
+      </div>
+    </div>
+  </div>
+</div>

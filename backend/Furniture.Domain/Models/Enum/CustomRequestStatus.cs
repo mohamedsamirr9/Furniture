@@ -10,6 +10,7 @@ namespace Furniture.Domain.Models.Enum
     {
         Open , 
         Closed , 
-        Accepted
+        Accepted, 
+        Cancelled
     }
 }

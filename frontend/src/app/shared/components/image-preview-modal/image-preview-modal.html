@@ -1,0 +1,6 @@
+<div class="modal-overlay" *ngIf="imageUrl" (click)="onClose()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <button class="close-btn" type="button" (click)="onClose()">&times;</button>
+    <img [src]="imageUrl" alt="Image preview" class="modal-image" />
+  </div>
+</div>

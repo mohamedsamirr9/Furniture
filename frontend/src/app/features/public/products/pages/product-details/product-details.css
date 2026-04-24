@@ -1,0 +1,140 @@
+.product-name {
+  font-size: 1.8rem;
+}
+.back-link {
+  font-weight: 500;
+  transition: transform 0.2s;
+}
+
+.back-link:hover {
+  transform: translateX(-5px);
+}
+
+.product-image-wrapper {
+  background-color: #f8f9fa;
+  max-height: 500px;
+}
+
+.product-image-wrapper img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+.thumb-gallery {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.thumb-btn {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  background: #fff;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb-btn:hover {
+  border-color: #9ca3af;
+  transform: translateY(-1px);
+}
+
+.thumb-btn.active {
+  border-color: var(--furnora-green-light);
+  box-shadow: 0 0 0 2px rgba(141, 181, 142, 0.25);
+}
+
+.category-badge {
+  display: inline-block;
+  background: #111827;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.seller-link {
+  color: #6b7280;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.seller-link:hover {
+  color: #374151;
+  text-decoration: underline;
+}
+
+.leading-relaxed {
+  line-height: 1.8;
+}
+
+.btn-add-cart {
+  background-color: var(--furnora-green-light);
+  border: none;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.btn-add-cart:hover {
+  background-color: var(--furnora-green-light);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(141, 181, 142, 0.4) !important;
+}
+
+h1 {
+  max-width: 400px;
+}
+
+/* Reviews Section Styles */
+.avg-rating-pill {
+  background: white;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.review-card {
+  background-color: #fff;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.review-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
+}
+
+.text-warning {
+  color: #ffc107 !important;
+}
+
+.stars-mini i {
+  font-size: 1.25rem;
+}
+
+.transition-all {
+  transition: all 0.2s ease;
+}
+
+@media (max-width: 576px) {
+  .avg-rating-pill {
+    padding: 0.5rem 1rem !important;
+  }
+
+  .thumb-btn {
+    width: 56px;
+    height: 56px;
+  }
+}
+

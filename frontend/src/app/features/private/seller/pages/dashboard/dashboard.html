@@ -1,0 +1,11 @@
+<div class="page-header">
+  <h1>{{ 'NAV.DASHBOARD' | translate }}</h1>
+</div>
+<hr class="divider" />
+
+<div class="stats-grid">
+  <div class="stat-card" *ngFor="let stat of stats">
+    <p class="stat-label">{{ stat.label | translate }}</p>
+    <h2 class="stat-value">{{ stat.value }}</h2>
+  </div>
+</div>

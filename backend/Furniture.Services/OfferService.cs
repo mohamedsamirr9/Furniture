@@ -1,6 +1,7 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Furniture.Domain.InterfacesRepositories;
 using Furniture.Domain.Models;
+using Furniture.Domain.Models.Enum;
 using Furniture.Services.Specifications;
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos;
@@ -43,16 +44,42 @@ namespace Furniture.Services
             return _mapper.Map<IEnumerable<OfferDto>>(offers);
         }
 
+        public async Task<OfferDto?> GetOfferByIdAsync(int offerId)
+        {
+            var repo = _unitOfWork.GetRepository<Offer, int>();
+            var offer = await repo.GetByIdAsync(offerId);
+            return _mapper.Map<OfferDto>(offer);
+        }
+
         public async Task AcceptOfferAsync(int offerId)
         {
             var repo = _unitOfWork.GetRepository<Offer, int>();
             var offer = await repo.GetByIdAsync(offerId);
             if (offer == null) throw new Exception("Offer not found");
 
-            var otherOffers = await repo.GetAllAsync(new OffersByRequestSpecification(offer.OrderRequestId));
-            foreach (var o in otherOffers)
+            if (offer.Status != OfferStatus.Pending)
+                throw new Exception("This offer has already been processed.");
+
+            var allOffers = await repo.GetAllAsync(new OffersByRequestSpecification(offer.CustomRequestId));
+            
+            if (allOffers.Any(o => o.Status == OfferStatus.Accepted))
+                throw new Exception("There is already an accepted offer for this request.");
+
+            // Update the selected offer
+            offer.Status = OfferStatus.Accepted;
+            
+            // Mark all other offers for this request as rejected
+            foreach (var o in allOffers.Where(x => x.Id != offerId))
             {
-                o.IsAccepted = o.Id == offerId;
+                o.Status = OfferStatus.Rejected;
+            }
+
+            // Update the status of the parent Custom Request
+            var requestRepo = _unitOfWork.GetRepository<CustomRequest, int>();
+            var request = await requestRepo.GetByIdAsync(offer.CustomRequestId);
+            if (request != null)
+            {
+                request.Status = CustomRequestStatus.Accepted;
             }
 
             await _unitOfWork.SaveChangesAsync();

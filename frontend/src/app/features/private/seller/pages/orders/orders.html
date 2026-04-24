@@ -1,0 +1,62 @@
+<div class="page-header">
+  <h1>{{ 'NAV.ORDERS' | translate }}</h1>
+</div>
+<hr class="divider" />
+
+<div *ngIf="isLoading">{{ 'ADMIN.LOADING' | translate }}</div>
+<div class="table-card" *ngIf="!isLoading">
+  <h2 class="card-title">{{ 'NAV.ORDERS' | translate }}</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{{ 'ADMIN.ORDER_ID' | translate }}</th>
+        <th>{{ 'ADMIN.CUSTOMER' | translate }}</th>
+        <th>{{ 'ADMIN.ITEMS' | translate }}</th>
+        <th>{{ 'ADMIN.SHIPPING' | translate }}</th>
+        <th>{{ 'ADMIN.STATUS' | translate }}</th>
+        <th>{{ 'ADMIN.TOTAL' | translate }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of (orders.orders || orders)">
+        <td><strong>ORD-{{ order.id || order.orderId }}</strong></td>
+        <td>{{ order.userName || ('ADMIN.CUSTOMER' | translate) }}</td>
+        <td>{{ order.isCustom ? ('ORDER.CUSTOM_PRODUCT' | translate) : (order.itemsCount || order.orderItems?.length || 0) + ' ' + ('ADMIN.ITEMS_COUNT' | translate) }}</td>
+        <td>{{ order.shippingAddress || ('ADMIN.NA' | translate) }}</td>
+        <td>
+          <select 
+            class="badge" 
+            [ngClass]="{
+              'badge-outline': !isTerminalStatus(order.status),
+              'badge-red': order.status === 'Cancelled' || order.status === 'Declined',
+              'badge-green': order.status === 'Completed'
+            }"
+            [disabled]="isTerminalStatus(order.status)"
+            (change)="updateStatus(order, $event)">
+            <option [value]="order.status" selected>{{ 'STATUS.' + (order.status | uppercase) | translate }}</option>
+            <option *ngFor="let next of getValidTransitions(order.status)" [value]="next">{{ 'STATUS.' + (next | uppercase) | translate }}</option>
+          </select>
+        </td>
+        <td><strong>{{ (order.totalPrice || order.total) | currency }}</strong></td>
+        <td>
+          <button
+            type="button"
+            class="view-details-btn"
+            (click)="viewOrderDetails(order.id || order.orderId)"
+          >
+            {{ 'MY_ORDERS.VIEW_DETAILS' | translate }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-order-details-modal
+  [isOpen]="showOrderDetailsModal"
+  [loading]="orderDetailsLoading"
+  [error]="orderDetailsError"
+  [order]="selectedOrder"
+  (close)="closeOrderDetails()"
+/>

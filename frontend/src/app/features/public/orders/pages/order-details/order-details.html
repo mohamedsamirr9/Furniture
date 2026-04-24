@@ -1,0 +1,220 @@
+<div class="container py-5 mt-4">
+  <div *ngIf="isLoading" class="d-flex justify-content-center my-5 py-5">
+    <div class="spinner-border text-dark" role="status">
+      <span class="visually-hidden">{{ 'ALERTS.LOADING' | translate }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="errorMsg" class="alert alert-danger shadow-sm py-3 px-4 rounded-4" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMsg }}
+    <button class="btn btn-sm btn-outline-danger ms-3" routerLink="/orders">{{ 'ORDER.BACK_TO_ORDERS' | translate }}</button>
+  </div>
+
+  <ng-container *ngIf="order && !isLoading">
+    <!-- Header -->
+    <div class="row align-items-center mb-4 pb-4 border-bottom">
+      <div class="col-md-6 mb-3 mb-md-0">
+        <a routerLink="/orders" class="text-decoration-none text-muted mb-3 d-inline-block fw-medium">
+          <i class="bi bi-arrow-left me-2"></i>{{ 'ORDER.BACK_TO_ORDERS' | translate }}
+        </a>
+        <h1 class="display-6 fw-bold mb-0">
+          {{ 'ORDER.NUMBER' | translate }}{{ order.id }}
+          <span *ngIf="order.isCustom" class="badge custom-order-badge ms-2" style="font-size: 0.9rem;">{{ 'ORDER.CUSTOM_PRODUCT' | translate }}</span>
+        </h1>
+        <p class="text-muted mt-2 mb-0">{{ 'ORDER.PLACED_ON' | translate }} {{ (order.orderDate || order.createdAt) | date:'mediumDate' }} {{ 'ORDER.AT' | translate }} {{ (order.orderDate || order.createdAt) | date:'shortTime' }}</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <span class="badge rounded-pill fw-medium px-4 py-2 fs-6 mb-3" [ngClass]="getStatusClass(order.status)">
+          {{ 'STATUS.' + (order.status | uppercase) | translate }}
+        </span>
+        <div *ngIf="canCancel">
+          <button class="btn btn-outline-danger rounded-pill fw-bold shadow-sm px-4" (click)="cancelOrder()" [disabled]="isCancelling">
+             <span *ngIf="isCancelling" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+             {{ 'ORDER.CANCEL' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-5">
+      <!-- Left: Order Items / Custom Project Details -->
+      <div class="col-lg-8">
+        
+        <!-- Case 1: Standard Order Items -->
+        <div *ngIf="!order.isCustom" class="card border-0 shadow-sm rounded-4 mb-4">
+          <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+            <h5 class="fw-bold mb-0">{{ 'ORDER.ITEMS_TITLE' | translate }}</h5>
+          </div>
+          <div class="card-body p-4">
+            <div class="d-flex flex-column flex-sm-row align-items-sm-center mb-4 pb-4 border-bottom border-light" *ngFor="let item of order.orderItems; let last = last" [class.border-bottom]="!last" [class.pb-4]="!last" [class.mb-4]="!last">
+              <img [src]="item.productImage || 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=150&auto=format&fit=crop'" 
+                   alt="{{ item.productName }}" class="rounded-4 me-sm-4 mb-3 mb-sm-0 shadow-sm" style="width: 100px; height: 100px; object-fit: cover;">
+              <div class="flex-grow-1 mb-2 mb-sm-0">
+                <h5 class="mb-1 fw-bold text-dark">{{ item.productName }}</h5>
+                <div class="text-muted mb-2">{{ 'ORDER.UNIT_PRICE' | translate }}: ${{ item.unitPrice | number:'1.2-2' }}</div>
+                <div class="fw-medium text-dark bg-light d-inline-block px-3 py-1 rounded-pill small">{{ 'ORDER.QTY' | translate }}: {{ item.quantity }}</div>
+              </div>
+              <div class="fw-bold text-sm-end fs-5 mt-2 mt-sm-0">
+                <div class="mb-2">${{ (item.unitPrice * item.quantity) | number:'1.2-2' }}</div>
+                <div *ngIf="order.status?.toLowerCase() === 'delivered' || order.status?.toLowerCase() === 'completed'">
+                    <button *ngIf="!reviewedProductIds.has(item.productId)" 
+                            class="btn btn-sm btn-outline-dark rounded-pill px-3 py-1 small fw-bold mt-2 shadow-sm"
+                            (click)="openReview(item)">
+                      <i class="bi bi-star-fill me-1"></i> {{ 'ORDER.REVIEW' | translate }}
+                    </button>
+                    <span *ngIf="reviewedProductIds.has(item.productId)" 
+                          class="badge bg-light text-success border border-success-subtle rounded-pill px-3 py-2 small d-inline-flex align-items-center mt-2">
+                      <i class="bi bi-check-circle-fill me-1"></i> {{ 'ORDER.REVIEWED' | translate }}
+                    </span>
+                </div>
+              </div>
+            </div>
+            
+            <div *ngIf="!order.orderItems || order.orderItems.length === 0" class="text-center text-muted py-5">
+              <i class="bi bi-box-seam display-4 mb-3 d-block opacity-25"></i>
+              {{ 'ORDER.NO_ITEMS' | translate }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Case 2: Custom Project Details -->
+        <div *ngIf="order.isCustom" class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+          <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+            <h5 class="fw-bold mb-0">{{ 'ORDER.CUSTOM_TITLE' | translate }}</h5>
+            <p class="text-muted small mt-1">{{ 'ORDER.CUSTOM_DETAILS' | translate }}</p>
+          </div>
+          <div class="card-body p-4">
+            <div class="row align-items-center g-4">
+              <div class="col-md-5">
+                <div class="custom-project-img-wrapper shadow-sm rounded-4 overflow-hidden">
+                  <img [src]="order.imageUrl || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=400&auto=format&fit=crop'" 
+                       class="img-fluid custom-project-img" alt="Custom furniture project">
+                  <div *ngIf="!order.imageUrl" class="img-placeholder">
+                    <i class="bi bi-image text-muted display-4"></i>
+                    <p class="small text-muted mt-2">{{ 'SELLER.NO_IMAGE' | translate }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="p-2">
+                  <h6 class="text-uppercase fw-bold text-muted small mb-3">{{ 'ORDER.PRODUCT_DESC' | translate }}</h6>
+                  <p class="fs-5 lh-base text-dark">{{ order.description || ('ORDER.NO_DESC' | translate) }}</p>
+                  
+                  <div class="mt-4 p-3 rounded-4 bg-light border border-light-subtle">
+                    <div class="d-flex align-items-center text-dark">
+                      <i class="bi bi-info-circle-fill me-2 text-primary"></i>
+                      <span class="small fw-medium">{{ 'ORDER.CUSTOM_NOTE' | translate }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Summary & Tracking -->
+      <div class="col-lg-4">
+        
+        <!-- Summary Card -->
+        <div class="card border-0 shadow-sm rounded-4 bg-light mb-4">
+          <div class="card-body p-4 p-md-5">
+            <h5 class="fw-bold mb-4">{{ 'ORDER.PAYMENT_SUMMARY' | translate }}</h5>
+            
+            <div class="d-flex justify-content-between mb-3 text-muted">
+              <span>{{ 'CART.SUBTOTAL' | translate }}</span>
+              <span class="fw-bold text-dark">${{ order.subTotal | number:'1.2-2' }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-3 text-muted">
+              <span>{{ 'CART.SHIPPING' | translate }}</span>
+              <span class="fw-bold text-dark">${{ order.shippingCost | number:'1.2-2' }}</span>
+            </div>
+            
+            <hr class="my-4 border-secondary-subtle">
+            
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-uppercase fw-bold text-muted small">{{ 'ORDER.TOTAL_PAID' | translate }}</span>
+              <span class="fs-3 fw-bold text-dark">${{ order.totalPrice | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipping details Card -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+          <div class="card-body p-4 p-md-5">
+            <h5 class="fw-bold mb-4">{{ 'ORDER.SHIPPING_INFO' | translate }}</h5>
+            <div class="d-flex align-items-start text-muted">
+              <i class="bi bi-geo-alt fs-5 me-3 text-dark"></i>
+              <div>
+                <p class="mb-0 lh-base text-dark">{{ order.shippingAddress || ('ORDER.NO_SHIPPING' | translate) }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Review Modal Overlay -->
+  <div class="modal-backdrop fade show" *ngIf="showReviewModal"></div>
+  <div class="modal fade show d-block" *ngIf="showReviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header border-0 bg-dark text-white p-4">
+          <h5 class="modal-title fw-bold">{{ 'REVIEW.TITLE' | translate }}</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeReview()" [attr.aria-label]="'BUTTONS.CANCEL' | translate"></button>
+        </div>
+        <div class="modal-body p-4 p-md-5 bg-white">
+          <div *ngIf="selectedProduct">
+            <div class="d-flex align-items-center mb-4 p-3 bg-light rounded-4">
+<img 
+  [src]="selectedProduct.productImage || 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=150&auto=format&fit=crop'" 
+  class="rounded-3 me-3 shadow-sm"
+  style="width: 50px; height: 50px; object-fit: cover;">
+                <h6 class="fw-bold mb-0 text-dark">{{ selectedProduct.productName }}</h6>
+            </div>
+            
+            <!-- Star Rating -->
+            <div class="text-center mb-4">
+              <h6 class="fw-bold text-uppercase small text-muted mb-3">{{ 'REVIEW.YOUR_RATING' | translate }}</h6>
+              <div class="star-rating fs-1 d-flex justify-content-center gap-1">
+                <i *ngFor="let star of [1,2,3,4,5]" 
+                    class="bi star"
+                    [class.bi-star-fill]="rating >= star" 
+                    [class.bi-star]="rating < star"
+                    [class.text-warning]="rating >= star"
+                    [class.text-secondary]="rating < star"
+                    (click)="setRating(star)">
+                  </i>
+              </div>
+            </div>
+
+            <!-- Review Message -->
+            <div class="mb-4">
+              <label for="reviewMessage" class="form-label fw-bold small text-muted text-uppercase">{{ 'REVIEW.YOUR_REVIEW' | translate }}</label>
+              <textarea id="reviewMessage" 
+                        class="form-control rounded-4 p-3 bg-light border-light-subtle" 
+                        rows="4" 
+                        [placeholder]="'REVIEW.PLACEHOLDER' | translate"
+                        [(ngModel)]="reviewMessage"></textarea>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="d-grid gap-2">
+              <button class="btn btn-dark btn-lg rounded-pill fw-bold py-3 shadow-sm transition-all" 
+                      [disabled]="rating === 0 || isSubmittingReview"
+                      (click)="submitReview()">
+                <span *ngIf="isSubmittingReview" class="spinner-border spinner-border-sm me-2"></span>
+                {{ 'REVIEW.SUBMIT' | translate }}
+              </button>
+              <button class="btn btn-link text-decoration-none text-muted fw-bold" 
+                      [disabled]="isSubmittingReview"
+                      (click)="closeReview()">{{ 'BUTTONS.CANCEL' | translate }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

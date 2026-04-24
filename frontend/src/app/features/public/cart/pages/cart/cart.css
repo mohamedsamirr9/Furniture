@@ -1,0 +1,9 @@
+.btn-add-cart, .btn-dark {
+  background-color: #212529;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-add-cart:hover, .btn-dark:hover {
+  background-color: #343a40;
+  transform: translateY(-2px);
+}

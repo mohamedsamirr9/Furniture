@@ -1,0 +1,107 @@
+<div class="custom-page">
+
+  <div class="form-section">
+    <h1 class="page-title">{{ 'CUSTOMER.REQUEST.TITLE' | translate }}</h1>
+    <p class="page-subtitle">
+      {{ 'CUSTOMER.REQUEST.DESC' | translate }}
+    </p>
+
+    <div *ngIf="submitError" class="alert alert-danger mb-4">
+      {{ submitError | translate }}
+    </div>
+
+    <div *ngIf="submitSuccess" class="alert alert-success mb-4">
+      {{ 'ALERTS.SUCCESS' | translate }}
+    </div>
+
+    <form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>{{ 'CUSTOMER.REQUEST.BUDGET' | translate }}</label>
+        <input type="number" formControlName="budget" [placeholder]="'CUSTOMER.REQUEST.BUDGET_PLACEHOLDER' | translate" class="form-control" />
+        <div *ngIf="requestForm.get('budget')?.invalid && requestForm.get('budget')?.touched" class="text-danger mt-1 small">
+          {{ 'VALIDATION.BUDGET_REQUIRED' | translate }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>{{ 'CUSTOMER.REQUEST.DESC_LABEL' | translate }}</label>
+        <textarea formControlName="description" rows="5" [placeholder]="'CUSTOMER.REQUEST.DESC_PLACEHOLDER' | translate" class="form-control"></textarea>
+        <div *ngIf="requestForm.get('description')?.invalid && requestForm.get('description')?.touched" class="text-danger mt-1 small">
+          {{ 'VALIDATION.DESC_MIN_LENGTH' | translate }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>{{ 'CUSTOMER.REQUEST.IMAGE_LABEL' | translate }}</label>
+        <div class="upload-area position-relative" [class.has-preview]="imagePreviewUrl" onclick="document.getElementById('file-upload').click()">
+          <input type="file" id="file-upload" class="d-none" accept="image/png, image/jpeg, image/webp" (change)="onFileSelected($event)">
+          
+          <div *ngIf="!imagePreviewUrl" class="text-center py-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <p class="upload-text mt-2 mb-1">{{ 'CUSTOMER.REQUEST.UPLOAD_TEXT' | translate }}</p>
+            <p class="upload-hint mb-0">{{ 'CUSTOMER.REQUEST.UPLOAD_HINT' | translate }}</p>
+          </div>
+
+          <div *ngIf="imagePreviewUrl" class="preview-container text-center">
+            <img [src]="imagePreviewUrl" alt="Preview" class="img-fluid rounded" style="max-height: 200px;">
+            <p class="mt-2 text-primary m-0 small">{{ 'CUSTOMER.REQUEST.CHANGE_IMAGE' | translate }}</p>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn mt-4 d-flex justify-content-center align-items-center gap-2" [disabled]="isLoading || requestForm.invalid">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        {{ isLoading ? ('ALERTS.LOADING' | translate) : ('SELLER.SUBMIT' | translate) }}
+      </button>
+    </form>
+  </div>
+
+  <div class="requests-section">
+    <h2 class="section-title">{{ 'CUSTOMER.REQUEST.MY_REQUESTS' | translate }}</h2>
+    
+    <div *ngIf="myRequests.length === 0" class="text-muted">
+      {{ 'CUSTOMER.REQUEST.EMPTY' | translate }}
+    </div>
+
+    <div class="request-card" *ngFor="let request of myRequests">
+      <div class="d-flex align-items-center mb-3" *ngIf="request.imageUrl">
+        <img [src]="request.imageUrl" alt="Request visual" class="rounded" style="width: 60px; height: 60px; object-fit: cover; margin-right: 15px;">
+        <div class="request-info flex-grow-1">
+          <div class="request-name d-flex justify-content-between align-items-center">
+            <span class="fs-5 fw-bold">{{ 'SELLER.REQUEST_ID' | translate }} #{{ request.id }}</span>
+            <span class="badge" [ngClass]="request.status === 'Open' ? 'badge-open' : 'badge-progress'">
+              {{ 'STATUS.' + (request.status | uppercase) | translate }}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="request-info" *ngIf="!request.imageUrl">
+        <div class="request-name d-flex justify-content-between align-items-center">
+          <span class="fs-5 fw-bold">{{ 'SELLER.REQUEST_ID' | translate }} #{{ request.id }}</span>
+          <span class="badge" [ngClass]="request.status === 'Open' ? 'badge-open' : 'badge-progress'">
+            {{ 'STATUS.' + (request.status | uppercase) | translate }}
+          </span>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between mt-2 align-items-center">
+        <span *ngIf="!request.acceptedPrice" class="fw-bold text-success">{{ 'SELLER.BUDGET' | translate }}: ${{ request.budget }}</span>
+        <span *ngIf="request.acceptedPrice" class="fw-bold" style="color: #28a745; background: #e6f4ea; padding: 4px 12px; border-radius: 6px; border: 1px solid #c3e6cb;">
+          {{ 'SELLER.ACCEPTED_PRICE' | translate }}: ${{ request.acceptedPrice }}
+        </span>
+      </div>
+      <p class="request-desc mt-2 text-truncate" style="max-width: 100%;">{{ request.description }}</p>
+
+      <button *ngIf="request.status === 'Open' || request.status === 'Accepted'" class="view-offer-btn mt-3 w-25" (click)="viewOffer(request.id)">
+        {{ 'MY_ORDERS.VIEW_DETAILS' | translate }}
+      </button>
+    </div>
+  </div>
+
+</div>

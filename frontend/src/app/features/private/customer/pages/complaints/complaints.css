@@ -1,0 +1,134 @@
+.complaints-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 36px;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.page-subtitle {
+  color: #6b7280;
+  font-size: 15px;
+}
+
+.new-btn {
+  background: #3d6b4f;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.new-btn:hover { background: #5a8f6b; }
+
+.complaint-card {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 22px 28px;
+  margin-bottom: 18px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: box-shadow 0.2s;
+}
+
+.complaint-card:hover {
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+.card-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.card-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon-open { background: #fee2e2; }
+.icon-resolved { background: #c8ddd0; }
+
+.complaint-id {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.complaint-desc {
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+.complaint-image {
+  width: 120px;
+  max-width: 100%;
+  border-radius: 10px;
+  border: 1.5px solid #e5e7eb;
+  margin: 6px 0;
+}
+
+.complaint-date {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.badge {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 18px;
+  border-radius: 999px;
+  border: 1.5px solid;
+}
+
+.card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.details-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #111827;
+  color: #fff;
+  cursor: pointer;
+}
+
+.badge-red {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.badge-green {
+  color: #3d6b4f;
+  border-color: #3d6b4f;
+}

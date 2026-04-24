@@ -10,7 +10,7 @@ namespace Furniture.shared.Dtos
     {
         public int Rating { get; set; }
         public string? Message { get; set; }
-        public string UserId { get; set; } = null!;
+        public string? UserId { get; set; }
         public int ProductId { get; set; }
     }
 }

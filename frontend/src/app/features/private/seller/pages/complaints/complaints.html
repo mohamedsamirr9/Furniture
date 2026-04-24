@@ -1,0 +1,63 @@
+<div class="page-header">
+  <h1>Complaints</h1>
+</div>
+<hr class="divider" />
+
+<div class="table-card" *ngIf="!loading && !error">
+  <h2 class="card-title">Complaints</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Customer</th>
+        <th>Order</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Response</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let complaint of complaints">
+        <td>#{{ complaint.id }}</td>
+        <td>{{ complaint.userName || 'Unknown' }}</td>
+        <td>ORD-{{ complaint.orderId }}</td>
+        <td>
+          <strong>{{ complaint.description }}</strong>
+      
+        </td>
+        <td>
+          <span class="badge" [ngClass]="getStatusClass(complaint.status)">{{ getStatusDisplay(complaint.status) }}</span>
+        </td>
+        <td>{{ complaint.createdAt | date:'mediumDate' }}</td>
+        <td>
+          <div class="latest-reply" *ngIf="complaint.latestReplyMessage">
+            <p class="reply-msg">{{ complaint.latestReplyMessage }}</p>
+            <small>{{ complaint.latestReplyBy }} • {{ complaint.latestReplyAt | date:'short' }}</small>
+          </div>
+        </td>
+        <td>
+          <button type="button" class="action-btn view-details-btn" (click)="openComplaintDetails(complaint.id)">
+            View Details
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="empty-state" *ngIf="!loading && !error && complaints.length === 0">
+  <p>No complaints found</p>
+</div>
+
+<app-complaint-details-modal
+  [isOpen]="showDetailsModal"
+  [loading]="detailsLoading"
+  [error]="detailsError"
+  [complaint]="selectedComplaint"
+  [role]="'seller'"
+  [isReplySubmitting]="replySubmitting"
+  (submitReply)="submitReply($event)"
+  (close)="closeComplaintDetails()"
+></app-complaint-details-modal>

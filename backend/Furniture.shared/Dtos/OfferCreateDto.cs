@@ -8,7 +8,7 @@ namespace Furniture.shared.Dtos
 {
     public class OfferCreateDto
     {
-        public int OrderRequestId { get; set; }
+        public int CustomRequestId { get; set; }
         public decimal Price { get; set; }
         public int DeliveryDays { get; set; }
     }

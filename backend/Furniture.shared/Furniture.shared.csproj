@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Furniture.Domain\Furniture.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
