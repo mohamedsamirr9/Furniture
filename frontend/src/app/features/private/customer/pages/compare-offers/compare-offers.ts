@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { OfferService } from '../../../../../core/services/offer.service';
+import { ChatSignalRService } from '../../../../../core/services/chat-signalr.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -22,6 +23,7 @@ export class CompareOffers implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private offerService: OfferService,
+    private chatService: ChatSignalRService,
     private translate: TranslateService
   ) {}
 
@@ -72,12 +74,25 @@ export class CompareOffers implements OnInit {
               o.status = 2;
             }
           });
-          
+
           this.errorMessage = ''; // Clear any previous errors
-          
+
           // Re-fetch in background
           this.loadOffers(false);
-          
+
+          // Start or get conversation with seller and open chat
+          if (offer.sellerId) {
+            this.chatService.startConversation({ otherUserId: offer.sellerId, firstMessage: `I accepted your offer #${offer.id}` })
+              .subscribe({
+                next: (conversation) => {
+                  // Dispatch event to open chat
+                  const event = new CustomEvent('openConversation', { detail: conversation, bubbles: true });
+                  window.dispatchEvent(event);
+                },
+                error: (err) => console.error('Error starting conversation:', err)
+              });
+          }
+
           setTimeout(() => {
             this.router.navigate(['/checkout'], { queryParams: { offerId: offer.id } });
           }, 1500);

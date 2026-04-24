@@ -20,6 +20,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Threading.Tasks;
 using Furniture.Application.Services;
+using Furniture.web.Hubs;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Furniture.web
@@ -65,7 +66,22 @@ namespace Furniture.web
                     ValidIssuer = jwt["Issuer"],
                     ValidAudience = jwt["Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(jwt["Key"]))
+                        Encoding.UTF8.GetBytes(jwt["Key"] ?? string.Empty))
+                };
+
+                 o.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            path.StartsWithSegments("/api/chatHub"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
             builder.Services.AddAuthorization(options =>
@@ -107,18 +123,26 @@ namespace Furniture.web
     });
             });
 
-
+var allowedOrigins = builder.Configuration
+    .GetSection("AllowedOrigins")
+    .Get<string[]>();
             // CORS
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
                     policy =>
                     {
-                        policy.AllowAnyOrigin()
-                              .AllowAnyMethod()
-                              .AllowAnyHeader();
+                        policy.WithOrigins(allowedOrigins!) 
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials()
+                                            .WithExposedHeaders("access_token");
+
                     });
             });
+
+            // SignalR
+            builder.Services.AddSignalR();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddAutoMapper(x =>
             {
@@ -210,7 +234,7 @@ namespace Furniture.web
             app.UseStaticFiles();
 
             app.MapControllers();
-
+app.MapHub<ChatHub>("/api/chatHub");
             app.Run();
 
         }

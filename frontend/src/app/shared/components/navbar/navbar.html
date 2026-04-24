@@ -68,6 +68,10 @@
           <i class="bi bi-person fs-5"></i>
         </a>
       </ng-template>
+
+      @if (authService.isLoggedIn()) {
+        <app-chat-widget></app-chat-widget>
+      }
     </div>
   </div>
 </nav>

@@ -5,11 +5,12 @@ import { CartService } from '../../../core/services/cart.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { ChatWidgetComponent } from '../chat-widget/chat-widget';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterModule, CommonModule, TranslateModule],
+  imports: [RouterModule, CommonModule, TranslateModule, ChatWidgetComponent],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
