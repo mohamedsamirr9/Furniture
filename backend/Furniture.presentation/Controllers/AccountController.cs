@@ -1,4 +1,4 @@
-﻿using Furniture.presentation.Controllers;
+using Furniture.presentation.Controllers;
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos.AuthDto;
 using Microsoft.AspNetCore.Authorization;
@@ -123,6 +123,14 @@ return Ok(new { message = "Now you are a seller" });
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             await _accountService.ChangePasswordAync(userId!, dto);
             return Ok(new { message = "Password changed successfully" });
+        }
+
+        [HttpGet("admin/users")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var result = await _accountService.GetAllUsersAsync();
+            return Ok(result);
         }
     }
 }

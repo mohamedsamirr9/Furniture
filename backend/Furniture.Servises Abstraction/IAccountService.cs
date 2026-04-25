@@ -1,4 +1,4 @@
-﻿using Furniture.shared.Dtos.AuthDto;
+using Furniture.shared.Dtos.AuthDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,5 +29,7 @@ namespace Furniture.Servises_Abstraction
         Task DeleteAccountAsync(string userId);
         Task BecomeSellerAsync(string UserId, BecomeSellerDto dto);
         Task ChangePasswordAync(string UserId, ChangePasswordDto dto);
+
+        Task<IEnumerable<AdminUserDto>> GetAllUsersAsync();
     }
 }

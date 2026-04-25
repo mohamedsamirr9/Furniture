@@ -253,7 +253,9 @@
     "REJECTED": "Rejected",
     "RESOLVED": "Resolved",
     "OPEN": "Open",
-    "IN_PROGRESS": "In Progress"
+    "IN_PROGRESS": "In Progress",
+    "ACTIVE": "Active",
+    "DELETED": "Deleted"
   },
   "AUTH": {
     "WELCOME": "Welcome back",
@@ -268,6 +270,8 @@
     "JOIN_DESC": "Join Furnora as a buyer or seller",
     "JOIN_US": "Join Us",
     "FULL_NAME": "Full Name",
+    "BUYER": "Buyer",
+    "ADMIN": "Admin",
     "CUSTOMER": "Customer",
     "CUSTOMER_DESC": "Explore, customize, and shop unique furniture that fits your style.",
     "SELLER": "Seller",
@@ -364,6 +368,8 @@
   "ADMIN": {
     "USERS_TITLE": "Users",
     "USERS_MGMT": "Users Management",
+    "ROLE": "Role",
+    "NO_USERS": "No users found.",
     "NAME": "Name",
     "EMAIL": "Email",
     "PHONE": "Phone",
@@ -392,6 +398,8 @@
     "OPEN_COMPLAINTS": "Open Complaints",
     "RECENT_ORDERS": "Recent Orders",
     "RECENT_COMPLAINTS": "Recent Complaints",
+    "NO_ORDERS": "No recent orders.",
+    "NO_COMPLAINTS": "No recent complaints.",
     "SHIPPING_RULES": "Shipping Rules",
     "CITY": "City",
     "PRICE": "Price",

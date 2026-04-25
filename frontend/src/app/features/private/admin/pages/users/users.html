@@ -12,26 +12,46 @@
         <th>{{ 'ADMIN.EMAIL' | translate }}</th>
         <th>{{ 'ADMIN.PHONE' | translate }}</th>
         <th>{{ 'ADMIN.ADDRESS' | translate }}</th>
-        <th>{{ 'ADMIN.STATUS' | translate }}</th>
+        <th>{{ 'ADMIN.ROLE' | translate }}</th>
         <th>{{ 'ADMIN.JOINED' | translate }}</th>
         <th>{{ 'ADMIN.STATUS' | translate }}</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
-        <td><strong>{{ user.name }}</strong></td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.phone }}</td>
-        <td>{{ user.address }}</td>
-        <td><span class="badge-outline">{{ 'AUTH.' + (user.role | uppercase) | translate }}</span></td>
-        <td>{{ user.joined }}</td>
-        <td>
-          <span class="badge"
-            [ngClass]="user.accountStatus === 'Deleted' ? 'badge-red' : 'badge-gray'">
-            {{ 'STATUS.' + (user.accountStatus | uppercase) | translate }}
-          </span>
-        </td>
-      </tr>
+      @if (isLoading) {
+        @for (_ of [1, 2, 3, 4, 5]; track $index) {
+          <tr class="table-row--skeleton">
+            <td><div class="skeleton skeleton-text"></div></td>
+            <td><div class="skeleton skeleton-text"></div></td>
+            <td><div class="skeleton skeleton-text"></div></td>
+            <td><div class="skeleton skeleton-text"></div></td>
+            <td><div class="skeleton skeleton-badge"></div></td>
+            <td><div class="skeleton skeleton-text"></div></td>
+            <td><div class="skeleton skeleton-badge"></div></td>
+          </tr>
+        }
+      } @else if (users.length === 0) {
+        <tr>
+          <td colspan="7" class="empty-msg">{{ 'ADMIN.NO_USERS' | translate }}</td>
+        </tr>
+      } @else {
+        @for (user of users; track user.email) {
+          <tr>
+            <td><strong>{{ user.name }}</strong></td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phone }}</td>
+            <td>{{ user.address }}</td>
+            <td><span class="badge-outline">{{ 'AUTH.' + (user.role | uppercase) | translate }}</span></td>
+            <td>{{ user.joined }}</td>
+            <td>
+              <span class="badge"
+                [ngClass]="user.accountStatus === 'Deleted' ? 'badge-red' : 'badge-gray'">
+                {{ 'STATUS.' + (user.accountStatus | uppercase) | translate }}
+              </span>
+            </td>
+          </tr>
+        }
+      }
     </tbody>
   </table>
-</div>
+</div>
