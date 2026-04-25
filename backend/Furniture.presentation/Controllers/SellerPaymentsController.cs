@@ -73,8 +73,27 @@ namespace Furniture.presentation.Controllers
             }
         }
 
-        
+        [HttpGet("payouts")]
+        [Authorize(Roles = "seller")]
+        public async Task<IActionResult> GetPayouts()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
 
+            try
+            {
+                var result = await _sellerPaymentService.GetSellerPayoutsAsync(userId);
+                return Ok(result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        
+        
         [HttpGet("admin/all")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAllSellers()

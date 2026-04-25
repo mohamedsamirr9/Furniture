@@ -63,4 +63,10 @@ export interface UpdateSellerProfilePayload {
   location?: string;
   bio?: string;
   profileImageUrl?: string;
+  // Bank/payment details
+  bankName?: string;
+  bankAccountNumber?: string;
+  bankCode?: string;
+  nationalId?: string;
+  paymobMerchantId?: string;
 }

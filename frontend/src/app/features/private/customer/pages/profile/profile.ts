@@ -59,9 +59,10 @@ export class ProfileComponent implements OnInit {
       address: ['', [Validators.required]],
     });
 
-    this.becomeSellerForm = this.fb.group({
-      nationalId: [null, [Validators.required]]
-    });
+     this.becomeSellerForm = this.fb.group({
+       storeName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(200)]],
+       nationalId: [null, [Validators.required]]
+     });
   }
 
   ngOnInit(): void {
@@ -156,17 +157,25 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  submitBecomeSeller(event: Event) {
-    event.preventDefault();
-    if (!this.nationalIdImageBase64) {
-      this.errorBecomeSeller = 'Please upload your National ID image.';
-      return;
-    }
+   submitBecomeSeller(event: Event) {
+     event.preventDefault();
+     const storeName = this.becomeSellerForm.value.storeName;
+     if (!this.nationalIdImageBase64) {
+       this.errorBecomeSeller = 'Please upload your National ID image.';
+       return;
+     }
+     if (!storeName) {
+       this.errorBecomeSeller = 'Please enter a store name.';
+       return;
+     }
 
-    this.isLoadingBecomeSeller = true;
-    this.errorBecomeSeller = '';
+     this.isLoadingBecomeSeller = true;
+     this.errorBecomeSeller = '';
 
-    this.authService.becomeSeller({ nationalIdImageBase64: this.nationalIdImageBase64 }).subscribe({
+     this.authService.becomeSeller({ 
+       storeName, 
+       nationalIdImageBase64: this.nationalIdImageBase64 
+     }).subscribe({
       next: () => {
         this.isLoadingBecomeSeller = false;
         this.successBecomeSeller = true;

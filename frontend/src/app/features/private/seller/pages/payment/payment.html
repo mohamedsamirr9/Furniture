@@ -1,161 +1,346 @@
 <div class="page-header">
   <span class="page-label">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-    {{ 'SELLER.PAYMENTS_LABEL' | translate }}
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <rect x="2" y="5" width="20" height="14" rx="2" />
+      <line x1="2" y1="10" x2="22" y2="10" />
+    </svg>
+    {{ 'SELLER.PAYMENTS.LABEL' | translate }}
   </span>
-  <h1>{{ 'SELLER.PAYMENTS_HEADING' | translate }}</h1>
-  <p class="page-sub">{{ 'SELLER.PAYMENTS_SUB' | translate }}</p>
+  <h1>{{ 'SELLER.PAYMENTS.TITLE' | translate }}</h1>
+  <p class="page-sub">{{ 'SELLER.PAYMENTS.SUBTITLE' | translate }}</p>
 </div>
 
-<!-- Summary Cards -->
+<div
+  *ngIf="errorMessage"
+  class="alert alert-danger d-flex align-items-center justify-content-between shadow-sm mb-3"
+>
+  <div>
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <strong>{{ 'SELLER.PAYMENTS.ERROR' | translate }}:</strong> {{ errorMessage }}
+  </div>
+  <button class="btn btn-sm btn-danger" (click)="loadEarnings()">
+    {{ 'SELLER.PAYMENTS.ACTIONS.RETRY' | translate }}
+  </button>
+</div>
+
 <div class="summary-row">
   <div class="summary-card dark">
-    <span class="summary-label">{{ 'SELLER.TOTAL_EARNINGS' | translate }}</span>
+    <span class="summary-label">{{ 'SELLER.PAYMENTS.EARNINGS' | translate }}</span>
     <div class="summary-icon">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+        <polyline points="16 7 22 7 22 13" />
+      </svg>
     </div>
-    <div class="summary-value">${{ earnings.total }}</div>
+    <div class="summary-value" *ngIf="!isLoading; else loadingTotal">
+      ${{ netEarnings | number: '1.2-2' }}
+    </div>
+    <ng-template #loadingTotal>
+      <div class="summary-value" style="opacity: 0.5">--</div>
+    </ng-template>
   </div>
   <div class="summary-card light">
-    <span class="summary-label">{{ 'SELLER.PENDING_PAYOUT' | translate }}</span>
+    <span class="summary-label">{{ 'SELLER.PAYMENTS.PENDING' | translate }}</span>
     <div class="summary-icon">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </svg>
     </div>
-    <div class="summary-value">${{ earnings.pending }}</div>
+    <div class="summary-value" *ngIf="!isLoading; else loadingPending">
+      ${{ pendingAmount | number: '1.2-2' }}
+    </div>
+    <ng-template #loadingPending>
+      <div class="summary-value" style="opacity: 0.5">--</div>
+    </ng-template>
   </div>
   <div class="summary-card light">
-    <span class="summary-label">{{ 'SELLER.LAST_PAYOUT' | translate }}</span>
+    <span class="summary-label">{{ 'SELLER.PAYMENTS.PAID' | translate }}</span>
     <div class="summary-icon">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <line x1="12" y1="1" x2="12" y2="23" />
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+      </svg>
     </div>
-    <div class="summary-value">${{ earnings.lastPayout }}</div>
+    <div class="summary-value" *ngIf="!isLoading; else loadingPaid">
+      ${{ earnings.paidAmount | number: '1.2-2' }}
+    </div>
+    <ng-template #loadingPaid>
+      <div class="summary-value" style="opacity: 0.5">--</div>
+    </ng-template>
   </div>
 </div>
 
-<!-- Main Content Row -->
 <div class="content-row">
-
-  <!-- Bank Details -->
   <div class="bank-card">
     <div class="bank-card-header">
       <div>
-        <h2 class="bank-title">{{ 'SELLER.BANK_DETAILS' | translate }}</h2>
-        <p class="bank-sub">{{ 'SELLER.BANK_SUB' | translate }}</p>
+        <h2 class="bank-title">{{ 'SELLER.PAYMENTS.BANK_DETAILS' | translate }}</h2>
+        <p class="bank-sub">{{ 'SELLER.BANK.SUBTITLE' | translate }}</p>
       </div>
       <span class="verified-badge" *ngIf="bankForm.verified">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        {{ 'SELLER.VERIFIED' | translate }}
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+        {{ 'SELLER.BANK.VERIFIED' | translate }}
       </span>
+    </div>
+
+    <div *ngIf="saveSuccess" class="alert alert-success mb-3">
+      {{ 'SELLER.BANK.SAVE_SUCCESS' | translate }}
     </div>
 
     <div class="form-grid">
       <div class="form-group">
         <label class="form-label">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-          {{ 'SELLER.BANK_NAME' | translate }}
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <line x1="3" y1="9" x2="21" y2="9" />
+          </svg>
+          {{ 'SELLER.BANK.NAME' | translate }}
         </label>
-        <input class="form-input" type="text" [(ngModel)]="bankForm.bankName" placeholder="e.g. CIB Bank" />
+        <input
+          class="form-input"
+          type="text"
+          [(ngModel)]="bankForm.bankName"
+          placeholder="{{ 'SELLER.BANK.PLACEHOLDER_BANK_NAME' | translate }}"
+        />
       </div>
       <div class="form-group">
         <label class="form-label">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          {{ 'SELLER.ACCOUNT_HOLDER' | translate }}
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          {{ 'SELLER.BANK.ACCOUNT_HOLDER' | translate }}
         </label>
-        <input class="form-input" type="text" [(ngModel)]="bankForm.accountHolder" placeholder="e.g. John Doe" />
+        <input
+          class="form-input"
+          type="text"
+          [(ngModel)]="bankForm.bankAccountNumber"
+          placeholder="{{ 'SELLER.BANK.PLACEHOLDER_ACCOUNT_NUMBER' | translate }}"
+        />
       </div>
     </div>
 
     <div class="form-group full">
       <label class="form-label">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-        {{ 'SELLER.IBAN' | translate }}
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <rect x="2" y="5" width="20" height="14" rx="2" />
+          <line x1="2" y1="10" x2="22" y2="10" />
+        </svg>
+        {{ 'SELLER.BANK.IBAN' | translate }}
       </label>
-      <input class="form-input" type="text" [(ngModel)]="bankForm.iban" placeholder="e.g. EG38 0010 0000 0000 0000 1234 567" />
+      <input
+        class="form-input"
+        type="text"
+        [(ngModel)]="bankForm.bankCode"
+        placeholder="{{ 'SELLER.BANK.PLACEHOLDER_IBAN' | translate }}"
+      />
     </div>
 
     <div class="form-grid">
       <div class="form-group">
         <label class="form-label">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          {{ 'SELLER.SWIFT' | translate }}
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          {{ 'SELLER.BANK.SWIFT' | translate }}
         </label>
-        <input class="form-input" type="text" [(ngModel)]="bankForm.swift" placeholder="e.g. CIBEEGCX" />
+        <input
+          class="form-input"
+          type="text"
+          [(ngModel)]="bankForm.nationalId"
+          placeholder="{{ 'SELLER.BANK.PLACEHOLDER_SWIFT' | translate }}"
+        />
       </div>
       <div class="form-group">
         <label class="form-label">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          {{ 'SELLER.PAYOUT_CYCLE' | translate }}
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          {{ 'SELLER.BANK.PAYOUT_CYCLE' | translate }}
         </label>
-        <input class="form-input" type="text" [(ngModel)]="bankForm.payoutCycle" placeholder="e.g. Monthly · 1st of each month" />
+        <input
+          class="form-input"
+          type="text"
+          [(ngModel)]="bankForm.paymobMerchantId"
+          placeholder="{{ 'SELLER.BANK.PLACEHOLDER_PAYOUT_CYCLE' | translate }}"
+        />
       </div>
     </div>
 
     <div class="bank-footer">
-      <p class="bank-disclaimer">{{ 'SELLER.BANK_DISCLAIMER' | translate }}</p>
-      <button class="save-btn" (click)="saveBankDetails()">{{ 'SELLER.SAVE_BANK' | translate }}</button>
+      <p class="bank-disclaimer">{{ 'SELLER.BANK.DISCLAIMER' | translate }}</p>
+      <button class="save-btn" (click)="saveBankDetails()">
+        {{ 'SELLER.SAVE_BUTTON' | translate }}
+      </button>
     </div>
   </div>
 
-  <!-- Recent Payouts -->
   <div class="payouts-card">
     <div class="payouts-header">
-      <h2 class="payouts-title">{{ 'SELLER.RECENT_PAYOUTS' | translate }}</h2>
-      <span class="payouts-period">{{ 'SELLER.LAST_90_DAYS' | translate }}</span>
+      <h2 class="payouts-title">{{ 'SELLER.PAYMENTS.RECENT_PAYOUTS' | translate }}</h2>
+      <span class="payouts-period">{{ 'SELLER.PAYOUTS.PERIOD' | translate }}</span>
     </div>
 
-    <div class="payout-list">
+    <div *ngIf="payoutsLoading" class="alert alert-info">
+      {{ 'SELLER.PAYOUTS.LOADING' | translate }}
+    </div>
+
+    <div *ngIf="!payoutsLoading && recentPayouts.length === 0" class="alert alert-info">
+      {{ 'SELLER.PAYOUTS.EMPTY' | translate }}
+    </div>
+
+    <div class="payout-list" *ngIf="recentPayouts.length > 0">
       <div class="payout-item" *ngFor="let p of recentPayouts">
         <div class="payout-left">
-          <span class="payout-id">{{ p.id }}</span>
-          <span class="payout-date">{{ p.date }}</span>
+          <span class="payout-id">#{{ p.id }}</span>
+          <span class="payout-date">{{ p.createdAt | date: 'MMM d, y' }}</span>
         </div>
         <div class="payout-right">
-          <span class="payout-amount">${{ p.amount }}</span>
-          <span class="payout-status">{{ p.status }}</span>
+          <span class="payout-amount">${{ p.amount | number: '1.2-2' }}</span>
+          <span
+            class="payout-status badge"
+            [ngClass]="{
+              'badge-green': p.status === 'Completed',
+              'badge-orange': p.status === 'Processing',
+              'badge-red': p.status === 'Failed' || p.status === 'Pending',
+            }"
+          >
+            {{ p.status }}
+          </span>
         </div>
       </div>
     </div>
 
-    <!-- Add Payout Form -->
-    <div class="add-payout-form">
-      <div class="add-payout-row">
-        <input class="form-input small" [(ngModel)]="newPayout.id" placeholder="PO-ID" />
-        <input class="form-input small" [(ngModel)]="newPayout.date" placeholder="Apr 20, 2026" />
-        <input class="form-input small" [(ngModel)]="newPayout.amount" placeholder="Amount" type="number" />
-        <button class="add-btn" (click)="addPayout()">+</button>
-      </div>
-    </div>
+    <a class="view-history">{{ 'SELLER.PAYOUTS.VIEW_HISTORY' | translate }} â†—</a>
 
-    <a class="view-history">{{ 'SELLER.VIEW_FULL_HISTORY' | translate }} ↗</a>
-
-    <!-- Payments Table -->
     <div class="table-section">
-      <h3 class="table-section-title">{{ 'SELLER.PAYMENTS_TITLE' | translate }}</h3>
-      <table class="table">
+      <h3 class="table-section-title">{{ 'SELLER.ORDERS.TABLE' | translate }}</h3>
+
+      <div *ngIf="ordersLoading" class="alert alert-info">
+        {{ 'SELLER.ORDERS.LOADING' | translate }}
+      </div>
+
+      <div *ngIf="!ordersLoading && orders.length === 0" class="alert alert-info">
+        {{ 'SELLER.ORDERS.EMPTY' | translate }}
+      </div>
+
+      <table class="table" *ngIf="orders.length > 0">
         <thead>
           <tr>
-            <th>{{ 'SELLER.PAYMENT_ID' | translate }}</th>
-            <th>{{ 'SELLER.ORDER' | translate }}</th>
-            <th>{{ 'SELLER.REFERENCE' | translate }}</th>
-            <th>{{ 'SELLER.STATUS' | translate }}</th>
-            <th>{{ 'SELLER.DATE' | translate }}</th>
+            <th>{{ 'SELLER.ORDERS.PAYMENT_ID' | translate }}</th>
+            <th>{{ 'SELLER.ORDERS.ORDER_ID' | translate }}</th>
+            <th>{{ 'SELLER.ORDERS.CUSTOMER' | translate }}</th>
+            <th>{{ 'SELLER.ORDERS.STATUS' | translate }}</th>
+            <th>{{ 'SELLER.ORDERS.AMOUNT' | translate }}</th>
+            <th>{{ 'SELLER.ORDERS.DATE' | translate }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let payment of payments">
-            <td><strong>{{ payment.id }}</strong></td>
-            <td>{{ payment.order }}</td>
-            <td>{{ payment.reference }}</td>
+          <tr *ngFor="let order of orders">
             <td>
-              <span class="badge" [ngClass]="payment.status === 'Refunded' ? 'badge-red' : 'badge-outline'">
-                {{ 'STATUS.' + (payment.status | uppercase) | translate }}
+              <strong>#{{ order.id }}</strong>
+            </td>
+            <td>{{ order.id }}</td>
+            <td>{{ order.userName || ('SELLER.ORDERS.CUSTOMER_NAME' | translate) }}</td>
+            <td>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'badge-green': order.status === 'Delivered' || order.status === 'Completed',
+                  'badge-orange': order.status === 'Processing' || order.status === 'Shipped',
+                  'badge-blue': order.status === 'Pending' || order.status === 'Accepted',
+                  'badge-red': order.status === 'Cancelled' || order.status === 'Declined',
+                }"
+              >
+                {{ order.status }}
               </span>
             </td>
-            <td><strong>{{ payment.date }}</strong></td>
+            <td>
+              <strong>${{ order.totalPrice | number: '1.2-2' }}</strong>
+            </td>
+            <td>
+              <strong>{{ order.orderDate | date: 'MMM d, y' }}</strong>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
-
 </div>
+'''

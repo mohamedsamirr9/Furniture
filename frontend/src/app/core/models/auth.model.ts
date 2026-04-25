@@ -32,6 +32,7 @@ export interface RefreshTokenDto {
 }
 
 export interface BecomeSellerDto {
+  storeName: string;
   nationalIdImageBase64?: string;
 }
 

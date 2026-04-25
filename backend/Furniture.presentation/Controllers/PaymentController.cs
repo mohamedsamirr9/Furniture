@@ -21,24 +21,28 @@ namespace Furniture.presentation.Controllers
         }
 
         
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentRequestDTO dto)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
-                return Unauthorized();
-
-            try
-            {
-                var result = await _paymentService.CreatePaymentAsync(dto.OrderId, userId);
-                return Ok(result);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
+         [HttpPost]
+         [Authorize]
+         public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentRequestDTO dto)
+         {
+             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+             if (string.IsNullOrEmpty(userId))
+                 return Unauthorized();
+ 
+             try
+             {
+                 var result = await _paymentService.CreatePaymentAsync(dto.OrderId, userId);
+                 return Ok(result);
+             }
+             catch (InvalidOperationException ex) when (ex.Message.Contains("profile not found"))
+             {
+                 return BadRequest(new { message = "Seller profile not found. The seller needs to complete their onboarding first." });
+             }
+             catch (InvalidOperationException ex)
+             {
+                 return BadRequest(new { message = ex.Message });
+             }
+         }
 
         
         [HttpGet("callback")]
