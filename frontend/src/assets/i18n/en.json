@@ -20,44 +20,44 @@
     "OFFERS": "Offers",
     "SEARCH": "Search",
     "MY_PROFILE": "My Profile",
-  "MY_ORDERS": "My Orders",
-  "SIGN_OUT": "Sign Out"
+    "MY_ORDERS": "My Orders",
+    "SIGN_OUT": "Sign Out"
   },
-"COMPLAINTS": {
-  "SUPPORT": "SUPPORT",
-  "TITLE": "My Complaints",
-  "SUBTITLE": "Submit and track your complaints. Our atelier team replies within 48 hours, with care.",
-  "NEW_COMPLAINT": "New Complaint",
-  "SUBMITTED_ON": "Submitted on",
-  "LATEST_RESPONSE": "Latest response:",
-  "VIEW_DETAILS": "View Details",
-  "EMPTY": "No complaints found",
-  "STATUS": {
-    "OPEN": "OPEN",
-    "IN_PROGRESS": "IN PROGRESS",
-    "RESOLVED": "RESOLVED",
-    "CLOSED": "CLOSED"
-  }
-},
-"MODAL": {
-  "TITLE": "Complaint Details",
-  "LOADING": "Loading complaint details...",
-  "MESSAGE": "MESSAGE",
-  "CREATED": "CREATED",
-  "BUYER": "BUYER",
-  "ORDER": "ORDER",
-  "SELLER": "SELLER",
-  "ATTACHMENT": "ATTACHMENT",
-  "REPLIES": "REPLIES",
-  "NO_REPLIES": "No replies yet.",
-  "NEXT_STATUS": "NEXT STATUS",
-  "UPDATE_STATUS": "Update Status",
-  "UPDATING": "Updating...",
-  "REPLY": "REPLY",
-  "REPLY_PLACEHOLDER": "Write a reply...",
-  "SEND": "Send",
-  "SENDING": "Sending..."
-},
+  "COMPLAINTS": {
+    "SUPPORT": "SUPPORT",
+    "TITLE": "My Complaints",
+    "SUBTITLE": "Submit and track your complaints. Our atelier team replies within 48 hours, with care.",
+    "NEW_COMPLAINT": "New Complaint",
+    "SUBMITTED_ON": "Submitted on",
+    "LATEST_RESPONSE": "Latest response:",
+    "VIEW_DETAILS": "View Details",
+    "EMPTY": "No complaints found",
+    "STATUS": {
+      "OPEN": "OPEN",
+      "IN_PROGRESS": "IN PROGRESS",
+      "RESOLVED": "RESOLVED",
+      "CLOSED": "CLOSED"
+    }
+  },
+  "MODAL": {
+    "TITLE": "Complaint Details",
+    "LOADING": "Loading complaint details...",
+    "MESSAGE": "MESSAGE",
+    "CREATED": "CREATED",
+    "BUYER": "BUYER",
+    "ORDER": "ORDER",
+    "SELLER": "SELLER",
+    "ATTACHMENT": "ATTACHMENT",
+    "REPLIES": "REPLIES",
+    "NO_REPLIES": "No replies yet.",
+    "NEXT_STATUS": "NEXT STATUS",
+    "UPDATE_STATUS": "Update Status",
+    "UPDATING": "Updating...",
+    "REPLY": "REPLY",
+    "REPLY_PLACEHOLDER": "Write a reply...",
+    "SEND": "Send",
+    "SENDING": "Sending..."
+  },
   "BUTTONS": {
     "SAVE": "Save",
     "CANCEL": "Cancel",
@@ -422,104 +422,104 @@
     "EMAIL": "Your Email",
     "MESSAGE": "Your Message"
   },
-   "SELLER": {
-     "OFFERS_TITLE": "Offer",
-     "CUSTOMER_REQUESTS": "Customer Requests",
-     "EMPTY_REQUESTS": "No customer requests available at the moment.",
-     "REQUEST_ID": "Request #",
-     "ACCEPTED_PRICE": "Accepted Price",
-     "BUYER": "Buyer",
-     "NO_IMAGE_DESC": "No reference image provided.",
-     "BY": "by",
-     "BUDGET": "Budget",
-     "STATUS": "Status",
-     "SEND_OFFER": "Send Offer",
-     "MAKE_OFFER": "Make an Offer",
-     "PRICE": "Price ($)",
-     "DELIVERY_DAYS": "Delivery Days",
-     "SUBMIT": "Submit",
-     "MY_OFFERS": "My Offers",
-     "OFFER_LABEL": "Offer",
-     "EMPTY_OFFERS": "You haven't made any offers yet.",
-     "PAYMENTS_TITLE": "Payments",
-     "PAYMENT_ID": "Payment ID",
-     "ORDER": "Order",
-     "REFERENCE": "Reference",
-     "DATE": "Date",
-     "OFFER_SUBMITTED": "Offer submitted successfully!",
-     "CLOSED": "Closed",
-     "ACCEPTED": "Accepted",
-     "REJECTED": "Rejected",
-     "PENDING": "Pending",
-     "CANCELLED": "Cancelled",
-     "NO_IMAGE": "Reference Image Unavailable",
-     "ERRORS": {
-       "LOAD_EARNINGS_FAILED": "Failed to load earnings data",
-       "SAVE_BANK_FAILED": "Failed to save bank details"
-     },
-     "ACTIONS": {
-       "RETRY": "Retry"
-     },
-      "PAYMENTS": {
-        "TITLE": "Payments",
-        "SUBTITLE": "Track your earnings, manage payouts, and update your bank details.",
-        "LABEL": "Payments",
-        "ERROR": "Error",
-        "EARNINGS": "Total Earnings",
-        "PENDING": "Pending Payout",
-        "PAID": "Total Paid",
-        "BANK_DETAILS": "Bank Details",
-        "RECENT_PAYOUTS": "Recent Payouts",
-        "ACTIONS": {
-          "RETRY": "Retry"
-        },
-        "ERRORS": {
-          "LOAD_FAILED": "Failed to load earnings data"
-        }
+  "SELLER": {
+    "OFFERS_TITLE": "Offer",
+    "CUSTOMER_REQUESTS": "Customer Requests",
+    "EMPTY_REQUESTS": "No customer requests available at the moment.",
+    "REQUEST_ID": "Request #",
+    "ACCEPTED_PRICE": "Accepted Price",
+    "BUYER": "Buyer",
+    "NO_IMAGE_DESC": "No reference image provided.",
+    "BY": "by",
+    "BUDGET": "Budget",
+    "STATUS": "Status",
+    "SEND_OFFER": "Send Offer",
+    "MAKE_OFFER": "Make an Offer",
+    "PRICE": "Price ($)",
+    "DELIVERY_DAYS": "Delivery Days",
+    "SUBMIT": "Submit",
+    "MY_OFFERS": "My Offers",
+    "OFFER_LABEL": "Offer",
+    "EMPTY_OFFERS": "You haven't made any offers yet.",
+    "PAYMENTS_TITLE": "Payments",
+    "PAYMENT_ID": "Payment ID",
+    "ORDER": "Order",
+    "REFERENCE": "Reference",
+    "DATE": "Date",
+    "OFFER_SUBMITTED": "Offer submitted successfully!",
+    "CLOSED": "Closed",
+    "ACCEPTED": "Accepted",
+    "REJECTED": "Rejected",
+    "PENDING": "Pending",
+    "CANCELLED": "Cancelled",
+    "NO_IMAGE": "Reference Image Unavailable",
+    "ERRORS": {
+      "LOAD_EARNINGS_FAILED": "Failed to load earnings data",
+      "SAVE_BANK_FAILED": "Failed to save bank details"
+    },
+    "ACTIONS": {
+      "RETRY": "Retry"
+    },
+    "PAYMENTS": {
+      "TITLE": "Payments",
+      "SUBTITLE": "Track your earnings, manage payouts, and update your bank details.",
+      "LABEL": "Payments",
+      "ERROR": "Error",
+      "EARNINGS": "Total Earnings",
+      "PENDING": "Pending Payout",
+      "PAID": "Total Paid",
+      "BANK_DETAILS": "Bank Details",
+      "RECENT_PAYOUTS": "Recent Payouts",
+      "ACTIONS": {
+        "RETRY": "Retry"
       },
-      "BANK": {
-       "TITLE": "Bank Details",
-       "SUBTITLE": "Enter your bank information to receive payouts.",
-       "VERIFIED": "Verified",
-       "SAVE_SUCCESS": "Bank details saved successfully!",
-       "ERRORS": {
-         "SAVE_FAILED": "Failed to save bank details"
-       },
-       "NAME": "Bank Name",
-       "ACCOUNT_HOLDER": "Account Holder Name",
-       "IBAN": "IBAN",
-       "SWIFT": "SWIFT Code",
-       "PAYOUT_CYCLE": "Payout Cycle",
-       "PLACEHOLDER_BANK_NAME": "e.g. CIB Bank",
-       "PLACEHOLDER_ACCOUNT_NUMBER": "e.g. EG12345678901234567890",
-       "PLACEHOLDER_IBAN": "e.g. CIBEEGCX",
-       "PLACEHOLDER_SWIFT": "e.g. 1234567890123",
-       "PLACEHOLDER_PAYOUT_CYCLE": "e.g. Monthly · 1st of each month",
-       "DISCLAIMER": "Your bank information is stored securely and will only be used for payout transfers.",
-       "SAVE_BUTTON": "Save Bank Details"
-     },
-     "PAYOUTS": {
-       "TITLE": "Recent Payouts",
-       "PERIOD": "Last 90 days",
-       "LOADING": "Loading payouts...",
-       "EMPTY": "No payouts yet.",
-       "VIEW_HISTORY": "View Full History"
-     },
-     "ORDERS": {
-       "TITLE": "Payment History",
-       "TABLE": "Payment History",
-       "LOADING": "Loading orders...",
-       "EMPTY": "No orders yet.",
-       "PAYMENT_ID": "Payment ID",
-       "ORDER_ID": "Order",
-       "CUSTOMER": "Customer",
-       "CUSTOMER_NAME": "Customer",
-       "STATUS": "Status",
-       "AMOUNT": "Amount",
-       "DATE": "Date"
-     },
-     "SAVE_BUTTON": "Save Bank Details"
-   },
+      "ERRORS": {
+        "LOAD_FAILED": "Failed to load earnings data"
+      }
+    },
+    "BANK": {
+      "TITLE": "Bank Details",
+      "SUBTITLE": "Enter your bank information to receive payouts.",
+      "VERIFIED": "Verified",
+      "SAVE_SUCCESS": "Bank details saved successfully!",
+      "ERRORS": {
+        "SAVE_FAILED": "Failed to save bank details"
+      },
+      "NAME": "Bank Name",
+      "ACCOUNT_HOLDER": "Account Holder Name",
+      "IBAN": "IBAN",
+      "SWIFT": "SWIFT Code",
+      "PAYOUT_CYCLE": "Payout Cycle",
+      "PLACEHOLDER_BANK_NAME": "e.g. CIB Bank",
+      "PLACEHOLDER_ACCOUNT_NUMBER": "e.g. EG12345678901234567890",
+      "PLACEHOLDER_IBAN": "e.g. CIBEEGCX",
+      "PLACEHOLDER_SWIFT": "e.g. 1234567890123",
+      "PLACEHOLDER_PAYOUT_CYCLE": "e.g. Monthly · 1st of each month",
+      "DISCLAIMER": "Your bank information is stored securely and will only be used for payout transfers.",
+      "SAVE_BUTTON": "Save Bank Details"
+    },
+    "PAYOUTS": {
+      "TITLE": "Recent Payouts",
+      "PERIOD": "Last 90 days",
+      "LOADING": "Loading payouts...",
+      "EMPTY": "No payouts yet.",
+      "VIEW_HISTORY": "View Full History"
+    },
+    "ORDERS": {
+      "TITLE": "Payment History",
+      "TABLE": "Payment History",
+      "LOADING": "Loading orders...",
+      "EMPTY": "No orders yet.",
+      "PAYMENT_ID": "Payment ID",
+      "ORDER_ID": "Order",
+      "CUSTOMER": "Customer",
+      "CUSTOMER_NAME": "Customer",
+      "STATUS": "Status",
+      "AMOUNT": "Amount",
+      "DATE": "Date"
+    },
+    "SAVE_BUTTON": "Save Bank Details"
+  },
   "HOME": {
     "HERO": {
       "EYEBROW": "FURNITURE ATELIER — EST. 2026",
@@ -564,40 +564,39 @@
       "LOCATION_LABEL": "Location"
     }
   },
-"CUSTOMER": {
-  "REQUEST": {
-    "TITLE": "Custom Furniture",
-    "TITLE_ITALIC": "Request",
-    "DESC": "Tell us what you're looking for and our skilled artisans will bring it to life.",
-    "BESPOKE_BADGE": "BESPOKE ATELIER",
-    "HERO_DESC": "Tell us what you're looking for and our skilled artisans will bring it to life — shaped, finished, and delivered to fit your space exactly.",
-    "STEP1_NUM": "01 · BRIEF",
-    "STEP1_LABEL": "Share your vision",
-    "STEP2_NUM": "02 · CRAFT",
-    "STEP2_LABEL": "Artisans build",
-    "STEP3_NUM": "03 · DELIVER",
-    "STEP3_LABEL": "To your door",
-    "THE_BRIEF": "THE BRIEF",
-    "SHARE_DETAILS": "Share the details",
-    "SHARE_DETAILS_DESC": "The more specific your description, the closer we can get to your vision. Reference images help us match your taste in materials, tone, and silhouette.",
-    "BUDGET": "Budget ($)",
-    "BUDGET_PLACEHOLDER": "Enter your maximum budget...",
-    "DESC_LABEL": "Description & Special Requirements",
-    "DESC_PLACEHOLDER": "Describe what you want (e.g. 3-seater sofa in blue velvet)...",
-    "IMAGE_LABEL": "Reference Image",
-    "UPLOAD_TEXT": "Click to upload reference image",
-    "UPLOAD_HINT": "PNG, JPG up to 10MB",
-    "CHANGE_IMAGE": "Click to change image",
-    "SUBMIT_NOTE": "We'll reply within 24 hours with a personalised quote.",
-    "SUBMITTED_TITLE": "Request Submitted!",
-    "SUBMIT_ANOTHER": "Submit Another Request",
-    "YOUR_ATELIER": "YOUR ATELIER",
-    "MY_REQUESTS": "My Requests",
-    "EMPTY_TITLE": "Nothing here yet",
-    "EMPTY": "You haven't made any custom requests yet.",
-    "EMPTY_DESC": "You haven't made any custom requests yet. Send your first brief above and we'll get to work."
-  },
-
+  "CUSTOMER": {
+    "REQUEST": {
+      "TITLE": "Custom Furniture",
+      "TITLE_ITALIC": "Request",
+      "DESC": "Tell us what you're looking for and our skilled artisans will bring it to life.",
+      "BESPOKE_BADGE": "BESPOKE ATELIER",
+      "HERO_DESC": "Tell us what you're looking for and our skilled artisans will bring it to life — shaped, finished, and delivered to fit your space exactly.",
+      "STEP1_NUM": "01 · BRIEF",
+      "STEP1_LABEL": "Share your vision",
+      "STEP2_NUM": "02 · CRAFT",
+      "STEP2_LABEL": "Artisans build",
+      "STEP3_NUM": "03 · DELIVER",
+      "STEP3_LABEL": "To your door",
+      "THE_BRIEF": "THE BRIEF",
+      "SHARE_DETAILS": "Share the details",
+      "SHARE_DETAILS_DESC": "The more specific your description, the closer we can get to your vision. Reference images help us match your taste in materials, tone, and silhouette.",
+      "BUDGET": "Budget ($)",
+      "BUDGET_PLACEHOLDER": "Enter your maximum budget...",
+      "DESC_LABEL": "Description & Special Requirements",
+      "DESC_PLACEHOLDER": "Describe what you want (e.g. 3-seater sofa in blue velvet)...",
+      "IMAGE_LABEL": "Reference Image",
+      "UPLOAD_TEXT": "Click to upload reference image",
+      "UPLOAD_HINT": "PNG, JPG up to 10MB",
+      "CHANGE_IMAGE": "Click to change image",
+      "SUBMIT_NOTE": "We'll reply within 24 hours with a personalised quote.",
+      "SUBMITTED_TITLE": "Request Submitted!",
+      "SUBMIT_ANOTHER": "Submit Another Request",
+      "YOUR_ATELIER": "YOUR ATELIER",
+      "MY_REQUESTS": "My Requests",
+      "EMPTY_TITLE": "Nothing here yet",
+      "EMPTY": "You haven't made any custom requests yet.",
+      "EMPTY_DESC": "You haven't made any custom requests yet. Send your first brief above and we'll get to work."
+    },
     "COMPLAINTS": {
       "TITLE": "My Complaints",
       "SUBTITLE": "Submit and track your complaints",
@@ -643,5 +642,27 @@
     "REBUILD_CONFIRM": "Are you sure you want to rebuild the search index?",
     "REBUILD_SUCCESS": "Search index rebuilt successfully.",
     "REBUILD_ERROR": "Failed to rebuild search index. Please try again."
+  },
+  "FORGET_PASSWORD": {
+    "BACK_TO_LOGIN": "Back to Login",
+    "TITLE": "Forgot Password?",
+    "SUBTITLE": "Enter your email and we'll send you a reset code.",
+    "EMAIL": "Email",
+    "EMAIL_REQUIRED": "Email is required.",
+    "EMAIL_INVALID": "Enter a valid email.",
+    "SEND_CODE": "Send Reset Code",
+    "RESET_TITLE": "Reset Password",
+    "RESET_SUBTITLE": "Check your email for the reset code.",
+    "TOKEN": "Reset Code",
+    "TOKEN_PLACEHOLDER": "Enter code from email",
+    "TOKEN_REQUIRED": "Reset code is required.",
+    "NEW_PASSWORD": "New Password",
+    "NEW_PASSWORD_PLACEHOLDER": "Enter new password",
+    "PASSWORD_REQUIRED": "Password is required.",
+    "PASSWORD_MIN": "Password must be at least 6 characters.",
+    "CONFIRM_PASSWORD": "Confirm Password",
+    "CONFIRM_PASSWORD_PLACEHOLDER": "Confirm new password",
+    "PASSWORD_MISMATCH": "Passwords do not match.",
+    "RESET_BTN": "Reset Password"
   }
 }
