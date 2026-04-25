@@ -18,3 +18,35 @@
 .badge-red { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
 .badge-gray { background: #f5efe8; color: #7a6a58; border: 1px solid #e0d8d0; }
 .badge-outline { border: 1px solid #e0d8d0; color: #5a4a3a; background: transparent; }
+
+/* ── Skeleton loading ─────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+.skeleton {
+  border-radius: 8px;
+  background: linear-gradient(90deg, #f0ebe4 25%, #e8e0d5 50%, #f0ebe4 75%);
+  background-size: 1200px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.table-row--skeleton { pointer-events: none; }
+.skeleton-text {
+  height: 14px;
+  width: 70%;
+}
+.skeleton-badge {
+  height: 24px;
+  width: 80px;
+  border-radius: 999px;
+}
+
+/* Empty state */
+.empty-msg {
+  text-align: center;
+  color: #a08060;
+  padding: 32px 0;
+  font-size: 14px;
+}

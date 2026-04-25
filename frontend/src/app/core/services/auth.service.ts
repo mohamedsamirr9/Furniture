@@ -157,4 +157,8 @@ export class AuthService {
       return null;
     }
   }
+
+  getAllUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/admin/users`);
+  }
 }

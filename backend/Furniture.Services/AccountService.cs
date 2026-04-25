@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Furniture.Domain.InterfacesRepositories;
 using Furniture.Domain.Models;
 using Furniture.Domain.Models.Enum;
@@ -267,5 +267,26 @@ namespace Furniture.Services
                 throw new Exception(errors);
             }
         }
+
+        public Task<IEnumerable<AdminUserDto>> GetAllUsersAsync()
+        {
+            var users = _userManager.Users
+                .OrderByDescending(u => u.RegisteredAt)
+                .Select(u => new AdminUserDto
+                {
+                    Id            = u.Id,
+                    Name          = u.Name,
+                    Email         = u.Email ?? "",
+                    Phone         = u.PhoneNumber,
+                    Address       = u.Address,
+                    Role          = u.Role.ToString(),
+                    JoinDate      = u.RegisteredAt,
+                    AccountStatus = u.IsDeleted ? "Deleted" : "Active",
+                })
+                .AsEnumerable();
+
+            return Task.FromResult(users);
+        }
     }
 }
+
