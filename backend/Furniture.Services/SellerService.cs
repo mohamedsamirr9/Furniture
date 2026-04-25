@@ -167,7 +167,12 @@ namespace Furniture.Services
                 AvatarUrl = imageUrl,
                 ProfileImageUrl = imageUrl,
                 Specialties = specialties,
-                Portfolio = portfolio
+                Portfolio = portfolio,
+                BankName = includeEmail ? sellerProfile?.BankName : null,
+                BankAccountNumber = includeEmail ? sellerProfile?.BankAccountNumber : null,
+                BankCode = includeEmail ? sellerProfile?.BankCode : null,
+                NationalId = includeEmail ? sellerProfile?.NationalId : null,
+                PaymobMerchantId = includeEmail ? sellerProfile?.PaymobMerchantId : null
             };
         }
     }

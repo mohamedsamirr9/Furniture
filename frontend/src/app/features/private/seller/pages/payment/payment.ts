@@ -46,6 +46,9 @@ export class Payment implements OnInit, OnDestroy {
     verified: false,
   };
 
+  hasExistingBankDetails = false;
+
+
   constructor(
     private earningsService: SellerEarningsService,
     private orderService: OrderService,
@@ -57,6 +60,7 @@ export class Payment implements OnInit, OnDestroy {
     this.loadEarnings();
     this.loadOrders();
     this.loadPayouts();
+    this.loadSellerProfile();
   }
 
   ngOnDestroy(): void {
@@ -117,6 +121,32 @@ export class Payment implements OnInit, OnDestroy {
       });
   }
 
+  loadSellerProfile(): void {
+    this.sellerService
+      .getMySellerProfile()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (profile) => {
+          if (profile && (profile.bankName || profile.bankAccountNumber || profile.bankCode)) {
+            this.hasExistingBankDetails = true;
+            this.bankForm = {
+              bankName: profile.bankName || '',
+              bankAccountNumber: profile.bankAccountNumber || '',
+              bankCode: profile.bankCode || '',
+              nationalId: profile.nationalId || '',
+              paymobMerchantId: profile.paymobMerchantId || '',
+              verified: !!profile.bankAccountNumber,
+            };
+          } else {
+            this.hasExistingBankDetails = false;
+          }
+        },
+        error: (err) => {
+          console.error('Failed to load seller profile:', err);
+        }
+      });
+  }
+
   saveBankDetails(): void {
     this.saveSuccess = false;
     this.errorMessage = null;
@@ -133,6 +163,7 @@ export class Payment implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.saveSuccess = true;
+          this.hasExistingBankDetails = true;
           setTimeout(() => (this.saveSuccess = false), 3000);
         },
         error: (err) => {

@@ -14,6 +14,11 @@ export interface SellerProfileApiDto {
   profileImageUrl?: string;
   specialties: string[];
   portfolio: SellerPortfolioItem[];
+  bankName?: string;
+  bankAccountNumber?: string;
+  bankCode?: string;
+  nationalId?: string;
+  paymobMerchantId?: string;
 }
 
 export interface SellerPortfolioItem {
@@ -38,6 +43,11 @@ export interface SellerProfileViewModel {
   profileImageUrl: string;
   specialties: string[];
   portfolio: SellerPortfolioItem[];
+  bankName?: string;
+  bankAccountNumber?: string;
+  bankCode?: string;
+  nationalId?: string;
+  paymobMerchantId?: string;
 }
 
 export function mapSellerProfileApiToView(dto: SellerProfileApiDto): SellerProfileViewModel {
@@ -55,6 +65,11 @@ export function mapSellerProfileApiToView(dto: SellerProfileApiDto): SellerProfi
     profileImageUrl: img,
     specialties: dto.specialties ?? [],
     portfolio: dto.portfolio ?? [],
+    bankName: dto.bankName,
+    bankAccountNumber: dto.bankAccountNumber,
+    bankCode: dto.bankCode,
+    nationalId: dto.nationalId,
+    paymobMerchantId: dto.paymobMerchantId,
   };
 }
 

@@ -491,9 +491,9 @@
       "SWIFT": "SWIFT Code",
       "PAYOUT_CYCLE": "Payout Cycle",
       "PLACEHOLDER_BANK_NAME": "e.g. CIB Bank",
-      "PLACEHOLDER_ACCOUNT_NUMBER": "e.g. EG12345678901234567890",
-      "PLACEHOLDER_IBAN": "e.g. CIBEEGCX",
-      "PLACEHOLDER_SWIFT": "e.g. 1234567890123",
+      "PLACEHOLDER_ACCOUNT_NUMBER": "e.g. Mohamed Samir",
+      "PLACEHOLDER_IBAN": "e.g. EG12345678901234567890",
+      "PLACEHOLDER_SWIFT": "e.g. CIBEEGCX",
       "PLACEHOLDER_PAYOUT_CYCLE": "e.g. Monthly · 1st of each month",
       "DISCLAIMER": "Your bank information is stored securely and will only be used for payout transfers.",
       "SAVE_BUTTON": "Save Bank Details"

@@ -491,9 +491,9 @@
       "SWIFT": "رمز السويفت",
       "PAYOUT_CYCLE": "دورة السحب",
       "PLACEHOLDER_BANK_NAME": "مثال: بنك القاهرة",
-      "PLACEHOLDER_ACCOUNT_NUMBER": "مثال: EG12345678901234567890",
-      "PLACEHOLDER_IBAN": "مثال: CIBEEGCX",
-      "PLACEHOLDER_SWIFT": "مثال: 1234567890123",
+      "PLACEHOLDER_ACCOUNT_NUMBER": "مثال: Mohamed Samir",
+      "PLACEHOLDER_IBAN": "مثال: EG12345678901234567890",
+      "PLACEHOLDER_SWIFT": "مثال: CIBEEGCX",
       "PLACEHOLDER_PAYOUT_CYCLE": "مثال: شهريًا · الأول من كل شهر",
       "DISCLAIMER": "معلوماتك البنكية مخزنة بأمان وستُستخدم فقط لتحويلات السحب.",
       "SAVE_BUTTON": "حفظ تفاصيل البنك"
