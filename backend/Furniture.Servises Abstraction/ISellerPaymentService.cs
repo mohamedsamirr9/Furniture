@@ -8,6 +8,7 @@ namespace Furniture.Servises_Abstraction
         Task<SellerProfileDTO> CreateSellerProfileAsync(string userId, CreateSellerProfileDTO dto);
         Task<SellerProfileDTO?> GetMyProfileAsync(string userId);
         Task<SellerEarningsDTO> GetEarningsAsync(string userId);
+        Task<List<SellerPayoutDTO>> GetSellerPayoutsAsync(string userId);
         Task<List<SellerProfileDTO>> GetAllSellersAsync();
         Task<List<SellerProfileDTO>> GetPendingSellersAsync();
         Task<bool> VerifySellerAsync(int sellerId);

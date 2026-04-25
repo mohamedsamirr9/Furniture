@@ -118,6 +118,29 @@ namespace Furniture.Services.Implementations
             };
         }
 
+        public async Task<List<SellerPayoutDTO>> GetSellerPayoutsAsync(string userId)
+        {
+            var seller = await GetSellerProfileByUserIdAsync(userId);
+            if (seller == null)
+                throw new InvalidOperationException("Seller profile not found");
+
+            var payoutSpec = new SellerPayoutSpecification(seller.Id);
+            var payouts = await _unitOfWork.GetRepository<SellerPayout, int>()
+                .GetAllAsync(payoutSpec);
+
+            return payouts.Select(p => new SellerPayoutDTO
+            {
+                Id = p.Id,
+                OrderId = p.OrderId,
+                Amount = p.NetAmount,
+                CommissionAmount = p.CommissionAmount,
+                Status = p.Status.ToString(),
+                CreatedAt = p.CreatedAt,
+                PaidAt = p.PaidAt,
+                TransactionId = p.PaymobTransactionId
+            }).ToList();
+        }
+
         public async Task<List<SellerProfileDTO>> GetAllSellersAsync()
         {
             var spec = new SellerProfileSpecification();
