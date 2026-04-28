@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Furniture.Persistence.Migrations
 {
     [DbContext(typeof(FurnitureDbContext))]
-    [Migration("20260427212954_AddCashPaymentAndCommissionSystem")]
-    partial class AddCashPaymentAndCommissionSystem
+    [Migration("20260428115421_addCommission")]
+    partial class addCommission
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

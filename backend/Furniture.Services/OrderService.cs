@@ -320,6 +320,17 @@ namespace Furniture.Services.Implementations
             if (order == null)
                 return false;
 
+            if (newStatus == OrderStatus.Paid)
+            {
+                var paymentSpec = new PaymentByOrderIdSpecification(orderId);
+                var payment = await _unitOfWork.GetRepository<Payment, int>()
+                    .GetByIdAsync(paymentSpec);
+
+                if (payment == null || payment.Method != PaymentMethod.Card)
+                    throw new InvalidOperationException(
+                        "Paid status is only valid for card payments.");
+            }
+
             ValidateStatusTransition(order.Status, newStatus);
 
             if (newStatus == OrderStatus.Processing && order.Status != OrderStatus.Processing)

@@ -5,6 +5,8 @@ export interface CartItem {
   quantity: number;
   productImage?: string;
   availableStock: number;
+  sellerIsBlocked?: boolean;
+  isBlocked?: boolean;
   totalPrice?: number;
 }
 

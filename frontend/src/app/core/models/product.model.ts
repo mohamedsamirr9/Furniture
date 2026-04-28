@@ -12,6 +12,8 @@ export interface Product {
     categoryName?: string;
     sellerId?: string;
     sellerName?: string;
+    sellerIsBlocked?: boolean;
+    isBlocked?: boolean;
     averageRating: number;
     mainImage?: string;
     images?: string[];

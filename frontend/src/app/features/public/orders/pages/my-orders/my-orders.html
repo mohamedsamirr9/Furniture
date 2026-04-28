@@ -62,8 +62,8 @@
                   </td>
                   <td class="px-4 py-4 fw-bold text-dark fs-6">${{ order.totalPrice | number:'1.2-2' }}</td>
                   <td class="px-4 py-4">
-                    <span class="badge rounded-pill fw-medium px-3 py-2" [ngClass]="getStatusClass(order.status || '')">
-                      {{ 'STATUS.' + (order.status | uppercase) | translate }}
+                    <span class="badge rounded-pill fw-medium px-3 py-2" [ngClass]="getStatusClass(getDisplayStatus(order) || '')">
+                      {{ 'STATUS.' + (getDisplayStatus(order) | uppercase) | translate }}
                     </span>
                   </td>
                   <td class="px-4 py-4 text-end">
@@ -85,8 +85,8 @@
           <div class="order-card-header">
             <span class="fw-bold text-dark">#{{ order.id }}</span>
             <span *ngIf="order.isCustom" class="badge bg-info text-dark ms-2" style="font-size: 0.65rem;">{{ 'MY_ORDERS.CUSTOM' | translate }}</span>
-            <span class="ms-auto badge rounded-pill fw-medium px-3 py-1" [ngClass]="getStatusClass(order.status || '')">
-              {{ 'STATUS.' + (order.status | uppercase) | translate }}
+            <span class="ms-auto badge rounded-pill fw-medium px-3 py-1" [ngClass]="getStatusClass(getDisplayStatus(order) || '')">
+              {{ 'STATUS.' + (getDisplayStatus(order) | uppercase) | translate }}
             </span>
           </div>
           <div class="order-card-body d-flex align-items-center">

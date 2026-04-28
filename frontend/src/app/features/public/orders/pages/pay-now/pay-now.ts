@@ -34,6 +34,7 @@ export class PayNowComponent implements OnInit, OnDestroy {
   safePaymentUrl: SafeResourceUrl | null = null;
 
   isPaid: boolean | null = null;
+  paymentMethod: 'cash' | 'card' = 'card';
 
   private destroy$ = new Subject<void>();
 
@@ -48,11 +49,17 @@ export class PayNowComponent implements OnInit, OnDestroy {
       this.orderResponse = (nav.extras.state['orderResponse'] as OrderResponseLike) ?? null;
       const passedOrderId = nav.extras.state['orderId'] as number | undefined;
       if (typeof passedOrderId === 'number') this.orderId = passedOrderId;
+      const passedMethod = nav.extras.state['paymentMethod'] as string | undefined;
+      if (passedMethod?.toLowerCase() === 'cash') this.paymentMethod = 'cash';
     }
   }
 
   ngOnInit(): void {
     const status = this.route.snapshot.queryParamMap.get('status');
+    const paymentMethod = this.route.snapshot.queryParamMap.get('paymentMethod');
+    if (paymentMethod?.toLowerCase() === 'cash') {
+      this.paymentMethod = 'cash';
+    }
 
     this.extractOrderId();
 
@@ -74,7 +81,7 @@ export class PayNowComponent implements OnInit, OnDestroy {
     this.errorMessage = null;
 
     this.paymentService
-      .createPayment(this.orderId!)
+      .createPayment(this.orderId!, this.paymentMethod)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {

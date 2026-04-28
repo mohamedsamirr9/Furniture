@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { OrderService } from '../../../../../core/services/order.service';
+import { SellerService } from '../../../../../core/services/seller.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { Order } from '../../../../../core/models/order.model';
 import { OrderDetailsModalComponent } from '../../../../../shared/components/order-details-modal/order-details-modal';
@@ -31,8 +33,17 @@ export class Orders implements OnInit {
   };
 
   private terminalStatuses = ['Completed', 'Cancelled', 'Declined'];
+  private sellerAllowedTransitions = ['Shipped', 'Delivered'];
 
-  constructor(private orderService: OrderService) {}
+  statusMessage: string | null = null;
+  statusMessageType: 'success' | 'error' = 'success';
+  sellerProfile: any;
+
+  constructor(
+    private orderService: OrderService,
+    private sellerService: SellerService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadOrders();
@@ -53,7 +64,9 @@ export class Orders implements OnInit {
   }
 
   getValidTransitions(status: string): string[] {
-    return this.validTransitions[status] || [];
+    return (this.validTransitions[status] || []).filter(next =>
+      this.sellerAllowedTransitions.includes(next)
+    );
   }
 
   isTerminalStatus(status: string): boolean {
@@ -63,13 +76,34 @@ export class Orders implements OnInit {
   updateStatus(order: any, event: any): void {
     const newStatus = event.target.value;
     const oldStatus = order.status;
+    if (!this.getValidTransitions(oldStatus).includes(newStatus)) {
+      event.target.value = oldStatus;
+      return;
+    }
     this.orderService.updateOrderStatus(order.id || order.orderId, newStatus).subscribe({
       next: () => {
         order.status = newStatus;
+        
+        this.statusMessage = `Order #${order.id || order.orderId} status updated to ${newStatus}`;
+        this.statusMessageType = 'success';
+        setTimeout(() => this.statusMessage = null, 4000);
+
+        // Refresh financial data silently after delivery
+        if (newStatus === 'Delivered') {
+          this.sellerService.getMySellerProfile().subscribe(profile => {
+            this.sellerProfile = profile;
+            setTimeout(() => {
+              this.router.navigate(['/seller/payment']);
+            }, 1500);
+          });
+        }
       },
       error: (err: any) => {
         console.error('Error updating order status', err);
         event.target.value = oldStatus;
+        this.statusMessage = 'Failed to update order status';
+        this.statusMessageType = 'error';
+        setTimeout(() => this.statusMessage = null, 4000);
       }
     });
   }

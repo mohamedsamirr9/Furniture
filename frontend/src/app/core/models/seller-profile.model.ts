@@ -19,6 +19,9 @@ export interface SellerProfileApiDto {
   bankCode?: string;
   nationalId?: string;
   paymobMerchantId?: string;
+  pendingCommission?: number;
+  maxAllowedCommission?: number;
+  isBlocked?: boolean;
 }
 
 export interface SellerPortfolioItem {
@@ -48,6 +51,9 @@ export interface SellerProfileViewModel {
   bankCode?: string;
   nationalId?: string;
   paymobMerchantId?: string;
+  pendingCommission?: number;
+  maxAllowedCommission?: number;
+  isBlocked?: boolean;
 }
 
 export function mapSellerProfileApiToView(dto: SellerProfileApiDto): SellerProfileViewModel {
@@ -70,6 +76,9 @@ export function mapSellerProfileApiToView(dto: SellerProfileApiDto): SellerProfi
     bankCode: dto.bankCode,
     nationalId: dto.nationalId,
     paymobMerchantId: dto.paymobMerchantId,
+    pendingCommission: dto.pendingCommission,
+    maxAllowedCommission: dto.maxAllowedCommission,
+    isBlocked: dto.isBlocked,
   };
 }
 

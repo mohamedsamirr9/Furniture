@@ -25,7 +25,13 @@
         <div>
           <strong>{{ 'ADMIN.STATUS' | translate }}</strong>
           <div>
-            <span class="badge badge-outline">{{ 'STATUS.' + (order.status | uppercase) | translate }}</span>
+            <span class="badge badge-outline">{{ 'STATUS.' + (getDisplayStatus(order) | uppercase) | translate }}</span>
+          </div>
+        </div>
+        <div>
+          <strong>Payment Method</strong>
+          <div>
+            <span class="badge badge-outline">{{ getPaymentMethodLabel(order) }}</span>
           </div>
         </div>
         <div>
@@ -37,7 +43,7 @@
       <div class="items-section">
         <strong>{{ 'ORDER.ITEMS_TITLE' | translate }}</strong>
 
-        <div class="item-row" *ngFor="let line of order.orderItems || []">
+        <div class="item-row" *ngFor="let line of order.orderItems || []" [class.opacity-50]="isSellerBlocked(line)">
           <div class="item-thumb-wrap">
             <img
               *ngIf="line.productImage"
@@ -54,6 +60,7 @@
               · {{ 'ORDER.UNIT_PRICE' | translate }}: {{ line.unitPrice | currency }}
               · {{ lineTotal(line) | currency }}
             </div>
+            <span *ngIf="isSellerBlocked(line)" class="badge bg-danger mt-1">Blocked</span>
           </div>
         </div>
 

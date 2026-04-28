@@ -11,6 +11,8 @@ namespace Furniture.Services.Mappings
             CreateMap<Order, OrderDTO>()
                 .ForMember(dest => dest.Status,
                     opt => opt.MapFrom(src => src.Status.ToString()))
+                .ForMember(dest => dest.PaymentMethod,
+                    opt => opt.MapFrom(src => src.Payment != null ? src.Payment.Method.ToString() : "Cash"))
                 .ForMember(dest => dest.UserName,
                     opt => opt.MapFrom(src => src.User != null ? src.User.UserName : null))
                 .ForMember(dest => dest.OrderItems,

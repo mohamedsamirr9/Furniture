@@ -23,7 +23,7 @@ export class Orders implements OnInit {
 
   private validTransitions: Record<string, string[]> = {
     'Pending': ['Accepted', 'Declined'],
-    'Accepted': ['Paid', 'Cancelled'],
+    'Accepted': ['Paid', 'Processing', 'Cancelled'],
     'Paid': ['Processing'],
     'Processing': ['Shipped'],
     'Shipped': ['Delivered'],
@@ -52,8 +52,13 @@ export class Orders implements OnInit {
     });
   }
 
-  getValidTransitions(status: string): string[] {
-    return this.validTransitions[status] || [];
+  getValidTransitions(order: any): string[] {
+    const transitions = this.validTransitions[order.status] || [];
+    const paymentMethod = (order.paymentMethod || 'Cash').toLowerCase();
+    if (paymentMethod === 'cash') {
+      return transitions.filter(next => next !== 'Paid');
+    }
+    return transitions;
   }
 
   isTerminalStatus(status: string): boolean {

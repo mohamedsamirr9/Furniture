@@ -32,8 +32,11 @@
 
       <!-- Left: Images -->
       <div class="col-md-6">
-        <div class="main-image-wrapper">
+        <div class="main-image-wrapper position-relative">
           <img [src]="selectedImage || fallbackImage" class="main-product-img" [alt]="product.name" />
+          <div *ngIf="isUnavailable" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 text-white fw-bold">
+            Unavailable
+          </div>
         </div>
         <div class="thumb-gallery mt-3" *ngIf="displayImages.length > 1">
           <button
@@ -76,6 +79,7 @@
           >
             by {{ product.sellerName }}
           </button>
+          <span *ngIf="isUnavailable" class="badge bg-danger ms-2">Blocked</span>
 
           <!-- Divider -->
           <div class="info-divider my-4"></div>
@@ -103,14 +107,16 @@
           <button
             class="btn-add-cart"
             (click)="addToCart()"
-            [disabled]="isAdding || product.stockQuantity <= 0"
+            [disabled]="isAdding || product.stockQuantity <= 0 || isUnavailable"
           >
             <span *ngIf="isAdding" class="spinner-border spinner-border-sm me-2" role="status"></span>
-            <i *ngIf="!isAdding && product.stockQuantity > 0" class="bi bi-cart-plus me-2"></i>
+            <i *ngIf="!isAdding && product.stockQuantity > 0 && !isUnavailable" class="bi bi-cart-plus me-2"></i>
             {{
               isAdding
                 ? ('ALERTS.LOADING' | translate)
-                : product.stockQuantity > 0
+                : isUnavailable
+                  ? 'Unavailable'
+                  : product.stockQuantity > 0
                   ? ('BUTTONS.ADD_TO_CART' | translate)
                   : ('DASHBOARD.OUT_OF_STOCK' | translate)
             }}

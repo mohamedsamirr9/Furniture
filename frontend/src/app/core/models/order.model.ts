@@ -5,6 +5,8 @@ export interface OrderItem {
   unitPrice: number;
   quantity: number;
   total?: number;
+  sellerIsBlocked?: boolean;
+  isBlocked?: boolean;
 }
 
 export interface Order {
@@ -14,6 +16,7 @@ export interface Order {
   totalPrice: number;
   orderDate: string;
   status: string;
+  paymentMethod?: 'Cash' | 'Card';
   shippingAddress: string;
   createdAt: string;
   userName?: string;

@@ -182,9 +182,10 @@
 
           @for (product of products; track product.id) {
             <div class="col-6 col-xl-4 d-flex">
-              <div class="card w-100 border-0 overflow-hidden product-card">
+              <div class="card w-100 border-0 overflow-hidden product-card" [class.opacity-50]="product.sellerIsBlocked || product.isBlocked">
                 <div class="img-container" [routerLink]="['/products', product.id]" style="cursor:pointer">
                   <span class="category-badge" *ngIf="product.categoryName">{{ product.categoryName }}</span>
+                  <span class="badge bg-danger position-absolute m-2" *ngIf="product.sellerIsBlocked || product.isBlocked">Blocked</span>
                   <img [src]="product.mainImage" class="card-img-top" [alt]="product.name" loading="lazy" />
                 </div>
                 <div class="card-body p-3 d-flex flex-column">
@@ -199,7 +200,7 @@
                         <i class="bi bi-star-fill me-1" *ngIf="product.averageRating > 0"></i>
                         {{ product.averageRating > 0 ? (product.averageRating | number:'1.1-1') : ('PRODUCT.NEW' | translate) }}
                       </span>
-                      <button class="btn btn-cart rounded-circle shadow-sm"><i class="bi bi-cart-plus"></i></button>
+                      <button class="btn btn-cart rounded-circle shadow-sm" [disabled]="product.sellerIsBlocked || product.isBlocked"><i class="bi bi-cart-plus"></i></button>
                     </div>
                   </div>
                 </div>

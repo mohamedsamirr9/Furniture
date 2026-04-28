@@ -1,5 +1,6 @@
 export interface CreatePaymentRequest {
   orderId: number;
+  paymentMethod?: 'cash' | 'card';
 }
 
 export interface PaymentResponse {

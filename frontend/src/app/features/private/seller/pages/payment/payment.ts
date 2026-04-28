@@ -32,6 +32,8 @@ export class Payment implements OnInit, OnDestroy {
   saveSuccess = false;
 
   orders: Order[] = [];
+  onlineOrders: Order[] = [];
+  cashOrders: Order[] = [];
   ordersLoading = false;
 
   recentPayouts: SellerPayout[] = [];
@@ -47,6 +49,7 @@ export class Payment implements OnInit, OnDestroy {
   };
 
   hasExistingBankDetails = false;
+  sellerProfile: any = null;
 
 
   constructor(
@@ -95,6 +98,8 @@ export class Payment implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.orders = data;
+          this.onlineOrders = this.orders.filter(o => o.paymentMethod === 'Card');
+          this.cashOrders = this.orders.filter(o => o.paymentMethod === 'Cash');
           this.ordersLoading = false;
         },
         error: (err) => {
@@ -127,6 +132,8 @@ export class Payment implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (profile) => {
+          this.sellerProfile = profile;
+
           if (profile && (profile.bankName || profile.bankAccountNumber || profile.bankCode)) {
             this.hasExistingBankDetails = true;
             this.bankForm = {
@@ -174,14 +181,33 @@ export class Payment implements OnInit, OnDestroy {
   }
 
   get netEarnings(): number {
-    return this.earnings.netEarnings || 0;
+    return this.onlineOrders.reduce((sum, o) => sum + (o.totalPrice || 0), 0);
   }
 
   get pendingAmount(): number {
-    return this.earnings.pendingAmount || 0;
+    const pendingStatuses = ['Pending', 'Processing', 'Accepted', 'Shipped'];
+    return this.onlineOrders
+      .filter(o => pendingStatuses.includes(o.status))
+      .reduce((sum, o) => sum + (o.totalPrice || 0), 0);
+  }
+
+  get paidAmount(): number {
+    const paidStatuses = ['Delivered', 'Completed'];
+    return this.onlineOrders
+      .filter(o => paidStatuses.includes(o.status))
+      .reduce((sum, o) => sum + (o.totalPrice || 0), 0);
+  }
+
+  get totalCashAmount(): number {
+    return this.cashOrders.reduce((sum, o) => sum + (o.totalPrice || 0), 0);
   }
 
   get lastPayoutAmount(): number {
     return this.recentPayouts.length > 0 ? this.recentPayouts[0].amount : 0;
+  }
+
+  get remainingLimit(): number {
+    if (!this.sellerProfile) return 0;
+    return (this.sellerProfile.maxAllowedCommission || 10000) - (this.sellerProfile.pendingCommission || 0);
   }
 }
