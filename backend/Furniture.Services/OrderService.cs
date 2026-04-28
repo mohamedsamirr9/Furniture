@@ -14,12 +14,15 @@ namespace Furniture.Services.Implementations
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IShippingCalculatorService _shippingCalculator;
+        private readonly IPaymentService _paymentService;
 
-        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IShippingCalculatorService shippingCalculator)
+
+        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IShippingCalculatorService shippingCalculator, IPaymentService paymentService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _shippingCalculator = shippingCalculator;
+            _paymentService = paymentService;
         }
 
         
@@ -110,6 +113,9 @@ namespace Furniture.Services.Implementations
 
             if (cart == null || !cart.CartItems.Any())
                 throw new InvalidOperationException("Cart is empty!");
+            
+            await ValidateSellersNotBlockedAsync(cart.CartItems);
+
 
             decimal totalPrice = 0;
             var orderItems = new List<OrderItem>();
@@ -182,6 +188,9 @@ namespace Furniture.Services.Implementations
 
             if (offer.OrderId != null)
                 throw new InvalidOperationException("An order has already been created for this offer");
+            
+            await ValidateSellerNotBlockedAsync(offer.SellerId);
+
 
             // Offers don't have defined category ids, so pass an empty list
             var shippingResult = await _shippingCalculator.CalculateShippingAsync(dto.City ?? "Unknown City", new List<int>());
@@ -233,13 +242,69 @@ namespace Furniture.Services.Implementations
                 throw new InvalidOperationException(
                     $"Cannot cancel order with status '{order.Status}'. Only Pending or Accepted orders can be cancelled.");
 
-            order.Status = OrderStatus.Cancelled;  
+            order.Status = OrderStatus.Cancelled;
             _unitOfWork.GetRepository<Order, int>().Update(order);
+
+            var paymentSpec = new PaymentByOrderIdSpecification(orderId);
+            var payment = await _unitOfWork.GetRepository<Payment, int>()
+                .GetByIdAsync(paymentSpec);
+
+            if (payment != null &&
+                (payment.Status == PaymentStatus.Pending || payment.Status == PaymentStatus.Processing))
+            {
+                payment.Status = PaymentStatus.Cancelled;
+                _unitOfWork.GetRepository<Payment, int>().Update(payment);
+            }
+
+            var payoutSpec = new SellerPayoutByOrderIdSpecification(orderId);
+            var payouts = await _unitOfWork.GetRepository<SellerPayout, int>()
+                .GetAllAsync(payoutSpec);
+
+            foreach (var payout in payouts.Where(p =>
+                         p.Status == PayoutStatus.Pending ||
+                         p.Status == PayoutStatus.Processing ||
+                         p.Status == PayoutStatus.Failed))
+            {
+                payout.Status = PayoutStatus.Cancelled;
+                _unitOfWork.GetRepository<SellerPayout, int>().Update(payout);
+            }
+
             await _unitOfWork.SaveChangesAsync();
 
             return true;
         }
+        
+        private async Task ValidateSellerNotBlockedAsync(string sellerId)
+        {
+            var spec = new SellerProfileByUserIdSpecification(sellerId);
+            var sellerProfile = await _unitOfWork.GetRepository<SellerProfile, int>()
+                .GetByIdAsync(spec);
 
+            if (sellerProfile != null && sellerProfile.IsBlocked)
+                throw new InvalidOperationException(
+                    "Some products in your order are currently unavailable");
+        }
+
+        private async Task ValidateSellersNotBlockedAsync(ICollection<CartItem> cartItems)
+        {
+            var sellerIds = cartItems
+                .Where(ci => ci.Product != null)
+                .Select(ci => ci.Product.SellerId)
+                .Distinct()
+                .ToList();
+
+            if (!sellerIds.Any())
+                return;
+
+            var spec = new BlockedSellerProfilesByUserIdsSpecification(sellerIds);
+
+            var blockedSellers = await _unitOfWork
+                .GetRepository<SellerProfile, int>()
+                .GetAllAsync(spec);
+
+            if (blockedSellers.Any())
+                throw new InvalidOperationException("Some products in your order are currently unavailable");
+        }
         #endregion
 
         
@@ -257,7 +322,7 @@ namespace Furniture.Services.Implementations
 
             ValidateStatusTransition(order.Status, newStatus);
 
-            if (newStatus == OrderStatus.Paid && order.Status != OrderStatus.Paid)
+            if (newStatus == OrderStatus.Processing && order.Status != OrderStatus.Processing)
             {
                 var productRepo = _unitOfWork.GetRepository<Product, int>();
                 foreach (var item in order.OrderItems ?? new List<OrderItem>())
@@ -278,6 +343,11 @@ namespace Furniture.Services.Implementations
             order.Status = newStatus;
             _unitOfWork.GetRepository<Order, int>().Update(order);
             await _unitOfWork.SaveChangesAsync();
+
+            if (newStatus == OrderStatus.Delivered)
+            {
+                await _paymentService.ConfirmCashPaymentAfterDeliveryAsync(orderId);
+            }
 
             return true;
         }
@@ -339,7 +409,7 @@ namespace Furniture.Services.Implementations
             var validTransitions = new Dictionary<OrderStatus, OrderStatus[]>
             {
                 { OrderStatus.Pending, new[] { OrderStatus.Accepted, OrderStatus.Declined } },
-                { OrderStatus.Accepted, new[] { OrderStatus.Paid, OrderStatus.Cancelled } },
+                { OrderStatus.Accepted, new[] { OrderStatus.Paid, OrderStatus.Processing, OrderStatus.Cancelled } },
                 { OrderStatus.Paid, new[] { OrderStatus.Processing } },
                 { OrderStatus.Processing, new[] { OrderStatus.Shipped } },
                 { OrderStatus.Shipped, new[] { OrderStatus.Delivered } },

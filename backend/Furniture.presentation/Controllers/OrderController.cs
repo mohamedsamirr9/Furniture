@@ -185,7 +185,7 @@ namespace Furniture.API.Controllers
         
         
         [HttpPut("admin/{orderId:int}/status")]
-         [Authorize(Roles = "admin,seller")]
+        [Authorize(Roles = "admin,seller")]
         public async Task<IActionResult> UpdateOrderStatus(
             int orderId,
             [FromBody] UpdateOrderStatusDTO updateDTO)
@@ -196,11 +196,24 @@ namespace Furniture.API.Controllers
             if (!Enum.TryParse<OrderStatus>(updateDTO.Status, true, out var newStatus))
                 return BadRequest(new { message = "Invalid status" });
 
-            var adminId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userRole = User.FindFirstValue(ClaimTypes.Role);
+
+            if (userRole == "seller")
+            {
+                var sellerAllowedStatuses = new[]
+                {
+                    OrderStatus.Shipped,
+                    OrderStatus.Delivered
+                };
+
+                if (!sellerAllowedStatuses.Contains(newStatus))
+                    return Forbid();
+            }
 
             try
             {
-                var result = await _orderService.UpdateOrderStatusAsync(orderId, newStatus, adminId!);
+                var result = await _orderService.UpdateOrderStatusAsync(orderId, newStatus, userId!);
                 if (!result)
                     return NotFound(new { message = "Order not found" });
 

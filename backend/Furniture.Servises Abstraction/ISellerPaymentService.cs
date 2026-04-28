@@ -14,5 +14,10 @@ namespace Furniture.Servises_Abstraction
         Task<bool> VerifySellerAsync(int sellerId);
         Task<bool> RetryFailedPayoutAsync(int payoutId);
         Task ProcessPayoutsForOrderAsync(int orderId);
+        
+        Task<SellerDebtDTO> GetSellerDebtAsync(string userId);
+        Task<bool> UnblockSellerAsync(int sellerId);
+        Task<bool> SettleSellerDebtAsync(int sellerId, decimal amount);
+        Task<SellerExposureDTO> GetSellerExposureAsync(int sellerId);
     }
 }

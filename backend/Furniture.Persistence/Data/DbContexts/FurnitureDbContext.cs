@@ -383,6 +383,17 @@ namespace Furniture.Persistence.Data.DbContexts
                         .OnDelete(DeleteBehavior.Cascade);
 
                   entity.HasIndex(s => s.UserId).IsUnique();
+                  
+                  entity.Property(e => e.PendingCommission)
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                  entity.Property(e => e.MaxAllowedCommission)
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(10000m);
+
+                  entity.Property(e => e.IsBlocked)
+                        .HasDefaultValue(false);
             });
 
             //seller payout
@@ -477,6 +488,31 @@ namespace Furniture.Persistence.Data.DbContexts
                   .OnDelete(DeleteBehavior.Restrict);
 
             });
+            
+            modelBuilder.Entity<CommissionTransaction>(entity =>
+            {
+                  entity.HasKey(e => e.Id);
+
+                  entity.Property(e => e.CommissionAmount)
+                        .HasColumnType("decimal(18,2)");
+
+                  entity.Property(e => e.OrderTotal)
+                        .HasColumnType("decimal(18,2)");
+
+                  entity.Property(e => e.CreatedAt)
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                  entity.HasOne(e => e.SellerProfile)
+                        .WithMany()
+                        .HasForeignKey(e => e.SellerProfileId)
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                  entity.HasOne(e => e.Order)
+                        .WithMany()
+                        .HasForeignKey(e => e.OrderId)
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired(false);    
+            });
 
 
         }
@@ -502,8 +538,10 @@ namespace Furniture.Persistence.Data.DbContexts
 
         public DbSet<SellerProfile> SellerProfiles { get; set; } = null!;
         public DbSet<SellerPayout> SellerPayouts { get; set; } = null!;
-        public DbSet<UserPreference> UserPreferences { get; set; }        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<UserPreference> UserPreferences { get; set; } 
+        public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<CommissionTransaction> CommissionTransactions { get; set; }
 
 
     }
