@@ -360,11 +360,11 @@
         {{ 'SELLER.ORDERS.LOADING' | translate }}
       </div>
 
-      <div *ngIf="!ordersLoading && orders.length === 0" class="alert alert-info">
+      <div *ngIf="!ordersLoading && payoutOrders.length === 0" class="alert alert-info">
         {{ 'SELLER.ORDERS.EMPTY' | translate }}
       </div>
 
-      <table class="table" *ngIf="orders.length > 0">
+      <table class="table" *ngIf="payoutOrders.length > 0">
         <thead>
           <tr>
             <th>{{ 'SELLER.ORDERS.PAYMENT_ID' | translate }}</th>
@@ -376,7 +376,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let order of orders">
+          <tr *ngFor="let order of payoutOrders">
             <td>
               <strong>#{{ order.id }}</strong>
             </td>
@@ -396,7 +396,7 @@
               </span>
             </td>
             <td>
-              <strong>${{ order.totalPrice | number: '1.2-2' }}</strong>
+              <strong>${{ (order.totalPrice * 0.90) | number: '1.2-2' }}</strong>
             </td>
             <td>
               <strong>{{ order.orderDate | date: 'MMM d, y' }}</strong>

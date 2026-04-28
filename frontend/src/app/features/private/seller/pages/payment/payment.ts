@@ -32,10 +32,11 @@ export class Payment implements OnInit, OnDestroy {
   saveSuccess = false;
 
   orders: Order[] = [];
-  onlineOrders: Order[] = [];
+  payoutOrders: Order[] = [];
   cashOrders: Order[] = [];
   ordersLoading = false;
 
+  rawPayouts: SellerPayout[] = [];
   recentPayouts: SellerPayout[] = [];
   payoutsLoading = false;
 
@@ -98,9 +99,10 @@ export class Payment implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.orders = data;
-          this.onlineOrders = this.orders.filter(o => o.paymentMethod === 'Card');
+          this.payoutOrders = this.orders.filter(o => o.paymentMethod === 'Card');
           this.cashOrders = this.orders.filter(o => o.paymentMethod === 'Cash');
           this.ordersLoading = false;
+          this.applyPayoutsFilter();
         },
         error: (err) => {
           this.ordersLoading = false;
@@ -116,14 +118,30 @@ export class Payment implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
-          this.recentPayouts = data.slice(0, 5);
-          this.payoutsLoading = false;
+          this.rawPayouts = data;
+          this.applyPayoutsFilter();
         },
         error: (err) => {
           this.payoutsLoading = false;
           console.error('Payouts load error:', err);
         },
       });
+  }
+
+  applyPayoutsFilter(): void {
+    if (this.rawPayouts.length > 0 && !this.ordersLoading) {
+      const cardOrderMap = new Map(this.payoutOrders.map(o => [o.id, o]));
+      this.recentPayouts = this.rawPayouts
+        .filter(p => cardOrderMap.has(p.orderId))
+        .map(p => {
+          const order = cardOrderMap.get(p.orderId)!;
+          return { ...p, amount: (order.totalPrice || 0) * 0.90 };
+        })
+        .slice(0, 5);
+      this.payoutsLoading = false;
+    } else if (!this.ordersLoading) {
+      this.payoutsLoading = false;
+    }
   }
 
   loadSellerProfile(): void {
@@ -181,21 +199,21 @@ export class Payment implements OnInit, OnDestroy {
   }
 
   get netEarnings(): number {
-    return this.onlineOrders.reduce((sum, o) => sum + (o.totalPrice || 0), 0);
+    return this.payoutOrders.reduce((sum, o) => sum + ((o.totalPrice || 0) * 0.90), 0);
   }
 
   get pendingAmount(): number {
     const pendingStatuses = ['Pending', 'Processing', 'Accepted', 'Shipped'];
-    return this.onlineOrders
+    return this.payoutOrders
       .filter(o => pendingStatuses.includes(o.status))
-      .reduce((sum, o) => sum + (o.totalPrice || 0), 0);
+      .reduce((sum, o) => sum + ((o.totalPrice || 0) * 0.90), 0);
   }
 
   get paidAmount(): number {
     const paidStatuses = ['Delivered', 'Completed'];
-    return this.onlineOrders
+    return this.payoutOrders
       .filter(o => paidStatuses.includes(o.status))
-      .reduce((sum, o) => sum + (o.totalPrice || 0), 0);
+      .reduce((sum, o) => sum + ((o.totalPrice || 0) * 0.90), 0);
   }
 
   get totalCashAmount(): number {
