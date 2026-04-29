@@ -49,6 +49,9 @@ namespace Furniture.Services
 
             if (product == null)
                 throw new KeyNotFoundException("Product Not Found");
+            
+            await ValidateSellerNotBlockedAsync(product.SellerId);
+
 
             if (product.StockQuantity < dto.Quantity)
                 throw new InvalidOperationException(
@@ -205,6 +208,18 @@ namespace Furniture.Services
 
             return cart;
         }
+        
+        private async Task ValidateSellerNotBlockedAsync(string sellerId)
+        {
+            var spec = new SellerProfileByUserIdSpecification(sellerId);
+            var sellerProfile = await _unitOfWork.GetRepository<SellerProfile, int>()
+                .GetByIdAsync(spec);
+
+            if (sellerProfile != null && sellerProfile.IsBlocked)
+                throw new InvalidOperationException(
+                    "This product is currently unavailable");
+        }
+
 
         #endregion
 

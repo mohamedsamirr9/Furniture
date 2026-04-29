@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { UserDto } from '../../../../../core/models/auth.model';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
@@ -43,7 +44,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder, 
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {
     this.personalForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
@@ -53,7 +55,7 @@ export class ProfileComponent implements OnInit {
       currentPassword: ['', [Validators.required]],
       newPassword: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
-    });
+    }, { validators: this.passwordMatchValidator });
 
     this.addressForm = this.fb.group({
       address: ['', [Validators.required]],
@@ -63,6 +65,12 @@ export class ProfileComponent implements OnInit {
        storeName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(200)]],
        nationalId: [null, [Validators.required]]
      });
+  }
+
+  passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('newPassword')?.value;
+    const confirm = control.get('confirmPassword')?.value;
+    return password === confirm ? null : { passwordMismatch: true };
   }
 
   ngOnInit(): void {
@@ -103,8 +111,6 @@ export class ProfileComponent implements OnInit {
 
   changePassword() {
     if (this.passwordForm.invalid) { this.passwordForm.markAllAsTouched(); return; }
-    const { newPassword, confirmPassword } = this.passwordForm.value;
-    if (newPassword !== confirmPassword) { this.errorPassword = 'Passwords do not match.'; return; }
     
     this.isLoadingPassword = true;
     this.errorPassword = '';
@@ -192,4 +198,4 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-}
+}

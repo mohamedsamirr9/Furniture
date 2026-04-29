@@ -57,7 +57,7 @@ namespace Furniture.Services
                     BankCode = dto.BankCode,
                     NationalId = dto.NationalId,
                     PaymobMerchantId = dto.PaymobMerchantId,
-                    CommissionRate = 10m,
+                    CommissionRate = 6m,
                     IsVerified = false,
                     CreatedAt = DateTime.UtcNow
                 };
@@ -172,7 +172,11 @@ namespace Furniture.Services
                 BankAccountNumber = includeEmail ? sellerProfile?.BankAccountNumber : null,
                 BankCode = includeEmail ? sellerProfile?.BankCode : null,
                 NationalId = includeEmail ? sellerProfile?.NationalId : null,
-                PaymobMerchantId = includeEmail ? sellerProfile?.PaymobMerchantId : null
+                PaymobMerchantId = includeEmail ? sellerProfile?.PaymobMerchantId : null,
+                PendingCommission = includeEmail ? sellerProfile?.PendingCommission ?? 0m : 0m,
+                MaxAllowedCommission = includeEmail ? sellerProfile?.MaxAllowedCommission ?? 0m : 0m,
+                IsBlocked = includeEmail && (sellerProfile?.IsBlocked ?? false),
+                BlockReason = includeEmail ? sellerProfile?.BlockReason : null
             };
         }
     }

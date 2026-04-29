@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Complaint, ComplaintDetail } from '../../../../../core/models/complaint.model';
 import { ComplaintService } from '../../../../../core/services/complaint.service';
+import { TranslateModule } from '@ngx-translate/core';
 import { ComplaintDetailsModalComponent } from '../../../../../shared/components/complaint-details-modal/complaint-details-modal';
 
 @Component({
   selector: 'app-complaints',
-  imports: [CommonModule, ComplaintDetailsModalComponent],
+  standalone: true,
+  imports: [CommonModule, ComplaintDetailsModalComponent, TranslateModule],
   templateUrl: './complaints.html',
   styleUrl: './complaints.css',
 })

@@ -2,6 +2,8 @@ namespace Furniture.shared.Dtos.Order;
 
 public class OrderDTO
 {
+    private string? _paymentMethod;
+
     public int Id { get; set; }
     public decimal SubTotal { get; set; }
     public decimal ShippingCost { get; set; }
@@ -9,6 +11,11 @@ public class OrderDTO
     public string City { get; set; } = string.Empty;
     public DateTime OrderDate { get; set; }
     public string Status { get; set; } = string.Empty;
+    public string PaymentMethod
+    {
+        get => string.IsNullOrWhiteSpace(_paymentMethod) ? "Cash" : _paymentMethod;
+        set => _paymentMethod = value;
+    }
     public string? ShippingAddress { get; set; }
     public DateTime CreatedAt { get; set; }
         

@@ -102,7 +102,7 @@ if (hasSeller)
             UserId = "seller-1",
             StoreName = "Main Store",
             StoreDescription = "Seeded seller profile",
-            CommissionRate = 10m,
+            CommissionRate = 6m,
             IsVerified = true,
             CreatedAt = DateTime.UtcNow
         });

@@ -30,5 +30,9 @@ namespace Furniture.shared.Dtos.SellerDto
         public string? BankCode { get; set; }
         public string? NationalId { get; set; }
         public string? PaymobMerchantId { get; set; }
+        public decimal PendingCommission { get; set; }
+        public decimal MaxAllowedCommission { get; set; }
+        public bool IsBlocked { get; set; }
+        public string? BlockReason { get; set; }
     }
 }

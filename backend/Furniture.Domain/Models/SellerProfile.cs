@@ -12,9 +12,16 @@ namespace Furniture.Domain.Models
         public string? BankName { get; set; }
         public string? BankCode { get; set; }      
         public string? NationalId { get; set; } 
-        public decimal CommissionRate { get; set; } = 10m;
+        public decimal CommissionRate { get; set; } = 6m;
         public bool IsVerified { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        // Cash Commission System
+        public decimal PendingCommission { get; set; }
+        public decimal MaxAllowedCommission { get; set; } = 10000m;
+        public bool IsBlocked { get; set; }
+        public string? BlockReason { get; set; }
+        public DateTime? BlockedAt { get; set; }
 
         
         public ApplicationUser User { get; set; } = null!;

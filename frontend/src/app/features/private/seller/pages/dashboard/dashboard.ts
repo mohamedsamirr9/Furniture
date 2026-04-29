@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 
 import { ProductService } from '../../../../../core/services/product.service';
 import { OrderService } from '../../../../../core/services/order.service';
-import { SellerEarningsService } from '../../../../../core/services/seller-earnings.service';
 import { ComplaintService } from '../../../../../core/services/complaint.service';
 
 const TERMINAL_STATUSES = ['Completed', 'Cancelled', 'Declined'];
@@ -23,14 +21,12 @@ export class Dashboard implements OnInit {
   stats = [
     { label: 'DASHBOARD.TOTAL_PRODUCTS', value: '—', icon: '📦' },
     { label: 'DASHBOARD.ACTIVE_ORDERS',  value: '—', icon: '🛒' },
-    { label: 'DASHBOARD.REVENUE',        value: '—', icon: '💰' },
     { label: 'DASHBOARD.OPEN_COMPLAINTS', value: '—', icon: '📋' },
   ];
 
   constructor(
     private productService: ProductService,
     private orderService: OrderService,
-    private earningsService: SellerEarningsService,
     private complaintService: ComplaintService,
   ) {}
 
@@ -44,17 +40,13 @@ export class Dashboard implements OnInit {
     forkJoin({
       products:   this.productService.getSellerProducts({ page: 1, pageSize: 1 }),
       orders:     this.orderService.getSellerOrders(),
-      earnings:   this.earningsService.getEarnings().pipe(catchError(() => of(null))),
       complaints: this.complaintService.getSellerComplaints(),
     }).subscribe({
-      next: ({ products, orders, earnings, complaints }) => {
+      next: ({ products, orders, complaints }) => {
         const totalProducts  = products?.totalCount ?? 0;
         const activeOrders   = (orders ?? []).filter(
           (o: any) => !TERMINAL_STATUSES.includes(o.status)
         ).length;
-        const revenue        = earnings != null
-          ? `$${(earnings.netEarnings ?? 0).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`
-          : 'N/A';
         const openComplaints = (complaints ?? []).filter(
           (c: any) => c.status === 'Open' || c.status === 'InProgress'
         ).length;
@@ -62,7 +54,6 @@ export class Dashboard implements OnInit {
         this.stats = [
           { label: 'DASHBOARD.TOTAL_PRODUCTS',  value: String(totalProducts),  icon: '📦' },
           { label: 'DASHBOARD.ACTIVE_ORDERS',   value: String(activeOrders),   icon: '🛒' },
-          { label: 'DASHBOARD.REVENUE',         value: revenue,                icon: '💰' },
           { label: 'DASHBOARD.OPEN_COMPLAINTS', value: String(openComplaints), icon: '📋' },
         ];
 
@@ -73,4 +64,4 @@ export class Dashboard implements OnInit {
       },
     });
   }
-}
+}

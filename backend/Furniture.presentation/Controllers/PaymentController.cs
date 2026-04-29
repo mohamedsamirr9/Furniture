@@ -31,8 +31,7 @@ namespace Furniture.presentation.Controllers
  
              try
              {
-                 var result = await _paymentService.CreatePaymentAsync(dto.OrderId, userId);
-                 return Ok(result);
+                 var result = await _paymentService.CreatePaymentAsync(dto.OrderId, userId, dto.PaymentMethod);                 return Ok(result);
              }
              catch (InvalidOperationException ex) when (ex.Message.Contains("profile not found"))
              {

@@ -6,6 +6,7 @@ import { CartService } from '../../../../../core/services/cart.service';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { Observable } from 'rxjs';
 import { Cart } from '../../../../../core/models/cart.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -24,7 +25,8 @@ export class CartComponent implements OnInit {
 
   constructor(
     private cartService: CartService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     this.cart$ = this.cartService.cart$;
   }
@@ -88,5 +90,21 @@ export class CartComponent implements OnInit {
         }
       });
     }
+  }
+
+  hasBlockedSeller(cart: Cart | null): boolean {
+    return !!cart?.items?.some(item => this.isItemBlocked(item));
+  }
+
+  isItemBlocked(item: any): boolean {
+    return !!(item?.sellerIsBlocked || item?.isBlocked);
+  }
+
+  proceedToCheckout(cart: Cart | null): void {
+    if (this.hasBlockedSeller(cart)) {
+      this.errorMsg = 'Checkout is unavailable because one or more sellers are blocked.';
+      return;
+    }
+    this.router.navigate(['/checkout']);
   }
 }

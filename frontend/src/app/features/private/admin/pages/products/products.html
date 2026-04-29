@@ -34,8 +34,12 @@
           </span>
         </td>
         <td class="actions">
-          <span class="edit-btn" (click)="openEditModal(product)">🖊</span>
-          <span class="delete-btn" (click)="deleteProduct(product.id)">🗑</span>
+          <span class="edit-btn" (click)="openEditModal(product)">
+            <i class="bi bi-pencil"></i>
+          </span>
+          <span class="delete-btn" (click)="deleteProduct(product.id)">
+            <i class="bi bi-trash"></i>
+          </span>
         </td>
       </tr>
     </tbody>

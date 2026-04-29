@@ -203,6 +203,7 @@ namespace Furniture.web
             builder.Services.AddScoped<IChatService, ChatService>();
             builder.Services.AddScoped<IRecommendationService, RecommendationService>();
             builder.Services.AddScoped<ISearchService, SearchService>();
+            builder.Services.AddHostedService<SearchIndexingBackgroundService>();
 
             var app = builder.Build();
 

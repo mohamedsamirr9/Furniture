@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, switchMap } from 'rxjs';
 import { SellerProfileViewModel } from '../../../core/models/seller-profile.model';
 import { SellerService } from '../../../core/services/seller.service';
@@ -9,7 +10,7 @@ import { SellerService } from '../../../core/services/seller.service';
 @Component({
   selector: 'app-seller-profile-display',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './seller-profile-display.html',
   styleUrl: './seller-profile-display.css',
 })
@@ -30,6 +31,7 @@ export class SellerProfileDisplayComponent implements OnChanges {
 
   private readonly fb = inject(FormBuilder);
   private readonly sellerService = inject(SellerService);
+  private readonly translate = inject(TranslateService);
 
   profileForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
@@ -116,7 +118,7 @@ export class SellerProfileDisplayComponent implements OnChanges {
         },
         error: (err) => {
           console.error(err);
-          this.saveError = err?.error?.message ?? 'Unable to save profile. Please try again.';
+          this.saveError = err?.error?.message ?? this.translate.instant('ALERTS.SUBMIT_ERROR');
         },
       });
   }
@@ -143,7 +145,7 @@ export class SellerProfileDisplayComponent implements OnChanges {
         },
         error: (err) => {
           console.error(err);
-          this.saveError = err?.error?.message ?? 'Image upload or profile update failed. Please try again.';
+          this.saveError = err?.error?.message ?? this.translate.instant('ALERTS.UPLOAD_ERROR');
         },
       });
   }

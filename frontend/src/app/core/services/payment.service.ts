@@ -16,8 +16,8 @@ export class PaymentService {
 
   constructor(private http: HttpClient) {}
 
-  createPayment(orderId: number): Observable<PaymentResponse> {
-    const body: CreatePaymentRequest = { orderId };
+  createPayment(orderId: number, paymentMethod: 'cash' | 'card' = 'card'): Observable<PaymentResponse> {
+    const body: CreatePaymentRequest = { orderId, paymentMethod };
     return this.http.post<PaymentResponse>(this.apiUrl, body);
   }
 

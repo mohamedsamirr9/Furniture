@@ -5,31 +5,44 @@
 
     <nav class="sidebar-nav">
       <a class="nav-item" routerLink="/admin/dashboard" routerLinkActive="active">
-        ⊞ {{ 'NAV.DASHBOARD' | translate }}
+        <i class="bi bi-grid-1x2"></i>
+        <span>{{ 'NAV.DASHBOARD' | translate }}</span>
       </a>
       <a class="nav-item" routerLink="/admin/categories" routerLinkActive="active">
-        🗂️ {{ 'NAV.CATEGORIES' | translate }}
+        <i class="bi bi-collection"></i>
+        <span>{{ 'NAV.CATEGORIES' | translate }}</span>
       </a>
       <a class="nav-item" routerLink="/admin/products" routerLinkActive="active">
-        🪑 {{ 'NAV.PRODUCTS' | translate }}
+        <i class="bi bi-box-seam"></i>
+        <span>{{ 'NAV.PRODUCTS' | translate }}</span>
       </a>
       <a class="nav-item" routerLink="/admin/orders" routerLinkActive="active">
-        📦 {{ 'NAV.ORDERS' | translate }}
+        <i class="bi bi-receipt"></i>
+        <span>{{ 'NAV.ORDERS' | translate }}</span>
       </a>
       <a class="nav-item" routerLink="/admin/complaints" routerLinkActive="active">
-        💬 {{ 'NAV.COMPLAINTS' | translate }}
+        <i class="bi bi-chat-dots"></i>
+        <span>{{ 'NAV.COMPLAINTS' | translate }}</span>
       </a>
       <a class="nav-item" routerLink="/admin/users" routerLinkActive="active">
-        👥 {{ 'NAV.USERS' | translate }}
+        <i class="bi bi-people"></i>
+        <span>{{ 'NAV.USERS' | translate }}</span>
       </a>
       <a class="nav-item" routerLink="/admin/shipping-rules" routerLinkActive="active">
-        🚚 {{ 'ADMIN.SHIPPING_RULES' | translate }}
+        <i class="bi bi-truck icon-mirror"></i>
+        <span>{{ 'ADMIN.SHIPPING_RULES' | translate }}</span>
       </a>
     </nav>
 
     <div class="sidebar-footer">
-      <div class="collapse-btn">› {{ 'NAV.COLLAPSE' | translate }}</div>
-      <div class="signout-btn" (click)="signOut()">→ {{ 'NAV.SIGNOUT' | translate }}</div>
+      <div class="collapse-btn">
+        <i class="bi bi-chevron-bar-left icon-mirror"></i>
+        <span>{{ 'NAV.COLLAPSE' | translate }}</span>
+      </div>
+      <div class="signout-btn" (click)="signOut()">
+        <i class="bi bi-box-arrow-right icon-mirror"></i>
+        <span>{{ 'NAV.SIGNOUT' | translate }}</span>
+      </div>
     </div>
   </aside>
 

@@ -35,7 +35,7 @@
             [disabled]="isTerminalStatus(order.status)"
             (change)="updateStatus(order, $event)">
             <option [value]="order.status" selected>{{ 'STATUS.' + (order.status | uppercase) | translate }}</option>
-            <option *ngFor="let next of getValidTransitions(order.status)" [value]="next">{{ 'STATUS.' + (next | uppercase) | translate }}</option>
+            <option *ngFor="let next of getValidTransitions(order)" [value]="next">{{ 'STATUS.' + (next | uppercase) | translate }}</option>
           </select>
         </td>
         <td><strong>{{ (order.totalPrice || order.total) | currency }}</strong></td>

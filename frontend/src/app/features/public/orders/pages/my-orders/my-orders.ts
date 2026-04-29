@@ -51,4 +51,12 @@ export class MyOrdersComponent implements OnInit {
       default: return 'bg-secondary';
     }
   }
+
+  getDisplayStatus(order: Order): string {
+    const paymentMethod = (order.paymentMethod || 'Cash').toLowerCase();
+    if (paymentMethod === 'cash' && order.status?.toLowerCase() === 'paid') {
+      return 'Processing';
+    }
+    return order.status;
+  }
 }

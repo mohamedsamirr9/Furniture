@@ -105,6 +105,25 @@ export class OrderDetailsComponent implements OnInit {
     return this.order?.status?.toLowerCase() === 'pending' || this.order?.status?.toLowerCase() === 'processing';
   }
 
+  get displayStatus(): string {
+    if (!this.order) return '';
+    const paymentMethod = (this.order.paymentMethod || 'Cash').toLowerCase();
+    if (paymentMethod === 'cash' && this.order.status?.toLowerCase() === 'paid') {
+      return 'Processing';
+    }
+    return this.order.status;
+  }
+
+  get paymentMethodLabel(): string {
+    return (this.order?.paymentMethod || 'Cash') === 'Card'
+      ? 'Online Payment'
+      : 'Cash on Delivery';
+  }
+
+  isSellerBlocked(item: any): boolean {
+    return !!(item?.sellerIsBlocked || item?.isBlocked);
+  }
+
   // Review Methods
   openReview(item: any): void {
     this.selectedProduct = item;

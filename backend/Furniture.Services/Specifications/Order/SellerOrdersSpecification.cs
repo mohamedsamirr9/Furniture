@@ -11,6 +11,7 @@ namespace Furniture.Services.Specifications.Order
         {
             AddInclude("OrderItems.Product.Images");
             AddInclude("Offer.CustomRequest");
+            AddInclude(o => o.Payment!);
             AddOrderByDescending(o => o.OrderDate);
         }
     }

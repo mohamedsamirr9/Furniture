@@ -246,7 +246,7 @@ namespace Furniture.Services
                     UserId = UserId,
                     StoreName = dto.StoreName,
                     StoreDescription = null,
-                    CommissionRate = 10m,
+                    CommissionRate = 6m,
                     IsVerified = false,
                     CreatedAt = DateTime.UtcNow
                 };

@@ -15,8 +15,8 @@ namespace Furniture.Services.Implementations
 {
     public class SellerPaymentService : ISellerPaymentService
     {
-        private const decimal DefaultCommissionRate = 10m;
-
+        private const decimal DefaultCommissionRate = 6m;
+        
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -101,18 +101,22 @@ namespace Furniture.Services.Implementations
                 throw new InvalidOperationException("Seller profile not found");
 
             var payoutSpec = new SellerPayoutSpecification(seller.Id);
-            var payouts = (await _unitOfWork.GetRepository<SellerPayout, int>()
+            var allPayouts = (await _unitOfWork.GetRepository<SellerPayout, int>()
                 .GetAllAsync(payoutSpec)).ToList();
+
+            var validPayouts = allPayouts
+                .Where(p => p.Status != PayoutStatus.Cancelled)
+                .ToList();
 
             return new SellerEarningsDTO
             {
-                TotalSales = payouts.Sum(p => p.OrderItemsTotal),
-                TotalCommission = payouts.Sum(p => p.CommissionAmount),
-                NetEarnings = payouts.Sum(p => p.NetAmount),
-                PendingAmount = payouts
+                TotalSales = validPayouts.Sum(p => p.OrderItemsTotal),
+                TotalCommission = validPayouts.Sum(p => p.CommissionAmount),
+                NetEarnings = validPayouts.Sum(p => p.NetAmount),
+                PendingAmount = validPayouts
                     .Where(p => p.Status == PayoutStatus.Pending || p.Status == PayoutStatus.Processing)
                     .Sum(p => p.NetAmount),
-                PaidAmount = payouts
+                PaidAmount = validPayouts
                     .Where(p => p.Status == PayoutStatus.Completed)
                     .Sum(p => p.NetAmount)
             };
@@ -196,6 +200,131 @@ namespace Furniture.Services.Implementations
                 await SendPayoutToSellerAsync(payout);
 
             await _unitOfWork.SaveChangesAsync();
+        }
+        
+        
+        public async Task<SellerDebtDTO> GetSellerDebtAsync(string userId)
+        {
+            var seller = await GetSellerProfileByUserIdAsync(userId);
+            if (seller == null)
+                throw new InvalidOperationException("Seller profile not found");
+
+            return new SellerDebtDTO
+            {
+                PendingCommission = seller.PendingCommission,
+                MaxAllowedCommission = seller.MaxAllowedCommission,
+                IsBlocked = seller.IsBlocked,
+                BlockReason = seller.BlockReason,
+                RemainingBeforeBlock =
+                    Math.Max(0, seller.MaxAllowedCommission - seller.PendingCommission)
+            };
+        }
+        
+        public async Task<SellerExposureDTO> GetSellerExposureAsync(int sellerId)
+        {
+            var seller = await _unitOfWork.GetRepository<SellerProfile, int>()
+                .GetByIdAsync(sellerId);
+
+            if (seller == null)
+                throw new InvalidOperationException("Seller profile not found");
+
+            var spec = new SellerPayoutExposureSpecification(sellerId);
+
+            var payouts = await _unitOfWork.GetRepository<SellerPayout, int>()
+                .GetAllAsync(spec);
+
+            var reservedCashCommission = payouts
+                .Where(p =>
+                    p.Order?.Payment != null &&
+                    p.Order.Payment.Method == PaymentMethod.Cash &&
+                    p.Order.Payment.Status == PaymentStatus.Pending &&
+                    p.Order.Status != OrderStatus.Cancelled &&
+                    p.Order.Status != OrderStatus.Declined &&
+                    p.Order.Status != OrderStatus.Completed)
+                .Sum(p => p.CommissionAmount);
+
+            var currentExposure = seller.PendingCommission + reservedCashCommission;
+
+            return new SellerExposureDTO
+            {
+                SellerId = seller.Id,
+                StoreName = seller.StoreName,
+                PendingCommission = seller.PendingCommission,
+                ReservedCashCommission = reservedCashCommission,
+                CurrentExposure = currentExposure,
+                MaxAllowedCommission = seller.MaxAllowedCommission,
+                IsBlocked = seller.IsBlocked,
+                IsOverLimit = currentExposure >= seller.MaxAllowedCommission
+            };
+        }
+        public async Task<bool> UnblockSellerAsync(int sellerId)
+        {
+            var seller = await _unitOfWork.GetRepository<SellerProfile, int>()
+                .GetByIdAsync(sellerId);
+
+            if (seller == null)
+                return false;
+
+            if (!seller.IsBlocked)
+                throw new InvalidOperationException("Seller is not blocked");
+
+            if (seller.PendingCommission > 0)
+                throw new InvalidOperationException(
+                    $"Seller still has {seller.PendingCommission} EGP pending. Cannot unblock until settled.");
+
+            seller.IsBlocked = false;
+            seller.BlockReason = null;
+            seller.BlockedAt = null;
+
+            _unitOfWork.GetRepository<SellerProfile, int>().Update(seller);
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> SettleSellerDebtAsync(int sellerId, decimal amount)
+        {
+            var seller = await _unitOfWork.GetRepository<SellerProfile, int>()
+                .GetByIdAsync(sellerId);
+
+            if (seller == null)
+                return false;
+
+            if (amount <= 0)
+                throw new InvalidOperationException("Amount must be greater than 0");
+
+            if (amount > seller.PendingCommission)
+                throw new InvalidOperationException(
+                    $"Amount {amount} exceeds pending commission {seller.PendingCommission}");
+
+            seller.PendingCommission -= amount;
+
+            var commissionTx = new CommissionTransaction
+            {
+                SellerProfileId = seller.Id,
+                OrderId = null,
+                OrderTotal = null,
+                CommissionAmount = amount,
+                Type = "manual_settlement",
+                Description = $"Manual settlement of {amount} EGP by admin",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _unitOfWork.GetRepository<CommissionTransaction, int>()
+                .AddAsync(commissionTx);
+
+            if (seller.PendingCommission <= 0)
+            {
+                seller.PendingCommission = 0;
+                seller.IsBlocked = false;
+                seller.BlockReason = null;
+                seller.BlockedAt = null;
+            }
+
+            _unitOfWork.GetRepository<SellerProfile, int>().Update(seller);
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
         }
 
         // ============================================================
