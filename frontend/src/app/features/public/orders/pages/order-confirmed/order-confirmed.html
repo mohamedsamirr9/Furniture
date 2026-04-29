@@ -1,0 +1,42 @@
+<div class="confirmed-page">
+  <div class="container text-center py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+
+        <!-- Icon -->
+        <div class="mb-4">
+          <div class="check-icon-wrapper">
+            <i class="bi bi-check-lg"></i>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <h1 class="display-6 fw-bold mb-3">{{ 'CONFIRMED.TITLE' | translate }}</h1>
+        <p class="text-muted mb-4 fs-5">{{ 'CONFIRMED.DESC' | translate }}</p>
+
+     <div class="confirmed-card mb-5" *ngIf="orderResponse">
+  <div class="confirmed-card-row">
+    <div class="confirmed-cell-left">
+      <span class="confirmed-label">{{ 'CONFIRMED.ORDER_NUMBER' | translate }}</span>
+      <span class="confirmed-value">#{{ orderResponse.orderId || orderResponse.id }}</span>
+    </div>
+    <div class="confirmed-cell-right">
+      <span class="confirmed-label">{{ 'CONFIRMED.TOTAL_PROCESSED' | translate }}</span>
+      <span class="confirmed-total">${{ orderResponse.totalPrice | number:'1.2-2' }}</span>
+    </div>
+  </div>
+</div>
+        <!-- Buttons -->
+        <div class="d-flex flex-column gap-3">
+          <a routerLink="/orders" class="btn-confirmed-primary">
+            {{ 'CONFIRMED.VIEW_MY_ORDERS' | translate }}
+          </a>
+          <a routerLink="/products" class="btn-confirmed-outline">
+            {{ 'CONFIRMED.CONTINUE_SHOPPING' | translate }}
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

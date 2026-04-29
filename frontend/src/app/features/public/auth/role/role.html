@@ -1,13 +1,10 @@
 <div
   class="container-fluid vh-100 d-flex flex-column align-items-center justify-content-center bg-white"
 >
-  <div class="position-absolute top-0 start-0 p-4">
-    <h3 class="brand mb-4" (click)="goHome()" style="cursor: pointer">Furnora</h3>
-  </div>
-
-  <div class="text-center mb-5">
-    <h2 class="fw-bold mb-3">Choose Your Account Type</h2>
-    <p class="text-secondary">How would you like to use Furnora?</p>
+  <div class="role-container bg-white shadow-lg text-center">
+    <h3 class="brand mb-4" (click)="goHome()" style="cursor: pointer">{{ 'NAV.BRAND' | translate }}</h3>
+    <h2 class="fw-bold fs-2 text-dark">{{ 'AUTH.JOIN_US' | translate }}</h2>
+    <p class="text-secondary">{{ 'AUTH.JOIN_DESC' | translate }}</p>
   </div>
 
   <div class="row g-4 justify-content-center w-100 px-3">
@@ -17,9 +14,9 @@
           <div class="icon-box bg-success-subtle text-success mb-3">
             <i class="bi bi-bag-check fs-2"></i>
           </div>
-          <h3 class="card-title fw-bold">Customer</h3>
+          <h3 class="card-title fw-bold">{{ 'AUTH.CUSTOMER' | translate }}</h3>
           <p class="card-text text-muted small mt-2">
-            Explore, customize, and shop unique furniture that fits your style.
+            {{ 'AUTH.CUSTOMER_DESC' | translate }}
           </p>
         </div>
       </div>
@@ -31,11 +28,12 @@
           <div class="icon-box bg-primary-subtle text-primary mb-3">
             <i class="bi bi-house-door fs-2"></i>
           </div>
-          <h3 class="card-title fw-bold">Seller</h3>
+          <h3 class="card-title fw-bold">{{ 'AUTH.SELLER' | translate }}</h3>
           <p class="card-text text-muted small mt-2">
-            Showcase your products, manage orders, and grow your business
+            {{ 'AUTH.SELLER_DESC' | translate }}
           </p>
         </div>
+
       </div>
     </div>
   </div>

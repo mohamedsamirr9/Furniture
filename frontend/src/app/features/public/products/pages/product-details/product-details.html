@@ -1,0 +1,178 @@
+<div class="container mt-5 py-4">
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="d-flex justify-content-center my-5">
+    <div class="spinner-border text-dark" role="status">
+      <span class="visually-hidden">{{ 'ALERTS.LOADING' | translate }}</span>
+    </div>
+  </div>
+
+  <!-- Not Found -->
+  <div *ngIf="notFoundMessage && !isLoading" class="text-center py-5">
+    <i class="bi bi-exclamation-circle text-danger display-1 mb-3 d-block"></i>
+    <h2 class="fw-bold">{{ notFoundMessage === 'Product not found.' ? ('ALERTS.PRODUCT_NOT_FOUND' | translate) : notFoundMessage }}</h2>
+    <a routerLink="/products" class="btn btn-outline-dark mt-3 px-4 rounded-pill">{{ 'BUTTONS.VIEW_DETAILS' | translate }}</a>
+  </div>
+
+  <!-- Product Details -->
+  <ng-container *ngIf="product && !isLoading">
+
+    <!-- Back Link -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <a routerLink="/products" class="back-link text-decoration-none d-inline-flex align-items-center gap-2">
+          <i class="bi bi-arrow-left"></i>
+          <span>{{ 'PRODUCT.ALL_PRODUCTS' | translate }}</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Product Row -->
+    <div class="row g-5 align-items-start">
+
+      <!-- Left: Images -->
+      <div class="col-md-6">
+        <div class="main-image-wrapper position-relative">
+          <img [src]="selectedImage || fallbackImage" class="main-product-img" [alt]="product.name" />
+          <div *ngIf="isUnavailable" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 text-white fw-bold">
+            Unavailable
+          </div>
+        </div>
+        <div class="thumb-gallery mt-3" *ngIf="displayImages.length > 1">
+          <button
+            type="button"
+            class="thumb-btn"
+            *ngFor="let image of displayImages"
+            [class.active]="isActiveImage(image)"
+            (click)="selectImage(image)"
+          >
+            <img [src]="image" [alt]="product.name" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Right: Info -->
+      <div class="col-md-6">
+        <div class="product-info-panel">
+
+          <!-- Top row: badge + wishlist -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="category-tag" *ngIf="product.categoryName">{{ product.categoryName }}</span>
+            <button
+              class="wishlist-btn"
+              (click)="toggleWishlist()"
+              [class.active]="isInWishlist"
+            >
+              <i class="bi" [class.bi-heart-fill]="isInWishlist" [class.bi-heart]="!isInWishlist"></i>
+            </button>
+          </div>
+
+          <!-- Name -->
+          <h1 class="product-title">{{ product.name }}</h1>
+
+          <!-- Seller -->
+          <button
+            *ngIf="product.sellerId && product.sellerName"
+            type="button"
+            class="seller-btn"
+            (click)="navigateToSeller()"
+          >
+            by {{ product.sellerName }}
+          </button>
+          <span *ngIf="isUnavailable" class="badge bg-danger ms-2">Blocked</span>
+
+          <!-- Divider -->
+          <div class="info-divider my-4"></div>
+
+          <!-- Description -->
+          <p class="product-desc">{{ product.description }}</p>
+
+          <!-- Price -->
+          <div class="price-row my-4">
+            <span class="product-price">${{ product.price }}</span>
+          </div>
+
+          <!-- Alerts -->
+          <div *ngIf="errorMessage" class="custom-alert alert-err mb-3">
+            <i class="bi bi-x-circle-fill me-2"></i>{{ errorMessage }}
+          </div>
+          <div *ngIf="addedSuccess" class="custom-alert alert-ok mb-3">
+            <i class="bi bi-check-circle-fill me-2"></i>{{ 'ALERTS.SUCCESS' | translate }}
+          </div>
+          <div *ngIf="wishlistMessage" class="custom-alert alert-ok mb-3">
+            {{ wishlistMessage | translate }}
+          </div>
+
+          <!-- Add to Cart -->
+          <button
+            class="btn-add-cart"
+            (click)="addToCart()"
+            [disabled]="isAdding || product.stockQuantity <= 0 || isUnavailable"
+          >
+            <span *ngIf="isAdding" class="spinner-border spinner-border-sm me-2" role="status"></span>
+            <i *ngIf="!isAdding && product.stockQuantity > 0 && !isUnavailable" class="bi bi-cart-plus me-2"></i>
+            {{
+              isAdding
+                ? ('ALERTS.LOADING' | translate)
+                : isUnavailable
+                  ? 'Unavailable'
+                  : product.stockQuantity > 0
+                  ? ('BUTTONS.ADD_TO_CART' | translate)
+                  : ('DASHBOARD.OUT_OF_STOCK' | translate)
+            }}
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="reviews-section mt-5 pt-5">
+      <div class="reviews-header d-flex justify-content-between align-items-center mb-4">
+        <h2 class="reviews-title">{{ 'PRODUCT.REVIEWS' | translate }}</h2>
+        <div *ngIf="productReviews.length > 0" class="avg-pill">
+          <span class="avg-score">{{ averageRating | number:'1.1-1' }}</span>
+          <i class="bi bi-star-fill avg-star"></i>
+          <span class="avg-count">({{ productReviews.length }} {{ 'PRODUCT.REVIEW_COUNT' | translate }})</span>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="isLoadingReviews" class="text-center py-5">
+        <div class="spinner-border text-dark" role="status"></div>
+        <p class="mt-2 text-muted">{{ 'PRODUCT.REVIEWS_LOADING' | translate }}</p>
+      </div>
+
+      <!-- Empty -->
+      <div *ngIf="!isLoadingReviews && productReviews.length === 0" class="reviews-empty">
+        <i class="bi bi-chat-heart reviews-empty-icon"></i>
+        <h4>{{ 'PRODUCT.NO_REVIEWS' | translate }}</h4>
+        <p>{{ 'PRODUCT.FIRST_REVIEW' | translate }}</p>
+      </div>
+
+      <!-- Reviews Grid -->
+      <div *ngIf="!isLoadingReviews && productReviews.length > 0" class="reviews-grid">
+        <div *ngFor="let review of productReviews" class="review-card">
+          <div class="review-card-header">
+            <div>
+              <div class="reviewer-name">{{ review.userName }}</div>
+              <div class="review-date">{{ review.createdAt | date:'longDate' }}</div>
+            </div>
+            <div class="star-row">
+              <i *ngFor="let star of [1,2,3,4,5]"
+                 class="bi"
+                 [class.bi-star-fill]="review.rating >= star"
+                 [class.bi-star]="review.rating < star"
+                 [class.filled]="review.rating >= star">
+              </i>
+            </div>
+          </div>
+          <p class="review-body" *ngIf="review.message">{{ review.message }}</p>
+          <p class="review-empty-msg" *ngIf="!review.message">{{ 'PRODUCT.NO_COMMENT' | translate }}</p>
+        </div>
+      </div>
+
+    </div>
+
+  </ng-container>
+</div>

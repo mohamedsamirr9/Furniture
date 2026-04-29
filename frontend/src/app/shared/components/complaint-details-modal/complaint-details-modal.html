@@ -1,0 +1,106 @@
+<div class="modal-overlay" *ngIf="isOpen" (click)="onClose()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ 'COMPLAINTS.MODAL.TITLE' | translate }}</h2>
+      <button class="close-btn" type="button" (click)="onClose()">&times;</button>
+    </div>
+
+    <div class="modal-body" *ngIf="loading">{{ 'COMPLAINTS.MODAL.LOADING' | translate }}</div>
+    <div class="modal-body error-text" *ngIf="!loading && error">{{ error }}</div>
+
+    <div class="modal-body" *ngIf="!loading && !error && complaint">
+      <div class="detail-top">
+        <span class="complaint-id">#{{ complaint.id }}</span>
+        <span class="badge" [ngClass]="getStatusClass(complaint.status)">
+          <span class="badge-dot"></span>
+          {{ getStatusDisplay(complaint.status) }}
+        </span>
+      </div>
+
+      <div class="detail-section">
+        <span class="section-label">{{ 'COMPLAINTS.MODAL.MESSAGE' | translate }}</span>
+        <p class="desc-text">{{ complaint.description }}</p>
+      </div>
+
+      <div class="detail-grid">
+        <div class="grid-item">
+          <span class="section-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            {{ 'COMPLAINTS.MODAL.CREATED' | translate }}
+          </span>
+          <p>{{ complaint.createdAt | date:'MMM d, yyyy · hh:mm a' }}</p>
+        </div>
+        <div class="grid-item">
+          <span class="section-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            {{ 'COMPLAINTS.MODAL.BUYER' | translate }}
+          </span>
+          <p>{{ complaint.userName || complaint.userId }}</p>
+        </div>
+        <div class="grid-item" *ngIf="complaint.orderId">
+          <span class="section-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+            </svg>
+            {{ 'COMPLAINTS.MODAL.ORDER' | translate }}
+          </span>
+          <p>ORD-{{ complaint.orderId }}</p>
+        </div>
+        <div class="grid-item" *ngIf="role === 'admin' && complaint.sellerId">
+          <span class="section-label">{{ 'COMPLAINTS.MODAL.SELLER' | translate }}</span>
+          <p>{{ complaint.sellerName || complaint.sellerId }}</p>
+        </div>
+      </div>
+
+      <div class="image-section" *ngIf="complaint.imageUrl">
+        <span class="section-label">{{ 'COMPLAINTS.MODAL.ATTACHMENT' | translate }}</span>
+        <img [src]="complaint.imageUrl" alt="Complaint attachment" class="detail-image" />
+      </div>
+
+      <div class="replies-section">
+        <span class="section-label">{{ 'COMPLAINTS.MODAL.REPLIES' | translate }}</span>
+        <div class="reply-item" *ngFor="let reply of complaint.replies">
+          <p class="reply-message">{{ reply.message }}</p>
+          <small>{{ reply.responderName }} • {{ reply.createdAt | date:'short' }}</small>
+        </div>
+        <div class="no-replies" *ngIf="complaint.replies.length === 0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <p>{{ 'COMPLAINTS.MODAL.NO_REPLIES' | translate }}</p>
+        </div>
+      </div>
+
+      <div class="actions-section" *ngIf="canReply || canUpdateStatus">
+        <div class="status-actions" *ngIf="canUpdateStatus && nextStatus">
+          <span class="section-label">{{ 'COMPLAINTS.MODAL.NEXT_STATUS' | translate }}</span>
+          <div class="action-row">
+            <span class="next-status-chip">{{ getStatusDisplay(nextStatus) }}</span>
+            <button type="button" class="action-btn" [disabled]="isStatusUpdating" (click)="onSubmitStatus()">
+              {{ isStatusUpdating ? ('COMPLAINTS.MODAL.UPDATING' | translate) : ('COMPLAINTS.MODAL.UPDATE_STATUS' | translate) }}
+            </button>
+          </div>
+        </div>
+
+        <div class="reply-form" *ngIf="canReply && complaint.status !== 'Closed'">
+          <span class="section-label">{{ 'COMPLAINTS.MODAL.REPLY' | translate }}</span>
+          <div class="action-row">
+            <input
+              type="text"
+              [(ngModel)]="replyMessage"
+              [placeholder]="'COMPLAINTS.MODAL.REPLY_PLACEHOLDER' | translate"
+              class="reply-input"
+            />
+            <button type="button" class="action-btn" [disabled]="isReplySubmitting" (click)="onSubmitReply()">
+              {{ isReplySubmitting ? ('COMPLAINTS.MODAL.SENDING' | translate) : ('COMPLAINTS.MODAL.SEND' | translate) }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

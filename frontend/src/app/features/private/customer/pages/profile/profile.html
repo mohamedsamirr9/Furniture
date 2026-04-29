@@ -1,0 +1,129 @@
+<div class="profile-page" *ngIf="user">
+  <h1 class="page-title">{{ 'PROFILE.TITLE' | translate }}</h1>
+  <p class="page-subtitle">{{ 'PROFILE.SUBTITLE' | translate }}</p>
+
+  <!-- Personal Information -->
+  <div class="profile-card">
+    <div class="card-header">
+      <div class="card-icon">
+        <i class="bi bi-person"></i>
+      </div>
+      <div>
+        <h2 class="card-title">{{ 'PROFILE.PERSONAL_INFO' | translate }}</h2>
+        <p class="card-subtitle">{{ 'PROFILE.UPDATE_NAME' | translate }}</p>
+      </div>
+    </div>
+    <div *ngIf="successPersonal" class="alert alert-success">{{ 'PROFILE.SUCCESS_PERSONAL' | translate }}</div>
+    <div *ngIf="errorPersonal" class="alert alert-danger">{{ errorPersonal }}</div>
+    <form [formGroup]="personalForm" (ngSubmit)="savePersonal()">
+      <div class="form-group">
+        <label class="form-label">{{ 'PROFILE.FULL_NAME' | translate }}</label>
+        <input type="text" formControlName="name" class="form-control" [placeholder]="'PROFILE.NAME_PLACEHOLDER' | translate" />
+        <div *ngIf="personalForm.get('name')?.invalid && personalForm.get('name')?.touched" class="field-error">{{ 'PROFILE.NAME_REQUIRED' | translate }}</div>
+      </div>
+      <button type="submit" class="btn-save" [disabled]="isLoadingPersonal">
+        <span *ngIf="isLoadingPersonal" class="spinner-border spinner-border-sm"></span>
+        <i *ngIf="!isLoadingPersonal" class="bi bi-save"></i>
+        {{ (isLoadingPersonal ? 'PROFILE.SAVING' : 'PROFILE.SAVE_CHANGES') | translate }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Address -->
+  <div class="profile-card">
+    <div class="card-header">
+      <div class="card-icon">
+        <i class="bi bi-geo-alt"></i>
+      </div>
+      <div>
+        <h2 class="card-title">{{ 'PROFILE.ADDRESS' | translate }}</h2>
+        <p class="card-subtitle">{{ 'PROFILE.DELIVERY_ADDRESS' | translate }}</p>
+      </div>
+    </div>
+    <div *ngIf="successAddress" class="alert alert-success">{{ 'PROFILE.SUCCESS_ADDRESS' | translate }}</div>
+    <div *ngIf="errorAddress" class="alert alert-danger">{{ errorAddress }}</div>
+    <form [formGroup]="addressForm" (ngSubmit)="saveAddress()">
+      <div class="form-group">
+        <label class="form-label">{{ 'PROFILE.FULL_ADDRESS' | translate }}</label>
+        <textarea formControlName="address" class="form-control" rows="3" [placeholder]="'PROFILE.ADDRESS_PLACEHOLDER' | translate"></textarea>
+        <div *ngIf="addressForm.get('address')?.invalid && addressForm.get('address')?.touched" class="field-error">{{ 'PROFILE.ADDRESS_REQUIRED' | translate }}</div>
+      </div>
+      <button type="submit" class="btn-save" [disabled]="isLoadingAddress">
+        <span *ngIf="isLoadingAddress" class="spinner-border spinner-border-sm"></span>
+        <i *ngIf="!isLoadingAddress" class="bi bi-house-door"></i>
+        {{ (isLoadingAddress ? 'PROFILE.SAVING' : 'PROFILE.SAVE_ADDRESS') | translate }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Security -->
+  <div class="profile-card">
+    <div class="card-header">
+      <div class="card-icon">
+        <i class="bi bi-lock"></i>
+      </div>
+      <div>
+        <h2 class="card-title">{{ 'PROFILE.SECURITY' | translate }}</h2>
+        <p class="card-subtitle">{{ 'PROFILE.CHANGE_PASSWORD' | translate }}</p>
+      </div>
+    </div>
+    <div *ngIf="successPassword" class="alert alert-success">{{ 'PROFILE.SUCCESS_PASSWORD' | translate }}</div>
+    <div *ngIf="errorPassword" class="alert alert-danger">{{ errorPassword }}</div>
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+      <div class="form-group">
+        <label class="form-label">{{ 'PROFILE.CURRENT_PASSWORD' | translate }}</label>
+        <input [type]="showCurrentPassword ? 'text' : 'password'" formControlName="currentPassword" class="form-control" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">{{ 'PROFILE.NEW_PASSWORD' | translate }}</label>
+          <input [type]="showNewPassword ? 'text' : 'password'" formControlName="newPassword" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">{{ 'PROFILE.CONFIRM_NEW_PASSWORD' | translate }}</label>
+          <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" class="form-control" />
+        </div>
+      </div>
+      <button type="submit" class="btn-save btn-save--outline" [disabled]="isLoadingPassword">
+        <span *ngIf="isLoadingPassword" class="spinner-border spinner-border-sm"></span>
+        <i *ngIf="!isLoadingPassword" class="bi bi-key"></i>
+        {{ (isLoadingPassword ? 'PROFILE.UPDATING' : 'PROFILE.UPDATE_PASSWORD') | translate }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Become Seller -->
+  <div class="profile-card">
+    <div class="card-header">
+      <div class="card-icon">
+        <i class="bi bi-shop"></i>
+      </div>
+      <div>
+        <h2 class="card-title">{{ 'PROFILE.BECOME_SELLER' | translate }}</h2>
+        <p class="card-subtitle">{{ 'PROFILE.START_SELLING' | translate }}</p>
+      </div>
+    </div>
+    <div *ngIf="successBecomeSeller" class="alert alert-success">{{ 'PROFILE.SUCCESS_BECOME_SELLER' | translate }}</div>
+    <div *ngIf="errorBecomeSeller" class="alert alert-danger">{{ errorBecomeSeller }}</div>
+    <form [formGroup]="becomeSellerForm" (ngSubmit)="submitBecomeSeller($event)">
+       <div class="form-group">
+         <label class="form-label">{{ 'PROFILE.ID_IMAGE' | translate }}</label>
+         <input type="file" (change)="onFileSelected($event)" class="form-control file-input" accept="image/*" />
+         <p class="form-hint">{{ 'PROFILE.ID_HINT' | translate }}</p>
+       </div>
+       <div class="form-group">
+         <label class="form-label">{{ 'PROFILE.STORE_NAME' | translate }}</label>
+         <input type="text" formControlName="storeName" class="form-control" [placeholder]="'PROFILE.STORE_PLACEHOLDER' | translate" />
+         <p class="form-hint">{{ 'PROFILE.STORE_HINT' | translate }}</p>
+         <div *ngIf="becomeSellerForm.get('storeName')?.hasError('required') && becomeSellerForm.get('storeName')?.touched" class="field-error">{{ 'PROFILE.STORE_REQUIRED' | translate }}</div>
+         <div *ngIf="becomeSellerForm.get('storeName')?.hasError('minlength') && becomeSellerForm.get('storeName')?.touched" class="field-error">{{ 'PROFILE.STORE_MIN' | translate }}</div>
+         <div *ngIf="becomeSellerForm.get('storeName')?.hasError('maxlength') && becomeSellerForm.get('storeName')?.touched" class="field-error">{{ 'PROFILE.STORE_MAX' | translate }}</div>
+       </div>
+      <button type="submit" class="btn-save" [disabled]="isLoadingBecomeSeller || !nationalIdImageBase64">
+        <span *ngIf="isLoadingBecomeSeller" class="spinner-border spinner-border-sm"></span>
+        <i *ngIf="!isLoadingBecomeSeller" class="bi bi-arrow-up-circle"></i>
+        {{ (isLoadingBecomeSeller ? 'PROFILE.SUBMITTING' : 'PROFILE.SUBMIT_REQUEST') | translate }}
+      </button>
+    </form>
+  </div>
+</div>

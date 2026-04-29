@@ -1,28 +1,61 @@
-<div
-  class="container-fluid vh-100 d-flex flex-column align-items-center justify-content-center bg-white"
->
-  <div class="position-absolute top-0 start-0 p-4">
-    <h3 class="brand mb-4" (click)="goHome()" style="cursor: pointer">Furnora</h3>
-  </div>
+<div class="container-fluid vh-100 verify-page">
+  <div class="row h-100">
 
-  <div class="text-center mb-4">
-    <h2 class="fw-bold mb-3">Verify Your Email</h2>
-    <p class="text-secondary">We sent a 6-digit code to your email. Enter it below.</p>
-  </div>
+    <!-- LEFT -->
+    <div class="col-md-6 d-flex align-items-center left">
+      <div class="form-wrapper">
 
-  <div class="otp-container d-flex gap-2 mb-4">
-    <input type="text" maxlength="1" class="form-control otp-input" />
-    <input type="text" maxlength="1" class="form-control otp-input" />
-    <input type="text" maxlength="1" class="form-control otp-input" />
-    <input type="text" maxlength="1" class="form-control otp-input" />
-    <input type="text" maxlength="1" class="form-control otp-input" />
-    <input type="text" maxlength="1" class="form-control otp-input" />
-  </div>
+        <h1 class="title">{{ 'VERIFY.TITLE' | translate }}</h1>
+        <p class="subtitle">{{ 'VERIFY.DESC' | translate }}</p>
+        <p class="email-text" *ngIf="email">{{ email }}</p>
 
-  <div class="w-100 d-flex flex-column align-items-center" style="max-width: 400px">
-    <button class="btn btn-verify w-100 py-2 text-white mb-3 shadow-sm">Verify</button>
-    <p class="text-secondary small">
-      Didn't receive a code? <a href="#" class="text-decoration-none fw-bold text-dark">Resend</a>
-    </p>
+        <!-- Error -->
+        <div *ngIf="errorMessage" class="alert-error mb-3">
+          <i class="bi bi-exclamation-circle"></i> {{ errorMessage }}
+        </div>
+
+        <!-- Success -->
+        <div *ngIf="successMessage" class="alert-success mb-3">
+          <i class="bi bi-check-circle"></i> {{ successMessage }}
+        </div>
+
+        <!-- OTP -->
+        <div class="otp-container mb-4">
+          <input
+            *ngFor="let digit of otp; let i = index"
+            type="text"
+            maxlength="1"
+            class="otp-input"
+            [class.filled]="otp[i]"
+            [(ngModel)]="otp[i]"
+            (input)="onInput($event, i)"
+            (keydown)="onKeyDown($event, i)" />
+        </div>
+
+        <button (click)="verify()" [disabled]="isLoading" class="btn-main mb-3">
+          <span *ngIf="isLoading" class="spinner"></span>
+          <span>{{ isLoading ? ('ALERTS.LOADING' | translate) : ('AUTH_EXTRA.VERIFY_BTN' | translate) }}</span>
+        </button>
+
+        <p class="text-center small" style="color: #8a7f77;">
+          {{ 'AUTH_EXTRA.RESEND_TEXT' | translate }}
+          <a href="javascript:void(0)" (click)="resendOtp()" class="link">{{ 'VERIFY.RESEND' | translate }}</a>
+        </p>
+
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center right">
+      <div class="image-card">
+        <img src="/assets/images/login.jpg">
+        <div class="overlay">
+          <span>VERIFY YOUR EMAIL</span>
+          <h3>{{ 'VERIFY.TITLE' | translate }}</h3>
+          <p>{{ 'VERIFY.DESC' | translate }}</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>

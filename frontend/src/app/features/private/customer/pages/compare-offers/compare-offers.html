@@ -1,0 +1,66 @@
+<div class="compare-page">
+
+  <button class="back-link" (click)="goBack()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"/>
+      <polyline points="12 19 5 12 12 5"/>
+    </svg>
+    {{ 'COMPARE_OFFERS.BACK_LINK' | translate }}
+  </button>
+
+  <h1 class="page-title">{{ 'COMPARE_OFFERS.TITLE' | translate }}</h1>
+  <p class="page-for">{{ 'COMPARE_OFFERS.FOR_REQUEST' | translate }}{{ requestId }}</p>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>{{ 'ALERTS.LOADING' | translate }}</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage | translate }}
+  </div>
+
+  <div *ngIf="acceptSuccess" class="success-message">
+    {{ 'COMPARE_OFFERS.SUCCESS_ACCEPT' | translate }}
+  </div>
+
+  <div *ngIf="!isLoading && offers.length === 0 && !errorMessage" class="empty-state">
+    <p>{{ 'COMPARE_OFFERS.EMPTY' | translate }}</p>
+  </div>
+
+  <div class="offers-grid" *ngIf="!isLoading && offers.length > 0">
+    <div class="offer-card" *ngFor="let offer of offers">
+      <div class="offer-header">
+        <h3 class="offer-name">{{ 'COMPARE_OFFERS.SELLER_LABEL' | translate }} {{ offer.sellerId || 'Unknown Seller' }}</h3>
+        <span *ngIf="offer.status === 1" class="badge-accepted">
+          {{ 'STATUS.ACCEPTED' | translate }}
+        </span>
+        <span *ngIf="offer.status === 2" class="badge-rejected">
+          {{ 'STATUS.REJECTED' | translate }}
+        </span>
+      </div>
+
+      <div class="offer-rows">
+        <div class="offer-row">
+          <span>{{ 'COMPARE_OFFERS.PRICE' | translate }}</span>
+          <span class="price-value">${{ offer.price }}</span>
+        </div>
+        <div class="offer-row">
+          <span>{{ 'COMPARE_OFFERS.DELIVERY_TIME' | translate }}</span>
+          <span>{{ offer.deliveryDays }} {{ 'COMPARE_OFFERS.DAYS' | translate }}</span>
+        </div>
+      </div>
+
+      <button class="accept-btn"
+        (click)="acceptOffer(offer)"
+        [disabled]="isAnyOfferAccepted"
+        [style.opacity]="isAnyOfferAccepted ? '0.5' : '1'"
+        [style.background-color]="offer.status === 1 ? '#2c1a0e' : (isAnyOfferAccepted ? '#e0d8d0' : '')"
+        [style.cursor]="isAnyOfferAccepted ? 'not-allowed' : 'pointer'">
+        {{ offer.status === 1 ? ('COMPARE_OFFERS.ACCEPTED_BADGE' | translate) : (offer.status === 2 ? ('COMPARE_OFFERS.DECLINED_BADGE' | translate) : ('COMPARE_OFFERS.ACCEPT_BTN' | translate)) }}
+      </button>
+    </div>
+  </div>
+
+</div>

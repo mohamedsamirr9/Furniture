@@ -1,0 +1,314 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:host { font-family: 'DM Sans', sans-serif; }
+
+.page-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: #1a1209;
+  margin: 0 0 20px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #ede5d8;
+  margin: 0 -40px 32px -40px;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1209;
+  margin-bottom: 20px;
+}
+
+.request-card {
+  background: #ffffff;
+  border: 1px solid #ede5d8;
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(44,26,14,0.05);
+  transition: box-shadow 0.2s;
+}
+
+.request-card:hover {
+  box-shadow: 0 6px 20px rgba(44,26,14,0.1);
+}
+
+.request-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1209;
+  margin-bottom: 6px;
+}
+
+.request-desc {
+  font-size: 14px;
+  color: #5a4a3a;
+  margin-bottom: 6px;
+}
+
+.request-meta {
+  font-size: 13px;
+  color: #a08060;
+  margin-bottom: 8px;
+}
+
+.badge-outline {
+  border: 1.5px solid #e0d8d0;
+  color: #5a4a3a;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.send-btn {
+  background: #2c1a0e;
+  color: #f5e8d0;
+  border: none;
+  border-radius: 999px;
+  padding: 11px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.send-btn:hover {
+  background: #3d2b1f;
+  box-shadow: 0 4px 14px rgba(44,26,14,0.25);
+}
+
+.send-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.view-details-btn {
+  background: #ffffff;
+  color: #5a4a3a;
+  border: 1.5px solid #e0d8d0;
+  border-radius: 999px;
+  padding: 11px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+}
+
+.view-details-btn:hover {
+  background: #f5efe8;
+  border-color: #c8a97a;
+  color: #2c1a0e;
+}
+
+.offer-form-container {
+  background: #fdfaf7 !important;
+  border-radius: 12px;
+  border: 1px solid #ede5d8;
+}
+
+.offer-form-container h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  color: #1a1209;
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #a08060;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 6px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 11px 14px !important;
+  border: 1.5px solid #e0d8d0 !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  background: #fdfaf7 !important;
+  color: #1a1209 !important;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #c8a97a !important;
+  box-shadow: 0 0 0 3px rgba(200,169,122,0.15);
+}
+
+.cancel-btn {
+  padding: 10px 20px !important;
+  background: #f5efe8 !important;
+  color: #7a6a58 !important;
+  border: none !important;
+  border-radius: 999px !important;
+  cursor: pointer;
+  font-weight: 600 !important;
+  font-family: 'DM Sans', sans-serif !important;
+  transition: background 0.2s !important;
+}
+
+.cancel-btn:hover { background: #e8ddd0 !important; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(26,18,9,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.modal-card {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(44,26,14,0.18);
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.25s ease;
+}
+
+.modal-header {
+  padding: 24px 28px;
+  border-bottom: 1px solid #ede5d8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1209;
+  margin: 0;
+}
+
+.close-btn {
+  background: #f5efe8;
+  border: none;
+  font-size: 22px;
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #7a6a58;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.close-btn:hover { background: #e8ddd0; color: #2c1a0e; }
+
+.modal-content { padding: 24px 28px; }
+
+.detail-row { margin-bottom: 16px; }
+
+.detail-row strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #a08060;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 5px;
+}
+
+.desc-text {
+  background: #fdfaf7;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 3px solid #c8a97a;
+  white-space: pre-wrap;
+  color: #1a1209;
+  font-size: 14px;
+}
+
+.price-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #2c1a0e;
+}
+
+.badge {
+  color: white;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.no-image-text {
+  color: #a08060;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+  font-size: 13px;
+}
+
+.ref-image {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+}
+
+.modal-footer {
+  padding: 16px 28px;
+  border-top: 1px solid #ede5d8;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.footer-close-btn {
+  padding: 10px 22px;
+  background: #f5efe8;
+  color: #7a6a58;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.2s;
+}
+
+.footer-close-btn:hover { background: #e8ddd0; color: #2c1a0e; }
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #a08060;
+  font-size: 14px;
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }

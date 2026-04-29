@@ -1,0 +1,106 @@
+<div class="page-header">
+  <h1>{{ 'ADMIN.SHIPPING_RULES' | translate }}</h1>
+  <button class="add-btn" (click)="openAddModal()">{{ 'ADMIN.ADD_RULE' | translate }}</button>
+</div>
+<hr class="divider" />
+
+<!-- Loading -->
+<div *ngIf="isLoading" class="loading-text">{{ 'ALERTS.LOADING' | translate }}</div>
+
+<!-- Table Card -->
+<div class="table-card" *ngIf="!isLoading">
+  <h2 class="card-title">{{ 'ADMIN.SHIPPING_RULES' | translate }}</h2>
+  
+  <!-- Empty State -->
+  <div *ngIf="rules.length === 0" class="text-center py-4">
+    <p class="text-muted">{{ 'ADMIN.NO_RULES' | translate }}</p>
+  </div>
+
+  <!-- Table -->
+  <table class="table" *ngIf="rules.length > 0">
+    <thead>
+      <tr>
+        <th>{{ 'ADMIN.CITY' | translate }}</th>
+        <th>{{ 'ADMIN.CATEGORY' | translate }}</th>
+        <th>{{ 'ADMIN.PRICE' | translate }}</th>
+        <th style="text-align: center;">{{ 'DASHBOARD.ACTIONS' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rule of rules">
+        <td>
+          <span class="badge-green">{{ 'CITIES.' + rule.city | translate }}</span>
+        </td>
+        <td>{{ rule.categoryName }}</td>
+        <td><strong>{{ rule.price | currency:'EGP ':'symbol':'1.2-2' }}</strong></td>
+        <td class="actions">
+          <span class="edit-btn" (click)="openEditModal(rule)">
+            <i class="bi bi-pencil"></i>
+          </span>
+          <span class="delete-btn" (click)="deleteRule(rule.id)">
+            <i class="bi bi-trash"></i>
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal Overlay -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ isEditing ? ('ADMIN.EDIT_RULE' | translate) : ('ADMIN.ADD_RULE' | translate) }}</h2>
+      <span class="modal-close" (click)="closeModal()">&times;</span>
+    </div>
+
+    <!-- Success / Error Messages -->
+    <div class="alert alert-success" *ngIf="successMessage">{{ successMessage | translate }}</div>
+    <div class="alert alert-error" *ngIf="errorMessage">{{ errorMessage | translate }}</div>
+
+    <form [formGroup]="ruleForm" (ngSubmit)="onSubmit()">
+      
+      <!-- City -->
+      <div class="form-group">
+        <label for="city">{{ 'ADMIN.CITY' | translate }} *</label>
+        <select id="city" formControlName="city">
+          <option value="" disabled>{{ 'CHECKOUT.SELECT_CITY' | translate }}</option>
+          <option *ngFor="let city of cities" [value]="city">{{ 'CITIES.' + city | translate }}</option>
+        </select>
+        <small class="error-text" *ngIf="ruleForm.get('city')?.touched && ruleForm.get('city')?.invalid">
+          {{ 'ADMIN.CITY_REQUIRED' | translate }}
+        </small>
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <label for="categoryId">{{ 'ADMIN.CATEGORY' | translate }} *</label>
+        <select id="categoryId" formControlName="categoryId">
+          <option value="" disabled>{{ 'FORM.SELECT_CATEGORY' | translate }}</option>
+          <option *ngFor="let cat of categories" [value]="cat.id">
+            {{ cat.nameEn }} / {{ cat.nameAr }}
+          </option>
+        </select>
+        <small class="error-text" *ngIf="ruleForm.get('categoryId')?.touched && ruleForm.get('categoryId')?.invalid">
+          {{ 'ADMIN.CATEGORY_REQUIRED' | translate }}
+        </small>
+      </div>
+
+      <!-- Price -->
+      <div class="form-group">
+        <label for="price">{{ 'ADMIN.PRICE' | translate }} (EGP) *</label>
+        <input id="price" type="number" formControlName="price" step="0.01" min="0" />
+        <small class="error-text" *ngIf="ruleForm.get('price')?.touched && ruleForm.get('price')?.invalid">
+          {{ 'ADMIN.PRICE_REQUIRED' | translate }}
+        </small>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="closeModal()">{{ 'BUTTONS.CANCEL' | translate }}</button>
+        <button type="submit" class="btn-submit" [disabled]="isSubmitting">
+          {{ isSubmitting ? ('ALERTS.LOADING' | translate) : (isEditing ? ('BUTTONS.UPDATE' | translate) : ('BUTTONS.ADD' | translate)) }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

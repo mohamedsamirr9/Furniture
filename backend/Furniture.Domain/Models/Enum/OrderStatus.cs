@@ -8,12 +8,15 @@ namespace Furniture.Domain.Models.Enum
 {
     public enum OrderStatus
     {
-        Pending,
-        Paid,
-        InProgress,
-        Shipped,
-        Delivered,
-        Completed,
-        Cancelled
+        
+        Pending = 0,     
+        Accepted = 1,   
+        Paid = 2,        
+        Processing = 3,   
+        Shipped = 4,      
+        Delivered = 5,   
+        Completed = 6,    
+        Cancelled = 7,    
+        Declined = 8   
     }
 }

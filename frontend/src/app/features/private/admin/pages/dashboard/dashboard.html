@@ -1,0 +1,84 @@
+<div class="page-header">
+  <h1>{{ 'ADMIN.DASHBOARD_TITLE' | translate }}</h1>
+</div>
+<hr class="divider" />
+
+<!-- Stat Cards -->
+<div class="stats-grid">
+  @if (isLoading) {
+    @for (_ of stats; track $index) {
+      <div class="stat-card stat-card--skeleton">
+        <div class="skeleton skeleton-label"></div>
+        <div class="skeleton skeleton-value"></div>
+      </div>
+    }
+  } @else {
+    @for (stat of stats; track stat.label) {
+      <div class="stat-card">
+        <p class="stat-label">{{ stat.label | translate }}</p>
+        <h2 class="stat-value">{{ stat.value }}</h2>
+      </div>
+    }
+  }
+</div>
+
+<!-- Recent Activity -->
+<div class="bottom-grid">
+  <!-- Recent Orders -->
+  <div class="table-card">
+    <h2 class="card-title">{{ 'ADMIN.RECENT_ORDERS' | translate }}</h2>
+    @if (isLoading) {
+      @for (_ of [1,2,3]; track $index) {
+        <div class="list-item list-item--skeleton">
+          <div style="flex:1">
+            <div class="skeleton skeleton-line-primary"></div>
+            <div class="skeleton skeleton-line-secondary"></div>
+          </div>
+          <div class="skeleton skeleton-badge"></div>
+        </div>
+      }
+    } @else if (recentOrders.length === 0) {
+      <p class="empty-msg">{{ 'ADMIN.NO_ORDERS' | translate }}</p>
+    } @else {
+      @for (order of recentOrders; track order.id) {
+        <div class="list-item">
+          <div>
+            <p class="item-id">{{ order.id }}</p>
+            <p class="item-sub">{{ order.customer }} • {{ 'STATUS.' + (order.status | uppercase) | translate }}</p>
+          </div>
+          <span class="badge-outline">{{ 'STATUS.' + (order.status | uppercase) | translate }}</span>
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Recent Complaints -->
+  <div class="table-card">
+    <h2 class="card-title">{{ 'ADMIN.RECENT_COMPLAINTS' | translate }}</h2>
+    @if (isLoading) {
+      @for (_ of [1,2,3]; track $index) {
+        <div class="list-item list-item--skeleton">
+          <div style="flex:1">
+            <div class="skeleton skeleton-line-primary"></div>
+            <div class="skeleton skeleton-line-secondary"></div>
+          </div>
+          <div class="skeleton skeleton-badge"></div>
+        </div>
+      }
+    } @else if (recentComplaints.length === 0) {
+      <p class="empty-msg">{{ 'ADMIN.NO_COMPLAINTS' | translate }}</p>
+    } @else {
+      @for (complaint of recentComplaints; track complaint.user) {
+        <div class="list-item">
+          <div>
+            <p class="item-id">{{ complaint.user }}</p>
+            <p class="item-sub">{{ complaint.description }}</p>
+          </div>
+          <span class="badge" [ngClass]="complaint.status === 'Open' ? 'badge-red' : 'badge-outline'">
+            {{ 'STATUS.' + (complaint.status | uppercase) | translate }}
+          </span>
+        </div>
+      }
+    }
+  </div>
+</div>

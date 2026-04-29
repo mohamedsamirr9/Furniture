@@ -11,12 +11,15 @@ namespace Furniture.Services
     public class CartService : ICartService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;          
+        private readonly IMapper _mapper; 
+        private readonly IRecommendationService _recommendationService;
 
-        public CartService(IUnitOfWork unitOfWork, IMapper mapper) 
+        public CartService(IUnitOfWork unitOfWork, IMapper mapper, IRecommendationService recommendationService) 
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _recommendationService = recommendationService;
+            
         }
 
         #region GET CART
@@ -46,6 +49,9 @@ namespace Furniture.Services
 
             if (product == null)
                 throw new KeyNotFoundException("Product Not Found");
+            
+            await ValidateSellerNotBlockedAsync(product.SellerId);
+
 
             if (product.StockQuantity < dto.Quantity)
                 throw new InvalidOperationException(
@@ -87,6 +93,10 @@ namespace Furniture.Services
             }
 
             await _unitOfWork.SaveChangesAsync();
+            
+            await _recommendationService.UpdateUserEmbeddingAsync(
+                userId, dto.ProductId, "cart");
+
 
             return await GetCartAsync(userId);
         }
@@ -198,6 +208,18 @@ namespace Furniture.Services
 
             return cart;
         }
+        
+        private async Task ValidateSellerNotBlockedAsync(string sellerId)
+        {
+            var spec = new SellerProfileByUserIdSpecification(sellerId);
+            var sellerProfile = await _unitOfWork.GetRepository<SellerProfile, int>()
+                .GetByIdAsync(spec);
+
+            if (sellerProfile != null && sellerProfile.IsBlocked)
+                throw new InvalidOperationException(
+                    "This product is currently unavailable");
+        }
+
 
         #endregion
 

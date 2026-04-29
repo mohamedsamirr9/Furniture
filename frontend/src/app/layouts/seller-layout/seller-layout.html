@@ -1,0 +1,46 @@
+<div class="seller-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">{{ 'NAV.BRAND' | translate }}</div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/seller/profile" routerLinkActive="active">
+        👤 {{ 'NAV.MY_PROFILE' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/seller/dashboard" routerLinkActive="active">
+        ⊞ {{ 'SELLER_SIDEBAR.DASHBOARD' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/seller/product" routerLinkActive="active">
+        🪑 {{ 'SELLER_SIDEBAR.PRODUCT' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/seller/orders" routerLinkActive="active">
+        📦 {{ 'SELLER_SIDEBAR.ORDERS' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/seller/offers" routerLinkActive="active">
+        💼 {{ 'SELLER_SIDEBAR.OFFERS' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/seller/payment" routerLinkActive="active">
+        💳 {{ 'SELLER_SIDEBAR.PAYMENT' | translate }}
+      </a>
+      <a class="nav-item" routerLink="/seller/complaints" routerLinkActive="active">
+        💬 {{ 'SELLER_SIDEBAR.COMPLAINTS' | translate }}
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="collapse-btn">
+        <span class="icon-mirror">›</span> {{ 'SELLER_SIDEBAR.COLLAPSE' | translate }}
+      </div>
+      <div class="signout-btn" (click)="signOut()">
+        <span class="icon-mirror">→</span> {{ 'SELLER_SIDEBAR.SIGN_OUT' | translate }}
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <router-outlet />
+  </main>
+
+  <app-chat-widget></app-chat-widget>
+
+</div>

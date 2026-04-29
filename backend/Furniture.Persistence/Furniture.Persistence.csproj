@@ -15,9 +15,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.14" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\DataSeed\JsonFiles\" />
-    <Folder Include="Data\Migrations\" />
-  </ItemGroup>
-
 </Project>

@@ -46,10 +46,10 @@ namespace Furniture.Persistence
                 Query = specifications.IncludeStrings
                     .Aggregate(Query, (current, include) => include(current));
             }
-            
-            if (specifications.IncludeStrings is not null && specifications.IncludeStrings.Count > 0)
+
+            if (specifications.IncludeStringsExpressions is not null && specifications.IncludeStringsExpressions.Count > 0)
             {
-                foreach (var includeString in specifications.IncludeStrings)
+                foreach (var includeString in specifications.IncludeStringsExpressions)
                 {
                     Query = Query.Include(includeString);
                 }

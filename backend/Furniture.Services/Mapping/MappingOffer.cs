@@ -1,6 +1,7 @@
-﻿using AutoMapper;
-using Furniture.shared.Dtos;
+using AutoMapper;
 using Furniture.Domain.Models;
+using Furniture.Domain.Models.Enum;
+using Furniture.shared.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,16 @@ using System.Threading.Tasks;
 
 namespace Furniture.Services.Mapping
 {
-    public class MappingOffer :Profile
+    public class MappingOffer : Profile
     {
         public MappingOffer()
         {
             CreateMap<OfferCreateDto, Offer>()
-                .ForMember(dest => dest.IsAccepted, opt => opt.MapFrom(src => false));
+            .ForMember(dest => dest.Status,
+                       opt => opt.MapFrom(src => OfferStatus.Pending));
 
-            CreateMap<Offer, OfferDto>();
+            CreateMap<Offer, OfferDto>()
+                .ForMember(dest => dest.RequestStatus, opt => opt.MapFrom(src => src.CustomRequest.Status));
         }
     }
 }

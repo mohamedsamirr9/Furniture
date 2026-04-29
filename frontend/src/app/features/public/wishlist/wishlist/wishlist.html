@@ -1,0 +1,67 @@
+<div class="wl-page">
+
+  <!-- HEADER -->
+  <div class="wl-header">
+    <div>
+      <h2 class="wl-title">{{ 'WISHLIST.TITLE' | translate }}</h2>
+      <p class="wl-subtitle">{{ wishlistItems.length }} {{ 'WISHLIST.SAVED_ITEMS' | translate }}</p>
+    </div>
+  </div>
+
+  <!-- SKELETON -->
+  <div *ngIf="loading" class="wl-grid">
+    <div class="wl-skeleton" *ngFor="let i of [1,2,3]"></div>
+  </div>
+
+  <!-- EMPTY -->
+  <div *ngIf="!loading && wishlistItems.length === 0" class="wl-empty">
+    <div class="wl-empty__icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    </div>
+    <h3>{{ 'WISHLIST.EMPTY' | translate }}</h3>
+    <!-- <p>{{ 'WISHLIST.EMPTY_DESC' | translate }}</p> -->
+  </div>
+
+  <!-- GRID -->
+  <div class="wl-grid" *ngIf="!loading && wishlistItems.length > 0">
+    <div class="wl-card" *ngFor="let product of wishlistItems">
+
+      <!-- IMAGE -->
+      <div class="wl-card__img-wrap">
+        <img [src]="product.mainImage" class="wl-card__img" [alt]="product.productName">
+        <button class="wl-card__heart" (click)="removeItem(product.productId)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#e74c3c" stroke="#e74c3c" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- BODY -->
+      <div class="wl-card__body">
+        <p class="wl-card__seller">{{ product.sellerName || product.categoryName }}</p>
+        <h6 class="wl-card__name">{{ product.productName }}</h6>
+
+        <div class="wl-card__stars">
+          <span *ngFor="let star of getStars(); let i = index" class="wl-star">
+            <svg width="14" height="14" viewBox="0 0 24 24"
+              [attr.fill]="i < 5 ? '#6b4b35' : 'none'"
+              [attr.stroke]="'#6b4b35'" stroke-width="2">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </span>
+        </div>
+
+        <div class="wl-card__footer">
+          <span class="wl-card__price">${{ product.productPrice }}</span>
+          <button class="wl-card__btn" [routerLink]="['/products', product.productId]">
+            {{ 'BUTTONS.VIEW' | translate }}
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

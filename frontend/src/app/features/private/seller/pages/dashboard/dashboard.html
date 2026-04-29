@@ -1,0 +1,22 @@
+<div class="page-header">
+  <h1>{{ 'NAV.DASHBOARD' | translate }}</h1>
+</div>
+<hr class="divider" />
+
+<div class="stats-grid">
+  @if (isLoading) {
+    @for (_ of stats; track $index) {
+      <div class="stat-card stat-card--skeleton">
+        <div class="skeleton skeleton-label"></div>
+        <div class="skeleton skeleton-value"></div>
+      </div>
+    }
+  } @else {
+    @for (stat of stats; track stat.label) {
+      <div class="stat-card">
+        <p class="stat-label">{{ stat.label | translate }}</p>
+        <h2 class="stat-value">{{ stat.value }}</h2>
+      </div>
+    }
+  }
+</div>

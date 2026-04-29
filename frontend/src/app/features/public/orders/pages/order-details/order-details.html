@@ -1,0 +1,238 @@
+<div class="container-fluid order-page py-4">
+  <div *ngIf="isLoading" class="d-flex justify-content-center my-5 py-5">
+    <div class="spinner-border text-dark" role="status">
+      <span class="visually-hidden">{{ 'ALERTS.LOADING' | translate }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="errorMsg" class="alert alert-danger shadow-sm py-3 px-4 rounded-4" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMsg }}
+    <button class="btn btn-sm btn-outline-danger ms-3" routerLink="/orders">{{ 'ORDER.BACK_TO_ORDERS' | translate }}</button>
+  </div>
+
+  <ng-container *ngIf="order && !isLoading">
+    <!-- Back Link -->
+    <a routerLink="/orders" class="back-link mb-4 d-inline-flex align-items-center gap-2">
+      <i class="bi bi-arrow-left"></i>{{ 'ORDER.BACK_TO_ORDERS' | translate }}
+    </a>
+
+    <!-- Order Header Card -->
+    <div class="order-header-card mb-4">
+      <div class="d-flex align-items-center gap-3">
+        <div class="order-icon-box">
+          <i class="bi bi-box-seam"></i>
+        </div>
+        <div>
+          <h1 class="order-title mb-0">
+            {{ 'ORDER.NUMBER' | translate }}{{ order.id }}
+            <span *ngIf="order.isCustom" class="badge custom-order-badge ms-2">{{ 'ORDER.CUSTOM_PRODUCT' | translate }}</span>
+          </h1>
+          <p class="order-date mb-0">{{ 'ORDER.PLACED_ON' | translate }} {{ (order.orderDate || order.createdAt) | date:'mediumDate' }} {{ 'ORDER.AT' | translate }} {{ (order.orderDate || order.createdAt) | date:'shortTime' }}</p>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <span class="status-badge" [ngClass]="getStatusClass(displayStatus)">
+          {{ 'STATUS.' + (displayStatus | uppercase) | translate }}
+        </span>
+        <span class="badge rounded-pill" [ngClass]="order.paymentMethod === 'Card' ? 'bg-primary' : 'bg-secondary'">
+          {{ paymentMethodLabel }}
+        </span>
+        <div *ngIf="canCancel">
+          <button class="btn-cancel-order" (click)="cancelOrder()" [disabled]="isCancelling">
+            <span *ngIf="isCancelling" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            {{ 'ORDER.CANCEL' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Left: Order Items / Custom Project Details -->
+      <div class="col-lg-8">
+
+        <!-- Case 1: Standard Order Items -->
+        <div *ngIf="!order.isCustom" class="order-card mb-4">
+          <div class="order-card-header">
+            <h5 class="fw-semibold mb-0">{{ 'ORDER.ITEMS_TITLE' | translate }}</h5>
+            <span class="items-count-badge">{{ order.orderItems?.length }} items</span>
+          </div>
+          <div class="order-card-body p-0">
+            <div class="item-row"
+                 *ngFor="let item of order.orderItems; let last = last"
+                 [class.border-bottom-0]="last"
+                 [class.opacity-50]="isSellerBlocked(item)">
+              <div class="item-img-wrap">
+                <img [src]="item.productImage || 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=150&auto=format&fit=crop'"
+                     alt="{{ item.productName }}" class="item-img">
+              </div>
+              <div class="item-info">
+                <h6 class="item-name">{{ item.productName }}</h6>
+                <p class="item-unit-price">{{ 'ORDER.UNIT_PRICE' | translate }}: ${{ item.unitPrice | number:'1.2-2' }}</p>
+                <span class="qty-chip">{{ 'ORDER.QTY' | translate }}: {{ item.quantity }}</span>
+                <span *ngIf="isSellerBlocked(item)" class="badge bg-danger ms-2">Blocked</span>
+              </div>
+              <div class="item-price-col">
+                <div class="item-total-price">${{ (item.unitPrice * item.quantity) | number:'1.2-2' }}</div>
+                <div *ngIf="order.status?.toLowerCase() === 'delivered' || order.status?.toLowerCase() === 'completed'">
+                  <button *ngIf="!reviewedProductIds.has(item.productId)"
+                          class="btn-review mt-2"
+                          (click)="openReview(item)">
+                    <i class="bi bi-star-fill me-1"></i> {{ 'ORDER.REVIEW' | translate }}
+                  </button>
+                  <span *ngIf="reviewedProductIds.has(item.productId)"
+                        class="reviewed-badge mt-2">
+                    <i class="bi bi-check-circle-fill me-1"></i> {{ 'ORDER.REVIEWED' | translate }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="!order.orderItems || order.orderItems.length === 0" class="text-center text-muted py-5">
+              <i class="bi bi-box-seam display-4 mb-3 d-block opacity-25"></i>
+              {{ 'ORDER.NO_ITEMS' | translate }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Case 2: Custom Project Details -->
+        <div *ngIf="order.isCustom" class="order-card mb-4 overflow-hidden">
+          <div class="order-card-header">
+            <div>
+              <h5 class="fw-semibold mb-0">{{ 'ORDER.CUSTOM_TITLE' | translate }}</h5>
+              <p class="text-muted small mt-1 mb-0">{{ 'ORDER.CUSTOM_DETAILS' | translate }}</p>
+            </div>
+          </div>
+          <div class="order-card-body">
+            <div class="row align-items-center g-4">
+              <div class="col-md-5">
+                <div class="custom-project-img-wrapper rounded-4 overflow-hidden">
+                  <img [src]="order.imageUrl || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=400&auto=format&fit=crop'"
+                       class="img-fluid custom-project-img" alt="Custom furniture project">
+                  <div *ngIf="!order.imageUrl" class="img-placeholder">
+                    <i class="bi bi-image text-muted display-4"></i>
+                    <p class="small text-muted mt-2">{{ 'SELLER.NO_IMAGE' | translate }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <h6 class="text-uppercase fw-bold text-muted small mb-3">{{ 'ORDER.PRODUCT_DESC' | translate }}</h6>
+                <p class="fs-5 lh-base text-dark">{{ order.description || ('ORDER.NO_DESC' | translate) }}</p>
+                <div class="mt-4 p-3 rounded-4 bg-light border border-light-subtle">
+                  <div class="d-flex align-items-center text-dark">
+                    <i class="bi bi-info-circle-fill me-2 text-primary"></i>
+                    <span class="small fw-medium">{{ 'ORDER.CUSTOM_NOTE' | translate }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Summary & Shipping -->
+      <div class="col-lg-4">
+
+        <!-- Payment Summary -->
+        <div class="order-card mb-4">
+          <div class="order-card-header">
+            <h5 class="fw-semibold mb-0">{{ 'ORDER.PAYMENT_SUMMARY' | translate }}</h5>
+          </div>
+          <div class="order-card-body">
+            <div class="summary-row">
+              <span>{{ 'CART.SUBTOTAL' | translate }}</span>
+              <span>${{ order.subTotal | number:'1.2-2' }}</span>
+            </div>
+            <div class="summary-row">
+              <span>{{ 'CART.SHIPPING' | translate }}</span>
+              <span>${{ order.shippingCost | number:'1.2-2' }}</span>
+            </div>
+            <hr class="summary-divider">
+            <div class="total-row">
+              <span class="total-label">{{ 'ORDER.TOTAL_PAID' | translate }}</span>
+              <span class="total-value">${{ order.totalPrice | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipping Info -->
+        <div class="order-card">
+          <div class="order-card-header">
+            <h5 class="fw-semibold mb-0">{{ 'ORDER.SHIPPING_INFO' | translate }}</h5>
+          </div>
+          <div class="order-card-body">
+            <div class="shipping-row">
+              <div class="shipping-pin-icon">
+                <i class="bi bi-geo-alt-fill"></i>
+              </div>
+              <p class="mb-0 text-dark">{{ order.shippingAddress || ('ORDER.NO_SHIPPING' | translate) }}</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Review Modal Overlay -->
+  <div class="modal-backdrop fade show" *ngIf="showReviewModal"></div>
+  <div class="modal fade show d-block" *ngIf="showReviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header border-0 bg-dark text-white p-4">
+          <h5 class="modal-title fw-bold">{{ 'REVIEW.TITLE' | translate }}</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeReview()" [attr.aria-label]="'BUTTONS.CANCEL' | translate"></button>
+        </div>
+        <div class="modal-body p-4 p-md-5 bg-white">
+          <div *ngIf="selectedProduct">
+            <div class="d-flex align-items-center mb-4 p-3 rounded-4" style="background:#F5F0E8;">
+              <img
+                [src]="selectedProduct.productImage || 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=150&auto=format&fit=crop'"
+                class="rounded-3 me-3 shadow-sm"
+                style="width: 50px; height: 50px; object-fit: cover;">
+              <h6 class="fw-bold mb-0 text-dark">{{ selectedProduct.productName }}</h6>
+            </div>
+
+            <!-- Star Rating -->
+            <div class="text-center mb-4">
+              <h6 class="fw-bold text-uppercase small text-muted mb-3">{{ 'REVIEW.YOUR_RATING' | translate }}</h6>
+              <div class="star-rating fs-1 d-flex justify-content-center gap-1">
+                <i *ngFor="let star of [1,2,3,4,5]"
+                    class="bi star"
+                    [class.bi-star-fill]="rating >= star"
+                    [class.bi-star]="rating < star"
+                    [class.text-warning]="rating >= star"
+                    [class.text-secondary]="rating < star"
+                    (click)="setRating(star)">
+                </i>
+              </div>
+            </div>
+
+            <!-- Review Message -->
+            <div class="mb-4">
+              <label for="reviewMessage" class="form-label fw-bold small text-muted text-uppercase">{{ 'REVIEW.YOUR_REVIEW' | translate }}</label>
+              <textarea id="reviewMessage"
+                        class="form-control rounded-4 p-3 border-light-subtle"
+                        style="background:#F5F0E8;"
+                        rows="4"
+                        [placeholder]="'REVIEW.PLACEHOLDER' | translate"
+                        [(ngModel)]="reviewMessage"></textarea>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="d-grid gap-2">
+              <button class="btn btn-dark btn-lg rounded-pill fw-bold py-3 shadow-sm"
+                      [disabled]="rating === 0 || isSubmittingReview"
+                      (click)="submitReview()">
+                <span *ngIf="isSubmittingReview" class="spinner-border spinner-border-sm me-2"></span>
+                {{ 'REVIEW.SUBMIT' | translate }}
+              </button>
+              <button class="btn btn-link text-decoration-none text-muted fw-bold"
+                      [disabled]="isSubmittingReview"
+                      (click)="closeReview()">{{ 'BUTTONS.CANCEL' | translate }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

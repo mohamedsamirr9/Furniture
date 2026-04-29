@@ -1,0 +1,92 @@
+<div class="page-header">
+  <h1>{{ 'DASHBOARD.CATEGORY_TITLE' | translate }}</h1>
+  <button class="add-btn" (click)="openAddModal()">{{ 'BUTTONS.ADD_CATEGORY' | translate }}</button>
+</div>
+<hr class="divider" />
+
+
+<div *ngIf="isLoading" class="loading-text">{{ 'ALERTS.LOADING' | translate }}</div>
+
+<!-- Category Grid -->
+<div class="categories-grid" *ngIf="!isLoading">
+  <div class="category-card" *ngFor="let cat of categories.items || categories">
+    <img class="category-img" *ngIf="cat.image" [src]="cat.image" [alt]="cat.name" />
+    <div class="category-info">
+      <div class="category-row">
+        <strong>{{ cat.name }}</strong>
+        <div class="actions">
+          <span class="edit-btn" (click)="openEditModal(cat)">
+            <i class="bi bi-pencil"></i>
+          </span>
+          <span class="delete-btn" (click)="deleteCategory(cat.id)">
+            <i class="bi bi-trash"></i>
+          </span>
+        </div>
+      </div>
+      <p class="category-desc">{{ cat.description }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Overlay -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ isEditing ? ('BUTTONS.UPDATE_CATEGORY' | translate) : ('BUTTONS.ADD_CATEGORY' | translate) }}</h2>
+      <span class="modal-close" (click)="closeModal()">&times;</span>
+    </div>
+
+    <!-- Success / Error Messages -->
+    <div class="alert alert-success" *ngIf="successMessage">{{ successMessage | translate }}</div>
+    <div class="alert alert-error" *ngIf="errorMessage">{{ errorMessage | translate }}</div>
+
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+      <div class="form-row" style="display: flex; gap: 15px; margin-bottom: 15px;">
+        <div class="form-group" style="flex: 1;">
+          <label for="nameEn">{{ 'FORM.NAME_EN' | translate }} *</label>
+          <input id="nameEn" type="text" formControlName="nameEn" placeholder="{{ 'FORM.NAME_EN' | translate }}" />
+          <small class="error-text" *ngIf="categoryForm.get('nameEn')?.touched && categoryForm.get('nameEn')?.invalid">
+            {{ 'ALERTS.NAME_REQUIRED_EN' | translate }}
+          </small>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label for="nameAr">{{ 'FORM.NAME_AR' | translate }}</label>
+          <input id="nameAr" type="text" formControlName="nameAr" placeholder="{{ 'FORM.NAME_AR' | translate }}" dir="rtl" />
+        </div>
+      </div>
+
+      <div class="form-row" style="display: flex; gap: 15px; margin-bottom: 15px;">
+        <div class="form-group" style="flex: 1;">
+          <label for="descriptionEn">{{ 'FORM.DESCRIPTION_EN' | translate }} *</label>
+          <textarea id="descriptionEn" formControlName="descriptionEn" rows="3" placeholder="{{ 'FORM.DESCRIPTION_EN' | translate }}"></textarea>
+          <small class="error-text" *ngIf="categoryForm.get('descriptionEn')?.touched && categoryForm.get('descriptionEn')?.invalid">
+            {{ 'ALERTS.DESC_REQUIRED_EN' | translate }}
+          </small>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label for="descriptionAr">{{ 'FORM.DESCRIPTION_AR' | translate }}</label>
+          <textarea id="descriptionAr" formControlName="descriptionAr" rows="3" placeholder="{{ 'FORM.DESCRIPTION_AR' | translate }}" dir="rtl"></textarea>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>{{ 'FORM.CATEGORY_IMAGE' | translate }}</label>
+        <input type="file" (change)="onImageSelected($event)" />
+
+        <div *ngIf="isUploading">{{ 'ALERTS.UPLOADING' | translate }}</div>
+      </div>
+      <img
+        *ngIf="!isUploading && categoryForm.get('image')?.value"
+        [src]="categoryForm.get('image')?.value"
+        width="120"
+      />
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="closeModal()">{{ 'BUTTONS.CANCEL' | translate }}</button>
+        <button type="submit" class="btn-submit" [disabled]="isSubmitting || isUploading">
+          {{ isSubmitting ? ('ALERTS.LOADING' | translate) : isEditing ? ('BUTTONS.UPDATE_CATEGORY' | translate) : ('BUTTONS.ADD_CATEGORY' | translate) }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
