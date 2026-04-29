@@ -200,7 +200,6 @@
                         <i class="bi bi-star-fill me-1" *ngIf="product.averageRating > 0"></i>
                         {{ product.averageRating > 0 ? (product.averageRating | number:'1.1-1') : ('PRODUCT.NEW' | translate) }}
                       </span>
-                      <button class="btn btn-cart rounded-circle shadow-sm" [disabled]="product.sellerIsBlocked || product.isBlocked"><i class="bi bi-cart-plus"></i></button>
                     </div>
                   </div>
                 </div>
