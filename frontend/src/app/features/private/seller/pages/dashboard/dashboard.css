@@ -1,35 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:host { font-family: 'DM Sans', sans-serif; }
+
 .page-header h1 {
+  font-family: 'Playfair Display', serif;
   font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 20px;
+  font-weight: 600;
+  color: #1a1209;
+  margin: 0 0 20px;
 }
 
 .divider {
   border: none;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #ede5d8;
   margin: 0 -40px 32px -40px;
 }
 
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 16px;
 }
 
 .stat-card {
   background: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: 14px;
+  border: 1px solid #ede5d8;
+  border-radius: 16px;
   padding: 24px;
+  box-shadow: 0 2px 8px rgba(44,26,14,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(44,26,14,0.1);
 }
 
 .stat-label {
-  font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #a08060;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 14px;
 }
 
 .stat-value {
-  font-size: 32px;
-  font-weight: 800;
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 600;
+  color: #1a1209;
+  line-height: 1;
 }
+
+/* ── Skeleton loading ─────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+
+.skeleton {
+  border-radius: 8px;
+  background: linear-gradient(90deg, #f0ebe4 25%, #e8e0d5 50%, #f0ebe4 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.skeleton-label {
+  height: 12px;
+  width: 70%;
+  margin-bottom: 20px;
+}
+
+.skeleton-value {
+  height: 36px;
+  width: 50%;
+}

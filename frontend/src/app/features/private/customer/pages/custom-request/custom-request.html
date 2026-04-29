@@ -1,107 +1,175 @@
-<div class="custom-page">
+<div class="crp-page">
 
-  <div class="form-section">
-    <h1 class="page-title">{{ 'CUSTOMER.REQUEST.TITLE' | translate }}</h1>
-    <p class="page-subtitle">
-      {{ 'CUSTOMER.REQUEST.DESC' | translate }}
-    </p>
-
-    <div *ngIf="submitError" class="alert alert-danger mb-4">
-      {{ submitError | translate }}
-    </div>
-
-    <div *ngIf="submitSuccess" class="alert alert-success mb-4">
-      {{ 'ALERTS.SUCCESS' | translate }}
-    </div>
-
-    <form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label>{{ 'CUSTOMER.REQUEST.BUDGET' | translate }}</label>
-        <input type="number" formControlName="budget" [placeholder]="'CUSTOMER.REQUEST.BUDGET_PLACEHOLDER' | translate" class="form-control" />
-        <div *ngIf="requestForm.get('budget')?.invalid && requestForm.get('budget')?.touched" class="text-danger mt-1 small">
-          {{ 'VALIDATION.BUDGET_REQUIRED' | translate }}
-        </div>
+  <!-- ===== HERO ===== -->
+  <section class="crp-hero">
+    <div class="crp-hero__left">
+      <div class="crp-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        {{ 'CUSTOMER.REQUEST.BESPOKE_BADGE' | translate }}
       </div>
+      <h1 class="crp-hero__title">
+        {{ 'CUSTOMER.REQUEST.TITLE' | translate }}
+        <span class="crp-hero__title-italic">{{ 'CUSTOMER.REQUEST.TITLE_ITALIC' | translate }}</span>
+      </h1>
+      <p class="crp-hero__desc">{{ 'CUSTOMER.REQUEST.HERO_DESC' | translate }}</p>
 
-      <div class="form-group">
-        <label>{{ 'CUSTOMER.REQUEST.DESC_LABEL' | translate }}</label>
-        <textarea formControlName="description" rows="5" [placeholder]="'CUSTOMER.REQUEST.DESC_PLACEHOLDER' | translate" class="form-control"></textarea>
-        <div *ngIf="requestForm.get('description')?.invalid && requestForm.get('description')?.touched" class="text-danger mt-1 small">
-          {{ 'VALIDATION.DESC_MIN_LENGTH' | translate }}
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>{{ 'CUSTOMER.REQUEST.IMAGE_LABEL' | translate }}</label>
-        <div class="upload-area position-relative" [class.has-preview]="imagePreviewUrl" onclick="document.getElementById('file-upload').click()">
-          <input type="file" id="file-upload" class="d-none" accept="image/png, image/jpeg, image/webp" (change)="onFileSelected($event)">
-          
-          <div *ngIf="!imagePreviewUrl" class="text-center py-4">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="17 8 12 3 7 8"/>
-              <line x1="12" y1="3" x2="12" y2="15"/>
-            </svg>
-            <p class="upload-text mt-2 mb-1">{{ 'CUSTOMER.REQUEST.UPLOAD_TEXT' | translate }}</p>
-            <p class="upload-hint mb-0">{{ 'CUSTOMER.REQUEST.UPLOAD_HINT' | translate }}</p>
+      <div class="crp-steps">
+        <div class="crp-step">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v16H4z"/><path d="M9 9h6M9 13h4"/></svg>
+          <div>
+            <span class="crp-step__num">{{ 'CUSTOMER.REQUEST.STEP1_NUM' | translate }}</span>
+            <p class="crp-step__label">{{ 'CUSTOMER.REQUEST.STEP1_LABEL' | translate }}</p>
           </div>
-
-          <div *ngIf="imagePreviewUrl" class="preview-container text-center">
-            <img [src]="imagePreviewUrl" alt="Preview" class="img-fluid rounded" style="max-height: 200px;">
-            <p class="mt-2 text-primary m-0 small">{{ 'CUSTOMER.REQUEST.CHANGE_IMAGE' | translate }}</p>
+        </div>
+        <div class="crp-step">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <div>
+            <span class="crp-step__num">{{ 'CUSTOMER.REQUEST.STEP2_NUM' | translate }}</span>
+            <p class="crp-step__label">{{ 'CUSTOMER.REQUEST.STEP2_LABEL' | translate }}</p>
+          </div>
+        </div>
+        <div class="crp-step">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <div>
+            <span class="crp-step__num">{{ 'CUSTOMER.REQUEST.STEP3_NUM' | translate }}</span>
+            <p class="crp-step__label">{{ 'CUSTOMER.REQUEST.STEP3_LABEL' | translate }}</p>
           </div>
         </div>
       </div>
-
-      <button type="submit" class="submit-btn mt-4 d-flex justify-content-center align-items-center gap-2" [disabled]="isLoading || requestForm.invalid">
-        <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-        {{ isLoading ? ('ALERTS.LOADING' | translate) : ('SELLER.SUBMIT' | translate) }}
-      </button>
-    </form>
-  </div>
-
-  <div class="requests-section">
-    <h2 class="section-title">{{ 'CUSTOMER.REQUEST.MY_REQUESTS' | translate }}</h2>
-    
-    <div *ngIf="myRequests.length === 0" class="text-muted">
-      {{ 'CUSTOMER.REQUEST.EMPTY' | translate }}
     </div>
 
-    <div class="request-card" *ngFor="let request of myRequests">
-      <div class="d-flex align-items-center mb-3" *ngIf="request.imageUrl">
-        <img [src]="request.imageUrl" alt="Request visual" class="rounded" style="width: 60px; height: 60px; object-fit: cover; margin-right: 15px;">
-        <div class="request-info flex-grow-1">
-          <div class="request-name d-flex justify-content-between align-items-center">
-            <span class="fs-5 fw-bold">{{ 'SELLER.REQUEST_ID' | translate }} #{{ request.id }}</span>
-            <span class="badge" [ngClass]="request.status === 'Open' ? 'badge-open' : 'badge-progress'">
-              {{ 'STATUS.' + (request.status | uppercase) | translate }}
-            </span>
-          </div>
-        </div>
+    <div class="crp-hero__right">
+      <div class="crp-hero__img-wrap">
+        <img src="assets/images/custom-furniture.jpg" class="crp-hero__img">
+        <div class="crp-hero__img-overlay"></div>
       </div>
-      
-      <div class="request-info" *ngIf="!request.imageUrl">
-        <div class="request-name d-flex justify-content-between align-items-center">
-          <span class="fs-5 fw-bold">{{ 'SELLER.REQUEST_ID' | translate }} #{{ request.id }}</span>
-          <span class="badge" [ngClass]="request.status === 'Open' ? 'badge-open' : 'badge-progress'">
-            {{ 'STATUS.' + (request.status | uppercase) | translate }}
-          </span>
-        </div>
+    </div>
+  </section>
+
+  <!-- ===== FORM SECTION ===== -->
+  <section class="crp-form-section">
+
+    <div class="crp-form-section__left">
+      <span class="crp-label">{{ 'CUSTOMER.REQUEST.THE_BRIEF' | translate }}</span>
+      <h2 class="crp-form-section__title">{{ 'CUSTOMER.REQUEST.SHARE_DETAILS' | translate }}</h2>
+      <p class="crp-form-section__desc">{{ 'CUSTOMER.REQUEST.SHARE_DETAILS_DESC' | translate }}</p>
+    </div>
+
+    <div class="crp-form-section__right">
+
+      <div *ngIf="submitError" class="crp-alert crp-alert--danger">
+        {{ submitError | translate }}
+      </div>
+      <div *ngIf="submitSuccess" class="crp-alert crp-alert--success">
+        {{ 'ALERTS.SUCCESS' | translate }}
       </div>
 
-      <div class="d-flex justify-content-between mt-2 align-items-center">
-        <span *ngIf="!request.acceptedPrice" class="fw-bold text-success">{{ 'SELLER.BUDGET' | translate }}: ${{ request.budget }}</span>
-        <span *ngIf="request.acceptedPrice" class="fw-bold" style="color: #28a745; background: #e6f4ea; padding: 4px 12px; border-radius: 6px; border: 1px solid #c3e6cb;">
-          {{ 'SELLER.ACCEPTED_PRICE' | translate }}: ${{ request.acceptedPrice }}
+      <form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+
+        <div class="crp-field">
+          <label>{{ 'CUSTOMER.REQUEST.BUDGET' | translate }}</label>
+          <div class="crp-input-wrap">
+            <span class="crp-input-prefix">$</span>
+            <input type="number" formControlName="budget"
+              [placeholder]="'CUSTOMER.REQUEST.BUDGET_PLACEHOLDER' | translate">
+          </div>
+          <div *ngIf="requestForm.get('budget')?.invalid && requestForm.get('budget')?.touched"
+            class="crp-error">{{ 'VALIDATION.BUDGET_REQUIRED' | translate }}</div>
+        </div>
+
+        <div class="crp-field">
+          <label>{{ 'CUSTOMER.REQUEST.DESC_LABEL' | translate }}</label>
+          <textarea formControlName="description" rows="5"
+            [placeholder]="'CUSTOMER.REQUEST.DESC_PLACEHOLDER' | translate"></textarea>
+          <div *ngIf="requestForm.get('description')?.invalid && requestForm.get('description')?.touched"
+            class="crp-error">{{ 'VALIDATION.DESC_MIN_LENGTH' | translate }}</div>
+        </div>
+
+        <div class="crp-field">
+          <label>{{ 'CUSTOMER.REQUEST.IMAGE_LABEL' | translate }}</label>
+          <div class="crp-upload" [class.crp-upload--has-preview]="imagePreviewUrl"
+            onclick="document.getElementById('file-upload').click()">
+            <input type="file" id="file-upload" class="d-none"
+              accept="image/png, image/jpeg, image/webp" (change)="onFileSelected($event)">
+
+            <div *ngIf="!imagePreviewUrl" class="crp-upload__empty">
+              <div class="crp-upload__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <p class="crp-upload__text">{{ 'CUSTOMER.REQUEST.UPLOAD_TEXT' | translate }}</p>
+              <p class="crp-upload__hint">{{ 'CUSTOMER.REQUEST.UPLOAD_HINT' | translate }}</p>
+            </div>
+
+            <div *ngIf="imagePreviewUrl" class="crp-upload__preview">
+              <img [src]="imagePreviewUrl" alt="Preview">
+              <p class="crp-upload__change">{{ 'CUSTOMER.REQUEST.CHANGE_IMAGE' | translate }}</p>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="crp-submit"
+          [disabled]="isLoading || requestForm.invalid">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+          {{ isLoading ? ('ALERTS.LOADING' | translate) : ('SELLER.SUBMIT' | translate) }}
+        </button>
+        <p class="crp-submit__note">{{ 'CUSTOMER.REQUEST.SUBMIT_NOTE' | translate }}</p>
+
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== MY REQUESTS ===== -->
+  <section class="crp-requests">
+    <span class="crp-label">{{ 'CUSTOMER.REQUEST.YOUR_ATELIER' | translate }}</span>
+    <h2 class="crp-requests__title">{{ 'CUSTOMER.REQUEST.MY_REQUESTS' | translate }}</h2>
+
+    <div *ngIf="myRequests.length === 0" class="crp-empty">
+      <div class="crp-empty__icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </div>
+      <h3>{{ 'CUSTOMER.REQUEST.EMPTY_TITLE' | translate }}</h3>
+      <p>{{ 'CUSTOMER.REQUEST.EMPTY_DESC' | translate }}</p>
+    </div>
+
+    <div class="crp-card" *ngFor="let request of myRequests">
+      <div class="crp-card__left">
+        <img *ngIf="request.imageUrl" [src]="request.imageUrl" alt="Request visual" class="crp-card__img">
+        <div *ngIf="!request.imageUrl" class="crp-card__img-placeholder">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <div class="crp-card__info">
+          <span class="crp-card__id">{{ 'SELLER.REQUEST_ID' | translate }} #{{ request.id }}</span>
+          <p class="crp-card__desc">{{ request.description }}</p>
+        </div>
+      </div>
+      <div class="crp-card__right">
+        <span class="crp-badge-status"
+          [ngClass]="request.status === 'Open' ? 'crp-badge-status--open' : 'crp-badge-status--progress'">
+          {{ 'STATUS.' + (request.status | uppercase) | translate }}
         </span>
+        <span class="crp-card__budget" *ngIf="!request.acceptedPrice">
+          ${{ request.budget }}
+        </span>
+        <span class="crp-card__accepted" *ngIf="request.acceptedPrice">
+          ${{ request.acceptedPrice }}
+        </span>
+        <button *ngIf="request.status === 'Open' || request.status === 'Accepted'"
+          class="crp-card__btn" (click)="viewOffer(request.id)">
+          {{ 'MY_ORDERS.VIEW_DETAILS' | translate }}
+        </button>
       </div>
-      <p class="request-desc mt-2 text-truncate" style="max-width: 100%;">{{ request.description }}</p>
-
-      <button *ngIf="request.status === 'Open' || request.status === 'Accepted'" class="view-offer-btn mt-3 w-25" (click)="viewOffer(request.id)">
-        {{ 'MY_ORDERS.VIEW_DETAILS' | translate }}
-      </button>
     </div>
-  </div>
 
+  </section>
 </div>

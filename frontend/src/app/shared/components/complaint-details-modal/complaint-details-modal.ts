@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ComplaintDetail, ComplaintStatus } from '../../../core/models/complaint.model';
-
+import { TranslateModule } from '@ngx-translate/core';
 @Component({
   selector: 'app-complaint-details-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [TranslateModule,CommonModule, FormsModule],
   templateUrl: './complaint-details-modal.html',
   styleUrl: './complaint-details-modal.css',
 })

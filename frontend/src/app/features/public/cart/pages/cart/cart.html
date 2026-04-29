@@ -1,106 +1,111 @@
-<div class="container mt-5 py-4">
-  <div class="row mb-4">
-    <div class="col-12">
-      <h1 class="display-6 fw-bold">{{ 'CART.TITLE' | translate }}</h1>
-    </div>
+<div class="ct-page">
+
+  <!-- TITLE -->
+  <div class="ct-header">
+    <h1 class="ct-title">{{ 'CART.TITLE' | translate }}</h1>
   </div>
 
-  <!-- Error Message -->
-  <div *ngIf="errorMsg" class="alert alert-danger shadow-sm" role="alert">
+  <!-- ERROR -->
+  <div *ngIf="errorMsg" class="ct-alert ct-alert--danger">
     <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMsg }}
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="d-flex justify-content-center my-5">
-    <div class="spinner-border text-dark" role="status">
+  <!-- LOADING -->
+  <div *ngIf="isLoading" class="ct-loading">
+    <div class="spinner-border" role="status">
       <span class="visually-hidden">{{ 'ALERTS.LOADING' | translate }}</span>
     </div>
   </div>
 
   <ng-container *ngIf="cart$ | async as cart; else noCart">
-    <div class="row g-5" *ngIf="cart?.items?.length; else emptyCart">
-      <!-- Cart Items -->
-      <div class="col-lg-8">
-        <div class="card border-0 shadow-sm rounded-4 mb-4" *ngFor="let item of cart.items">
-          <div class="card-body p-4">
-            <div class="row align-items-center">
-              <div class="col-md-2 col-4 mb-3 mb-md-0">
-                <img [src]="item.productImage || 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=150&auto=format&fit=crop'" 
-                     class="img-fluid rounded-3" [alt]="item.productName">
-              </div>
-              <div class="col-md-4 col-8">
-                <h5 class="fw-bold mb-1">{{ item.productName }}</h5>
-                <p class="text-muted mb-0">${{ item.unitPrice | number:'1.2-2' }}</p>
-              </div>
-              <div class="col-md-3 col-6 mt-3 mt-md-0 d-flex justify-content-center">
-                <div class="input-group input-group-sm w-75">
-                  <button class="btn btn-outline-secondary" type="button" (click)="updateQuantity(item.productId, item.quantity, -1)" [disabled]="isLoading ">-</button>
-                  <input type="text" class="form-control text-center" [value]="item.quantity" readonly>
-                  <button class="btn btn-outline-secondary" type="button" (click)="updateQuantity(item.productId, item.quantity, 1)" [disabled]="isLoading || item.quantity === item.availableStock">+</button>
+    <div class="ct-layout" *ngIf="cart?.items?.length; else emptyCart">
 
-                </div>
-              </div>
-              <div class="col-md-2 col-4 mt-3 mt-md-0 text-end">
-                <p class="fw-bold mb-0">${{ (item.unitPrice * item.quantity) | number:'1.2-2' }}</p>
-              </div>
-              <div class="col-md-1 col-2 mt-3 mt-md-0 text-end">
-                <button class="btn btn-link text-danger p-0" (click)="removeItem(item.productId)" [disabled]="isLoading">
-                  <i class="bi bi-trash fs-5"></i>
-                </button>
-              </div>
-            </div>
+      <!-- LEFT: ITEMS -->
+      <div class="ct-items">
+
+        <div class="ct-item" *ngFor="let item of cart.items" [class.opacity-50]="isItemBlocked(item)">
+          <img [src]="item.productImage || 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=150&auto=format&fit=crop'"
+               class="ct-item__img" [alt]="item.productName">
+
+          <div class="ct-item__info">
+            <h6 class="ct-item__name">{{ item.productName }}</h6>
+            <p class="ct-item__price">${{ item.unitPrice | number:'1.2-2' }}</p>
+            <span *ngIf="isItemBlocked(item)" class="badge bg-danger">Blocked</span>
           </div>
+
+          <div class="ct-item__qty">
+            <button class="ct-qty__btn" (click)="updateQuantity(item.productId, item.quantity, -1)" [disabled]="isLoading || isItemBlocked(item)">−</button>
+            <span class="ct-qty__val">{{ item.quantity }}</span>
+            <button class="ct-qty__btn" (click)="updateQuantity(item.productId, item.quantity, 1)" [disabled]="isLoading || isItemBlocked(item) || item.quantity === item.availableStock">+</button>
+          </div>
+
+          <p class="ct-item__total">${{ (item.unitPrice * item.quantity) | number:'1.2-2' }}</p>
+
+          <button class="ct-item__delete" (click)="removeItem(item.productId)" [disabled]="isLoading">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
+            </svg>
+          </button>
         </div>
-        <div class="d-flex justify-content-between align-items-center mt-4">
-          <a routerLink="/products" class="text-decoration-none text-dark">
-            <i class="bi bi-arrow-left me-2"></i>{{ 'CART.CONTINUE_SHOPPING' | translate }}
+
+        <!-- ACTIONS -->
+        <div class="ct-actions">
+          <a routerLink="/products" class="ct-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            {{ 'CART.CONTINUE_SHOPPING' | translate }}
           </a>
-          <button class="btn btn-outline-danger shadow-sm rounded-pill px-4" (click)="clearCart()" [disabled]="isLoading">
+          <button class="ct-clear-btn" (click)="clearCart()" [disabled]="isLoading">
             {{ 'CART.CLEAR_CART' | translate }}
           </button>
         </div>
       </div>
 
-      <!-- Order Summary -->
-      <div class="col-lg-4">
-        <div class="card border-0 shadow-sm rounded-4 bg-light">
-          <div class="card-body p-4">
-            <h4 class="fw-bold mb-4">{{ 'CART.ORDER_SUMMARY' | translate }}</h4>
-            <div class="d-flex justify-content-between mb-3">
-              <span class="text-muted">{{ 'CART.SUBTOTAL' | translate }}</span>
-              <span class="fw-bold">${{ cart.totalPrice | number:'1.2-2' }}</span>
-            </div>
-            <div class="d-flex justify-content-between mb-3">
-              <span class="text-muted">{{ 'CART.SHIPPING' | translate }}</span>
-              <span class="fw-bold">{{ 'CART.SHIPPING_DESC' | translate }}</span>
-            </div>
-            <hr>
-            <div class="d-flex justify-content-between mb-4">
-              <span class="fs-5 fw-bold">{{ 'CART.TOTAL' | translate }}</span>
-              <span class="fs-5 fw-bold">${{ cart.totalPrice | number:'1.2-2' }}</span>
-            </div>
-            <button class="btn btn-dark w-100 py-3 rounded-pill fw-bold shadow-sm" routerLink="/checkout" [disabled]="isLoading">
-              {{ 'CART.PROCEED_TO_CHECKOUT' | translate }}
-            </button>
-          </div>
+      <!-- RIGHT: SUMMARY -->
+      <div class="ct-summary">
+        <h4 class="ct-summary__title">{{ 'CART.ORDER_SUMMARY' | translate }}</h4>
+
+        <div class="ct-summary__row">
+          <span>{{ 'CART.SUBTOTAL' | translate }}</span>
+          <span class="ct-summary__val">${{ cart.totalPrice | number:'1.2-2' }}</span>
         </div>
+
+        <div class="ct-summary__row">
+          <span>{{ 'CART.SHIPPING' | translate }}</span>
+          <span class="ct-summary__val">{{ 'CART.SHIPPING_DESC' | translate }}</span>
+        </div>
+
+        <div class="ct-summary__divider"></div>
+
+        <div class="ct-summary__row ct-summary__row--total">
+          <span>{{ 'CART.TOTAL' | translate }}</span>
+          <span>${{ cart.totalPrice | number:'1.2-2' }}</span>
+        </div>
+
+        <button class="ct-checkout-btn" (click)="proceedToCheckout(cart)" [disabled]="isLoading || hasBlockedSeller(cart)">
+          {{ 'CART.PROCEED_TO_CHECKOUT' | translate }}
+        </button>
       </div>
+
     </div>
 
-    <!-- Empty Cart Template -->
+    <!-- EMPTY -->
     <ng-template #emptyCart>
-      <div class="text-center py-5">
-        <i class="bi bi-cart-x display-1 text-muted mb-4 d-block"></i>
-        <h2 class="fw-bold mb-3">{{ 'CART.EMPTY' | translate }}</h2>
-        <p class="text-muted mb-4">{{ 'CART.EMPTY_DESC' | translate }}</p>
-        <a routerLink="/products" class="btn btn-dark rounded-pill px-5 py-3 fw-bold shadow-sm">{{ 'CART.START_SHOPPING' | translate }}</a>
+      <div class="ct-empty">
+        <div class="ct-empty__icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+        </div>
+        <h2>{{ 'CART.EMPTY' | translate }}</h2>
+        <p>{{ 'CART.EMPTY_DESC' | translate }}</p>
+        <a routerLink="/products" class="ct-shop-btn">{{ 'CART.START_SHOPPING' | translate }}</a>
       </div>
     </ng-template>
   </ng-container>
 
   <ng-template #noCart>
-    <div class="text-center py-5" *ngIf="!isLoading">
-      <!-- Wait state until resolved -->
-    </div>
+    <div *ngIf="!isLoading"></div>
   </ng-template>
+
 </div>

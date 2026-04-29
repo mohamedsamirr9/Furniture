@@ -92,6 +92,8 @@ export class ProductDetails implements OnInit {
           categoryName: res.categoryName || res.CategoryName,
           sellerId: res.sellerId || res.SellerId,
           sellerName: res.sellerName || res.SellerName,
+          sellerIsBlocked: res.sellerIsBlocked ?? res.isBlocked ?? res.IsBlocked ?? false,
+          isBlocked: res.isBlocked ?? res.IsBlocked ?? res.sellerIsBlocked ?? false,
           averageRating: res.averageRating || 0,
           images,
         };
@@ -133,6 +135,10 @@ export class ProductDetails implements OnInit {
 
   addToCart() {
     if (!this.product) return;
+    if (this.isUnavailable) {
+      this.errorMessage = 'Unavailable';
+      return;
+    }
     this.isAdding = true;
     this.addedSuccess = false;
     this.errorMessage = '';
@@ -188,6 +194,10 @@ export class ProductDetails implements OnInit {
 
   isActiveImage(imageUrl: string): boolean {
     return this.selectedImage === imageUrl;
+  }
+
+  get isUnavailable(): boolean {
+    return !!(this.product?.sellerIsBlocked || this.product?.isBlocked);
   }
 
 showWishlistMessage(message: string) {

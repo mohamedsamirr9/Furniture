@@ -5,6 +5,7 @@ import { Register } from './register/register';
 import { Role } from './role/role';
 import { Verify } from './verify/verify';
 import { Success } from './success/success';
+import { ForgotPassword } from './forgot-password/forgot-password'; 
 
 export const AUTH_ROUTES: Routes = [
   {
@@ -16,6 +17,7 @@ export const AUTH_ROUTES: Routes = [
       { path: 'role', component: Role },
       { path: 'verify', component: Verify },
       { path: 'success', component: Success },
+      { path: 'forgot-password', component: ForgotPassword }, 
     ],
   },
 ];

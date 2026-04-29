@@ -27,4 +27,22 @@ export class OrderDetailsModalComponent {
     }
     return line.unitPrice * line.quantity;
   }
+
+  getDisplayStatus(order: Order): string {
+    const paymentMethod = (order.paymentMethod || 'Cash').toLowerCase();
+    if (paymentMethod === 'cash' && order.status?.toLowerCase() === 'paid') {
+      return 'Processing';
+    }
+    return order.status;
+  }
+
+  getPaymentMethodLabel(order: Order): string {
+    return (order.paymentMethod || 'Cash') === 'Card'
+      ? 'ORDER.ONLINE_PAYMENT'
+      : 'ORDER.CASH_ON_DELIVERY';
+  }
+
+  isSellerBlocked(line: any): boolean {
+    return !!(line?.sellerIsBlocked || line?.isBlocked);
+  }
 }

@@ -12,6 +12,10 @@ import { Subscription } from 'rxjs';
   imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './wishlist.html',
   styleUrl: './wishlist.css',
+  host: {
+  'style': 'display: block; background-color: #f9f4ef; min-height: 100vh;'
+}
+
 })
 export class WishlistComponent implements OnInit, OnDestroy {
   loading = true;
@@ -53,7 +57,6 @@ export class WishlistComponent implements OnInit, OnDestroy {
   removeItem(productId: number) {
     this.wishlistService.removeFromWishlist(productId).subscribe({
       next: () => {
-        console.log(`Product ${productId} removed from wishlist`);
       },
       error: (err: any) => {
         console.error('Error removing from wishlist', err);

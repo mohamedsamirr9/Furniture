@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CartService } from '../../../../../core/services/cart.service';
 import { OrderService } from '../../../../../core/services/order.service';
+import { PaymentService } from '../../../../../core/services/payment.service';
 import { OfferService } from '../../../../../core/services/offer.service';
 import { ShippingService } from '../../../../../core/services/shipping.service';
 import { of, BehaviorSubject, Subject } from 'rxjs';
@@ -15,9 +16,10 @@ import { TranslateModule } from '@ngx-translate/core';
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, TranslateModule],
   templateUrl: './checkout.html',
-  styleUrls: ['./checkout.css']
+  styleUrls: ['./checkout.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
   checkoutForm: FormGroup;
@@ -25,6 +27,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   offerId: number | null = null;
   displayData$: Observable<any>;
   shippingCost$ = new BehaviorSubject<number>(0);
+  paymentMethod: 'Cash' | 'Card' = 'Cash';
+  hasBlockedSellerInOrder = false;
   cities: string[] = [
     'Cairo', 'Giza', 'Alexandria', 'Aswan', 'Luxor', 
     'Port Said', 'Suez', 'Mansoura', 'Tanta', 'Ismailia', 'Assiut'
@@ -35,6 +39,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private cartService: CartService,
     private orderService: OrderService,
+    private paymentService: PaymentService,
     private offerService: OfferService,
     private shippingService: ShippingService,
     private router: Router,
@@ -92,6 +97,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     if (!this.offerId) {
       this.cartService.loadCart().subscribe();
     }
+
+    this.displayData$.pipe(takeUntil(this.destroy$)).subscribe((data: any) => {
+      this.hasBlockedSellerInOrder = !!data?.items?.some((item: any) => item?.sellerIsBlocked);
+    });
   }
 
   ngOnDestroy(): void {
@@ -108,16 +117,47 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const formValue = this.checkoutForm.value;
 
+    if (this.hasBlockedSellerInOrder) {
+      this.isLoading = false;
+      alert('Checkout is unavailable because one or more sellers are blocked.');
+      return;
+    }
+
     if (this.offerId) {
       this.orderService.createOrderFromOffer({
         offerId: this.offerId,
         city: formValue.city,
         shippingAddress: formValue.shippingAddress,
-        notes: formValue.notes
-      }).subscribe({
+        notes: formValue.notes,
+        paymentMethod: this.paymentMethod
+      } as any).subscribe({
         next: (response: any) => {
           this.isLoading = false;
-          this.router.navigate(['/orders/confirmed'], { state: { orderResponse: response } });
+          const orderId = response?.orderId ?? response?.OrderId ?? response?.id;
+          if (this.paymentMethod === 'Card') {
+            this.router.navigate(['/orders/pay'], {
+              state: {
+                orderId,
+                orderResponse: response,
+                paymentMethod: 'card'
+              }
+            });
+          } else {
+            this.paymentService.createPayment(orderId, 'cash').subscribe({
+              next: () => {
+                this.router.navigate(['/orders/confirmed'], {
+                  state: {
+                    orderId,
+                    orderResponse: response
+                  }
+                });
+              },
+              error: (err: any) => {
+                console.error('Error recording cash payment', err);
+                alert(err?.error?.message || 'Failed to finalize cash order. Please try again.');
+              }
+            });
+          }
         },
         error: (err: any) => {
           this.isLoading = false;
@@ -129,13 +169,41 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.orderService.createOrder({
         city: formValue.city,
         shippingAddress: formValue.shippingAddress,
-        notes: formValue.notes
-      }).subscribe({
+        notes: formValue.notes,
+        paymentMethod: this.paymentMethod
+      } as any).subscribe({
         next: (response: any) => {
           this.isLoading = false;
-          this.cartService.clearCart().subscribe(() => {
-            this.router.navigate(['/orders/confirmed'], { state: { orderResponse: response } });
-          });
+          const orderId = response?.orderId ?? response?.OrderId ?? response?.id;
+
+          if (this.paymentMethod === 'Card') {
+            this.cartService.clearCart().subscribe(() => {
+              this.router.navigate(['/orders/pay'], {
+                state: {
+                  orderId,
+                  orderResponse: response,
+                  paymentMethod: 'card'
+                }
+              });
+            });
+          } else {
+            this.paymentService.createPayment(orderId, 'cash').subscribe({
+              next: () => {
+                this.cartService.clearCart().subscribe(() => {
+                  this.router.navigate(['/orders/confirmed'], {
+                    state: {
+                      orderId,
+                      orderResponse: response
+                    }
+                  });
+                });
+              },
+              error: (err: any) => {
+                console.error('Error recording cash payment', err);
+                alert(err?.error?.message || 'Failed to finalize cash order. Please try again.');
+              }
+            });
+          }
         },
         error: (err: any) => {
           this.isLoading = false;

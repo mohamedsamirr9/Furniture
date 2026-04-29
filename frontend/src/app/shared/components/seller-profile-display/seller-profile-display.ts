@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { finalize, switchMap } from 'rxjs';
 import { SellerProfileViewModel } from '../../../core/models/seller-profile.model';
 import { SellerService } from '../../../core/services/seller.service';
@@ -9,7 +10,7 @@ import { SellerService } from '../../../core/services/seller.service';
 @Component({
   selector: 'app-seller-profile-display',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './seller-profile-display.html',
   styleUrl: './seller-profile-display.css',
 })
@@ -17,9 +18,7 @@ export class SellerProfileDisplayComponent implements OnChanges {
   @Input() seller: SellerProfileViewModel | null = null;
   @Input() loading = false;
   @Input() error = '';
-  /** Dashboard: enables edit UI, avatar upload, and save to API. */
   @Input() editMode = false;
-  /** Public storefront CTA (hidden on dashboard). */
   @Input() showRequestCustomCta = true;
 
   @Output() profileUpdated = new EventEmitter<SellerProfileViewModel>();
@@ -32,6 +31,7 @@ export class SellerProfileDisplayComponent implements OnChanges {
 
   private readonly fb = inject(FormBuilder);
   private readonly sellerService = inject(SellerService);
+  private readonly translate = inject(TranslateService);
 
   profileForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
@@ -71,15 +71,9 @@ export class SellerProfileDisplayComponent implements OnChanges {
   }
 
   getAvatarBackgroundStyle(name?: string): { [key: string]: string } {
-    const key = (name ?? '').trim() || '?';
-    let hash = 0;
-    for (let i = 0; i < key.length; i++) {
-      hash = key.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const hue = Math.abs(hash) % 360;
     return {
-      'background-color': `hsl(${hue}, 52%, 46%)`,
-      color: '#ffffff',
+      'background-color': '#2c1a0e',
+      color: '#f5e8d0',
     };
   }
 
@@ -96,6 +90,10 @@ export class SellerProfileDisplayComponent implements OnChanges {
     this.isEditing = false;
     this.patchFormFromSeller();
     this.saveError = '';
+  }
+
+  openAddWork(): void {
+    // هنا تضيف اللوجيك بتاعك
   }
 
   saveProfile(): void {
@@ -120,8 +118,7 @@ export class SellerProfileDisplayComponent implements OnChanges {
         },
         error: (err) => {
           console.error(err);
-          this.saveError =
-            err?.error?.message ?? 'Unable to save profile. Please try again.';
+          this.saveError = err?.error?.message ?? this.translate.instant('ALERTS.SUBMIT_ERROR');
         },
       });
   }
@@ -139,9 +136,7 @@ export class SellerProfileDisplayComponent implements OnChanges {
         switchMap((res) =>
           this.sellerService.updateMyProfile({ profileImageUrl: res.secure_url })
         ),
-        finalize(() => {
-          this.avatarUploading = false;
-        })
+        finalize(() => { this.avatarUploading = false; })
       )
       .subscribe({
         next: (vm) => {
@@ -150,9 +145,7 @@ export class SellerProfileDisplayComponent implements OnChanges {
         },
         error: (err) => {
           console.error(err);
-          this.saveError =
-            err?.error?.message ??
-            'Image upload or profile update failed. Please try again.';
+          this.saveError = err?.error?.message ?? this.translate.instant('ALERTS.UPLOAD_ERROR');
         },
       });
   }

@@ -383,6 +383,17 @@ namespace Furniture.Persistence.Data.DbContexts
                         .OnDelete(DeleteBehavior.Cascade);
 
                   entity.HasIndex(s => s.UserId).IsUnique();
+                  
+                  entity.Property(e => e.PendingCommission)
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                  entity.Property(e => e.MaxAllowedCommission)
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(10000m);
+
+                  entity.Property(e => e.IsBlocked)
+                        .HasDefaultValue(false);
             });
 
             //seller payout
@@ -441,6 +452,67 @@ namespace Furniture.Persistence.Data.DbContexts
                         .HasForeignKey<UserPreference>(x => x.UserId);
             });
 
+            modelBuilder.Entity<Conversation>(entity =>{
+                entity.HasKey(c => c.Id);
+
+                entity.HasOne(c => c.Seller)
+                    .WithMany(u=>u.ConversationsAsSeller)
+                    .HasForeignKey(c => c.SellerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c=> c.Customer)
+                .WithMany(u=>u.ConversationsAsCustomer)
+                .HasForeignKey(c=>c.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<Message>(entity =>
+            {
+                entity.HasKey(m => m.Id);
+
+                entity.Property(m=>m.Content)
+                .IsRequired()
+                .HasMaxLength(2000);
+
+                entity.Property(m => m.SentAt)
+                .HasDefaultValueSql("GETDATE()");
+
+                entity.HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(m => m.Sender)
+                  .WithMany()
+                  .HasForeignKey(m => m.SenderId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            });
+            
+            modelBuilder.Entity<CommissionTransaction>(entity =>
+            {
+                  entity.HasKey(e => e.Id);
+
+                  entity.Property(e => e.CommissionAmount)
+                        .HasColumnType("decimal(18,2)");
+
+                  entity.Property(e => e.OrderTotal)
+                        .HasColumnType("decimal(18,2)");
+
+                  entity.Property(e => e.CreatedAt)
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                  entity.HasOne(e => e.SellerProfile)
+                        .WithMany()
+                        .HasForeignKey(e => e.SellerProfileId)
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                  entity.HasOne(e => e.Order)
+                        .WithMany()
+                        .HasForeignKey(e => e.OrderId)
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired(false);    
+            });
 
 
         }
@@ -466,7 +538,11 @@ namespace Furniture.Persistence.Data.DbContexts
 
         public DbSet<SellerProfile> SellerProfiles { get; set; } = null!;
         public DbSet<SellerPayout> SellerPayouts { get; set; } = null!;
-        public DbSet<UserPreference> UserPreferences { get; set; }
+        public DbSet<UserPreference> UserPreferences { get; set; } 
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<CommissionTransaction> CommissionTransactions { get; set; }
+
 
     }
 }

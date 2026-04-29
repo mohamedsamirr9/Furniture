@@ -1,66 +1,92 @@
-.success-wrapper {
-  background-color: #ffffff;
-}
-
-.success-content {
-  max-width: 500px;
-  padding: 20px;
-}
-
-.check-box {
-  width: 60px;
-  height: 60px;
-  border: 3px solid var(--furnora-green);
+.success-page {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f5efe8;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
-  border-radius: 4px; 
 }
 
-.check-box i {
+.success-page .card-wrapper {
+  background: #fff;
+  border-radius: 24px;
+  padding: 60px 50px;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(107, 75, 53, 0.08);
+}
+
+.success-page .check-box {
+  width: 72px;
+  height: 72px;
+  border: 3px solid #6b4b35;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  background: #fdf8f4;
+}
+
+.success-page .check-box i {
   font-size: 2.5rem;
-  color: var(--furnora-green);
+  color: #6b4b35;
 }
 
-h1 {
-  font-size: 2.5rem;
-  color: #000;
+.success-page .title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2d1f16;
+  margin-bottom: 12px;
 }
 
-.description {
-  color: #333;
-  font-size: 1.1rem;
+.success-page .subtitle {
+  color: #8a7f77;
+  font-size: 15px;
+  margin-bottom: 36px;
   line-height: 1.6;
 }
 
-.btn {
-  border-radius: 50px; 
-  font-size: 1.1rem;
-  transition: all 0.3s ease;
-}
-
-.btn-home {
-  background-color: var(--furnora-green);
+/* BUTTONS */
+.success-page .btn-main {
+  background: linear-gradient(135deg, #6b4b35, #8a6245);
   color: white;
+  padding: 14px;
+  border-radius: 12px;
   border: none;
+  font-weight: 500;
+  font-size: 15px;
+  transition: 0.3s;
+  width: 100%;
+  display: block;
+  text-decoration: none;
+  margin-bottom: 12px;
 }
 
-.btn-home:hover {
-  background-color: #6a9b6b;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(124, 175, 125, 0.3);
+.success-page .btn-main:hover { opacity: 0.9; color: white; }
+
+.success-page .btn-outline {
+  background: transparent;
+  color: #2d1f16;
+  padding: 13px;
+  border-radius: 12px;
+  border: 1.5px solid #c4b5aa;
+  font-weight: 500;
+  font-size: 15px;
+  transition: 0.3s;
+  width: 100%;
+  display: block;
+  text-decoration: none;
 }
 
-.btn-dashboard {
-  background-color: transparent;
-  color: var(--furnora-dark);
-  border: 1.5px solid var(--furnora-dark);
+.success-page .btn-outline:hover {
+  border-color: #6b4b35;
+  color: #6b4b35;
+  background: #fdf8f4;
 }
 
-.btn-dashboard:hover {
-  background-color: #f8fcf8;
-  color: var(--furnora-dark);
-  border-color: var(--furnora-dark);
+@media (max-width: 576px) {
+  .success-page .card-wrapper { padding: 40px 24px; }
+  .success-page .title { font-size: 26px; }
 }

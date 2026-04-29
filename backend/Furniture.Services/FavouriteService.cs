@@ -45,6 +45,12 @@ namespace Furniture.Services
             await _unitOfWork.GetRepository<Favourite, int>().AddAsync(favourite);
             await _unitOfWork.SaveChangesAsync();
 
+    var specs = new FavouritesByUserSpecification(userId);
+    var prods = await _unitOfWork.GetRepository<Favourite, int>().GetAllAsync(specs);
+    var added = prods.First(f => f.ProductId == productId);
+    var result = _mapper.Map<FavouriteDto>(added);
+
+    _ = Task.Run(() => _recommendationService.UpdateUserEmbeddingAsync(userId, productId, "favorite"));
             try
             {
                 await _recommendationService.UpdateUserEmbeddingAsync(userId, productId, "favorite");
@@ -58,7 +64,7 @@ namespace Furniture.Services
             var prods = await _unitOfWork.GetRepository<Favourite, int>().GetAllAsync(specs);
             var added = prods.First(f => f.ProductId == productId);
 
-            return _mapper.Map<FavouriteDto>(added);
+    return result;
 
         }
 

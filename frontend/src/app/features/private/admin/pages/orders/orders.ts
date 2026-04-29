@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderService } from '../../../../../core/services/order.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Order } from '../../../../../core/models/order.model';
 import { OrderDetailsModalComponent } from '../../../../../shared/components/order-details-modal/order-details-modal';
 
@@ -23,7 +23,7 @@ export class Orders implements OnInit {
 
   private validTransitions: Record<string, string[]> = {
     'Pending': ['Accepted', 'Declined'],
-    'Accepted': ['Paid', 'Cancelled'],
+    'Accepted': ['Paid', 'Processing', 'Cancelled'],
     'Paid': ['Processing'],
     'Processing': ['Shipped'],
     'Shipped': ['Delivered'],
@@ -32,7 +32,10 @@ export class Orders implements OnInit {
 
   private terminalStatuses = ['Completed', 'Cancelled', 'Declined'];
 
-  constructor(private orderService: OrderService) {}
+  constructor(
+    private orderService: OrderService,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit(): void {
     this.loadOrders();
@@ -52,8 +55,13 @@ export class Orders implements OnInit {
     });
   }
 
-  getValidTransitions(status: string): string[] {
-    return this.validTransitions[status] || [];
+  getValidTransitions(order: any): string[] {
+    const transitions = this.validTransitions[order.status] || [];
+    const paymentMethod = (order.paymentMethod || 'Cash').toLowerCase();
+    if (paymentMethod === 'cash') {
+      return transitions.filter(next => next !== 'Paid');
+    }
+    return transitions;
   }
 
   isTerminalStatus(status: string): boolean {
@@ -87,8 +95,7 @@ export class Orders implements OnInit {
       },
       error: (err: any) => {
         console.error('Error loading order details', err);
-        this.orderDetailsError =
-          err?.error?.message ?? err?.message ?? 'Failed to load order details';
+        this.orderDetailsError = this.translate.instant('ORDER.LOAD_DETAILS_ERROR');
         this.orderDetailsLoading = false;
       },
     });

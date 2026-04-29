@@ -44,33 +44,49 @@ namespace Furniture.Services
             var profileRepo = _unitOfWork.GetRepository<SellerProfile, int>();
             var sellerProfile = await profileRepo.GetByIdAsync(new SellerProfileByUserIdSpecification(userId));
 
-            if (dto.Bio != null || dto.Name != null)
+            if (sellerProfile is null)
             {
-                if (sellerProfile is null)
+                var storeName = dto.Name ?? user.Name ?? "Seller";
+                sellerProfile = new SellerProfile
                 {
-                    var storeName = dto.Name ?? user.Name ?? "Seller";
-                    sellerProfile = new SellerProfile
-                    {
-                        UserId = userId,
-                        StoreName = storeName.Length > 200 ? storeName[..200] : storeName,
-                        StoreDescription = dto.Bio,
-                    };
-                    await profileRepo.AddAsync(sellerProfile);
+                    UserId = userId,
+                    StoreName = storeName.Length > 200 ? storeName[..200] : storeName,
+                    StoreDescription = dto.Bio,
+                    BankName = dto.BankName,
+                    BankAccountNumber = dto.BankAccountNumber,
+                    BankCode = dto.BankCode,
+                    NationalId = dto.NationalId,
+                    PaymobMerchantId = dto.PaymobMerchantId,
+                    CommissionRate = 6m,
+                    IsVerified = false,
+                    CreatedAt = DateTime.UtcNow
+                };
+                await profileRepo.AddAsync(sellerProfile);
+            }
+            else
+            {
+                if (dto.Bio != null)
+                    sellerProfile.StoreDescription = dto.Bio;
+                if (dto.Name != null)
+                {
+                    var storeName = dto.Name;
+                    if (storeName.Length > 200)
+                        storeName = storeName[..200];
+                    sellerProfile.StoreName = storeName;
                 }
-                else
-                {
-                    if (dto.Bio != null)
-                        sellerProfile.StoreDescription = dto.Bio;
-                    if (dto.Name != null)
-                    {
-                        var storeName = dto.Name;
-                        if (storeName.Length > 200)
-                            storeName = storeName[..200];
-                        sellerProfile.StoreName = storeName;
-                    }
 
-                    profileRepo.Update(sellerProfile);
-                }
+                if (dto.BankName != null)
+                    sellerProfile.BankName = dto.BankName;
+                if (dto.BankAccountNumber != null)
+                    sellerProfile.BankAccountNumber = dto.BankAccountNumber;
+                if (dto.BankCode != null)
+                    sellerProfile.BankCode = dto.BankCode;
+                if (dto.NationalId != null)
+                    sellerProfile.NationalId = dto.NationalId;
+                if (dto.PaymobMerchantId != null)
+                    sellerProfile.PaymobMerchantId = dto.PaymobMerchantId;
+
+                profileRepo.Update(sellerProfile);
             }
 
             var identityResult = await _userManager.UpdateAsync(user);
@@ -151,7 +167,16 @@ namespace Furniture.Services
                 AvatarUrl = imageUrl,
                 ProfileImageUrl = imageUrl,
                 Specialties = specialties,
-                Portfolio = portfolio
+                Portfolio = portfolio,
+                BankName = includeEmail ? sellerProfile?.BankName : null,
+                BankAccountNumber = includeEmail ? sellerProfile?.BankAccountNumber : null,
+                BankCode = includeEmail ? sellerProfile?.BankCode : null,
+                NationalId = includeEmail ? sellerProfile?.NationalId : null,
+                PaymobMerchantId = includeEmail ? sellerProfile?.PaymobMerchantId : null,
+                PendingCommission = includeEmail ? sellerProfile?.PendingCommission ?? 0m : 0m,
+                MaxAllowedCommission = includeEmail ? sellerProfile?.MaxAllowedCommission ?? 0m : 0m,
+                IsBlocked = includeEmail && (sellerProfile?.IsBlocked ?? false),
+                BlockReason = includeEmail ? sellerProfile?.BlockReason : null
             };
         }
     }

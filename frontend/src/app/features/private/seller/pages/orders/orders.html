@@ -1,6 +1,11 @@
 <div class="page-header">
   <h1>{{ 'NAV.ORDERS' | translate }}</h1>
 </div>
+
+<div *ngIf="statusMessage" class="status-toast" [ngClass]="statusMessageType">
+  <span>{{ statusMessage }}</span>
+</div>
+
 <hr class="divider" />
 
 <div *ngIf="isLoading">{{ 'ADMIN.LOADING' | translate }}</div>
@@ -32,7 +37,7 @@
               'badge-red': order.status === 'Cancelled' || order.status === 'Declined',
               'badge-green': order.status === 'Completed'
             }"
-            [disabled]="isTerminalStatus(order.status)"
+            [disabled]="isTerminalStatus(order.status) || getValidTransitions(order.status).length === 0"
             (change)="updateStatus(order, $event)">
             <option [value]="order.status" selected>{{ 'STATUS.' + (order.status | uppercase) | translate }}</option>
             <option *ngFor="let next of getValidTransitions(order.status)" [value]="next">{{ 'STATUS.' + (next | uppercase) | translate }}</option>

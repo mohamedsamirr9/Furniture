@@ -85,7 +85,33 @@ namespace Furniture.Persistence.Data.DataSeed
                         .Select(e => e.Description))
                 );
             }
+          
             }
+            var hasSeller = await _userManager.Users
+    .AnyAsync(u => u.Id == "seller-1");
+
+if (hasSeller)
+{
+    var hasSellerProfile = await _dbContext.SellerProfiles
+        .AnyAsync(sp => sp.UserId == "seller-1");
+
+    if (!hasSellerProfile)
+    {
+        _dbContext.SellerProfiles.Add(new SellerProfile
+        {
+            UserId = "seller-1",
+            StoreName = "Main Store",
+            StoreDescription = "Seeded seller profile",
+            CommissionRate = 6m,
+            IsVerified = true,
+            CreatedAt = DateTime.UtcNow
+        });
+
+        await _dbContext.SaveChangesAsync();
+    }
+}
+
+            
                 var HasProductsImages = await _dbContext.ProductImages.AnyAsync();
                                 var HasProducts = await _dbContext.Products.AnyAsync();
                                                 var HasCategories =await _dbContext.Categories.AnyAsync();

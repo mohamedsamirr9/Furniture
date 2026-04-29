@@ -1,5 +1,281 @@
-/* ===== My Orders Page Responsive Styles ===== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 
+:root {
+  --bg:           #f0ece4;
+  --card-bg:      #faf8f4;
+  --table-header: #ede9e0;
+  --border:       #ddd8ce;
+  --accent:       #7c4f2a;
+  --accent-hover: #5e3a1e;
+  --text-dark:    #2b2018;
+  --text-mid:     #7a6a5a;
+  --text-light:   #a89880;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'DM Sans', sans-serif;
+}
+
+/* ─── Page ─── */
+body,
+.container {
+  background-color: var(--bg) !important;
+  font-family: var(--font-body);
+}
+
+.container.py-5 {
+  padding-top: 2.5rem !important;
+  margin-top: 0 !important;
+}
+
+/* ─── Header ─── */
+h1.display-6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: -0.02em;
+}
+
+p.text-muted {
+  color: var(--text-mid) !important;
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+
+/* ─── Continue Shopping button ─── */
+.btn-outline-dark {
+  background-color: transparent !important;
+  border: 1.5px solid var(--border) !important;
+  color: var(--text-dark) !important;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-radius: 50px !important;
+  padding: 0.5rem 1.4rem !important;
+  transition: border-color 0.2s ease, color 0.2s ease;
+  box-shadow: none !important;
+}
+
+.btn-outline-dark:hover {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+/* ─── Table card ─── */
+.card.rounded-4 {
+  background-color: var(--card-bg) !important;
+  border: 1.5px solid var(--border) !important;
+  border-radius: 1.1rem !important;
+  box-shadow: 0 2px 16px rgba(80, 50, 20, 0.07) !important;
+  overflow: hidden;
+}
+
+/* ─── Table header ─── */
+.table thead.table-light th {
+  background-color: var(--table-header) !important;
+  color: var(--text-mid) !important;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border) !important;
+  border-top: none !important;
+}
+
+/* ─── Table rows ─── */
+.table tbody tr {
+  border-top: 1px solid var(--border) !important;
+  transition: background-color 0.15s ease;
+}
+
+.table tbody tr:hover {
+  background-color: #f5f0e8 !important;
+}
+
+.table tbody td:first-child {
+  font-weight: 700;
+  color: var(--text-dark);
+  font-size: 0.95rem;
+}
+
+.table tbody td:nth-child(2) {
+  color: var(--text-mid);
+  font-size: 0.88rem;
+}
+
+.table tbody td:nth-child(3) {
+  font-weight: 700;
+  color: var(--text-dark);
+  font-size: 0.95rem;
+}
+
+/* ─── Status badges ─── */
+.badge {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+.bg-warning.text-dark {
+  background-color: #e8d9c4 !important;
+  color: var(--accent) !important;
+  border: 1px solid #d4bfa0 !important;
+}
+
+.bg-success {
+  background-color: #c8ddc4 !important;
+  color: #2d5a27 !important;
+}
+
+.bg-danger {
+  background-color: #ddc4c4 !important;
+  color: #5a2727 !important;
+}
+
+.bg-info.text-dark {
+  background-color: #c4d4dd !important;
+  color: #1a3a4a !important;
+}
+
+.bg-primary {
+  background-color: #c4cedd !important;
+  color: #1a2a4a !important;
+}
+
+.bg-secondary {
+  background-color: #ddd8ce !important;
+  color: var(--text-mid) !important;
+}
+
+/* ─── View Details button ─── */
+.btn-sm.btn-dark {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #fff !important;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border-radius: 50px !important;
+  padding: 0.45rem 1.2rem !important;
+  box-shadow: none !important;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-sm.btn-dark:hover {
+  background-color: var(--accent-hover) !important;
+  transform: translateY(-1px);
+}
+
+/* ─── Empty state ─── */
+.bg-light.rounded-4 {
+  background-color: var(--card-bg) !important;
+  border: 1.5px solid var(--border) !important;
+}
+
+.bi-bag-x {
+  color: var(--text-light) !important;
+}
+
+.btn-dark.rounded-pill {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #fff !important;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.btn-dark.rounded-pill:hover {
+  background-color: var(--accent-hover) !important;
+}
+
+/* ─── Error alert ─── */
+.alert-danger {
+  background-color: #f5e8e8;
+  border-color: #e0bfbf;
+  color: #7a2020;
+  border-radius: 0.9rem !important;
+}
+
+/* ─── Spinner ─── */
+.spinner-border.text-dark {
+  color: var(--accent) !important;
+}
+
+/* ─── Mobile cards ─── */
+.order-card-mobile {
+  background-color: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 8px rgba(80, 50, 20, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.order-card-mobile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(80, 50, 20, 0.1);
+}
+
+.order-card-mobile .order-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.order-card-mobile .order-card-body {
+  display: flex;
+  align-items: center;
+}
+
+.order-img-container {
+  width: 50px;
+  height: 50px;
+  border-radius: 0.6rem;
+  overflow: hidden;
+  background-color: var(--table-header);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.container.py-5 {
+  padding-top: 6rem !important;   
+  margin-top: 0 !important;
+}
+.order-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* ─── Table background ─── */
+.table {
+  background-color: var(--card-bg) !important;
+}
+
+.table tbody tr {
+  background-color: var(--card-bg) !important;
+}
+
+.table tbody tr:hover {
+  background-color: #f5f0e8 !important;
+}
+
+.table > :not(caption) > * > * {
+  background-color: transparent !important;
+}
+.custom-request-snippet {
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  font-style: italic;
+}
+
+.bi-chevron-right {
+  color: var(--text-light) !important;
+}
+
+/* ─── Responsive ─── */
 @media (max-width: 575.98px) {
   .container.py-5 {
     padding-top: 1.5rem !important;
@@ -11,78 +287,16 @@
   }
 }
 
-/* Mobile order cards */
-.order-card-mobile {
-  background: #fff;
-  border-radius: 1rem;
-  padding: 1.25rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.order-card-mobile:active {
-  background-color: #f0f0f0;
-}
-
-/* Custom Order Enhancements */
-.order-img-container {
-  width: 45px;
-  height: 45px;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #f8f9fa;
-  border: 1px solid #eee;
-  flex-shrink: 0;
-}
-
-.order-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.custom-request-snippet {
-  font-size: 0.85rem;
-  color: #6c757d;
-  font-style: italic;
-}
-
-.badge.bg-info {
-  background-color: #e3f2fd !important;
-  color: #0d47a1 !important;
-  border: 1px solid #bbdefb;
-}
-
-.order-card-mobile:hover, 
-.order-card-mobile:active {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-}
-
-.order-card-mobile .order-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-}
-
-.order-card-mobile .order-card-body {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Tablets - tighter table spacing */
 @media (min-width: 768px) and (max-width: 991px) {
-  .table td, .table th {
+  .table td,
+  .table th {
     padding-left: 0.75rem !important;
     padding-right: 0.75rem !important;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
-  .btn-sm {
-    font-size: 0.8rem;
-    padding: 0.4rem 1rem;
+  .btn-sm.btn-dark {
+    font-size: 0.75rem;
+    padding: 0.4rem 1rem !important;
   }
 }

@@ -3,9 +3,11 @@ import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { catchError, switchMap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
   const authService = inject(AuthService);
+  const router = inject(Router); 
   const token = authService.token;
   const isApiUrl = req.url.startsWith(environment.apiUrl);
   
@@ -24,16 +26,24 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Handle 401 Unauthorized errors
-      if (error.status === 401 && isApiUrl && !isAuthRequest) {
-        // If it's already a refresh request or we have no refresh token, just return error
-        if (isRefreshRequest || !authService.refreshTokenValue) {
-          return throwError(() => error);
-        }
-        return handle401Error(req, next, authService);
-      }
+
+  if (error.status === 401 && isApiUrl && !isAuthRequest) {
+
+    if (isRefreshRequest || !authService.refreshTokenValue) {
+      authService.logout();
+
+      router.navigate(['/login'], {
+        queryParams: { returnUrl: window.location.pathname }
+      });
+
       return throwError(() => error);
-    })
+    }
+
+    return handle401Error(req, next, authService);
+  }
+
+  return throwError(() => error);
+})
   );
 };
 

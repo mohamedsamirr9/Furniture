@@ -9,11 +9,13 @@ public class OrderSpecifications : BaseSpecificationscs<Domain.Models.Order, int
     public OrderSpecifications(string userId) : base(o => o.UserId == userId)
     {
         AddInclude("OrderItems.Product.Images");
+        AddInclude(o => o.Payment!);
         AddOrderByDescending(o => o.OrderDate);
     }
     public OrderSpecifications(string userId, int pageIndex, int pageSize) : base(o => o.UserId == userId)
     {
         AddInclude("OrderItems.Product.Images");
+        AddInclude(o => o.Payment!);
         AddOrderByDescending(o => o.OrderDate);
         ApplyPagination(pageSize, pageIndex);
     }
@@ -29,6 +31,7 @@ public class OrderSpecifications : BaseSpecificationscs<Domain.Models.Order, int
         : base(o => o.UserId == userId && o.Status == status)
     {
         AddInclude("OrderItems.Product.Images");
+        AddInclude(o => o.Payment!);
         AddOrderByDescending(o => o.OrderDate);
     }
 
@@ -49,6 +52,7 @@ public class OrderSpecifications : BaseSpecificationscs<Domain.Models.Order, int
         : base(o => o.Id == orderId)
     {
         AddInclude("OrderItems.Product.Images");
+        AddInclude(o => o.Payment!);
     }
     
 }

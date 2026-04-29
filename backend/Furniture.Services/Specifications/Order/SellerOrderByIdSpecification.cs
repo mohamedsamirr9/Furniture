@@ -19,5 +19,6 @@ public class SellerOrderByIdSpecification : BaseSpecificationscs<Domain.Models.O
         AddInclude(o => o.User);
         AddInclude(o => o.Offer!);
         AddInclude("Offer.CustomRequest");
+        AddInclude(o => o.Payment!);
     }
 }

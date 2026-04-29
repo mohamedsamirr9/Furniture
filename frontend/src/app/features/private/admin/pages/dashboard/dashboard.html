@@ -1,84 +1,84 @@
 <div class="page-header">
   <h1>{{ 'ADMIN.DASHBOARD_TITLE' | translate }}</h1>
-  <button
-    *ngIf="isAdmin"
-    class="btn btn-primary rebuild-btn"
-    type="button"
-    [disabled]="isRebuilding"
-    (click)="rebuildSearchIndex()"
-  >
-    <span
-      *ngIf="isRebuilding"
-      class="spinner-border spinner-border-sm me-2"
-      role="status"
-      aria-hidden="true"
-    ></span>
-    {{ 'SEARCH.REBUILD_INDEX' | translate }}
-  </button>
 </div>
 <hr class="divider" />
+
+<!-- Stat Cards -->
 <div class="stats-grid">
-  <div class="stat-card">
-    <p class="stat-label">{{ 'ADMIN.TOTAL_USERS' | translate }}</p>
-    <h2 class="stat-value">5</h2>
-  </div>
-  <div class="stat-card">
-    <p class="stat-label">{{ 'ADMIN.TOTAL_PRODUCTS' | translate }}</p>
-    <h2 class="stat-value">6</h2>
-  </div>
-  <div class="stat-card">
-    <p class="stat-label">{{ 'ADMIN.ACTIVE_ORDERS' | translate }}</p>
-    <h2 class="stat-value">2</h2>
-  </div>
-  <div class="stat-card">
-    <p class="stat-label">{{ 'ADMIN.OPEN_COMPLAINTS' | translate }}</p>
-    <h2 class="stat-value">1</h2>
-  </div>
+  @if (isLoading) {
+    @for (_ of stats; track $index) {
+      <div class="stat-card stat-card--skeleton">
+        <div class="skeleton skeleton-label"></div>
+        <div class="skeleton skeleton-value"></div>
+      </div>
+    }
+  } @else {
+    @for (stat of stats; track stat.label) {
+      <div class="stat-card">
+        <p class="stat-label">{{ stat.label | translate }}</p>
+        <h2 class="stat-value">{{ stat.value }}</h2>
+      </div>
+    }
+  }
 </div>
 
-<div class="toast-container position-fixed top-0 end-0 p-3">
-  <div
-    #rebuildToast
-    class="toast align-items-center border-0"
-    role="alert"
-    aria-live="assertive"
-    aria-atomic="true"
-    [ngClass]="toastClass"
-  >
-    <div class="d-flex">
-      <div class="toast-body">{{ toastMessage }}</div>
-      <button
-        type="button"
-        class="btn-close btn-close-white me-2 m-auto"
-        data-bs-dismiss="toast"
-        aria-label="Close"
-      ></button>
-    </div>
-  </div>
-</div>
-
+<!-- Recent Activity -->
 <div class="bottom-grid">
+  <!-- Recent Orders -->
   <div class="table-card">
     <h2 class="card-title">{{ 'ADMIN.RECENT_ORDERS' | translate }}</h2>
-    <div class="list-item" *ngFor="let order of recentOrders">
-      <div>
-        <p class="item-id">{{ order.id }}</p>
-        <p class="item-sub">{{ order.customer }} • {{ 'STATUS.' + (order.status | uppercase) | translate }}</p>
-      </div>
-      <span class="badge-outline">{{ 'STATUS.' + (order.status | uppercase) | translate }}</span>
-    </div>
+    @if (isLoading) {
+      @for (_ of [1,2,3]; track $index) {
+        <div class="list-item list-item--skeleton">
+          <div style="flex:1">
+            <div class="skeleton skeleton-line-primary"></div>
+            <div class="skeleton skeleton-line-secondary"></div>
+          </div>
+          <div class="skeleton skeleton-badge"></div>
+        </div>
+      }
+    } @else if (recentOrders.length === 0) {
+      <p class="empty-msg">{{ 'ADMIN.NO_ORDERS' | translate }}</p>
+    } @else {
+      @for (order of recentOrders; track order.id) {
+        <div class="list-item">
+          <div>
+            <p class="item-id">{{ order.id }}</p>
+            <p class="item-sub">{{ order.customer }} • {{ 'STATUS.' + (order.status | uppercase) | translate }}</p>
+          </div>
+          <span class="badge-outline">{{ 'STATUS.' + (order.status | uppercase) | translate }}</span>
+        </div>
+      }
+    }
   </div>
 
+  <!-- Recent Complaints -->
   <div class="table-card">
     <h2 class="card-title">{{ 'ADMIN.RECENT_COMPLAINTS' | translate }}</h2>
-    <div class="list-item" *ngFor="let complaint of recentComplaints">
-      <div>
-        <p class="item-id">{{ complaint.user }}</p>
-        <p class="item-sub">{{ complaint.description }}</p>
-      </div>
-      <span class="badge" [ngClass]="complaint.status === 'Open' ? 'badge-red' : 'badge-outline'">
-        {{ 'STATUS.' + (complaint.status | uppercase) | translate }}
-      </span>
-    </div>
+    @if (isLoading) {
+      @for (_ of [1,2,3]; track $index) {
+        <div class="list-item list-item--skeleton">
+          <div style="flex:1">
+            <div class="skeleton skeleton-line-primary"></div>
+            <div class="skeleton skeleton-line-secondary"></div>
+          </div>
+          <div class="skeleton skeleton-badge"></div>
+        </div>
+      }
+    } @else if (recentComplaints.length === 0) {
+      <p class="empty-msg">{{ 'ADMIN.NO_COMPLAINTS' | translate }}</p>
+    } @else {
+      @for (complaint of recentComplaints; track complaint.user) {
+        <div class="list-item">
+          <div>
+            <p class="item-id">{{ complaint.user }}</p>
+            <p class="item-sub">{{ complaint.description }}</p>
+          </div>
+          <span class="badge" [ngClass]="complaint.status === 'Open' ? 'badge-red' : 'badge-outline'">
+            {{ 'STATUS.' + (complaint.status | uppercase) | translate }}
+          </span>
+        </div>
+      }
+    }
   </div>
-</div>
+</div>
