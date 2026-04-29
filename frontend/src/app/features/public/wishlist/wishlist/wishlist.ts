@@ -57,7 +57,6 @@ export class WishlistComponent implements OnInit, OnDestroy {
   removeItem(productId: number) {
     this.wishlistService.removeFromWishlist(productId).subscribe({
       next: () => {
-        console.log(`Product ${productId} removed from wishlist`);
       },
       error: (err: any) => {
         console.error('Error removing from wishlist', err);
