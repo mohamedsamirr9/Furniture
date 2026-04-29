@@ -8,7 +8,7 @@ public interface IRecommendationService
     Task SaveUserQuizAsync(string userId, string style, string color, string roomSize, string budget);
     Task<List<ProductRecommendationDto>> GetRecommendationsAsync(string userId, int topK = 5);
     Task UpdateUserEmbeddingAsync(string userId, int productId, string actionType);
-    Task IndexAllProductsAsync();
+    Task IndexAllProductsAsync(bool onlyMissing = false);
     Task DeleteProductEmbeddingAsync(int productId);
 }
 

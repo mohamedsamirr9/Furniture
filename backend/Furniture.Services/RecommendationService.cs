@@ -134,10 +134,15 @@ public class RecommendationService : IRecommendationService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task IndexAllProductsAsync()
+    public async Task IndexAllProductsAsync(bool onlyMissing = false)
     {
         var spec     = new ProductsWithImagesSpecification();
         var products = await _unitOfWork.GetRepository<Product, int>().GetAllAsync(spec);
+
+        if (onlyMissing)
+        {
+            products = products.Where(p => string.IsNullOrEmpty(p.EmbeddingVector));
+        }
 
         foreach (var product in products)
         {
