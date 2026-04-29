@@ -38,8 +38,8 @@ export class OrderDetailsModalComponent {
 
   getPaymentMethodLabel(order: Order): string {
     return (order.paymentMethod || 'Cash') === 'Card'
-      ? 'Online Payment'
-      : 'Cash on Delivery';
+      ? 'ORDER.ONLINE_PAYMENT'
+      : 'ORDER.CASH_ON_DELIVERY';
   }
 
   isSellerBlocked(line: any): boolean {

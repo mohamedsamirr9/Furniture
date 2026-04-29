@@ -30,7 +30,7 @@
   </button>
 </div>
 
-<h3 class="mt-4 mb-3" style="font-size: 1.25rem; font-weight: 600; color: var(--text-main);">💳 Online Earnings (Paymob only)</h3>
+<h3 class="mt-4 mb-3" style="font-size: 1.25rem; font-weight: 600; color: var(--text-main);">💳 {{ 'SELLER.PAYMENTS.ONLINE_EARNINGS' | translate }}</h3>
 <div class="summary-row">
   <div class="summary-card dark">
     <span class="summary-label">{{ 'SELLER.PAYMENTS.EARNINGS' | translate }}</span>
@@ -100,10 +100,10 @@
   </div>
 </div>
 
-<h3 class="mt-4 mb-3" style="font-size: 1.25rem; font-weight: 600; color: var(--text-main);">💵 Cash Summary</h3>
+<h3 class="mt-4 mb-3" style="font-size: 1.25rem; font-weight: 600; color: var(--text-main);">💵 {{ 'SELLER.PAYMENTS.CASH_SUMMARY' | translate }}</h3>
 <div class="summary-row">
   <div class="summary-card light">
-    <span class="summary-label">Total Cash Orders</span>
+    <span class="summary-label">{{ 'SELLER.PAYMENTS.TOTAL_CASH_ORDERS' | translate }}</span>
     <div class="summary-icon">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -121,7 +121,7 @@
     </ng-template>
   </div>
   <div class="summary-card dark" style="background: #2a3b2c; border-color: #3e5841;">
-    <span class="summary-label">Cash Amount (Collected on delivery)</span>
+    <span class="summary-label">{{ 'SELLER.PAYMENTS.CASH_AMOUNT' | translate }}</span>
     <div class="summary-icon">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="2" y="6" width="20" height="12" rx="2" />
@@ -140,18 +140,18 @@
 
 <div class="summary-row mt-3">
   <div class="summary-card light">
-    <span class="summary-label">Pending Commission</span>
+    <span class="summary-label">{{ 'SELLER.PAYMENTS.PENDING_COMMISSION' | translate }}</span>
     <div class="summary-value">{{ sellerProfile?.pendingCommission | number: '1.2-2' }} EGP</div>
   </div>
   <div class="summary-card light">
-    <span class="summary-label">Max Limit</span>
+    <span class="summary-label">{{ 'SELLER.PAYMENTS.MAX_LIMIT' | translate }}</span>
     <div class="summary-value">{{ (sellerProfile?.maxAllowedCommission || 10000) | number: '1.0-0' }} EGP</div>
   </div>
   <div class="summary-card light">
-    <span class="summary-label">Remaining Limit</span>
+    <span class="summary-label">{{ 'SELLER.PAYMENTS.REMAINING_LIMIT' | translate }}</span>
     <div class="summary-value">{{ remainingLimit | number: '1.2-2' }} EGP</div>
     <span class="badge" [ngClass]="sellerProfile?.isBlocked ? 'badge-red' : 'badge-green'">
-      {{ sellerProfile?.isBlocked ? 'Blocked' : 'Active' }}
+      {{ sellerProfile?.isBlocked ? ('SELLER.PAYMENTS.BLOCKED' | translate) : ('SELLER.PAYMENTS.ACTIVE' | translate) }}
     </span>
   </div>
 </div>
@@ -167,7 +167,7 @@
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
             <polyline points="22 4 12 14.01 9 11.01"></polyline>
           </svg>
-          Your bank details are saved
+          {{ 'SELLER.PAYMENTS.BANK_DETAILS_SAVED' | translate }}
         </p>
       </div>
       <span class="verified-badge" *ngIf="bankForm.verified">

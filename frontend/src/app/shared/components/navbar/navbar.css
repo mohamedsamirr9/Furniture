@@ -130,8 +130,17 @@
   }
 }
 
-:host-context([dir="rtl"]) .navbar-nav { flex-direction: row-reverse; }
 :host-context([dir="rtl"]) .nav-icons { margin-left: 0; margin-right: auto; }
+:host-context([dir="rtl"]) .profile-dropdown {
+  right: auto;
+  left: 0;
+  transform-origin: top left;
+}
+
+:host-context([dir="rtl"]) .badge-dot {
+  right: auto;
+  left: -8px;
+}
 /* ─── Profile Dropdown ─── */
 .profile-dropdown-wrapper {
   position: relative;

@@ -34,8 +34,12 @@
         <td>{{ rule.categoryName }}</td>
         <td><strong>{{ rule.price | currency:'EGP ':'symbol':'1.2-2' }}</strong></td>
         <td class="actions">
-          <span class="edit-btn" (click)="openEditModal(rule)">🖊</span>
-          <span class="delete-btn" (click)="deleteRule(rule.id)">🗑</span>
+          <span class="edit-btn" (click)="openEditModal(rule)">
+            <i class="bi bi-pencil"></i>
+          </span>
+          <span class="delete-btn" (click)="deleteRule(rule.id)">
+            <i class="bi bi-trash"></i>
+          </span>
         </td>
       </tr>
     </tbody>

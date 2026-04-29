@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap');
-
-:host { font-family: 'DM Sans', sans-serif; }
+:host { 
+  font-family: inherit; 
+}
 
 .seller-layout {
   display: flex;
@@ -19,12 +19,12 @@
   height: 100vh;
   top: 0;
   inset-inline-start: 0;
+  z-index: 100;
 }
 
 .sidebar-logo {
-  font-family: 'Playfair Display', serif;
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 700;
   color: #2c1a0e;
   padding-inline-start: 12px;
   padding-bottom: 20px;
@@ -51,7 +51,7 @@
   text-decoration: none;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
-  font-family: 'DM Sans', sans-serif;
+  font-family: inherit;
 }
 
 .nav-item:hover {
@@ -84,7 +84,7 @@
   color: #a08060;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
-  font-family: 'DM Sans', sans-serif;
+  font-family: inherit;
 }
 
 .collapse-btn:hover,
@@ -98,3 +98,11 @@
   flex: 1;
   padding: 40px;
 }
+
+.icon-mirror {
+  display: inline-block;
+}
+
+[dir="rtl"] .icon-mirror {
+  transform: scaleX(-1);
+}

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderService } from '../../../../../core/services/order.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Order } from '../../../../../core/models/order.model';
 import { OrderDetailsModalComponent } from '../../../../../shared/components/order-details-modal/order-details-modal';
 
@@ -32,7 +32,10 @@ export class Orders implements OnInit {
 
   private terminalStatuses = ['Completed', 'Cancelled', 'Declined'];
 
-  constructor(private orderService: OrderService) {}
+  constructor(
+    private orderService: OrderService,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit(): void {
     this.loadOrders();
@@ -92,8 +95,7 @@ export class Orders implements OnInit {
       },
       error: (err: any) => {
         console.error('Error loading order details', err);
-        this.orderDetailsError =
-          err?.error?.message ?? err?.message ?? 'Failed to load order details';
+        this.orderDetailsError = this.translate.instant('ORDER.LOAD_DETAILS_ERROR');
         this.orderDetailsLoading = false;
       },
     });

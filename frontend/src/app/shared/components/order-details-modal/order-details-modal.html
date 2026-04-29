@@ -29,9 +29,9 @@
           </div>
         </div>
         <div>
-          <strong>Payment Method</strong>
+          <strong>{{ 'ORDER.PAYMENT_METHOD' | translate }}</strong>
           <div>
-            <span class="badge badge-outline">{{ getPaymentMethodLabel(order) }}</span>
+            <span class="badge badge-outline">{{ getPaymentMethodLabel(order) | translate }}</span>
           </div>
         </div>
         <div>
@@ -60,7 +60,7 @@
               · {{ 'ORDER.UNIT_PRICE' | translate }}: {{ line.unitPrice | currency }}
               · {{ lineTotal(line) | currency }}
             </div>
-            <span *ngIf="isSellerBlocked(line)" class="badge bg-danger mt-1">Blocked</span>
+            <span *ngIf="isSellerBlocked(line)" class="badge bg-danger mt-1">{{ 'ORDER.BLOCKED' | translate }}</span>
           </div>
         </div>
 

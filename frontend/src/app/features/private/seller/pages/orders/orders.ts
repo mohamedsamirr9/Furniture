@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { OrderService } from '../../../../../core/services/order.service';
 import { SellerService } from '../../../../../core/services/seller.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Order } from '../../../../../core/models/order.model';
 import { OrderDetailsModalComponent } from '../../../../../shared/components/order-details-modal/order-details-modal';
 
@@ -42,7 +42,8 @@ export class Orders implements OnInit {
   constructor(
     private orderService: OrderService,
     private sellerService: SellerService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -84,7 +85,9 @@ export class Orders implements OnInit {
       next: () => {
         order.status = newStatus;
         
-        this.statusMessage = `Order #${order.id || order.orderId} status updated to ${newStatus}`;
+        const orderId = order.id || order.orderId;
+        const localizedStatus = this.translate.instant('STATUS.' + newStatus.toUpperCase());
+        this.statusMessage = this.translate.instant('ORDER.STATUS_UPDATED', { id: orderId, status: localizedStatus });
         this.statusMessageType = 'success';
         setTimeout(() => this.statusMessage = null, 4000);
 
@@ -101,7 +104,7 @@ export class Orders implements OnInit {
       error: (err: any) => {
         console.error('Error updating order status', err);
         event.target.value = oldStatus;
-        this.statusMessage = 'Failed to update order status';
+        this.statusMessage = this.translate.instant('ORDER.STATUS_ERROR');
         this.statusMessageType = 'error';
         setTimeout(() => this.statusMessage = null, 4000);
       }
@@ -121,8 +124,7 @@ export class Orders implements OnInit {
       },
       error: (err: any) => {
         console.error('Error loading order details', err);
-        this.orderDetailsError =
-          err?.error?.message ?? err?.message ?? 'Failed to load order details';
+        this.orderDetailsError = this.translate.instant('ORDER.LOAD_DETAILS_ERROR');
         this.orderDetailsLoading = false;
       },
     });

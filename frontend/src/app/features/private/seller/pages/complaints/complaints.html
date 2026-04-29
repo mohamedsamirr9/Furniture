@@ -1,21 +1,21 @@
 <div class="page-header">
-  <h1>Complaints</h1>
+  <h1>{{ 'SELLER.COMPLAINTS.TITLE' | translate }}</h1>
 </div>
 <hr class="divider" />
 
 <div class="table-card" *ngIf="!loading && !error">
-  <h2 class="card-title">Complaints</h2>
+  <h2 class="card-title">{{ 'SELLER.COMPLAINTS.TITLE' | translate }}</h2>
   <table class="table">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Customer</th>
-        <th>Order</th>
-        <th>Description</th>
-        <th>Status</th>
-        <th>Date</th>
-        <th>Response</th>
-        <th>Details</th>
+        <th>{{ 'SELLER.COMPLAINTS.ID' | translate }}</th>
+        <th>{{ 'SELLER.COMPLAINTS.CUSTOMER' | translate }}</th>
+        <th>{{ 'SELLER.COMPLAINTS.ORDER' | translate }}</th>
+        <th>{{ 'SELLER.COMPLAINTS.DESC_LABEL' | translate }}</th>
+        <th>{{ 'SELLER.COMPLAINTS.STATUS' | translate }}</th>
+        <th>{{ 'SELLER.COMPLAINTS.DATE' | translate }}</th>
+        <th>{{ 'SELLER.COMPLAINTS.RESPONSE' | translate }}</th>
+        <th>{{ 'SELLER.COMPLAINTS.DETAILS' | translate }}</th>
       </tr>
     </thead>
     <tbody>
@@ -39,7 +39,7 @@
         </td>
         <td>
           <button type="button" class="action-btn view-details-btn" (click)="openComplaintDetails(complaint.id)">
-            View Details
+            {{ 'SELLER.COMPLAINTS.VIEW_DETAILS' | translate }}
           </button>
         </td>
       </tr>
@@ -48,7 +48,7 @@
 </div>
 
 <div class="empty-state" *ngIf="!loading && !error && complaints.length === 0">
-  <p>No complaints found</p>
+  <p>{{ 'SELLER.COMPLAINTS.EMPTY' | translate }}</p>
 </div>
 
 <app-complaint-details-modal

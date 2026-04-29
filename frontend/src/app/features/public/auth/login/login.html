@@ -10,31 +10,31 @@
 
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
-          <label>Email</label>
+          <label>{{ 'AUTH.EMAIL' | translate }}</label>
           <div class="input-group-custom mb-1"
                [class.input-error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
             <i class="bi bi-envelope"></i>
             <input type="email" formControlName="email" placeholder="you@example.com">
           </div>
           <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-text mb-2">
-            <span *ngIf="loginForm.get('email')?.hasError('required')">Email is required.</span>
-            <span *ngIf="loginForm.get('email')?.hasError('email')">Enter a valid email.</span>
+            <span *ngIf="loginForm.get('email')?.hasError('required')">{{ 'AUTH.EMAIL_REQUIRED' | translate }}</span>
+            <span *ngIf="loginForm.get('email')?.hasError('email')">{{ 'AUTH.EMAIL_INVALID' | translate }}</span>
           </div>
           <div *ngIf="!(loginForm.get('email')?.invalid && loginForm.get('email')?.touched)" class="mb-3"></div>
 
-          <label>Password</label>
+          <label>{{ 'AUTH.PASSWORD' | translate }}</label>
           <div class="input-group-custom mb-1"
                [class.input-error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
             <i class="bi bi-lock"></i>
             <input type="password" formControlName="password" placeholder="********">
           </div>
           <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-text mb-1">
-            <span *ngIf="loginForm.get('password')?.hasError('required')">Password is required.</span>
-            <span *ngIf="loginForm.get('password')?.hasError('minlength')">Minimum 6 characters.</span>
+            <span *ngIf="loginForm.get('password')?.hasError('required')">{{ 'AUTH.PASSWORD_REQUIRED' | translate }}</span>
+            <span *ngIf="loginForm.get('password')?.hasError('minlength')">{{ 'AUTH.PASSWORD_MIN' | translate }}</span>
           </div>
 
           <div class="text-end mb-4">
-          <a routerLink="/forgot-password" class="link small">Forgot password?</a>
+          <a routerLink="/forgot-password" class="link small">{{ 'AUTH.FORGOT_PASS' | translate }}</a>
           </div>
 
           <!-- Error Message من السيرفر -->
@@ -44,12 +44,12 @@
 
           <button class="btn-main w-100" [disabled]="isLoading">
             <span *ngIf="isLoading" class="spinner"></span>
-            <span *ngIf="!isLoading">{{ 'AUTH.SIGN_IN' | translate }} →</span>
+            <span *ngIf="!isLoading">{{ 'AUTH.SIGN_IN' | translate }} <span class="icon-mirror">→</span></span>
           </button>
 
           <p class="text-center mt-4">
-            Don't have an account?
-            <a routerLink="/register" class="link">Sign up</a>
+            {{ 'AUTH.NO_ACCOUNT' | translate }}
+            <a routerLink="/register" class="link">{{ 'AUTH.SIGN_UP' | translate }}</a>
           </p>
 
         </form>
@@ -61,7 +61,7 @@
       <div class="image-card">
         <img src="/assets/images/login.jpg">
         <div class="overlay">
-          <span>CURATED COLLECTION</span>
+          <span>{{ 'AUTH.CURATED_COLLECTION' | translate }}</span>
           <h3>{{ 'AUTH.FIND_PERFECT' | translate }}</h3>
           <p>{{ 'AUTH.BROWSE_THOUSANDS' | translate }}</p>
         </div>

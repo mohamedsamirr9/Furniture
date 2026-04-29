@@ -1,6 +1,6 @@
 <div class="seller-profile-root">
   <div *ngIf="loading" class="profile-header">
-    <p>Loading seller profile...</p>
+    <p>{{ 'ALERTS.LOADING' | translate }}</p>
   </div>
 
   <div *ngIf="!loading && error" class="profile-header">
@@ -12,13 +12,13 @@
   <ng-container *ngIf="!loading && seller">
     <div class="profile-header">
       <div class="profile-header-top" *ngIf="editMode">
-        <span class="dashboard-profile-label">Your profile</span>
+        <span class="dashboard-profile-label">{{ 'SELLER_PROFILE.YOUR_PROFILE' | translate }}</span>
         <button type="button" class="btn-edit-dashboard" (click)="toggleEdit()" *ngIf="!isEditing">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
           </svg>
-          Edit
+          {{ 'BUTTONS.EDIT' | translate }}
         </button>
       </div>
 
@@ -83,13 +83,13 @@
                   <line x1="8" y1="2" x2="8" y2="6"/>
                   <line x1="3" y1="10" x2="21" y2="10"/>
                 </svg>
-                Joined {{ seller.joinDate }}
+                {{ 'SELLER_PROFILE.JOINED' | translate }} {{ seller.joinDate | date:'mediumDate' }}
               </span>
               <span class="meta-item rating">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#8B6F4E" stroke="#8B6F4E" stroke-width="2">
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                 </svg>
-                {{ seller.rating }} ({{ seller.reviewsCount }} reviews)
+                {{ seller.rating }} ({{ seller.reviewsCount }} {{ 'SELLER_PROFILE.REVIEWS' | translate }})
               </span>
               <span class="meta-item" *ngIf="editMode && seller.email">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -107,25 +107,25 @@
 
           <form class="profile-info profile-edit-form" [formGroup]="profileForm" *ngIf="editMode && isEditing" (ngSubmit)="saveProfile()">
             <div class="form-group">
-              <label for="sp-name">Name</label>
+              <label for="sp-name">{{ 'ADMIN.NAME' | translate }}</label>
               <input id="sp-name" type="text" formControlName="name" class="form-control" />
-              <div *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched" class="field-error">Name is required.</div>
+              <div *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched" class="field-error">{{ 'SELLER_PROFILE.NAME_REQUIRED' | translate }}</div>
             </div>
             <div class="form-group">
-              <label for="sp-location">Location</label>
+              <label for="sp-location">{{ 'CHECKOUT.CITY' | translate }}</label>
               <input id="sp-location" type="text" formControlName="location" class="form-control" />
-              <div *ngIf="profileForm.get('location')?.invalid && profileForm.get('location')?.touched" class="field-error">Location is required.</div>
+              <div *ngIf="profileForm.get('location')?.invalid && profileForm.get('location')?.touched" class="field-error">{{ 'SELLER_PROFILE.LOCATION_REQUIRED' | translate }}</div>
             </div>
             <div class="form-group">
-              <label for="sp-bio">Bio</label>
+              <label for="sp-bio">{{ 'PRODUCT.DESCRIPTION' | translate }}</label>
               <textarea id="sp-bio" formControlName="bio" class="form-control" rows="4"></textarea>
-              <div *ngIf="profileForm.get('bio')?.invalid && profileForm.get('bio')?.touched" class="field-error">Bio must be at least 10 characters.</div>
+              <div *ngIf="profileForm.get('bio')?.invalid && profileForm.get('bio')?.touched" class="field-error">{{ 'SELLER_PROFILE.BIO_MIN' | translate }}</div>
             </div>
             <div class="form-actions">
               <button type="submit" class="send-btn" [disabled]="isSaving">
-                {{ isSaving ? 'Saving…' : 'Save changes' }}
+                {{ isSaving ? ('BUTTONS.SAVE' | translate) + '…' : ('BUTTONS.SAVE' | translate) }}
               </button>
-              <button type="button" class="cancel-btn" (click)="cancelEdit()" [disabled]="isSaving">Cancel</button>
+              <button type="button" class="cancel-btn" (click)="cancelEdit()" [disabled]="isSaving">{{ 'BUTTONS.CANCEL' | translate }}</button>
             </div>
           </form>
         </div>
@@ -137,21 +137,21 @@
               <circle cx="12" cy="7" r="4"/>
             </svg>
             <span class="stat-value">{{ seller.completedOrders }}</span>
-            <span class="stat-label">Completed</span>
+            <span class="stat-label">{{ 'SELLER_PROFILE.COMPLETED' | translate }}</span>
           </div>
           <div class="stat-card">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B6F4E" stroke-width="2">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
             </svg>
             <span class="stat-value">{{ seller.rating }}</span>
-            <span class="stat-label">Rating</span>
+            <span class="stat-label">{{ 'SELLER_PROFILE.RATING' | translate }}</span>
           </div>
           <div class="stat-card">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B6F4E" stroke-width="2">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
             <span class="stat-value">{{ seller.reviewsCount }}</span>
-            <span class="stat-label">Reviews</span>
+            <span class="stat-label">{{ 'SELLER_PROFILE.REVIEWS' | translate }}</span>
           </div>
         </div>
       </div>
@@ -165,8 +165,8 @@
             <circle cx="8.5" cy="8.5" r="1.5"/>
             <polyline points="21 15 16 10 5 21"/>
           </svg>
-          <h2 class="portfolio-title">Portfolio &amp; Work</h2>
-          <span class="portfolio-count">{{ seller.portfolio.length }} pieces showcased</span>
+          <h2 class="portfolio-title">{{ 'SELLER_PROFILE.PORTFOLIO' | translate }}</h2>
+          <span class="portfolio-count">{{ seller.portfolio.length }} {{ 'SELLER_PROFILE.PIECES_SHOWCASED' | translate }}</span>
         </div>
 
         <div class="portfolio-actions">
@@ -176,28 +176,31 @@
             *ngIf="editMode"
             (click)="openAddWork()"
           >
-            + Add Work
+            {{ 'SELLER_PROFILE.ADD_WORK' | translate }}
           </button>
           <a *ngIf="showRequestCustomCta" routerLink="/customer" class="btn-request">
-            Request Custom Piece
+            {{ 'SELLER_PROFILE.REQUEST_CUSTOM' | translate }}
           </a>
         </div>
       </div>
 
-<div class="portfolio-grid">
-  <div
-    class="portfolio-card"
-    *ngFor="let item of seller.portfolio"
-    [routerLink]="['/products', item.id]"
-    style="cursor:pointer"
-  >
-    <div class="portfolio-img-wrap">
-      <img [src]="item.imageUrl" [alt]="item.title" class="portfolio-img" />
+      <div class="portfolio-grid">
+        <div
+          class="portfolio-card"
+          *ngFor="let item of seller.portfolio"
+          [routerLink]="['/products', item.id]"
+          style="cursor:pointer"
+        >
+          <div class="portfolio-img-wrap">
+            <img [src]="item.imageUrl" [alt]="item.title" class="portfolio-img" />
+          </div>
+          <div class="portfolio-info">
+            <span class="portfolio-category">{{ item.category }}</span>
+            <h3 class="portfolio-name">{{ item.title }}</h3>
+            <p class="portfolio-desc">{{ item.description }}</p>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="portfolio-info">
-      <span class="portfolio-category">{{ item.category }}</span>
-      <h3 class="portfolio-name">{{ item.title }}</h3>
-      <p class="portfolio-desc">{{ item.description }}</p>
-    </div>
-  </div>
+  </ng-container>
 </div>

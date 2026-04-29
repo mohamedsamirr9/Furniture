@@ -5,7 +5,7 @@
 
     <nav class="sidebar-nav">
       <a class="nav-item" routerLink="/seller/profile" routerLinkActive="active">
-        👤 Profile
+        👤 {{ 'NAV.MY_PROFILE' | translate }}
       </a>
       <a class="nav-item" routerLink="/seller/dashboard" routerLinkActive="active">
         ⊞ {{ 'SELLER_SIDEBAR.DASHBOARD' | translate }}
@@ -28,8 +28,12 @@
     </nav>
 
     <div class="sidebar-footer">
-      <div class="collapse-btn">› {{ 'SELLER_SIDEBAR.COLLAPSE' | translate }}</div>
-      <div class="signout-btn" (click)="signOut()">→ {{ 'SELLER_SIDEBAR.SIGN_OUT' | translate }}</div>
+      <div class="collapse-btn">
+        <span class="icon-mirror">›</span> {{ 'SELLER_SIDEBAR.COLLAPSE' | translate }}
+      </div>
+      <div class="signout-btn" (click)="signOut()">
+        <span class="icon-mirror">→</span> {{ 'SELLER_SIDEBAR.SIGN_OUT' | translate }}
+      </div>
     </div>
   </aside>
 
