@@ -20,12 +20,7 @@ const TERMINAL_STATUSES = ['Completed', 'Cancelled', 'Declined'];
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
-  @ViewChild('rebuildToast') rebuildToastRef!: ElementRef;
-
-  isRebuilding = false;
   isLoading = true;
-  toastMessage = '';
-  toastClass = 'text-bg-success';
   private toastInstance: any;
 
   // Stat cards
@@ -123,28 +118,6 @@ export class Dashboard implements OnInit {
     });
   }
 
-  rebuildSearchIndex(): void {
-    if (!this.isAdmin || this.isRebuilding) return;
-
-    const confirmed = confirm(this.translate.instant('SEARCH.REBUILD_CONFIRM'));
-    if (!confirmed) return;
-
-    this.isRebuilding = true;
-    this.searchService
-      .rebuildIndex()
-      .pipe(finalize(() => (this.isRebuilding = false)))
-      .subscribe({
-        next: () => this.showToast('SEARCH.REBUILD_SUCCESS', 'text-bg-success'),
-        error: () => this.showToast('SEARCH.REBUILD_ERROR', 'text-bg-danger'),
-      });
-  }
-
   private showToast(messageKey: string, toastClass: string): void {
-    this.toastMessage = this.translate.instant(messageKey);
-    this.toastClass = toastClass;
-    if (!this.rebuildToastRef) return;
-    const toastElement = this.rebuildToastRef.nativeElement;
-    this.toastInstance = this.toastInstance || new bootstrap.Toast(toastElement, { delay: 3500 });
-    this.toastInstance.show();
   }
 }

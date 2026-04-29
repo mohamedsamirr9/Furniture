@@ -213,16 +213,7 @@
               <div class="card w-100 border-0 overflow-hidden product-card image-result-card" [routerLink]="['/products', result.productId]" style="cursor:pointer">
                 <div class="img-container">
                   <img [src]="result.imageUrl" class="card-img-top" [alt]="result.name" loading="lazy" />
-                  <div class="similarity-badge">
-                    <div class="similarity-progress">
-                      <div class="progress-bar" [style.width.%]="result.similarity * 100"
-                        [class.bg-success]="result.similarity >= 0.8"
-                        [class.bg-warning]="result.similarity >= 0.5 && result.similarity < 0.8"
-                        [class.bg-danger]="result.similarity < 0.5">
-                      </div>
-                    </div>
-                    <span class="similarity-text">{{ result.similarity * 100 | number:'1.0-0' }}% {{ 'PRODUCT.MATCH' | translate }}</span>
-                  </div>
+                  
                 </div>
                 <div class="card-body p-3 d-flex flex-column">
                   <h6 class="card-title fw-bold m-0 text-truncate mb-2">{{ result.name }}</h6>
