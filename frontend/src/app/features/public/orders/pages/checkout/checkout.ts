@@ -174,9 +174,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       } as any).subscribe({
         next: (response: any) => {
           this.isLoading = false;
-          this.cartService.clearCart().subscribe(() => {
-            const orderId = response?.orderId ?? response?.OrderId ?? response?.id;
-            if (this.paymentMethod === 'Card') {
+          const orderId = response?.orderId ?? response?.OrderId ?? response?.id;
+
+          if (this.paymentMethod === 'Card') {
+            this.cartService.clearCart().subscribe(() => {
               this.router.navigate(['/orders/pay'], {
                 state: {
                   orderId,
@@ -184,23 +185,25 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                   paymentMethod: 'card'
                 }
               });
-            } else {
-              this.paymentService.createPayment(orderId, 'cash').subscribe({
-                next: () => {
+            });
+          } else {
+            this.paymentService.createPayment(orderId, 'cash').subscribe({
+              next: () => {
+                this.cartService.clearCart().subscribe(() => {
                   this.router.navigate(['/orders/confirmed'], {
                     state: {
                       orderId,
                       orderResponse: response
                     }
                   });
-                },
-                error: (err: any) => {
-                  console.error('Error recording cash payment', err);
-                  alert(err?.error?.message || 'Failed to finalize cash order. Please try again.');
-                }
-              });
-            }
-          });
+                });
+              },
+              error: (err: any) => {
+                console.error('Error recording cash payment', err);
+                alert(err?.error?.message || 'Failed to finalize cash order. Please try again.');
+              }
+            });
+          }
         },
         error: (err: any) => {
           this.isLoading = false;

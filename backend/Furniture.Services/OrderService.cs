@@ -158,11 +158,6 @@ namespace Furniture.Services.Implementations
             await _unitOfWork.GetRepository<Order, int>().AddAsync(newOrder);
 
 
-            foreach (var item in cart.CartItems.ToList())
-            {
-                cart.CartItems.Remove(item);
-            }
-
             await _unitOfWork.SaveChangesAsync();
 
             return new OrderResponseDTO

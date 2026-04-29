@@ -205,7 +205,10 @@ namespace Furniture.Services.Implementations
             var payment = await GetExistingPaymentAsync(orderId);
 
             if (payment == null)
+            {
+                _logger.LogError("Cannot confirm cash payment for Order {OrderId}: Payment record missing.", orderId);
                 return;
+            }
 
             if (payment.Method != PaymentMethod.Cash)
                 return;
