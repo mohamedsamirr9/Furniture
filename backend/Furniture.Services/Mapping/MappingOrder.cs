@@ -9,10 +9,21 @@ namespace Furniture.Services.Mappings
         public MappingOrder()
         {
             CreateMap<Order, OrderDTO>()
+                .ForMember(dest => dest.SellerId,
+                    opt => opt.MapFrom(src => src.SellerId))
                 .ForMember(dest => dest.Status,
                     opt => opt.MapFrom(src => src.Status.ToString()))
                 .ForMember(dest => dest.PaymentMethod,
-                    opt => opt.MapFrom(src => src.Payment != null ? src.Payment.Method.ToString() : "Cash"))
+                    opt => opt.MapFrom(src => src.Payment != null ? src.Payment.Method.ToString() : null))
+                .ForMember(dest => dest.PaymentStatus,
+                    opt => opt.MapFrom(src =>
+                        src.Payment == null
+                            ? OrderPaymentStatus.Unpaid
+                            : src.Payment.Status == Domain.Models.Enum.PaymentStatus.Completed
+                                ? OrderPaymentStatus.Paid
+                                : src.Payment.Status == Domain.Models.Enum.PaymentStatus.Failed || src.Payment.Status == Domain.Models.Enum.PaymentStatus.Cancelled
+                                    ? OrderPaymentStatus.Failed
+                                    : OrderPaymentStatus.Unpaid))
                 .ForMember(dest => dest.UserName,
                     opt => opt.MapFrom(src => src.User != null ? src.User.UserName : null))
                 .ForMember(dest => dest.OrderItems,

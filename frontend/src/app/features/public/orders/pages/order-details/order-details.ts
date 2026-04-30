@@ -107,17 +107,36 @@ export class OrderDetailsComponent implements OnInit {
 
   get displayStatus(): string {
     if (!this.order) return '';
-    const paymentMethod = (this.order.paymentMethod || 'Cash').toLowerCase();
-    if (paymentMethod === 'cash' && this.order.status?.toLowerCase() === 'paid') {
+    const paymentStatus = (this.order.paymentStatus || '').toLowerCase();
+    const paymentMethod = (this.order.paymentMethod || '').toLowerCase();
+    if ((paymentStatus === 'unpaid' || paymentMethod === 'cash') && this.order.status?.toLowerCase() === 'paid') {
       return 'Processing';
     }
     return this.order.status;
   }
 
   get paymentMethodLabel(): string {
-    return (this.order?.paymentMethod || 'Cash') === 'Card'
-      ? 'Online Payment'
-      : 'Cash on Delivery';
+    const paymentStatus = (this.order?.paymentStatus || '').toLowerCase();
+    const paymentMethod = (this.order?.paymentMethod || '').toLowerCase();
+    if (paymentStatus === 'paid') return 'Online Payment';
+    if (paymentStatus === 'failed') return 'Payment Failed';
+    if (paymentStatus === 'unpaid' && paymentMethod === 'cash') return 'Cash on Delivery';
+    if (paymentStatus === 'unpaid' && paymentMethod === 'card') return 'Unpaid';
+    if (paymentStatus === 'unpaid') return 'Unpaid';
+    if (paymentMethod === 'cash') return 'Cash on Delivery';
+    if (paymentMethod === 'card') return 'Online Payment';
+    return 'Unpaid';
+  }
+
+  get paymentBadgeClass(): string {
+    const paymentStatus = (this.order?.paymentStatus || '').toLowerCase();
+    const paymentMethod = (this.order?.paymentMethod || '').toLowerCase();
+    if (paymentStatus === 'paid') return 'bg-primary';
+    if (paymentStatus === 'failed') return 'bg-danger';
+    if (paymentStatus === 'unpaid') return 'bg-warning text-dark';
+    if (paymentMethod === 'card') return 'bg-primary';
+    if (paymentMethod === 'cash') return 'bg-secondary';
+    return 'bg-warning text-dark';
   }
 
   isSellerBlocked(item: any): boolean {

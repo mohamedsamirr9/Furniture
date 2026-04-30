@@ -103,20 +103,26 @@ namespace Furniture.Services.Implementations
             var payoutSpec = new SellerPayoutSpecification(seller.Id);
             var allPayouts = (await _unitOfWork.GetRepository<SellerPayout, int>()
                 .GetAllAsync(payoutSpec)).ToList();
-
-            var validPayouts = allPayouts
-                .Where(p => p.Status != PayoutStatus.Cancelled)
+            
+            // Payment is the single source of truth for financial classification.
+            // Never infer card/cash from missing payment records.
+            var paidCardPayouts = allPayouts
+                .Where(p =>
+                    p.Order?.Payment != null &&
+                    p.Order.Payment.Status == PaymentStatus.Completed &&
+                    p.Order.Payment.Method == PaymentMethod.Card)
                 .ToList();
 
             return new SellerEarningsDTO
             {
-                TotalSales = validPayouts.Sum(p => p.OrderItemsTotal),
-                TotalCommission = validPayouts.Sum(p => p.CommissionAmount),
-                NetEarnings = validPayouts.Sum(p => p.NetAmount),
-                PendingAmount = validPayouts
+                // Online earnings = paid Paymob/Card orders only.
+                TotalSales = paidCardPayouts.Sum(p => p.OrderItemsTotal),
+                TotalCommission = paidCardPayouts.Sum(p => p.CommissionAmount),
+                NetEarnings = paidCardPayouts.Sum(p => p.NetAmount),
+                PendingAmount = paidCardPayouts
                     .Where(p => p.Status == PayoutStatus.Pending || p.Status == PayoutStatus.Processing)
                     .Sum(p => p.NetAmount),
-                PaidAmount = validPayouts
+                PaidAmount = paidCardPayouts
                     .Where(p => p.Status == PayoutStatus.Completed)
                     .Sum(p => p.NetAmount)
             };

@@ -35,6 +35,20 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   ];
   private destroy$ = new Subject<void>();
 
+  private extractOrderIds(response: any): number[] {
+    // Split-orders response shape: { orders: [{ orderId: ... }, ...] }
+    const orders = response?.orders ?? response?.Orders;
+    if (Array.isArray(orders)) {
+      return orders
+        .map((o: any) => o?.orderId ?? o?.OrderId ?? o?.id)
+        .filter((id: any) => typeof id === 'number' && id > 0);
+    }
+
+    // Legacy single-order response shape
+    const single = response?.orderId ?? response?.OrderId ?? response?.id;
+    return typeof single === 'number' && single > 0 ? [single] : [];
+  }
+
   constructor(
     private fb: FormBuilder,
     private cartService: CartService,
@@ -174,34 +188,52 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       } as any).subscribe({
         next: (response: any) => {
           this.isLoading = false;
-          const orderId = response?.orderId ?? response?.OrderId ?? response?.id;
+          const orderIds = this.extractOrderIds(response);
+          const orderId = orderIds[0];
+          if (!orderId) {
+            alert('Failed to place order. Please try again.');
+            return;
+          }
 
           if (this.paymentMethod === 'Card') {
             this.cartService.clearCart().subscribe(() => {
               this.router.navigate(['/orders/pay'], {
                 state: {
                   orderId,
+                  orderIds,
                   orderResponse: response,
                   paymentMethod: 'card'
                 }
               });
             });
           } else {
-            this.paymentService.createPayment(orderId, 'cash').subscribe({
-              next: () => {
-                this.cartService.clearCart().subscribe(() => {
-                  this.router.navigate(['/orders/confirmed'], {
-                    state: {
-                      orderId,
-                      orderResponse: response
-                    }
-                  });
-                });
-              },
-              error: (err: any) => {
-                console.error('Error recording cash payment', err);
-                alert(err?.error?.message || 'Failed to finalize cash order. Please try again.');
-              }
+            // Record cash payment per created order
+            let completed = 0;
+            let failed = false;
+
+            orderIds.forEach((id: number) => {
+              this.paymentService.createPayment(id, 'cash').subscribe({
+                next: () => {
+                  completed += 1;
+                  if (!failed && completed === orderIds.length) {
+                    this.cartService.clearCart().subscribe(() => {
+                      this.router.navigate(['/orders/confirmed'], {
+                        state: {
+                          orderId,
+                          orderIds,
+                          orderResponse: response
+                        }
+                      });
+                    });
+                  }
+                },
+                error: (err: any) => {
+                  if (failed) return;
+                  failed = true;
+                  console.error('Error recording cash payment', err);
+                  alert(err?.error?.message || 'Failed to finalize cash order. Please try again.');
+                }
+              });
             });
           }
         },

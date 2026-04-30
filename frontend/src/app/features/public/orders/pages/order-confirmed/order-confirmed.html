@@ -14,15 +14,18 @@
         <h1 class="display-6 fw-bold mb-3">{{ 'CONFIRMED.TITLE' | translate }}</h1>
         <p class="text-muted mb-4 fs-5">{{ 'CONFIRMED.DESC' | translate }}</p>
 
-     <div class="confirmed-card mb-5" *ngIf="orderResponse">
+     <div class="confirmed-card mb-5" *ngIf="orders?.length">
   <div class="confirmed-card-row">
     <div class="confirmed-cell-left">
       <span class="confirmed-label">{{ 'CONFIRMED.ORDER_NUMBER' | translate }}</span>
-      <span class="confirmed-value">#{{ orderResponse.orderId || orderResponse.id }}</span>
+      <span class="confirmed-value">#{{ primaryOrderId }}</span>
+      <div *ngIf="orders.length > 1" class="text-muted small mt-1">
+        {{ orders.length }} orders
+      </div>
     </div>
     <div class="confirmed-cell-right">
       <span class="confirmed-label">{{ 'CONFIRMED.TOTAL_PROCESSED' | translate }}</span>
-      <span class="confirmed-total">${{ orderResponse.totalPrice | number:'1.2-2' }}</span>
+      <span class="confirmed-total">${{ totalProcessed | number:'1.2-2' }}</span>
     </div>
   </div>
 </div>

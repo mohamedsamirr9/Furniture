@@ -29,17 +29,24 @@ export class OrderDetailsModalComponent {
   }
 
   getDisplayStatus(order: Order): string {
-    const paymentMethod = (order.paymentMethod || 'Cash').toLowerCase();
-    if (paymentMethod === 'cash' && order.status?.toLowerCase() === 'paid') {
+    const paymentStatus = (order.paymentStatus || '').toLowerCase();
+    const paymentMethod = (order.paymentMethod || '').toLowerCase();
+    if ((paymentStatus === 'unpaid' || paymentMethod === 'cash') && order.status?.toLowerCase() === 'paid') {
       return 'Processing';
     }
     return order.status;
   }
 
   getPaymentMethodLabel(order: Order): string {
-    return (order.paymentMethod || 'Cash') === 'Card'
-      ? 'ORDER.ONLINE_PAYMENT'
-      : 'ORDER.CASH_ON_DELIVERY';
+    const paymentStatus = (order.paymentStatus || '').toLowerCase();
+    const paymentMethod = (order.paymentMethod || '').toLowerCase();
+    if (paymentStatus === 'paid') return 'ORDER.ONLINE_PAYMENT';
+    if (paymentStatus === 'failed') return 'ORDER.PAYMENT_FAILED';
+    if (paymentStatus === 'unpaid' && paymentMethod === 'cash') return 'ORDER.CASH_ON_DELIVERY';
+    if (paymentStatus === 'unpaid') return 'ORDER.UNPAID';
+    if (paymentMethod === 'cash') return 'ORDER.CASH_ON_DELIVERY';
+    if (paymentMethod === 'card') return 'ORDER.ONLINE_PAYMENT';
+    return 'ORDER.UNPAID';
   }
 
   isSellerBlocked(line: any): boolean {

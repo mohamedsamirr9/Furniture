@@ -10,8 +10,10 @@ namespace Furniture.Domain.Models
     public class Payment
     {
         public int Id { get; set; }
-        public int OrderId { get; set; }
-        public Order Order { get; set; } = null!;
+        // Legacy optional link (kept for backward compatibility).
+        public int? OrderId { get; set; }
+        public Order? Order { get; set; }
+        public ICollection<Order>? Orders { get; set; }
         public decimal Amount { get; set; }
         public string Currency { get; set; } = "EGP";
         public PaymentMethod Method { get; set; }

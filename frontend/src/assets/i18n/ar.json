@@ -240,6 +240,8 @@
     "PAYMENT_METHOD": "طريقة الدفع",
     "ONLINE_PAYMENT": "دفع أونلاين (فيزا/بطاقة)",
     "CASH_ON_DELIVERY": "دفع عند الاستلام (كاش)",
+    "UNPAID": "غير مدفوع",
+    "PAYMENT_FAILED": "فشل الدفع",
     "BLOCKED": "محظور"
   },
   "REVIEW": {

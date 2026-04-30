@@ -53,8 +53,11 @@ export class MyOrdersComponent implements OnInit {
   }
 
   getDisplayStatus(order: Order): string {
-    const paymentMethod = (order.paymentMethod || 'Cash').toLowerCase();
-    if (paymentMethod === 'cash' && order.status?.toLowerCase() === 'paid') {
+    const paymentStatus = (order.paymentStatus || '').toLowerCase();
+    const paymentMethod = (order.paymentMethod || '').toLowerCase();
+
+    // Backward compatibility: old API used paymentMethod, new API uses paymentStatus
+    if ((paymentStatus === 'unpaid' || paymentMethod === 'cash') && order.status?.toLowerCase() === 'paid') {
       return 'Processing';
     }
     return order.status;

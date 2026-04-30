@@ -18,6 +18,8 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class Payment implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
+  private refreshHandle: ReturnType<typeof setInterval> | null = null;
+  private readonly onWindowFocus = () => this.refreshPaymentData();
 
   earnings: SellerEarnings = {
     totalSales: 0,
@@ -61,15 +63,31 @@ export class Payment implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.refreshPaymentData();
+    this.loadSellerProfile();
+    window.addEventListener('focus', this.onWindowFocus);
+    this.refreshHandle = setInterval(() => this.refreshPaymentData(), 15000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshHandle) {
+      clearInterval(this.refreshHandle);
+      this.refreshHandle = null;
+    }
+    window.removeEventListener('focus', this.onWindowFocus);
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private refreshPaymentData(): void {
     this.loadEarnings();
     this.loadOrders();
     this.loadPayouts();
     this.loadSellerProfile();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  retryLoad(): void {
+    this.refreshPaymentData();
   }
 
   loadEarnings(): void {
@@ -99,8 +117,12 @@ export class Payment implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.orders = data;
-          this.payoutOrders = this.orders.filter(o => o.paymentMethod === 'Card');
-          this.cashOrders = this.orders.filter(o => o.paymentMethod === 'Cash');
+          this.payoutOrders = this.orders.filter(
+            o => (o.paymentMethod || '').toLowerCase() === 'card'
+          );
+          this.cashOrders = this.orders.filter(
+            o => (o.paymentMethod || '').toLowerCase() === 'cash'
+          );
           this.ordersLoading = false;
           this.applyPayoutsFilter();
         },

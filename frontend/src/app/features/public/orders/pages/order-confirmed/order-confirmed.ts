@@ -43,6 +43,9 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class OrderConfirmedComponent implements OnInit {
   orderResponse: any;
+  orders: any[] = [];
+  totalProcessed = 0;
+  primaryOrderId: number | null = null;
 
   constructor(private router: Router) {
     const nav = this.router.getCurrentNavigation();
@@ -55,7 +58,26 @@ export class OrderConfirmedComponent implements OnInit {
     if (!this.orderResponse && historyState?.orderResponse) {
       this.orderResponse = historyState.orderResponse;
     }
+
+    this.hydrateFromResponse(this.orderResponse);
   }
 
   ngOnInit(): void {}
+
+  private hydrateFromResponse(response: any): void {
+    if (!response) return;
+
+    const orders = response?.orders ?? response?.Orders;
+    if (Array.isArray(orders) && orders.length > 0) {
+      this.orders = orders;
+      this.primaryOrderId = orders[0]?.orderId ?? orders[0]?.OrderId ?? orders[0]?.id ?? null;
+      this.totalProcessed = orders.reduce((sum: number, o: any) => sum + (Number(o?.totalPrice ?? o?.TotalPrice ?? 0) || 0), 0);
+      return;
+    }
+
+    // legacy single-order response
+    this.orders = [response];
+    this.primaryOrderId = response?.orderId ?? response?.OrderId ?? response?.id ?? null;
+    this.totalProcessed = Number(response?.totalPrice ?? response?.TotalPrice ?? 0) || 0;
+  }
 }

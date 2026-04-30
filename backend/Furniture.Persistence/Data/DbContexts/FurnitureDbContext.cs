@@ -180,10 +180,22 @@ namespace Furniture.Persistence.Data.DbContexts
                       .HasForeignKey(o => o.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
 
+                entity.HasOne(o => o.Seller)
+                      .WithMany()
+                      .HasForeignKey(o => o.SellerId)
+                      .OnDelete(DeleteBehavior.Restrict)
+                      .IsRequired(false);
+
                 entity.HasOne(o => o.ShippingRule)
                      .WithMany(sr => sr.Orders)
                      .HasForeignKey(o => o.ShippingRuleId)
                      .OnDelete(DeleteBehavior.Restrict)
+                     .IsRequired(false);
+
+                entity.HasOne(o => o.Payment)
+                     .WithMany(p => p.Orders)
+                     .HasForeignKey(o => o.PaymentId)
+                     .OnDelete(DeleteBehavior.SetNull)
                      .IsRequired(false);
             });
 
@@ -352,11 +364,12 @@ namespace Furniture.Persistence.Data.DbContexts
                   entity.Property(p => p.Amount)
                         .HasColumnType("decimal(18,2)");
 
-                  // Payment → Order (1-1) 
+                  // Legacy optional link Payment → Order (kept for old data)
                   entity.HasOne(p => p.Order)
-                        .WithOne(o => o.Payment)
-                        .HasForeignKey<Payment>(p => p.OrderId)
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey(p => p.OrderId)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired(false);
             });
             
             //seller profile

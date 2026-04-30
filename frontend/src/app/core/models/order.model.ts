@@ -16,6 +16,7 @@ export interface Order {
   totalPrice: number;
   orderDate: string;
   status: string;
+  paymentStatus?: 'Unpaid' | 'Paid' | 'Failed';
   paymentMethod?: 'Cash' | 'Card';
   shippingAddress: string;
   createdAt: string;
