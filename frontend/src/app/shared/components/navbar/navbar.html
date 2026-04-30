@@ -107,6 +107,7 @@
       </ng-template>
 
       @if (authService.isLoggedIn()) {
+        <app-notification></app-notification>
         <app-chat-widget></app-chat-widget>
       }
     </div>

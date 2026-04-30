@@ -13,7 +13,10 @@ import { MyOrdersComponent } from './orders/pages/my-orders/my-orders';
 import { OrderDetailsComponent } from './orders/pages/order-details/order-details';
 import { WishlistComponent } from './wishlist/wishlist/wishlist';
 import { SellerProfileComponent } from './seller-profile/pages/seller-profile/seller-profile';
+import { CustomRequestComponent } from '../private/customer/pages/custom-request/custom-request';
 import { authGuard } from '../../core/guards/auth.guard';
+import { CustomRequestDetailsComponent } from './notification/component/custom-request-details/custom-request-details';
+
 
 export const PUBLIC_ROUTES: Routes = [
   {
@@ -31,6 +34,7 @@ export const PUBLIC_ROUTES: Routes = [
       { path: 'orders', component: MyOrdersComponent, canActivate: [authGuard] },
       { path: 'wishlist', component: WishlistComponent, canActivate: [authGuard] },
       { path: 'sellers/:id', component: SellerProfileComponent },
+      { path: 'custom-requests/:id', component: CustomRequestDetailsComponent, canActivate: [authGuard] },
     ],
   },
 ];

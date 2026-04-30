@@ -25,8 +25,13 @@ export class CustomRequestService {
   uploadImage(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', 'product_images'); // Reusing existing preset
+    formData.append('upload_preset', 'product_images');  
 
     return this.http.post<any>('https://api.cloudinary.com/v1_1/dcsd2lm6l/image/upload', formData);
   }
+
+  getRequestById(id: number): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/${id}`);
+}
+
 }

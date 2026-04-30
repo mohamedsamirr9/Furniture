@@ -1,0 +1,19 @@
+<div class="details-container">
+  <div *ngIf="isLoading" class="loading">Loading...</div>
+
+  <div *ngIf="!isLoading && request">
+    <h2>Custom Request Details</h2>
+
+    <div class="detail-card">
+      <p><strong>Description:</strong> {{ request.description }}</p>
+      <p><strong>Budget:</strong> {{ request.budget | currency:'EGP' }}</p>
+      <p><strong>Status:</strong> <span class="status">{{ request.status }}</span></p>
+      <!-- <!-- <p><strong>Buyer:</strong> {{ request.buyerName }}</p> -->
+      <img *ngIf="request.imageUrl" [src]="request.imageUrl" alt="Request Image" />
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && !request">
+    <p>Request not found.</p>
+  </div>
+</div>

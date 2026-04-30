@@ -6,11 +6,12 @@ import { WishlistService } from '../../../core/services/wishlist.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { ChatWidgetComponent } from '../chat-widget/chat-widget';
+import { NotificationComponent } from '../../../features/public/notification/component/notification/notification';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterModule, CommonModule, TranslateModule, ChatWidgetComponent],
+  imports: [RouterModule, CommonModule, TranslateModule, ChatWidgetComponent, NotificationComponent],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })

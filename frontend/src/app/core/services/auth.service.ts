@@ -14,6 +14,7 @@ import {
   BecomeSellerDto,
   ResetPasswordDto
 } from '../models/auth.model';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,12 +25,14 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<UserDto | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      this.currentUserSubject.next(JSON.parse(savedUser));
-    }
+  constructor(private http: HttpClient, private notificationService: NotificationService) {
+  const savedUser = localStorage.getItem('user');
+  if (savedUser) {
+    this.currentUserSubject.next(JSON.parse(savedUser));
+    const token = localStorage.getItem('token');
+    if (token) this.notificationService.startConnection(token);
   }
+}
 
   get token(): string | null {
     return localStorage.getItem('token');
@@ -69,6 +72,7 @@ export class AuthService {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     this.currentUserSubject.next(null);
+    this.notificationService.stopConnection();
 
     // Only call revoke if we had a refresh token
     if (refreshToken) {
@@ -126,7 +130,10 @@ export class AuthService {
     const refreshToken = authResult.refreshToken || authResult.RefreshToken;
     const user = authResult.user || authResult.User;
 
-    if (token) localStorage.setItem('token', token);
+    if (token) {
+      localStorage.setItem('token', token);
+      this.notificationService.startConnection(token); 
+    }    
     if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
     if (user) {
       localStorage.setItem('user', JSON.stringify(user));
