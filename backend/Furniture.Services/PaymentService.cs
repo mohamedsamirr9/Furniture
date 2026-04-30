@@ -357,9 +357,17 @@ namespace Furniture.Services.Implementations
             var payouts = new List<SellerPayout>();
             foreach (var order in orders)
             {
+                var existingPayouts = await _unitOfWork.GetRepository<SellerPayout, int>()
+                    .GetAllAsync(new SellerPayoutByOrderIdSpecification(order.Id));
+
                 foreach (var group in order.OrderItems!.GroupBy(oi => oi.SellerId))
                 {
                     var sellerProfile = await GetSellerProfileAsync(group.Key);
+
+                    // Minimal safety guard: prevent duplicate payout creation
+                    // for the same (OrderId + SellerId) pair.
+                    if (existingPayouts.Any(p => p.SellerProfileId == sellerProfile.Id))
+                        continue;
 
                     var itemsTotal = Math.Round(group.Sum(oi => oi.UnitPrice * oi.Quantity), 2);
                     var commission = Math.Round(itemsTotal * (sellerProfile.CommissionRate / 100m), 2);
