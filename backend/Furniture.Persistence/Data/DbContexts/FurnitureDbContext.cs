@@ -171,6 +171,12 @@ namespace Furniture.Persistence.Data.DbContexts
 
                 entity.Property(o => o.TotalPrice)
                       .HasColumnType("decimal(18,2)");
+                
+                entity.Property(o => o.SubTotal)
+                      .HasColumnType("decimal(18,2)");
+
+                entity.Property(o => o.ShippingCost)
+                      .HasColumnType("decimal(18,2)");
 
                 entity.Property(o => o.CreatedAt)
                       .HasDefaultValueSql("GETDATE()");
@@ -185,6 +191,7 @@ namespace Furniture.Persistence.Data.DbContexts
                      .HasForeignKey(o => o.ShippingRuleId)
                      .OnDelete(DeleteBehavior.Restrict)
                      .IsRequired(false);
+                
             });
 
             //order item
@@ -394,6 +401,11 @@ namespace Furniture.Persistence.Data.DbContexts
 
                   entity.Property(e => e.IsBlocked)
                         .HasDefaultValue(false);
+                  
+                  entity.Property(e => e.BlockReason)
+                        .HasMaxLength(500);
+
+                  entity.Property(e => e.BlockedAt);
             });
 
             //seller payout
@@ -513,6 +525,14 @@ namespace Furniture.Persistence.Data.DbContexts
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired(false);    
             });
+            
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                  entity.HasOne(n => n.User)
+                        .WithMany()
+                        .HasForeignKey(n => n.UserId)
+                        .OnDelete(DeleteBehavior.Cascade);
+            });
 
 
         }
@@ -542,6 +562,7 @@ namespace Furniture.Persistence.Data.DbContexts
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<CommissionTransaction> CommissionTransactions { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
 
     }
