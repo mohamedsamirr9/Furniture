@@ -39,6 +39,22 @@ export class AuthService {
     return localStorage.getItem('refreshToken');
   }
 
+  get currentUserId(): string | null {
+    const fromUser = this.currentUserSubject.value?.id;
+    if (fromUser) return fromUser;
+
+    const decoded = this.decodeToken();
+    if (!decoded) return null;
+
+    // Standard ASP.NET Core NameIdentifier claim key
+    return (
+      decoded['nameid'] ||
+      decoded['ClaimTypes.NameIdentifier'] ||
+      decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] ||
+      null
+    );
+  }
+
   register(data: RegisterDto): Observable<AuthResponseDto> {
     return this.http.post<AuthResponseDto>(`${this.baseUrl}/register`, data);
   }
@@ -56,6 +72,7 @@ export class AuthService {
     return this.http.post<AuthResponseDto>(`${this.baseUrl}/refresh`, { token: refreshToken }).pipe(
       tap((response) => this.setSession(response)),
       catchError((err: any) => {
+        this.logout();
         return throwError(() => err);
       })
     );
@@ -135,17 +152,13 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    const hasToken = !!this.token;
-    const hasUser = !!this.currentUserSubject.value;
-    return hasToken && hasUser;
+    return this.isTokenValid();
   }
 
   getUserRole(): string | null {
-    const token = this.token;
-    if (!token) return null;
-
     try {
-      const decoded: any = jwtDecode(token);
+      const decoded: any = this.decodeToken();
+      if (!decoded) return null;
       // Standard ASP.NET Core Role claim key
       const role = decoded['role'] || 
                    decoded['ClaimTypes.Role'] || 
@@ -156,6 +169,27 @@ export class AuthService {
       console.error('Failed to decode token', e);
       return null;
     }
+  }
+
+  private decodeToken(): any | null {
+    const token = this.token;
+    if (!token) return null;
+    try {
+      return jwtDecode<any>(token);
+    } catch {
+      return null;
+    }
+  }
+
+  private isTokenValid(): boolean {
+    const decoded = this.decodeToken();
+    if (!decoded) return false;
+
+    const exp: number | undefined = decoded['exp'];
+    if (!exp) return true; // if no exp claim, treat as present (avoid breaking)
+
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    return exp > nowSeconds;
   }
 
   getAllUsers(): Observable<any[]> {

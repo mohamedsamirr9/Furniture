@@ -132,8 +132,13 @@ namespace Furniture.web
 
         [Authorize(Roles = "admin,seller,buyer")]
         [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(role)) return Unauthorized();
+
+            await _complaintService.DeleteAsync(id, userId, role);
             return NoContent();
         }
     }

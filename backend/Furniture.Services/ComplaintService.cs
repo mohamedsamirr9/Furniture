@@ -10,6 +10,19 @@ namespace Furniture.Services
 {
     public class ComplaintService(IUnitOfWork _unitOfWork, IMapper _mapper) : IComplaintService
     {
+        public async Task DeleteAsync(int id, string actorUserId, string actorRole)
+        {
+            var complaint = await GetComplaintDetails(id);
+            if (!CanAccessComplaint(complaint, actorUserId, actorRole))
+            {
+                throw new InvalidOperationException("Unauthorized to access this complaint.");
+            }
+
+            var repo = _unitOfWork.GetRepository<Complaint, int>();
+            repo.Remove(complaint);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
         public async Task CloseAsync(int id, string userId, string role)
         {
             var complaint = await GetComplaintDetails(id);
