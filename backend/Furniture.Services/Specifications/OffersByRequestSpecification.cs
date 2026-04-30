@@ -13,7 +13,9 @@ namespace Furniture.Services.Specifications
         public OffersByRequestSpecification(int requestId)
        : base(o => o.CustomRequestId == requestId)
         {
-            AddOrderByDescending(o => o.Price); 
+            AddInclude(o => o.Seller);        
+        AddInclude(o => o.CustomRequest); 
+        AddOrderByDescending(o => o.Price);
         }
     }
 }

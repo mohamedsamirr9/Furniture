@@ -9,6 +9,7 @@ namespace Furniture.Services.Specifications
         public OffersByOrderIdsSpecification(List<int> orderIds) 
             : base(o => o.OrderId.HasValue && orderIds.Contains(o.OrderId.Value))
         {
+            AddInclude(o => o.Seller);
             AddInclude(o => o.CustomRequest);
         }
     }

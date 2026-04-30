@@ -19,7 +19,8 @@ namespace Furniture.Services.Mapping
                        opt => opt.MapFrom(src => OfferStatus.Pending));
 
             CreateMap<Offer, OfferDto>()
-                .ForMember(dest => dest.RequestStatus, opt => opt.MapFrom(src => src.CustomRequest.Status));
+                .ForMember(dest => dest.RequestStatus, opt => opt.MapFrom(src => src.CustomRequest.Status))
+                .ForMember(dest => dest.SellerName, opt => opt.MapFrom(src => src.Seller.Name ?? src.Seller.UserName ?? src.Seller.Email ?? string.Empty));
         }
     }
 }

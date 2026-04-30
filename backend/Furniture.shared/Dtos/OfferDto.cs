@@ -15,5 +15,6 @@ namespace Furniture.shared.Dtos
         public OfferStatus Status { get; set; }
         public CustomRequestStatus? RequestStatus { get; set; }
         public string SellerId { get; set; } = null!;
+        public string SellerName { get; set; } = null!;
     }
 }
