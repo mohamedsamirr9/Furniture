@@ -19,7 +19,16 @@ export class CustomRequestDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.route.paramMap.subscribe(params => {
+      const id = Number(params.get('id'));
+      this.loadRequest(id);
+    });
+  }
+
+  private loadRequest(id: number): void {
+    this.isLoading = true;
+    this.request = null;
+
     this.customRequestService.getRequestById(id).subscribe({
       next: (data) => {
         this.request = data;

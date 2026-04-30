@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { NotificationService } from '../../../../../core/services/notification.service';
 import { Notification } from '../../../../../core/models/notification.model';
 import { AsyncPipe, DatePipe, NgFor, NgIf } from '@angular/common';
@@ -24,22 +24,39 @@ export class NotificationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.notificationService.startConnection(token);
+    }
     this.notificationService.loadNotifications();
   }
 
   toggleDropdown(): void {
     this.isOpen = !this.isOpen;
+    if (this.isOpen) {
+      this.notificationService.loadNotifications();
+    }
+  }
+
+  @HostListener('document:click')
+  closeDropdown(): void {
+    this.isOpen = false;
   }
 
   onRead(notification: Notification): void {
     if (!notification.isRead) {
-      this.notificationService.markAsRead(notification.id).subscribe();
       this.notificationService.markAsReadLocally(notification.id);
+
+      this.notificationService.markAsRead(notification.id).subscribe({
+        error: (err) => console.error('mark as read failed', err)
+      });
     }
 
     if (notification.customRequestId) {
       this.isOpen = false;
-      this.router.navigate(['/custom-requests', notification.customRequestId]);
+      setTimeout(() => {
+        this.router.navigate(['/custom-requests', notification.customRequestId]);
+      }, 100);
     }
   }
 }

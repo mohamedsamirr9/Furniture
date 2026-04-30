@@ -1,34 +1,51 @@
 <div class="notification-wrapper position-relative" (click)="$event.stopPropagation()">
-  
-  <button class="nav-icon-link position-relative notification-btn" (click)="toggleDropdown()">
-    <i class="bi bi-bell fs-5"></i>
-    <span class="badge-dot" *ngIf="(unreadCount$ | async)! > 0">
-      {{ unreadCount$ | async }}
+
+  <!-- BELL BUTTON -->
+  <button class="notification-btn" (click)="toggleDropdown()">
+    <i class="bi bi-bell"></i>
+    <span class="notification-badge" *ngIf="(unreadCount$ | async)! > 0">
+      {{ (unreadCount$ | async)! > 9 ? '9+' : (unreadCount$ | async) }}
     </span>
   </button>
 
+  <!-- DROPDOWN -->
   <div class="notification-dropdown" *ngIf="isOpen">
+
     <div class="notification-header">
       <span>Notifications</span>
     </div>
 
     <ng-container *ngIf="(notifications$ | async) as notifications">
+
       <div
         *ngFor="let n of notifications"
         class="notification-item"
         [class.unread]="!n.isRead"
+        [class.read]="n.isRead"
         (click)="onRead(n)">
+
         <div class="notif-icon">
           <i class="bi bi-hammer"></i>
         </div>
+
         <div class="notif-content">
           <strong>{{ n.title }}</strong>
           <p>{{ n.message }}</p>
           <small>{{ n.createdAt | date:'short' }}</small>
         </div>
+
       </div>
-      <p *ngIf="notifications.length === 0" class="empty">No notifications</p>
+
+      <!-- EMPTY STATE -->
+      <div *ngIf="notifications.length === 0" class="empty">
+        <div class="empty-icon">
+          <i class="bi bi-bell-slash"></i>
+        </div>
+        <p>No notifications yet</p>
+      </div>
+
     </ng-container>
+
   </div>
 
 </div>

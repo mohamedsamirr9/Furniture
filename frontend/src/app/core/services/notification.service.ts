@@ -7,17 +7,37 @@ import { Notification } from '../models/notification.model';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
-  private hubConnection!: signalR.HubConnection;
+  private hubConnection?: signalR.HubConnection;
+  private readonly storageKey = 'notifications_cache';
 
-  private notificationsSubject = new BehaviorSubject<Notification[]>([]);
+  private initialNotifications = this.getNotificationsFromStorage();
+
+  private notificationsSubject = new BehaviorSubject<Notification[]>(this.initialNotifications);
   notifications$ = this.notificationsSubject.asObservable();
 
-  private unreadCountSubject = new BehaviorSubject<number>(0);
+  private unreadCountSubject = new BehaviorSubject<number>(
+    this.initialNotifications.filter(n => !n.isRead).length
+  );
   unreadCount$ = this.unreadCountSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
+  private getNotificationsFromStorage(): Notification[] {
+    const data = localStorage.getItem(this.storageKey);
+    return data ? JSON.parse(data) : [];
+  }
+
+  private updateState(notifications: Notification[]): void {
+    this.notificationsSubject.next(notifications);
+    this.unreadCountSubject.next(notifications.filter(n => !n.isRead).length);
+    localStorage.setItem(this.storageKey, JSON.stringify(notifications));
+  }
+
   startConnection(token: string): void {
+    if (this.hubConnection && this.hubConnection.state !== signalR.HubConnectionState.Disconnected) {
+      return;
+    }
+
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(`${environment.apiUrl}/notificationHub`, {
         accessTokenFactory: () => token
@@ -25,13 +45,16 @@ export class NotificationService {
       .withAutomaticReconnect()
       .build();
 
-    this.hubConnection.start().catch(err => console.error('SignalR error:', err));
-
     this.hubConnection.on('ReceiveNotification', (notification: Notification) => {
+      console.log('Realtime notification:', notification);
       const current = this.notificationsSubject.value;
-      this.notificationsSubject.next([notification, ...current]);
-      this.unreadCountSubject.next(this.unreadCountSubject.value + 1);
+      const updated = [notification, ...current.filter(n => n.id !== notification.id)];
+      this.updateState(updated);
     });
+
+    this.hubConnection.start()
+      .then(() => console.log('SignalR connected'))
+      .catch(err => console.error('SignalR error:', err));
   }
 
   stopConnection(): void {
@@ -47,18 +70,27 @@ export class NotificationService {
   }
 
   loadNotifications(): void {
-    this.getMyNotifications().subscribe(notifications => {
-      this.notificationsSubject.next(notifications);
-      const unread = notifications.filter(n => !n.isRead).length;
-      this.unreadCountSubject.next(unread);
+    this.getMyNotifications().subscribe({
+      next: (notifications) => {
+        console.log('Notifications from API:', notifications);
+        this.updateState(notifications);
+      },
+      error: (err) => {
+        console.error('Load notifications failed:', err);
+      }
     });
   }
 
   markAsReadLocally(id: number): void {
-    const updated = this.notificationsSubject.value.map(n =>
+    const current = this.notificationsSubject.value;
+    const updated = current.map(n =>
       n.id === id ? { ...n, isRead: true } : n
     );
-    this.notificationsSubject.next(updated);
-    this.unreadCountSubject.next(updated.filter(n => !n.isRead).length);
+    this.updateState(updated);
+  }
+
+  clearNotificationsState(): void {
+    this.updateState([]);
+    localStorage.removeItem(this.storageKey);
   }
 }

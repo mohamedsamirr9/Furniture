@@ -3,17 +3,17 @@
 
   <div *ngIf="!isLoading && request">
     <h2>Custom Request Details</h2>
+    <p class="details-subtitle">View your custom furniture request info</p>
 
     <div class="detail-card">
       <p><strong>Description:</strong> {{ request.description }}</p>
       <p><strong>Budget:</strong> {{ request.budget | currency:'EGP' }}</p>
       <p><strong>Status:</strong> <span class="status">{{ request.status }}</span></p>
-      <!-- <!-- <p><strong>Buyer:</strong> {{ request.buyerName }}</p> -->
       <img *ngIf="request.imageUrl" [src]="request.imageUrl" alt="Request Image" />
     </div>
   </div>
 
-  <div *ngIf="!isLoading && !request">
+  <div *ngIf="!isLoading && !request" class="not-found">
     <p>Request not found.</p>
   </div>
 </div>
