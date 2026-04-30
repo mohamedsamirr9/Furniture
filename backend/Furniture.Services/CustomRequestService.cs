@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 
 namespace Furniture.Services
 {
-    public class CustomRequestService(IUnitOfWork _unitOfWork, IMapper _mapper) : ICustomRequestService
+    
+    public class CustomRequestService(IUnitOfWork _unitOfWork, IMapper _mapper, INotificationService _notificationService) : ICustomRequestService
     {
         public async Task CancelRequest(int id, string buyerId)
         {
@@ -37,6 +38,12 @@ namespace Furniture.Services
             await repo.AddAsync(request);
             await _unitOfWork.SaveChangesAsync();
 
+            await _notificationService.NotifyAllSellersAsync(
+                title: "New Custom Request",
+                message: $"New Custom Request Has Been Added: {dto.Description}",
+                customRequestId: request.Id
+            );  
+            
             return _mapper.Map<CustomRequestDto>(request);
         }
 
@@ -88,6 +95,12 @@ namespace Furniture.Services
             _mapper.Map(dto, request);
             repo.Update(request);
             await _unitOfWork.SaveChangesAsync();
+            
+            await _notificationService.NotifyAllSellersAsync(
+                title: "Custom Request Updated",
+                message: $"A custom request has been updated: {dto.Description}",
+                customRequestId: id
+            );
         }
     }
 }

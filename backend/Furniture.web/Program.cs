@@ -70,7 +70,8 @@ namespace Furniture.web
                         var accessToken = context.Request.Query["access_token"];
                         var path = context.Request.Path;
                         if (!string.IsNullOrEmpty(accessToken) &&
-                            path.StartsWithSegments("/api/chatHub"))
+                            (path.StartsWithSegments("/api/chatHub") ||
+                             path.StartsWithSegments("/api/notificationHub")))
                         {
                             context.Token = accessToken;
                         }
@@ -204,7 +205,10 @@ namespace Furniture.web
             builder.Services.AddScoped<IRecommendationService, RecommendationService>();
             builder.Services.AddScoped<ISearchService, SearchService>();
             builder.Services.AddHostedService<SearchIndexingBackgroundService>();
-
+            builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddScoped<IHubNotificationClient, HubNotificationClient>();
+            
+            
             var app = builder.Build();
 
             // Data Seeding
@@ -230,6 +234,7 @@ namespace Furniture.web
 
             app.MapControllers();
             app.MapHub<ChatHub>("/api/chatHub");
+            app.MapHub<NotificationHub>("/api/notificationHub");
             app.Run();
         }
     }
