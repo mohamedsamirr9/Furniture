@@ -207,33 +207,23 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               });
             });
           } else {
-            // Record cash payment per created order
-            let completed = 0;
-            let failed = false;
-
-            orderIds.forEach((id: number) => {
-              this.paymentService.createPayment(id, 'cash').subscribe({
-                next: () => {
-                  completed += 1;
-                  if (!failed && completed === orderIds.length) {
-                    this.cartService.clearCart().subscribe(() => {
-                      this.router.navigate(['/orders/confirmed'], {
-                        state: {
-                          orderId,
-                          orderIds,
-                          orderResponse: response
-                        }
-                      });
-                    });
-                  }
-                },
-                error: (err: any) => {
-                  if (failed) return;
-                  failed = true;
-                  console.error('Error recording cash payment', err);
-                  alert(err?.error?.message || 'Failed to finalize cash order. Please try again.');
-                }
-              });
+            // Split-orders share one master payment, so cash should be recorded once.
+            this.paymentService.createPayment(orderId, 'cash').subscribe({
+              next: () => {
+                this.cartService.clearCart().subscribe(() => {
+                  this.router.navigate(['/orders/confirmed'], {
+                    state: {
+                      orderId,
+                      orderIds,
+                      orderResponse: response
+                    }
+                  });
+                });
+              },
+              error: (err: any) => {
+                console.error('Error recording cash payment', err);
+                alert(err?.error?.message || 'Failed to finalize cash order. Please try again.');
+              }
             });
           }
         },

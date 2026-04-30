@@ -29,7 +29,7 @@ export class OrderDetailsModalComponent {
   }
 
   getDisplayStatus(order: Order): string {
-    const paymentStatus = (order.paymentStatus || '').toLowerCase();
+    const paymentStatus = this.normalizePaymentStatus(order.paymentStatus);
     const paymentMethod = (order.paymentMethod || '').toLowerCase();
     if ((paymentStatus === 'unpaid' || paymentMethod === 'cash') && order.status?.toLowerCase() === 'paid') {
       return 'Processing';
@@ -38,15 +38,27 @@ export class OrderDetailsModalComponent {
   }
 
   getPaymentMethodLabel(order: Order): string {
-    const paymentStatus = (order.paymentStatus || '').toLowerCase();
+    const paymentStatus = this.normalizePaymentStatus(order.paymentStatus);
     const paymentMethod = (order.paymentMethod || '').toLowerCase();
-    if (paymentStatus === 'paid') return 'ORDER.ONLINE_PAYMENT';
-    if (paymentStatus === 'failed') return 'ORDER.PAYMENT_FAILED';
-    if (paymentStatus === 'unpaid' && paymentMethod === 'cash') return 'ORDER.CASH_ON_DELIVERY';
-    if (paymentStatus === 'unpaid') return 'ORDER.UNPAID';
+
+    // For seller/admin order details, "Payment Method" should show the actual method first.
     if (paymentMethod === 'cash') return 'ORDER.CASH_ON_DELIVERY';
     if (paymentMethod === 'card') return 'ORDER.ONLINE_PAYMENT';
+
+    // Fallback when legacy/partial data has no method.
+    if (paymentStatus === 'failed') return 'ORDER.PAYMENT_FAILED';
+    if (paymentStatus === 'unpaid') return 'ORDER.UNPAID';
+    if (paymentStatus === 'paid') return 'ORDER.ONLINE_PAYMENT';
     return 'ORDER.UNPAID';
+  }
+
+  private normalizePaymentStatus(value: Order['paymentStatus']): string {
+    if (typeof value === 'number') {
+      if (value === 1) return 'paid';
+      if (value === 2) return 'failed';
+      return 'unpaid';
+    }
+    return (value || '').toString().toLowerCase();
   }
 
   isSellerBlocked(line: any): boolean {

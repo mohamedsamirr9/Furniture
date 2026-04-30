@@ -107,7 +107,7 @@ export class OrderDetailsComponent implements OnInit {
 
   get displayStatus(): string {
     if (!this.order) return '';
-    const paymentStatus = (this.order.paymentStatus || '').toLowerCase();
+    const paymentStatus = this.normalizePaymentStatus(this.order.paymentStatus);
     const paymentMethod = (this.order.paymentMethod || '').toLowerCase();
     if ((paymentStatus === 'unpaid' || paymentMethod === 'cash') && this.order.status?.toLowerCase() === 'paid') {
       return 'Processing';
@@ -116,7 +116,7 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   get paymentMethodLabel(): string {
-    const paymentStatus = (this.order?.paymentStatus || '').toLowerCase();
+    const paymentStatus = this.normalizePaymentStatus(this.order?.paymentStatus);
     const paymentMethod = (this.order?.paymentMethod || '').toLowerCase();
     if (paymentStatus === 'paid') return 'Online Payment';
     if (paymentStatus === 'failed') return 'Payment Failed';
@@ -129,7 +129,7 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   get paymentBadgeClass(): string {
-    const paymentStatus = (this.order?.paymentStatus || '').toLowerCase();
+    const paymentStatus = this.normalizePaymentStatus(this.order?.paymentStatus);
     const paymentMethod = (this.order?.paymentMethod || '').toLowerCase();
     if (paymentStatus === 'paid') return 'bg-primary';
     if (paymentStatus === 'failed') return 'bg-danger';
@@ -137,6 +137,15 @@ export class OrderDetailsComponent implements OnInit {
     if (paymentMethod === 'card') return 'bg-primary';
     if (paymentMethod === 'cash') return 'bg-secondary';
     return 'bg-warning text-dark';
+  }
+
+  private normalizePaymentStatus(value: Order['paymentStatus'] | undefined): string {
+    if (typeof value === 'number') {
+      if (value === 1) return 'paid';
+      if (value === 2) return 'failed';
+      return 'unpaid';
+    }
+    return (value || '').toString().toLowerCase();
   }
 
   isSellerBlocked(item: any): boolean {

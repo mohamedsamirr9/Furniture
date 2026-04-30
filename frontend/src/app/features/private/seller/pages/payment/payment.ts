@@ -18,8 +18,6 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class Payment implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  private refreshHandle: ReturnType<typeof setInterval> | null = null;
-  private readonly onWindowFocus = () => this.refreshPaymentData();
 
   earnings: SellerEarnings = {
     totalSales: 0,
@@ -64,17 +62,9 @@ export class Payment implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.refreshPaymentData();
-    this.loadSellerProfile();
-    window.addEventListener('focus', this.onWindowFocus);
-    this.refreshHandle = setInterval(() => this.refreshPaymentData(), 15000);
   }
 
   ngOnDestroy(): void {
-    if (this.refreshHandle) {
-      clearInterval(this.refreshHandle);
-      this.refreshHandle = null;
-    }
-    window.removeEventListener('focus', this.onWindowFocus);
     this.destroy$.next();
     this.destroy$.complete();
   }

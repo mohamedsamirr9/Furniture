@@ -28,7 +28,7 @@ export class MyOrdersComponent implements OnInit {
     this.orderService.getMyOrders().subscribe({
       next: (data: any) => {
         // Handle direct array or paginated object structure
-        this.orders = Array.isArray(data) ? data : (data.items || data.data || []);
+        this.orders = Array.isArray(data) ? data : (data.orders || data.items || data.data || []);
         this.isLoading = false;
       },
       error: (err: any) => {
@@ -53,7 +53,7 @@ export class MyOrdersComponent implements OnInit {
   }
 
   getDisplayStatus(order: Order): string {
-    const paymentStatus = (order.paymentStatus || '').toLowerCase();
+    const paymentStatus = this.normalizePaymentStatus(order.paymentStatus);
     const paymentMethod = (order.paymentMethod || '').toLowerCase();
 
     // Backward compatibility: old API used paymentMethod, new API uses paymentStatus
@@ -61,5 +61,14 @@ export class MyOrdersComponent implements OnInit {
       return 'Processing';
     }
     return order.status;
+  }
+
+  private normalizePaymentStatus(value: Order['paymentStatus']): string {
+    if (typeof value === 'number') {
+      if (value === 1) return 'paid';
+      if (value === 2) return 'failed';
+      return 'unpaid';
+    }
+    return (value || '').toString().toLowerCase();
   }
 }

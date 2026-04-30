@@ -688,8 +688,17 @@ namespace Furniture.Services.Implementations
         private async Task<PaymentResponseDTO> HandleCashPaymentAsync(List<Order> orders, int orderId, Payment? existingPayment)
         {
             var sellerPayouts = await BuildSellerPayoutsAsync(orders);
+            var existingOrderIds = new HashSet<int>();
+            foreach (var ord in orders)
+            {
+                var spec = new SellerPayoutByOrderIdSpecification(ord.Id);
+                var existing = await _unitOfWork.GetRepository<SellerPayout, int>()
+                    .GetAllAsync(spec);
+                if (existing.Any())
+                    existingOrderIds.Add(ord.Id);
+            }
 
-            foreach (var payout in sellerPayouts)
+            foreach (var payout in sellerPayouts.Where(p => !existingOrderIds.Contains(p.OrderId)))
             {
                 payout.Status = PayoutStatus.Pending;
                 await _unitOfWork.GetRepository<SellerPayout, int>().AddAsync(payout);
