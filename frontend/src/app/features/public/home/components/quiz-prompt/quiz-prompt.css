@@ -1,0 +1,272 @@
+/* ============================================================
+   FLOATING BUTTON
+   ============================================================ */
+.qp-float-btn {
+  position: fixed;
+  bottom: 100px; 
+  right: 24px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6b4b35, #8a6245);
+  color: #fff;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(107, 75, 53, 0.3);
+  z-index: 1000;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qp-float-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 26px rgba(107, 75, 53, 0.4);
+}
+
+/* ============================================================
+   POPUP
+   ============================================================ */
+.qp-popup {
+  position: fixed;
+  bottom: 95px; 
+  right: 24px;
+  width: 320px;
+  max-width: calc(100vw - 24px);
+  background: #fff;
+  border-radius: 20px;
+  border: 1.5px solid #ede5d8;
+  padding: 28px 24px 24px;
+  box-shadow: 0 12px 40px rgba(107, 75, 53, 0.15);
+  z-index: 1001;
+  animation: qpSlideUp 0.35s ease;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Close */
+.qp-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #b5a99a;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.qp-close:hover {
+  color: #2c1a0e;
+}
+
+/* Icon */
+.qp-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+/* Title */
+.qp-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c1a0e;
+  margin: 0 0 8px;
+}
+
+/* Text */
+.qp-text {
+  font-size: 13px;
+  color: #7a6a58;
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+/* Actions */
+.qp-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.qp-btn-primary {
+  display: block;
+  background: linear-gradient(135deg, #6b4b35, #8a6245);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px rgba(107, 75, 53, 0.2);
+}
+
+.qp-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(107, 75, 53, 0.28);
+  color: #fff;
+}
+
+.qp-btn-secondary {
+  background: none;
+  border: none;
+  color: #8a7f77;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+
+.qp-btn-secondary:hover {
+  color: #2c1a0e;
+}
+
+/* Animation */
+@keyframes qpSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .qp-popup {
+    width: 280px;
+    max-width: calc(100vw - 32px);
+    right: 16px;
+    bottom: 90px;
+    padding: 20px 16px 16px;
+    border-radius: 16px;
+  }
+
+  .qp-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+
+  .qp-title {
+    font-size: 15px;
+  }
+
+  .qp-text {
+    font-size: 12px;
+    margin-bottom: 14px;
+  }
+
+  .qp-btn-primary {
+    padding: 10px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+
+  .qp-btn-secondary {
+    font-size: 12px;
+  }
+
+  .qp-float-btn {
+    right: 16px;
+    bottom: 92px;
+    width: 46px;
+    height: 46px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .qp-popup {
+    right: 12px;
+    left: 12px;
+    width: auto;
+    max-width: none;
+    bottom: 85px;
+    padding: 18px 14px 14px;
+    border-radius: 14px;
+  }
+
+  .qp-icon {
+    font-size: 28px;
+    margin-bottom: 6px;
+  }
+
+  .qp-title {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .qp-text {
+    font-size: 11px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .qp-actions {
+    gap: 6px;
+  }
+
+  .qp-btn-primary {
+    padding: 9px;
+    font-size: 12px;
+    border-radius: 10px;
+  }
+
+  .qp-btn-secondary {
+    font-size: 11px;
+    padding: 4px;
+  }
+
+  .qp-close {
+    top: 8px;
+    right: 10px;
+    font-size: 14px;
+  }
+
+  .qp-float-btn {
+    right: 14px;
+    bottom: 86px;
+    width: 42px;
+    height: 42px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .qp-popup {
+    right: 8px;
+    left: 8px;
+    bottom: 80px;
+    padding: 16px 12px 12px;
+  }
+
+  .qp-icon {
+    font-size: 24px;
+  }
+
+  .qp-title {
+    font-size: 13px;
+  }
+
+  .qp-text {
+    font-size: 10.5px;
+  }
+
+  .qp-float-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 15px;
+    bottom: 82px;
+  }
+}

@@ -1,0 +1,275 @@
+.quiz-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fdf8f3;
+  padding: 2rem 1rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.quiz-container {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 8px 30px rgba(107, 75, 53, 0.08);
+  border: 1.5px solid #ede5d8;
+}
+
+/* Header */
+.quiz-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #2c1a0e;
+}
+
+.logo span {
+  color: #8a6245;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #8a7f77;
+  margin: 6px 0 0;
+}
+
+/* Progress */
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background: #f3ece5;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #6b4b35, #8a6245);
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.progress-label {
+  font-size: 12px;
+  color: #8a7f77;
+  white-space: nowrap;
+}
+
+/* Step dots */
+.step-dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e6ddd4;
+  transition: all 0.3s;
+}
+
+.dot.active {
+  background: #6b4b35;
+  transform: scale(1.2);
+}
+
+.dot.done {
+  background: #b07d50;
+}
+
+/* Question */
+.question {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c1a0e;
+  text-align: center;
+  margin: 0 0 1.5rem;
+  line-height: 1.35;
+}
+
+/* Options */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.option-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 12px;
+  border: 1.5px solid #ede5d8;
+  border-radius: 14px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+.option-btn:hover {
+  border-color: #b07d50;
+  background: #faf7f4;
+  transform: translateY(-1px);
+}
+
+.option-btn.selected {
+  border-color: #6b4b35;
+  background: #f5efe8;
+  box-shadow: 0 4px 14px rgba(107, 75, 53, 0.08);
+}
+
+.opt-icon {
+  font-size: 24px;
+  line-height: 1;
+  color: #6b4b35;
+  transition: color 0.2s;
+}
+
+.option-btn.selected .opt-icon {
+  color: #4a2e1e;
+}
+
+.opt-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b3a2d;
+}
+
+.option-btn.selected .opt-label {
+  color: #6b4b35;
+}
+
+.check {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 11px;
+  color: #6b4b35;
+  font-weight: 700;
+}
+
+/* Error */
+.error-msg {
+  font-size: 13px;
+  color: #c0392b;
+  text-align: center;
+  margin: 0 0 1rem;
+}
+
+/* Navigation */
+.nav-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-back {
+  background: none;
+  border: 1.5px solid #e2d9d1;
+  border-radius: 10px;
+  padding: 11px 18px;
+  font-size: 13px;
+  color: #7a6a58;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.btn-back:hover {
+  border-color: #b07d50;
+  background: #faf7f4;
+  color: #2c1a0e;
+}
+
+.btn-next {
+  flex: 1;
+  background: linear-gradient(135deg, #6b4b35, #8a6245);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.18s, opacity 0.18s, box-shadow 0.18s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  box-shadow: 0 4px 14px rgba(107, 75, 53, 0.18);
+}
+
+.btn-next:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(107, 75, 53, 0.22);
+}
+
+.btn-next:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #2c1a0e, #4a2e1e);
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: linear-gradient(135deg, #24150b, #3a2417);
+}
+
+/* Spinner */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .quiz-container {
+    padding: 2rem 1rem;
+    border-radius: 16px;
+  }
+
+  .question {
+    font-size: 20px;
+  }
+
+  .options-grid {
+    gap: 10px;
+  }
+}

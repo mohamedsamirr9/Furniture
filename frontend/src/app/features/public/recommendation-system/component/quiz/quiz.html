@@ -1,0 +1,65 @@
+<div class="quiz-page">
+  <div class="quiz-container">
+
+    <!-- Header -->
+    <div class="quiz-header">
+      <div class="logo">Furniture<span>AI</span></div>
+      <p class="subtitle">Help us personalise your experience</p>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="progress"></div>
+      </div>
+      <span class="progress-label">{{ currentStep + 1 }} of {{ steps.length }}</span>
+    </div>
+
+    <!-- Step dots -->
+    <div class="step-dots">
+      <span
+        *ngFor="let s of steps; let i = index"
+        class="dot"
+        [class.active]="i === currentStep"
+        [class.done]="i < currentStep">
+      </span>
+    </div>
+
+    <!-- Question -->
+    <h2 class="question">{{ steps[currentStep].question }}</h2>
+
+    <!-- Options -->
+    <div class="options-grid">
+      <button
+        *ngFor="let opt of steps[currentStep].options"
+        class="option-btn"
+        [class.selected]="currentAnswer === opt.label"
+        (click)="select(opt.label)">
+        <i [class]="opt.icon" class="opt-icon"></i>
+        <span class="opt-label">{{ opt.label }}</span>
+        <span class="check" *ngIf="currentAnswer === opt.label">✓</span>
+      </button>
+    </div>
+
+    <!-- Error -->
+    <p class="error-msg" *ngIf="error">{{ error }}</p>
+
+    <!-- Navigation -->
+    <div class="nav-row">
+      <button class="btn-back" *ngIf="currentStep > 0" (click)="back()">
+        ← Back
+      </button>
+      <button
+        class="btn-next"
+        [class.btn-submit]="currentStep === steps.length - 1"
+        [disabled]="!currentAnswer || loading"
+        (click)="next()">
+        <span *ngIf="!loading">
+          {{ currentStep === steps.length - 1 ? 'Show my picks ✨' : 'Next →' }}
+        </span>
+        <span *ngIf="loading" class="spinner"></span>
+      </button>
+    </div>
+
+  </div>
+</div>

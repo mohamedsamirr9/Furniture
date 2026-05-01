@@ -1,0 +1,52 @@
+<section class="hr-section" *ngIf="loading">
+  <div class="hr-header">
+    <div class="hr-header__text">
+      <h2 class="hr-title">Picked for you </h2>
+      <p class="hr-subtitle">Based on your style and activity</p>
+    </div>
+  </div>
+
+  <div class="hr-grid">
+    <div class="hr-skeleton" *ngFor="let s of skeletons">
+      <div class="sk-img"></div>
+      <div class="sk-body">
+        <div class="sk-line long"></div>
+        <div class="sk-line short"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hr-section" *ngIf="!loading && hasData">
+  <div class="hr-header">
+    <div class="hr-header__text">
+      <h2 class="hr-title">Picked for you </h2>
+      <p class="hr-subtitle">Based on your style and activity</p>
+    </div>
+
+    <a routerLink="/recommendations" class="hr-see-all">
+      See all →
+    </a>
+  </div>
+
+  <div class="hr-grid">
+    <a
+      *ngFor="let p of products"
+      class="hr-card"
+      [routerLink]="['/products', p.id]"
+      (click)="onProductClick(p)">
+
+      <div class="hr-card__img">
+        <img
+          [src]="p.imageUrl || 'assets/placeholder.png'"
+          [alt]="p.name"
+          loading="lazy" />
+      </div>
+
+      <div class="hr-card__body">
+        <p class="hr-card__name">{{ p.name }}</p>
+        <p class="hr-card__price">{{ p.price | currency:'EGP':'symbol':'1.0-0' }}</p>
+      </div>
+    </a>
+  </div>
+</section>

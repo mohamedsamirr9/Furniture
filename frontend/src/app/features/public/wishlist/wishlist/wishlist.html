@@ -21,17 +21,23 @@
       </svg>
     </div>
     <h3>{{ 'WISHLIST.EMPTY' | translate }}</h3>
-    <!-- <p>{{ 'WISHLIST.EMPTY_DESC' | translate }}</p> -->
   </div>
 
   <!-- GRID -->
   <div class="wl-grid" *ngIf="!loading && wishlistItems.length > 0">
-    <div class="wl-card" *ngFor="let product of wishlistItems">
+    <div
+      class="wl-card"
+      *ngFor="let product of wishlistItems"
+      [routerLink]="['/products', product.productId]">
 
       <!-- IMAGE -->
       <div class="wl-card__img-wrap">
         <img [src]="product.mainImage" class="wl-card__img" [alt]="product.productName">
-        <button class="wl-card__heart" (click)="removeItem(product.productId)">
+
+        <button
+          type="button"
+          class="wl-card__heart"
+          (click)="removeItem(product.productId); $event.stopPropagation()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="#e74c3c" stroke="#e74c3c" stroke-width="2">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
           </svg>
@@ -55,9 +61,6 @@
 
         <div class="wl-card__footer">
           <span class="wl-card__price">${{ product.productPrice }}</span>
-          <button class="wl-card__btn" [routerLink]="['/products', product.productId]">
-            {{ 'BUTTONS.VIEW' | translate }}
-          </button>
         </div>
       </div>
 

@@ -1,0 +1,26 @@
+<!-- الـ Popup -->
+<div class="qp-popup" *ngIf="isOpen" (click)="$event.stopPropagation()">
+
+  <!-- Close button -->
+  <button class="qp-close" (click)="dismiss()">✕</button>
+
+  <!-- Icon -->
+  <div class="qp-icon">🛋️</div>
+
+  <!-- Content -->
+  <h3 class="qp-title">Skip the scrolling</h3>
+  <p class="qp-text">
+    Answer 4 quick questions and let us find the perfect furniture for your space.
+  </p>
+
+  <!-- Actions -->
+  <div class="qp-actions">
+    <a routerLink="/quiz" class="qp-btn-primary">
+      Personalize My Picks 
+    </a>
+    <button class="qp-btn-secondary" (click)="dismiss()">
+      I'll browse manually
+    </button>
+  </div>
+
+</div>

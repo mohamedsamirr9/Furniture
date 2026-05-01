@@ -18,6 +18,10 @@ export class WishlistService {
 
   constructor(private http: HttpClient) {}
 
+  getCurrentItems(): any[] {
+    return this.wishlistSubject.getValue();
+  }
+
   getWishlist(): Observable<any[]> {
     return this.http.get<any[]>(this.baseUrl).pipe(
       tap((items) => this.wishlistSubject.next(items))
@@ -28,7 +32,11 @@ export class WishlistService {
     return this.http.post<any>(`${this.baseUrl}/${productId}`, {}).pipe(
       tap((newItem: any) => {
         const currentItems = this.wishlistSubject.value;
-        this.wishlistSubject.next([...currentItems, newItem]);
+        const exists = currentItems.some((item: any) => item.productId === newItem.productId);
+
+        if (!exists) {
+          this.wishlistSubject.next([...currentItems, newItem]);
+        }
       })
     );
   }
@@ -37,7 +45,9 @@ export class WishlistService {
     return this.http.delete<any>(`${this.baseUrl}/${productId}`).pipe(
       tap(() => {
         const currentItems = this.wishlistSubject.value;
-        this.wishlistSubject.next(currentItems.filter((item: any) => item.productId !== productId));
+        this.wishlistSubject.next(
+          currentItems.filter((item: any) => item.productId !== productId)
+        );
       })
     );
   }

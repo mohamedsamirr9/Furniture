@@ -1,0 +1,58 @@
+<div class="rec-page">
+
+  <div class="page-header">
+    <div class="header-text">
+      <h1>Picked for you <span class="sparkle">✨</span></h1>
+      <p>Based on your style preferences</p>
+    </div>
+    <button class="btn-retake" (click)="retakeQuiz()">
+      ↺ Retake quiz
+    </button>
+  </div>
+
+  <div class="products-grid" *ngIf="loading">
+    <div class="skeleton-card" *ngFor="let s of skeletons">
+      <div class="sk-img"></div>
+      <div class="sk-body">
+        <div class="sk-line long"></div>
+        <div class="sk-line short"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && error">
+    <div class="empty-icon">⚠️</div>
+    <p>{{ error }}</p>
+    <button class="btn-primary" (click)="ngOnInit()">Try again</button>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && !error && products.length === 0">
+    <div class="empty-icon">🛋️</div>
+    <p>No recommendations yet.</p>
+    <p class="empty-sub">Take the quiz so we can find the perfect furniture for you.</p>
+    <button class="btn-primary" (click)="retakeQuiz()">Take the quiz →</button>
+  </div>
+
+  <div class="products-grid" *ngIf="!loading && products.length > 0">
+    <a
+      class="product-card"
+      *ngFor="let p of products"
+      [routerLink]="['/products', p.id]"
+      (click)="onProductClick(p)">
+
+      <div class="card-img">
+        <img
+          [src]="p.imageUrl || 'assets/placeholder.png'"
+          [alt]="p.name"
+          loading="lazy" />
+      </div>
+
+      <div class="card-body">
+        <p class="product-name" [title]="p.name">{{ p.name }}</p>
+        <p class="product-price">{{ p.price | currency:'EGP':'symbol':'1.0-0' }}</p>
+      </div>
+
+    </a>
+  </div>
+
+</div>

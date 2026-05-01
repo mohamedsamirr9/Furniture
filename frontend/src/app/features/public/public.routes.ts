@@ -16,6 +16,8 @@ import { SellerProfileComponent } from './seller-profile/pages/seller-profile/se
 import { CustomRequestComponent } from '../private/customer/pages/custom-request/custom-request';
 import { authGuard } from '../../core/guards/auth.guard';
 import { CustomRequestDetailsComponent } from './notification/component/custom-request-details/custom-request-details';
+import { QuizComponent } from './recommendation-system/component/quiz/quiz';
+import { RecommendationsListComponent } from './recommendation-system/component/recommendations-list/recommendations-list';
 
 
 export const PUBLIC_ROUTES: Routes = [
@@ -35,6 +37,8 @@ export const PUBLIC_ROUTES: Routes = [
       { path: 'wishlist', component: WishlistComponent, canActivate: [authGuard] },
       { path: 'sellers/:id', component: SellerProfileComponent },
       { path: 'custom-requests/:id', component: CustomRequestDetailsComponent, canActivate: [authGuard] },
+      { path: 'quiz', component: QuizComponent, canActivate: [authGuard] },
+      { path: 'recommendations', component: RecommendationsListComponent, canActivate: [authGuard] },
     ],
   },
 ];

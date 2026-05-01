@@ -13,7 +13,7 @@ import { NotificationComponent } from '../../../features/public/notification/com
   standalone: true,
   imports: [RouterModule, CommonModule, TranslateModule, ChatWidgetComponent, NotificationComponent],
   templateUrl: './navbar.html',
-  styleUrl: './navbar.css',
+  styleUrls: ['./navbar.css'],
 })
 export class Navbar implements OnInit, OnDestroy {
   currentLang: string = 'en';
@@ -35,10 +35,11 @@ export class Navbar implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentLang = localStorage.getItem('lang') || 'en';
+
     if (this.authService.isLoggedIn()) {
       this.cartService.loadCart().subscribe();
-      this.wishlistService.getWishlist().subscribe();
     }
+
     document.addEventListener('click', this.outsideClickListener);
   }
 
