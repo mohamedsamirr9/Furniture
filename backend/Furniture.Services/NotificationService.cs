@@ -35,6 +35,7 @@ namespace Furniture.Services
             if (!sellers.Any()) return;
 
             var repo = _unitOfWork.GetRepository<Notification, int>();
+            var now = DateTime.UtcNow;
 
             var notifications = sellers.Select(sellerId => new Notification
             {
@@ -43,7 +44,7 @@ namespace Furniture.Services
                 Message = message,
                 CustomRequestId = customRequestId,
                 IsRead = false,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = now
             }).ToList();
 
             foreach (var notif in notifications)
@@ -51,16 +52,20 @@ namespace Furniture.Services
 
             await _unitOfWork.SaveChangesAsync();
 
-            var notifDto = new NotificationDto
+            foreach (var notif in notifications)
             {
-                Title = title,
-                Message = message,
-                CustomRequestId = customRequestId,
-                CreatedAt = DateTime.UtcNow,
-                IsRead = false
-            };
+                var notifDto = new NotificationDto
+                {
+                    Id = notif.Id,
+                    Title = notif.Title,
+                    Message = notif.Message,
+                    CustomRequestId = notif.CustomRequestId,
+                    CreatedAt = notif.CreatedAt,
+                    IsRead = notif.IsRead
+                };
 
-            await _hubNotificationClient.BroadcastNotificationAsync(sellers, notifDto);
+                await _hubNotificationClient.SendNotificationToUserAsync(notif.UserId, notifDto);
+            }
         }
 
         public async Task<IEnumerable<NotificationDto>> GetMyNotificationsAsync(string userId)
