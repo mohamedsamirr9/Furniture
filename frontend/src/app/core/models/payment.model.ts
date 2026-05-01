@@ -34,3 +34,26 @@ export interface SellerPayout {
   paidAt?: string;
   transactionId?: string;
 }
+
+export interface RecentPayout {
+  orderId: number;
+  amount: number;
+  status: 'Pending' | 'Paid' | string;
+  date: string;
+}
+
+export interface SellerPaymentDashboard {
+  onlineEarnings: {
+    totalEarnings: number;
+    pendingPayout: number;
+    totalPaid: number;
+  };
+  cashSummary: {
+    totalCashOrders: number;
+    cashAmount: number;
+    pendingCommission: number;
+    maxLimit: number;
+    remainingLimit: number;
+  };
+  recentPayouts: RecentPayout[];
+}

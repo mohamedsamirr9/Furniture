@@ -28,6 +28,9 @@ namespace Furniture.presentation.Controllers
              var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
              if (string.IsNullOrEmpty(userId))
                  return Unauthorized();
+
+             if (dto.OrderId <= 0)
+                 return BadRequest(new { message = "OrderId is required" });
  
              try
              {

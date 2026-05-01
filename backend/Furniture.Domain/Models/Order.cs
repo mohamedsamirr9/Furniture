@@ -25,8 +25,13 @@ namespace Furniture.Domain.Models
         public string UserId { get; set; } = null!;
         public ApplicationUser User { get; set; }=null!;
 
+        // For split orders (one seller per order). May be null for legacy/custom data.
+        public string? SellerId { get; set; }
+        public ApplicationUser? Seller { get; set; }
+
 
         public ICollection<OrderItem>? OrderItems { get; set; }
+        public int? PaymentId { get; set; }
         public Payment? Payment { get; set; }
         public ICollection<SellerPayout>? SellerPayouts { get; set; }
 

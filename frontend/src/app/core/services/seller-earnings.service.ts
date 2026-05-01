@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { SellerEarnings } from '../models/payment.model';
 import { SellerPayout } from '../models/payment.model';
+import { SellerPaymentDashboard } from '../models/payment.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,5 +20,9 @@ export class SellerEarningsService {
 
   getPayouts(): Observable<SellerPayout[]> {
     return this.http.get<SellerPayout[]>(`${this.apiUrl}/payouts`);
+  }
+
+  getPaymentDashboard(): Observable<SellerPaymentDashboard> {
+    return this.http.get<SellerPaymentDashboard>(`${this.apiUrl}/payment-dashboard`);
   }
 }

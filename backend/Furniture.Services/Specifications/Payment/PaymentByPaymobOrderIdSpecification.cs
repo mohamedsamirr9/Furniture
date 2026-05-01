@@ -8,5 +8,6 @@ public class PaymentByPaymobOrderIdSpecification : BaseSpecificationscs<Payment,
         : base(p => p.PaymobOrderId == paymobOrderId)
     {
         AddInclude(p => p.Order);
+        AddInclude(p => p.Orders!);
     }
 }

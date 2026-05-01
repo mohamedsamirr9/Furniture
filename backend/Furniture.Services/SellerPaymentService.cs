@@ -5,11 +5,13 @@ using Furniture.Domain.InterfacesRepositories;
 using Furniture.Domain.Models;
 using Furniture.Domain.Models.Enum;
 using Furniture.Services.Specifications;
+using Furniture.Services.Specifications.Order;
 using Furniture.Services.Specifications.Seller;
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos.Payment;
 using Furniture.shared.Dtos.Seller;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Furniture.Services.Implementations
 {
@@ -20,15 +22,18 @@ namespace Furniture.Services.Implementations
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILogger<SellerPaymentService> _logger;
 
         public SellerPaymentService(
             IUnitOfWork unitOfWork,
             IConfiguration config,
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory,
+            ILogger<SellerPaymentService> logger)
         {
             _unitOfWork = unitOfWork;
             _config = config;
             _httpClientFactory = httpClientFactory;
+            _logger = logger;
         }
 
         
@@ -74,6 +79,73 @@ namespace Furniture.Services.Implementations
             return sellerProfile == null ? null : MapToDTO(sellerProfile);
         }
 
+        public async Task<SellerPaymentDashboardDTO> GetPaymentDashboardAsync(string userId)
+        {
+            var seller = await GetSellerProfileByUserIdAsync(userId);
+            if (seller == null)
+                throw new InvalidOperationException("Seller profile not found");
+
+            var payoutSpec = new SellerPayoutSpecification(seller.Id);
+            var allPayouts = (await _unitOfWork.GetRepository<SellerPayout, int>()
+                .GetAllAsync(payoutSpec)).ToList();
+
+            var cardPayouts = allPayouts
+                .Where(p => p.Order?.Payment != null && p.Order.Payment.Method == PaymentMethod.Card)
+                .ToList();
+
+            var completedCardPayouts = cardPayouts
+                .Where(p => p.Order!.Payment!.Status == PaymentStatus.Completed)
+                .ToList();
+
+            var pendingCardPayouts = cardPayouts
+                .Where(p => p.Order!.Payment!.Status != PaymentStatus.Completed)
+                .ToList();
+
+            var sellerOrdersSpec = new SellerOrdersSpecification(seller.UserId);
+            var sellerOrders = (await _unitOfWork.GetRepository<Order, int>()
+                .GetAllAsync(sellerOrdersSpec))
+                .ToList();
+
+            var validCashOrders = sellerOrders
+                .Where(o =>
+                    o.Payment != null &&
+                    o.Payment.Method == PaymentMethod.Cash &&
+                    o.Status != OrderStatus.Cancelled &&
+                    o.Status != OrderStatus.Declined)
+                .ToList();
+
+            var recentPayouts = cardPayouts
+                .OrderByDescending(p => p.PaidAt ?? p.ProcessedAt ?? p.CreatedAt)
+                .Take(5)
+                .Select(p => new RecentPayoutDTO
+                {
+                    OrderId = p.OrderId,
+                    Amount = p.NetAmount,
+                    Status = p.Status == PayoutStatus.Completed ? "Paid" : "Pending",
+                    Date = p.PaidAt ?? p.ProcessedAt ?? p.CreatedAt
+                })
+                .ToList();
+
+            return new SellerPaymentDashboardDTO
+            {
+                OnlineEarnings = new OnlineEarningsDTO
+                {
+                    TotalEarnings = completedCardPayouts.Sum(p => p.NetAmount),
+                    PendingPayout = pendingCardPayouts.Sum(p => p.NetAmount),
+                    TotalPaid = completedCardPayouts.Sum(p => p.NetAmount)
+                },
+                CashSummary = new CashSummaryDTO
+                {
+                    TotalCashOrders = validCashOrders.Count,
+                    CashAmount = validCashOrders.Sum(o => o.TotalPrice),
+                    PendingCommission = seller.PendingCommission,
+                    MaxLimit = seller.MaxAllowedCommission,
+                    RemainingLimit = seller.MaxAllowedCommission - seller.PendingCommission
+                },
+                RecentPayouts = recentPayouts
+            };
+        }
+
         public async Task<bool> VerifySellerAsync(int sellerId)
         {
             var seller = await _unitOfWork.GetRepository<SellerProfile, int>()
@@ -104,21 +176,37 @@ namespace Furniture.Services.Implementations
             var allPayouts = (await _unitOfWork.GetRepository<SellerPayout, int>()
                 .GetAllAsync(payoutSpec)).ToList();
 
-            var validPayouts = allPayouts
-                .Where(p => p.Status != PayoutStatus.Cancelled)
+            // Online earnings endpoint: Paymob/Card only.
+            // Skip records with missing payment safely.
+            var cardPayouts = allPayouts
+                .Where(p =>
+                    p.Order?.Payment != null &&
+                    p.Order.Payment.Method == PaymentMethod.Card)
                 .ToList();
+
+            var completedCardPayouts = cardPayouts
+                .Where(p => p.Order!.Payment!.Status == PaymentStatus.Completed)
+                .ToList();
+
+            var pendingCardPayouts = cardPayouts
+                .Where(p => p.Order!.Payment!.Status != PaymentStatus.Completed)
+                .ToList();
+
+            _logger.LogInformation(
+                "Seller earnings (online/card) computed for SellerProfileId={SellerProfileId}: CardPayouts={CardPayouts}, PendingCardPayouts={PendingCardPayouts}, CompletedCardPayouts={CompletedCardPayouts}",
+                seller.Id,
+                cardPayouts.Count,
+                pendingCardPayouts.Count,
+                completedCardPayouts.Count);
 
             return new SellerEarningsDTO
             {
-                TotalSales = validPayouts.Sum(p => p.OrderItemsTotal),
-                TotalCommission = validPayouts.Sum(p => p.CommissionAmount),
-                NetEarnings = validPayouts.Sum(p => p.NetAmount),
-                PendingAmount = validPayouts
-                    .Where(p => p.Status == PayoutStatus.Pending || p.Status == PayoutStatus.Processing)
-                    .Sum(p => p.NetAmount),
-                PaidAmount = validPayouts
-                    .Where(p => p.Status == PayoutStatus.Completed)
-                    .Sum(p => p.NetAmount)
+                // Online earnings = paid Paymob/Card orders only.
+                TotalSales = completedCardPayouts.Sum(p => p.OrderItemsTotal),
+                TotalCommission = completedCardPayouts.Sum(p => p.CommissionAmount),
+                NetEarnings = completedCardPayouts.Sum(p => p.NetAmount),
+                PendingAmount = pendingCardPayouts.Sum(p => p.NetAmount),
+                PaidAmount = completedCardPayouts.Sum(p => p.NetAmount)
             };
         }
 

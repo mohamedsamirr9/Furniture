@@ -104,7 +104,7 @@ namespace Furniture.Services.Implementations
 
         
         
-        public async Task<OrderResponseDTO> CreateOrderFromCartAsync(
+        public async Task<SplitOrdersResponseDTO> CreateOrderFromCartAsync(
             string userId, CreateOrderDTO createOrderDTO)
         {
             var cartRepo = _unitOfWork.GetRepository<Cart, int>();
@@ -116,57 +116,100 @@ namespace Furniture.Services.Implementations
             
             await ValidateSellersNotBlockedAsync(cart.CartItems);
 
+            var groups = cart.CartItems
+                .GroupBy(ci => ci.Product?.SellerId)
+                .ToList();
 
-            decimal totalPrice = 0;
-            var orderItems = new List<OrderItem>();
+            if (groups.Any(g => string.IsNullOrWhiteSpace(g.Key)))
+                throw new InvalidOperationException("Some cart items are missing seller information.");
 
-            foreach (var cartItem in cart.CartItems)
+            var requestedMethod = string.Equals(createOrderDTO.PaymentMethod, "cash", StringComparison.OrdinalIgnoreCase)
+                ? PaymentMethod.Cash
+                : PaymentMethod.Card;
+
+            var masterPayment = new Payment
             {
-                if (cartItem.Product == null)
-                    throw new InvalidOperationException($"Product with ID {cartItem.ProductId} not found");
+                Currency = "EGP",
+                Method = requestedMethod,
+                Status = PaymentStatus.Pending,
+                CreatedAt = DateTime.UtcNow
+            };
+            await _unitOfWork.GetRepository<Payment, int>().AddAsync(masterPayment);
 
-                var currentPrice = cartItem.Product.Price;
-                totalPrice += currentPrice * cartItem.Quantity;
+            var createdOrders = new List<(string SellerId, Order Order)>();
 
-                orderItems.Add(new OrderItem
+            foreach (var sellerGroup in groups)
+            {
+                var sellerId = sellerGroup.Key!;
+
+                decimal subTotal = 0;
+                var orderItems = new List<OrderItem>();
+
+                foreach (var cartItem in sellerGroup)
                 {
-                    ProductId = cartItem.ProductId,
-                    UnitPrice = currentPrice,
-                    Quantity = cartItem.Quantity,
-                    SellerId = cartItem.Product.SellerId
-                });
+                    if (cartItem.Product == null)
+                        throw new InvalidOperationException($"Product with ID {cartItem.ProductId} not found");
+
+                    var currentPrice = cartItem.Product.Price;
+                    subTotal += currentPrice * cartItem.Quantity;
+
+                    orderItems.Add(new OrderItem
+                    {
+                        ProductId = cartItem.ProductId,
+                        UnitPrice = currentPrice,
+                        Quantity = cartItem.Quantity,
+                        SellerId = sellerId
+                    });
+                }
+
+                var categoryIds = sellerGroup
+                    .Where(ci => ci.Product != null)
+                    .Select(ci => ci.Product!.CategoryId)
+                    .Distinct()
+                    .ToList();
+
+                var shippingResult = await _shippingCalculator.CalculateShippingAsync(createOrderDTO.City, categoryIds);
+
+                var newOrder = new Order
+                {
+                    UserId = userId,
+                    SellerId = sellerId,
+                    Payment = masterPayment,
+                    SubTotal = subTotal,
+                    ShippingCost = shippingResult.ShippingCost,
+                    TotalPrice = subTotal + shippingResult.ShippingCost,
+                    City = createOrderDTO.City,
+                    ShippingRuleId = shippingResult.ShippingRuleId,
+                    OrderDate = DateTime.UtcNow,
+                    Status = OrderStatus.Pending,
+                    ShippingAddress = createOrderDTO.ShippingAddress,
+                    CreatedAt = DateTime.UtcNow,
+                    OrderItems = orderItems
+                };
+
+                await _unitOfWork.GetRepository<Order, int>().AddAsync(newOrder);
+                createdOrders.Add((sellerId, newOrder));
             }
 
-            var categoryIds = cart.CartItems.Select(ci => ci.Product.CategoryId).Distinct();
-            var shippingResult = await _shippingCalculator.CalculateShippingAsync(createOrderDTO.City, categoryIds);
-
-            var newOrder = new Order
-            {
-                UserId = userId,
-                SubTotal = totalPrice,
-                ShippingCost = shippingResult.ShippingCost,
-                TotalPrice = totalPrice + shippingResult.ShippingCost,
-                City = createOrderDTO.City,
-                ShippingRuleId = shippingResult.ShippingRuleId,
-                OrderDate = DateTime.UtcNow,
-                Status = OrderStatus.Pending,
-                ShippingAddress = createOrderDTO.ShippingAddress,
-                CreatedAt = DateTime.UtcNow,
-                OrderItems = orderItems
-            };
-
-            await _unitOfWork.GetRepository<Order, int>().AddAsync(newOrder);
-
-
+            masterPayment.Amount = createdOrders.Sum(x => x.Order.TotalPrice);
             await _unitOfWork.SaveChangesAsync();
 
-            return new OrderResponseDTO
+            return new SplitOrdersResponseDTO
             {
-                OrderId = newOrder.Id,
-                TotalPrice = newOrder.TotalPrice,
-                OrderDate = newOrder.OrderDate,
-                Status = newOrder.Status.ToString(),
-                Message = "Order created successfully!"
+                PaymentId = masterPayment.Id,
+                Orders = createdOrders.Select(x => new OrderResponseDTO
+                {
+                    OrderId = x.Order.Id,
+                    SellerId = x.SellerId,
+                    SubTotal = x.Order.SubTotal,
+                    ShippingCost = x.Order.ShippingCost,
+                    TotalPrice = x.Order.TotalPrice,
+                    City = x.Order.City,
+                    OrderDate = x.Order.OrderDate,
+                    Status = x.Order.Status.ToString(),
+                    Message = "Order created successfully!"
+                }).ToList(),
+                Message = "Orders created successfully!"
             };
         }
         public async Task<OrderResponseDTO> CreateOrderFromOfferAsync(
@@ -193,6 +236,7 @@ namespace Furniture.Services.Implementations
             var newOrder = new Order
             {
                 UserId = userId,
+                SellerId = offer.SellerId,
                 SubTotal = offer.Price,
                 ShippingCost = shippingResult.ShippingCost,
                 TotalPrice = offer.Price + shippingResult.ShippingCost,
@@ -215,6 +259,7 @@ namespace Furniture.Services.Implementations
             return new OrderResponseDTO
             {
                 OrderId = newOrder.Id,
+                SellerId = offer.SellerId,
                 TotalPrice = newOrder.TotalPrice,
                 OrderDate = newOrder.OrderDate,
                 Status = newOrder.Status.ToString(),

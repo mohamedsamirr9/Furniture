@@ -240,6 +240,8 @@
     "PAYMENT_METHOD": "Payment Method",
     "ONLINE_PAYMENT": "Online Payment (Card)",
     "CASH_ON_DELIVERY": "Cash on Delivery",
+    "UNPAID": "Unpaid",
+    "PAYMENT_FAILED": "Payment Failed",
     "BLOCKED": "Blocked"
   },
   "REVIEW": {

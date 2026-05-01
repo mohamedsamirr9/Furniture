@@ -11,12 +11,14 @@ export interface OrderItem {
 
 export interface Order {
   id: number;
+  sellerId?: string;
   subTotal: number;
   shippingCost: number;
   totalPrice: number;
   orderDate: string;
   status: string;
-  paymentMethod?: 'Cash' | 'Card';
+  paymentStatus?: 'Unpaid' | 'Paid' | 'Failed' | 0 | 1 | 2;
+  paymentMethod?: 'Cash' | 'Card' | string | null;
   shippingAddress: string;
   createdAt: string;
   userName?: string;

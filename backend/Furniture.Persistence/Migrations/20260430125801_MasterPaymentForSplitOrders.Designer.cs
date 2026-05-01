@@ -4,6 +4,7 @@ using Furniture.Persistence.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Furniture.Persistence.Migrations
 {
     [DbContext(typeof(FurnitureDbContext))]
-    partial class FurnitureDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260430125801_MasterPaymentForSplitOrders")]
+    partial class MasterPaymentForSplitOrders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,7 +164,7 @@ namespace Furniture.Persistence.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.CartItem", b =>
@@ -182,7 +185,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.ToTable("CartItems", (string)null);
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Category", b =>
@@ -220,7 +223,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.CommissionTransaction", b =>
@@ -261,7 +264,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("SellerProfileId");
 
-                    b.ToTable("CommissionTransactions", (string)null);
+                    b.ToTable("CommissionTransactions");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Complaint", b =>
@@ -300,7 +303,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Complaints", (string)null);
+                    b.ToTable("Complaints");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.ComplaintReply", b =>
@@ -334,7 +337,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("ResponderId");
 
-                    b.ToTable("ComplaintReplies", (string)null);
+                    b.ToTable("ComplaintReplies");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Conversation", b =>
@@ -362,7 +365,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Conversations", (string)null);
+                    b.ToTable("Conversations");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.CustomRequest", b =>
@@ -394,7 +397,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("BuyerId");
 
-                    b.ToTable("CustomRequests", (string)null);
+                    b.ToTable("CustomRequests");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Favourite", b =>
@@ -419,7 +422,7 @@ namespace Furniture.Persistence.Migrations
                     b.HasIndex("UserId", "ProductId")
                         .IsUnique();
 
-                    b.ToTable("Favourites", (string)null);
+                    b.ToTable("Favourites");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Message", b =>
@@ -456,43 +459,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages", (string)null);
-                });
-
-            modelBuilder.Entity("Furniture.Domain.Models.Notification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("CustomRequestId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Offer", b =>
@@ -532,7 +499,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Offers", (string)null);
+                    b.ToTable("Offers");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Order", b =>
@@ -597,7 +564,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.OrderItem", b =>
@@ -624,7 +591,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Payment", b =>
@@ -670,7 +637,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Product", b =>
@@ -729,7 +696,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.ProductImage", b =>
@@ -752,7 +719,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages", (string)null);
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.RefrashToken", b =>
@@ -781,7 +748,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Review", b =>
@@ -817,7 +784,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.SellerPayout", b =>
@@ -872,7 +839,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("SellerProfileId");
 
-                    b.ToTable("SellerPayouts", (string)null);
+                    b.ToTable("SellerPayouts");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.SellerProfile", b =>
@@ -893,8 +860,7 @@ namespace Furniture.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BlockReason")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("BlockedAt")
                         .HasColumnType("datetime2");
@@ -949,7 +915,7 @@ namespace Furniture.Persistence.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("SellerProfiles", (string)null);
+                    b.ToTable("SellerProfiles");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.ShippingRule", b =>
@@ -975,7 +941,7 @@ namespace Furniture.Persistence.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("ShippingRules", (string)null);
+                    b.ToTable("ShippingRules");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.UserPreference", b =>
@@ -1013,7 +979,7 @@ namespace Furniture.Persistence.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserPreferences", (string)null);
+                    b.ToTable("UserPreferences");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1301,17 +1267,6 @@ namespace Furniture.Persistence.Migrations
                     b.Navigation("Conversation");
 
                     b.Navigation("Sender");
-                });
-
-            modelBuilder.Entity("Furniture.Domain.Models.Notification", b =>
-                {
-                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Offer", b =>

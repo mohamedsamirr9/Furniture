@@ -34,7 +34,7 @@
         <span class="status-badge" [ngClass]="getStatusClass(displayStatus)">
           {{ 'STATUS.' + (displayStatus | uppercase) | translate }}
         </span>
-        <span class="badge rounded-pill" [ngClass]="order.paymentMethod === 'Card' ? 'bg-primary' : 'bg-secondary'">
+        <span class="badge rounded-pill" [ngClass]="paymentBadgeClass">
           {{ paymentMethodLabel }}
         </span>
         <div *ngIf="canCancel">

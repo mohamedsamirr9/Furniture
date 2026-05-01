@@ -4,6 +4,7 @@ using System.Text;
 using Furniture.Domain.InterfacesRepositories;
 using Furniture.Domain.Models;
 using Furniture.Domain.Models.Enum;
+using Furniture.Services.Specifications.Order;
 using Furniture.Services.Specifications;
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos.Payment;
@@ -38,13 +39,19 @@ namespace Furniture.Services.Implementations
         public async Task<PaymentResponseDTO> CreatePaymentAsync(int orderId, string userId, string paymentMethod = "card")
         {
             var order = await GetOrderAsync(orderId, userId);
-            ValidateOrderForPayment(order);
+            var relatedOrders = await GetPaymentOrdersAsync(order, userId);
+            ValidateOrdersForPayment(relatedOrders);
 
             var requestedMethod = paymentMethod.Equals("cash", StringComparison.OrdinalIgnoreCase)
                 ? PaymentMethod.Cash
                 : PaymentMethod.Card;
 
             var existingPayment = await GetExistingPaymentAsync(orderId);
+            if (existingPayment == null && order.PaymentId.HasValue)
+            {
+                existingPayment = await _unitOfWork.GetRepository<Payment, int>()
+                    .GetByIdAsync(order.PaymentId.Value);
+            }
 
             if (existingPayment?.Status == PaymentStatus.Completed)
                 throw new InvalidOperationException("Order is already paid");
@@ -53,51 +60,55 @@ namespace Furniture.Services.Implementations
             {
                 if (existingPayment.Method == PaymentMethod.Cash && requestedMethod == PaymentMethod.Cash)
                 {
+                    var hasMissingPayouts = await HasMissingSellerPayoutsAsync(relatedOrders);
+                    if (hasMissingPayouts)
+                    {
+                        _logger.LogInformation(
+                            "Cash payment exists but payouts are missing for one or more orders. Initializing payouts. PaymentId={PaymentId}, OrderId={OrderId}",
+                            existingPayment.Id, orderId);
+                        return await HandleCashPaymentAsync(relatedOrders, orderId, existingPayment);
+                    }
+
                     return new PaymentResponseDTO
                     {
                         PaymentUrl = null,
                         PaymentToken = null,
                         OrderId = orderId,
-                        Amount = order.TotalPrice,
+                        Amount = relatedOrders.Sum(o => o.TotalPrice),
                         Message = "Cash payment already recorded for this order."
                     };
                 }
-
-                if (existingPayment.Method != requestedMethod)
-                {
-                    throw new InvalidOperationException(
-                        "A payment has already been initiated for this order. Please continue with the same payment method.");
-                }
             }
 
-            await ValidateSellerNotBlockedAsync(order);
+            await ValidateSellerNotBlockedAsync(relatedOrders);
 
             if (requestedMethod == PaymentMethod.Cash)
             {
-                await ValidateCashExposureAsync(order);
-                return await HandleCashPaymentAsync(order, orderId);
+                await ValidateCashExposureAsync(relatedOrders);
+                return await HandleCashPaymentAsync(relatedOrders, orderId, existingPayment);
             }
 
             var merchantOrderId = $"order-{order.Id}-{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}";
-
-            var sellerPayouts = await BuildSellerPayoutsAsync(order, orderId);
+            var totalAmount = relatedOrders.Sum(o => o.TotalPrice);
+            var allOrderItems = relatedOrders.SelectMany(o => o.OrderItems ?? new List<OrderItem>()).ToList();
+            var sellerPayouts = await BuildSellerPayoutsAsync(relatedOrders);
 
             var (paymentToken, paymobOrderId) =
-                await CreatePaymobPaymentAsync(order, merchantOrderId);
+                await CreatePaymobPaymentAsync(totalAmount, allOrderItems, order, merchantOrderId);
 
             await SavePaymentAsync(
                 existingPayment,
-                orderId,
-                order,
+                relatedOrders,
+                totalAmount,
                 paymentToken,
                 paymobOrderId,
                 merchantOrderId);
 
-            await SavePayoutsAsync(orderId, sellerPayouts, paymentToken);
+            await SavePayoutsAsync(relatedOrders.Select(o => o.Id).ToList(), sellerPayouts, paymentToken);
 
             await _unitOfWork.SaveChangesAsync();
 
-            return BuildPaymentResponse(orderId, order, paymentToken);
+            return BuildPaymentResponse(orderId, totalAmount, paymentToken);
         }
        public async Task<bool> HandlePaymentCallbackAsync(PaymobCallbackDTO callback, string hmac)
         {
@@ -114,6 +125,7 @@ namespace Furniture.Services.Implementations
             if (!callback.success)
             {
                 _logger.LogInformation("Payment not successful for OrderId={OrderId}", callback.order);
+                await MarkPaymentAsFailedAsync(callback);
                 return false;
             }
 
@@ -152,39 +164,19 @@ namespace Furniture.Services.Implementations
                 return true;
             }
 
-            var order = await _unitOfWork.GetRepository<Order, int>()
-                .GetByIdAsync(payment.OrderId);
-
-            if (order != null &&
-                (order.Status == OrderStatus.Cancelled || order.Status == OrderStatus.Declined))
+            var paymentOrders = await GetPaymentOrdersByPaymentIdAsync(payment.Id);
+            if (paymentOrders.Any(o => o.Status == OrderStatus.Cancelled || o.Status == OrderStatus.Declined))
             {
-                _logger.LogInformation(
-                    "Ignoring callback for cancelled/declined order OrderId={InternalOrderId}",
-                    payment.OrderId);
-                return true;
-            }
-
-            var existingPaymentForOrder = await GetExistingPaymentAsync(payment.OrderId);
-
-            if (existingPaymentForOrder != null && existingPaymentForOrder.Status == PaymentStatus.Completed)
-            {
-                _logger.LogInformation(
-                    "Internal OrderId={InternalOrderId} already has completed payment, acknowledging duplicate callback",
-                    payment.OrderId);
-                return true;
-            }
-
-            if (existingPaymentForOrder != null && existingPaymentForOrder.Status == PaymentStatus.Cancelled)
-            {
-                _logger.LogInformation(
-                    "Ignoring callback because payment for OrderId={InternalOrderId} is cancelled",
-                    payment.OrderId);
+                _logger.LogInformation("Ignoring callback because one or more linked orders are cancelled/declined. PaymentId={PaymentId}", payment.Id);
                 return true;
             }
 
             await CompletePaymentAsync(payment, callback);
             await _unitOfWork.SaveChangesAsync();
-            await _sellerPaymentService.ProcessPayoutsForOrderAsync(payment.OrderId);
+            foreach (var oid in await GetPaymentOrderIdsAsync(payment))
+            {
+                await _sellerPaymentService.ProcessPayoutsForOrderAsync(oid);
+            }
 
             _logger.LogInformation("Payment completed successfully for OrderId={InternalOrderId}", payment.OrderId);
 
@@ -202,6 +194,7 @@ namespace Furniture.Services.Implementations
         
         public async Task ConfirmCashPaymentAfterDeliveryAsync(int orderId)
         {
+            _logger.LogInformation("ConfirmCashPaymentAfterDeliveryAsync started for OrderId={OrderId}", orderId);
             var payment = await GetExistingPaymentAsync(orderId);
 
             if (payment == null)
@@ -211,25 +204,48 @@ namespace Furniture.Services.Implementations
             }
 
             if (payment.Method != PaymentMethod.Cash)
+            {
+                _logger.LogInformation(
+                    "Skipping cash commission for OrderId={OrderId}: Payment method is {Method}, not Cash.",
+                    orderId, payment.Method);
                 return;
+            }
 
-            if (payment.Status == PaymentStatus.Completed || payment.Status == PaymentStatus.Cancelled)
+            if (payment.Status == PaymentStatus.Cancelled)
+            {
+                _logger.LogInformation("Skipping cash commission for OrderId={OrderId}: Payment is cancelled.", orderId);
                 return;
+            }
 
             var order = await _unitOfWork.GetRepository<Order, int>()
                 .GetByIdAsync(orderId);
 
             if (order == null || order.Status != OrderStatus.Delivered)
+            {
+                _logger.LogInformation(
+                    "Skipping cash commission for OrderId={OrderId}: Order missing or status is {Status}.",
+                    orderId, order?.Status);
                 return;
+            }
 
-            payment.Status = PaymentStatus.Completed;
-            payment.PaidAt = DateTime.UtcNow;
-            _unitOfWork.GetRepository<Payment, int>().Update(payment);
+            // For split cash orders sharing one payment, one delivered order may complete
+            // the master payment before other sibling orders are delivered.
+            // Keep processing per-order payouts even when payment is already completed.
+            if (payment.Status != PaymentStatus.Completed)
+            {
+                payment.Status = PaymentStatus.Completed;
+                payment.PaidAt = DateTime.UtcNow;
+                _unitOfWork.GetRepository<Payment, int>().Update(payment);
+            }
 
             var payoutSpec = new SellerPayoutByOrderIdSpecification(orderId);
             var payouts = await _unitOfWork.GetRepository<SellerPayout, int>()
                 .GetAllAsync(payoutSpec);
+            _logger.LogInformation(
+                "OrderId={OrderId} has {PayoutCount} payouts before delivery processing.",
+                orderId, payouts.Count());
 
+            var processedPayoutCount = 0;
             foreach (var payout in payouts.Where(p =>
                 p.Status == PayoutStatus.Pending ||
                 p.Status == PayoutStatus.Processing))
@@ -241,6 +257,9 @@ namespace Furniture.Services.Implementations
                     continue;
 
                 sellerProfile.PendingCommission += payout.CommissionAmount;
+                _logger.LogInformation(
+                    "OrderId={OrderId}, SellerProfileId={SellerProfileId}: PendingCommission increased by {CommissionAmount}. New PendingCommission={PendingCommission}.",
+                    orderId, sellerProfile.Id, payout.CommissionAmount, sellerProfile.PendingCommission);
 
                 var commissionTx = new CommissionTransaction
                 {
@@ -270,9 +289,13 @@ namespace Furniture.Services.Implementations
                 payout.ProcessedAt = DateTime.UtcNow;
                 payout.PaidAt = DateTime.UtcNow;
                 _unitOfWork.GetRepository<SellerPayout, int>().Update(payout);
+                processedPayoutCount++;
             }
 
-            await _unitOfWork.SaveChangesAsync();
+            var affected = await _unitOfWork.SaveChangesAsync();
+            _logger.LogInformation(
+                "ConfirmCashPaymentAfterDeliveryAsync completed for OrderId={OrderId}. ProcessedPayouts={ProcessedPayouts}, DbRowsAffected={AffectedRows}.",
+                orderId, processedPayoutCount, affected);
         }
 
         // ============================================================
@@ -295,6 +318,14 @@ namespace Furniture.Services.Implementations
         {
             if (order.Status != OrderStatus.Pending && order.Status != OrderStatus.Accepted)
                 throw new InvalidOperationException("Order is not ready for payment");
+        }
+
+        private static void ValidateOrdersForPayment(IEnumerable<Order> orders)
+        {
+            foreach (var order in orders)
+            {
+                ValidateOrderForPayment(order);
+            }
         }
 
         private async Task<Payment?> GetExistingPaymentAsync(int orderId)
@@ -321,28 +352,38 @@ namespace Furniture.Services.Implementations
                 .GetByIdAsync(spec);
         }
 
-        private async Task<List<SellerPayout>> BuildSellerPayoutsAsync(Order order, int orderId)
+        private async Task<List<SellerPayout>> BuildSellerPayoutsAsync(List<Order> orders)
         {
             var payouts = new List<SellerPayout>();
-
-            foreach (var group in order.OrderItems!.GroupBy(oi => oi.SellerId))
+            foreach (var order in orders)
             {
-                var sellerProfile = await GetSellerProfileAsync(group.Key);
+                var existingPayouts = await _unitOfWork.GetRepository<SellerPayout, int>()
+                    .GetAllAsync(new SellerPayoutByOrderIdSpecification(order.Id));
 
-                var itemsTotal = Math.Round(group.Sum(oi => oi.UnitPrice * oi.Quantity), 2);
-                var commission = Math.Round(itemsTotal * (sellerProfile.CommissionRate / 100m), 2);
-                var netAmount = Math.Round(itemsTotal - commission, 2);
-
-                payouts.Add(new SellerPayout
+                foreach (var group in order.OrderItems!.GroupBy(oi => oi.SellerId))
                 {
-                    SellerProfileId = sellerProfile.Id,
-                    OrderId = orderId,
-                    OrderItemsTotal = itemsTotal,
-                    CommissionAmount = commission,
-                    NetAmount = netAmount,
-                    Status = PayoutStatus.Pending,
-                    CreatedAt = DateTime.UtcNow
-                });
+                    var sellerProfile = await GetSellerProfileAsync(group.Key);
+
+                    // Minimal safety guard: prevent duplicate payout creation
+                    // for the same (OrderId + SellerId) pair.
+                    if (existingPayouts.Any(p => p.SellerProfileId == sellerProfile.Id))
+                        continue;
+
+                    var itemsTotal = Math.Round(group.Sum(oi => oi.UnitPrice * oi.Quantity), 2);
+                    var commission = Math.Round(itemsTotal * (sellerProfile.CommissionRate / 100m), 2);
+                    var netAmount = Math.Round(itemsTotal - commission, 2);
+
+                    payouts.Add(new SellerPayout
+                    {
+                        SellerProfileId = sellerProfile.Id,
+                        OrderId = order.Id,
+                        OrderItemsTotal = itemsTotal,
+                        CommissionAmount = commission,
+                        NetAmount = netAmount,
+                        Status = PayoutStatus.Pending,
+                        CreatedAt = DateTime.UtcNow
+                    });
+                }
             }
 
             return payouts;
@@ -363,8 +404,8 @@ namespace Furniture.Services.Implementations
 
         private async Task SavePaymentAsync(
             Payment? existingPayment,
-            int orderId,
-            Order order,
+            List<Order> orders,
+            decimal totalAmount,
             string paymentToken,
             string paymobOrderId,
             string merchantOrderId)
@@ -378,6 +419,7 @@ namespace Furniture.Services.Implementations
                 existingPayment.PaymobTransactionId = paymentToken;
                 existingPayment.PaymobOrderId = paymobOrderId;
                 existingPayment.MerchantOrderId = merchantOrderId;
+                existingPayment.Amount = totalAmount;
 
                 _unitOfWork.GetRepository<Payment, int>().Update(existingPayment);
             }
@@ -385,8 +427,7 @@ namespace Furniture.Services.Implementations
             {
                 var payment = new Payment
                 {
-                    OrderId = orderId,
-                    Amount = order.TotalPrice,
+                    Amount = totalAmount,
                     Currency = "EGP",
                     Method = PaymentMethod.Card,
                     Status = PaymentStatus.Pending,
@@ -396,17 +437,31 @@ namespace Furniture.Services.Implementations
                     CreatedAt = DateTime.UtcNow
                 };
                 await _unitOfWork.GetRepository<Payment, int>().AddAsync(payment);
+                existingPayment = payment;
+            }
+
+            if (existingPayment != null)
+            {
+                foreach (var ord in orders)
+                {
+                    ord.PaymentId = existingPayment.Id;
+                    _unitOfWork.GetRepository<Order, int>().Update(ord);
+                }
             }
         }
 
         private async Task SavePayoutsAsync(
-            int orderId,
+            List<int> orderIds,
             List<SellerPayout> newPayouts,
             string paymentToken)
         {
-            var existingPayoutsSpec = new SellerPayoutByOrderIdSpecification(orderId);
-            var existingPayouts = (await _unitOfWork.GetRepository<SellerPayout, int>()
-                .GetAllAsync(existingPayoutsSpec)).ToList();
+            var existingPayouts = new List<SellerPayout>();
+            foreach (var oid in orderIds)
+            {
+                var existingPayoutsSpec = new SellerPayoutByOrderIdSpecification(oid);
+                existingPayouts.AddRange(await _unitOfWork.GetRepository<SellerPayout, int>()
+                    .GetAllAsync(existingPayoutsSpec));
+            }
 
             if (!existingPayouts.Any())
             {
@@ -438,7 +493,7 @@ namespace Furniture.Services.Implementations
             }
         }
 
-        private PaymentResponseDTO BuildPaymentResponse(int orderId, Order order, string paymentToken)
+        private PaymentResponseDTO BuildPaymentResponse(int orderId, decimal totalAmount, string paymentToken)
         {
             var iframeId = _config["Paymob:IframeId"];
             var paymentUrl =
@@ -449,7 +504,7 @@ namespace Furniture.Services.Implementations
                 PaymentUrl = paymentUrl,
                 PaymentToken = paymentToken,
                 OrderId = orderId,
-                Amount = order.TotalPrice
+                Amount = totalAmount
             };
         }
  
@@ -461,33 +516,34 @@ namespace Furniture.Services.Implementations
             payment.PaymobTransactionId = callback.id;
             _unitOfWork.GetRepository<Payment, int>().Update(payment);
 
-            var order = await _unitOfWork.GetRepository<Order, int>()
-                .GetByIdAsync(payment.OrderId);
-
-            if (order != null)
+            var paymentOrders = await GetPaymentOrdersByPaymentIdAsync(payment.Id);
+            foreach (var order in paymentOrders)
             {
                 order.Status = OrderStatus.Paid;
                 _unitOfWork.GetRepository<Order, int>().Update(order);
             }
 
-            var payoutSpec = new SellerPayoutByOrderIdSpecification(payment.OrderId);
-            var payouts = await _unitOfWork.GetRepository<SellerPayout, int>()
-                .GetAllAsync(payoutSpec);
-
-            foreach (var payout in payouts.Where(p => p.Status == PayoutStatus.Pending))
+            foreach (var order in paymentOrders)
             {
-                payout.Status = PayoutStatus.Processing;
-                payout.PaymobTransactionId = callback.id;
-                _unitOfWork.GetRepository<SellerPayout, int>().Update(payout);
+                var payoutSpec = new SellerPayoutByOrderIdSpecification(order.Id);
+                var payouts = await _unitOfWork.GetRepository<SellerPayout, int>()
+                    .GetAllAsync(payoutSpec);
+
+                foreach (var payout in payouts.Where(p => p.Status == PayoutStatus.Pending))
+                {
+                    payout.Status = PayoutStatus.Processing;
+                    payout.PaymobTransactionId = callback.id;
+                    _unitOfWork.GetRepository<SellerPayout, int>().Update(payout);
+                }
             }
         }
  
 
-        private async Task<(string PaymentKey, string PaymobOrderId)> CreatePaymobPaymentAsync(Order order, string merchantOrderId)
+        private async Task<(string PaymentKey, string PaymobOrderId)> CreatePaymobPaymentAsync(decimal totalAmount, List<OrderItem> items, Order buyerOrderContext, string merchantOrderId)
         {
             var authToken = await GetAuthTokenAsync();
-            var paymobOrderId = await CreatePaymobOrderAsync(authToken, order, merchantOrderId);
-            var paymentKey = await GetPaymentKeyAsync(authToken, paymobOrderId, order);
+            var paymobOrderId = await CreatePaymobOrderAsync(authToken, totalAmount, items, merchantOrderId);
+            var paymentKey = await GetPaymentKeyAsync(authToken, paymobOrderId, totalAmount, buyerOrderContext);
             return (paymentKey, paymobOrderId.ToString());
         }
 
@@ -503,15 +559,15 @@ namespace Furniture.Services.Implementations
             return result!.Token;
         }
 
-        private async Task<int> CreatePaymobOrderAsync(string authToken, Order order, string merchantOrderId)        {
+        private async Task<int> CreatePaymobOrderAsync(string authToken, decimal totalAmount, List<OrderItem> items, string merchantOrderId)        {
             var request = new
             {
                 auth_token = authToken,
                 delivery_needed = false,
-                amount_cents = (int)Math.Round(order.TotalPrice * 100m),
+                amount_cents = (int)Math.Round(totalAmount * 100m),
                 currency = "EGP",
                 merchant_order_id = merchantOrderId,
-                items = order.OrderItems!.Select(oi => new
+                items = items.Select(oi => new
                 {
                     name = oi.Product?.NameEn ?? "Product",
                     amount_cents = (int)Math.Round(oi.UnitPrice * 100m),
@@ -536,12 +592,12 @@ namespace Furniture.Services.Implementations
             return result!.Id;
         }
 
-        private async Task<string> GetPaymentKeyAsync(string authToken, int paymobOrderId, Order order)
+        private async Task<string> GetPaymentKeyAsync(string authToken, int paymobOrderId, decimal totalAmount, Order order)
         {
             var request = new
             {
                 auth_token = authToken,
-                amount_cents = (int)(order.TotalPrice * 100),
+                amount_cents = (int)(totalAmount * 100),
                 expiration = 3600,
                 order_id = paymobOrderId.ToString(),
                 billing_data = new
@@ -637,27 +693,47 @@ namespace Furniture.Services.Implementations
         }
         
         
-        private async Task<PaymentResponseDTO> HandleCashPaymentAsync(Order order, int orderId)
+        private async Task<PaymentResponseDTO> HandleCashPaymentAsync(List<Order> orders, int orderId, Payment? existingPayment)
         {
-            var sellerPayouts = await BuildSellerPayoutsAsync(order, orderId);
+            var sellerPayouts = await BuildSellerPayoutsAsync(orders);
+            var existingOrderIds = new HashSet<int>();
+            foreach (var ord in orders)
+            {
+                var spec = new SellerPayoutByOrderIdSpecification(ord.Id);
+                var existing = await _unitOfWork.GetRepository<SellerPayout, int>()
+                    .GetAllAsync(spec);
+                if (existing.Any())
+                    existingOrderIds.Add(ord.Id);
+            }
 
-            foreach (var payout in sellerPayouts)
+            foreach (var payout in sellerPayouts.Where(p => !existingOrderIds.Contains(p.OrderId)))
             {
                 payout.Status = PayoutStatus.Pending;
                 await _unitOfWork.GetRepository<SellerPayout, int>().AddAsync(payout);
             }
 
-            var payment = new Payment
+            var payment = existingPayment ?? new Payment
             {
-                OrderId = orderId,
-                Amount = order.TotalPrice,
+                Amount = orders.Sum(o => o.TotalPrice),
                 Currency = "EGP",
                 Method = PaymentMethod.Cash,
                 Status = PaymentStatus.Pending,
                 CreatedAt = DateTime.UtcNow
             };
+            payment.Method = PaymentMethod.Cash;
+            payment.Status = PaymentStatus.Pending;
+            payment.Amount = orders.Sum(o => o.TotalPrice);
 
-            await _unitOfWork.GetRepository<Payment, int>().AddAsync(payment);
+            if (existingPayment == null)
+                await _unitOfWork.GetRepository<Payment, int>().AddAsync(payment);
+            else
+                _unitOfWork.GetRepository<Payment, int>().Update(payment);
+
+            foreach (var ord in orders)
+            {
+                ord.Payment = payment;
+                _unitOfWork.GetRepository<Order, int>().Update(ord);
+            }
 
             await _unitOfWork.SaveChangesAsync();
 
@@ -666,13 +742,13 @@ namespace Furniture.Services.Implementations
                 PaymentUrl = null,
                 PaymentToken = null,
                 OrderId = orderId,
-                Amount = order.TotalPrice,
+                Amount = orders.Sum(o => o.TotalPrice),
                 Message = "Cash order recorded successfully. Payment will be completed after delivery."
             };
         }
-        private async Task ValidateSellerNotBlockedAsync(Order order)
+        private async Task ValidateSellerNotBlockedAsync(List<Order> orders)
         {
-            foreach (var group in order.OrderItems!.GroupBy(oi => oi.SellerId))
+            foreach (var group in orders.SelectMany(o => o.OrderItems!).GroupBy(oi => oi.SellerId))
             {
                 var sellerProfile = await GetSellerProfileAsync(group.Key);
                 if (sellerProfile.IsBlocked)
@@ -682,16 +758,17 @@ namespace Furniture.Services.Implementations
             }
         }
         
-        private async Task ValidateCashExposureAsync(Order order)
+        private async Task ValidateCashExposureAsync(List<Order> orders)
         {
-            foreach (var group in order.OrderItems!.GroupBy(oi => oi.SellerId))
+            var currentOrderIds = orders.Select(o => o.Id).ToHashSet();
+            foreach (var group in orders.SelectMany(o => o.OrderItems!).GroupBy(oi => oi.SellerId))
             {
                 var sellerProfile = await GetSellerProfileAsync(group.Key);
 
                 var itemsTotal = Math.Round(group.Sum(oi => oi.UnitPrice * oi.Quantity), 2);
                 var newCommission = Math.Round(itemsTotal * (sellerProfile.CommissionRate / 100m), 2);
 
-                var reservedCashCommission = await GetReservedCashCommissionAsync(sellerProfile.Id, order.Id);
+                var reservedCashCommission = await GetReservedCashCommissionAsync(sellerProfile.Id, currentOrderIds);
                 var currentExposure = sellerProfile.PendingCommission + reservedCashCommission;
                 var projectedExposure = currentExposure + newCommission;
 
@@ -709,7 +786,7 @@ namespace Furniture.Services.Implementations
                         newCommission,
                         projectedExposure,
                         sellerProfile.MaxAllowedCommission,
-                        order.Id);
+                        string.Join(",", currentOrderIds));
 
                     throw new InvalidOperationException(
                         "Cash payment is currently unavailable for one or more items in your order. Please choose card payment or try again later.");
@@ -719,7 +796,7 @@ namespace Furniture.Services.Implementations
 
         private async Task<decimal> GetReservedCashCommissionAsync(
             int sellerProfileId,
-            int currentOrderId)
+            HashSet<int> currentOrderIds)
         {
             var spec = new SellerPayoutExposureSpecification(sellerProfileId);
 
@@ -729,7 +806,7 @@ namespace Furniture.Services.Implementations
 
             return payouts
                 .Where(p =>
-                    p.OrderId != currentOrderId &&   
+                    !currentOrderIds.Contains(p.OrderId) &&   
                     p.Order?.Payment != null &&
                     p.Order.Payment.Method == PaymentMethod.Cash &&
                     p.Order.Payment.Status == PaymentStatus.Pending &&
@@ -737,6 +814,79 @@ namespace Furniture.Services.Implementations
                     p.Order.Status != OrderStatus.Declined &&
                     p.Order.Status != OrderStatus.Completed)
                 .Sum(p => p.CommissionAmount);
+        }
+
+        private async Task<bool> HasMissingSellerPayoutsAsync(List<Order> orders)
+        {
+            foreach (var ord in orders)
+            {
+                var spec = new SellerPayoutByOrderIdSpecification(ord.Id);
+                var payouts = await _unitOfWork.GetRepository<SellerPayout, int>()
+                    .GetAllAsync(spec);
+
+                if (!payouts.Any())
+                    return true;
+            }
+
+            return false;
+        }
+
+        private async Task MarkPaymentAsFailedAsync(PaymobCallbackDTO callback)
+        {
+            Payment? payment = null;
+
+            if (callback.order > 0)
+            {
+                payment = await GetPaymentByPaymobOrderIdAsync(callback.order.ToString());
+            }
+
+            if (payment == null && !string.IsNullOrWhiteSpace(callback.merchant_order_id))
+            {
+                payment = await GetPaymentByMerchantOrderIdStoredAsync(callback.merchant_order_id);
+            }
+
+            if (payment == null)
+                return;
+
+            payment.Status = PaymentStatus.Failed;
+            _unitOfWork.GetRepository<Payment, int>().Update(payment);
+
+            var orders = await GetPaymentOrdersByPaymentIdAsync(payment.Id);
+            foreach (var order in orders)
+            {
+                _unitOfWork.GetRepository<Order, int>().Update(order);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        private async Task<List<Order>> GetPaymentOrdersAsync(Order order, string userId)
+        {
+            if (order.PaymentId.HasValue)
+            {
+                return await GetPaymentOrdersByPaymentIdAsync(order.PaymentId.Value, userId);
+            }
+
+            return new List<Order> { order };
+        }
+
+        private async Task<List<Order>> GetPaymentOrdersByPaymentIdAsync(int paymentId, string? userId = null)
+        {
+            var spec = new OrdersByPaymentIdSpecification(paymentId, userId);
+            var orders = await _unitOfWork.GetRepository<Order, int>().GetAllAsync(spec);
+            return orders.ToList();
+        }
+
+        private async Task<List<int>> GetPaymentOrderIdsAsync(Payment payment)
+        {
+            if (payment.Orders != null && payment.Orders.Any())
+                return payment.Orders.Select(o => o.Id).ToList();
+
+            if (payment.OrderId.HasValue)
+                return new List<int> { payment.OrderId.Value };
+
+            var orders = await GetPaymentOrdersByPaymentIdAsync(payment.Id);
+            return orders.Select(o => o.Id).ToList();
         }
     }
 }

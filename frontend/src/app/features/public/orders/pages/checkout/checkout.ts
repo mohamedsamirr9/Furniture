@@ -35,6 +35,20 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   ];
   private destroy$ = new Subject<void>();
 
+  private extractOrderIds(response: any): number[] {
+    // Split-orders response shape: { orders: [{ orderId: ... }, ...] }
+    const orders = response?.orders ?? response?.Orders;
+    if (Array.isArray(orders)) {
+      return orders
+        .map((o: any) => o?.orderId ?? o?.OrderId ?? o?.id)
+        .filter((id: any) => typeof id === 'number' && id > 0);
+    }
+
+    // Legacy single-order response shape
+    const single = response?.orderId ?? response?.OrderId ?? response?.id;
+    return typeof single === 'number' && single > 0 ? [single] : [];
+  }
+
   constructor(
     private fb: FormBuilder,
     private cartService: CartService,
@@ -174,25 +188,33 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       } as any).subscribe({
         next: (response: any) => {
           this.isLoading = false;
-          const orderId = response?.orderId ?? response?.OrderId ?? response?.id;
+          const orderIds = this.extractOrderIds(response);
+          const orderId = orderIds[0];
+          if (!orderId) {
+            alert('Failed to place order. Please try again.');
+            return;
+          }
 
           if (this.paymentMethod === 'Card') {
             this.cartService.clearCart().subscribe(() => {
               this.router.navigate(['/orders/pay'], {
                 state: {
                   orderId,
+                  orderIds,
                   orderResponse: response,
                   paymentMethod: 'card'
                 }
               });
             });
           } else {
+            // Split-orders share one master payment, so cash should be recorded once.
             this.paymentService.createPayment(orderId, 'cash').subscribe({
               next: () => {
                 this.cartService.clearCart().subscribe(() => {
                   this.router.navigate(['/orders/confirmed'], {
                     state: {
                       orderId,
+                      orderIds,
                       orderResponse: response
                     }
                   });

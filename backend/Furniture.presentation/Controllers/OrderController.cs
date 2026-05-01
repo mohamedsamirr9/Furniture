@@ -2,6 +2,7 @@ using Furniture.Domain.Models.Enum;
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos.Order;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -86,7 +87,7 @@ namespace Furniture.API.Controllers
             try
             {
                 var result = await _orderService.CreateOrderFromCartAsync(userId, createOrderDTO);
-                return CreatedAtAction(nameof(GetOrderById), new { orderId = result.OrderId }, result);
+                return StatusCode(StatusCodes.Status201Created, result);
             }
             catch (InvalidOperationException ex)
             {

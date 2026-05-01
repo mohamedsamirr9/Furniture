@@ -1,5 +1,6 @@
 using Furniture.Servises_Abstraction;
 using Furniture.shared.Dtos.ShippingRule;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Furniture.presentation.Controllers
@@ -27,6 +28,7 @@ namespace Furniture.presentation.Controllers
 
         // POST /api/shippingrules
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<ShippingRuleDto>> Create(ShippingRuleCreateUpdateDto dto)
         {
             try
@@ -42,6 +44,7 @@ namespace Furniture.presentation.Controllers
 
         // PUT /api/shippingrules/{id}
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Update(int id, ShippingRuleCreateUpdateDto dto)
         {
             try
@@ -57,6 +60,7 @@ namespace Furniture.presentation.Controllers
 
         // DELETE /api/shippingrules/{id}
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _shippingService.DeleteAsync(id);

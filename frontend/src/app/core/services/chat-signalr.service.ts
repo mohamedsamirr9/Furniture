@@ -191,8 +191,10 @@ export class ChatSignalRService implements OnDestroy {
     const index = conversations.findIndex((c) => c.id === message.conversationId);
     if (index !== -1) {
       conversations[index].lastMessage = message;
-      conversations[index].unreadCount =
-        message.senderId !== this.authService.token ? conversations[index].unreadCount + 1 : 0;
+      const currentUserId = this.authService.currentUserId;
+      if (currentUserId) {
+        conversations[index].unreadCount = message.senderId !== currentUserId ? conversations[index].unreadCount + 1 : 0;
+      }
       this.conversationsSubject.next([...conversations]);
     }
   }

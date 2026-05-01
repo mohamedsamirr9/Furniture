@@ -7,7 +7,6 @@ export interface ReviewCreateDto {
   rating: number;
   message?: string;
   productId: number;
-  userId: string;
 }
 
 @Injectable({
@@ -18,12 +17,8 @@ export class ReviewService {
 
   constructor(private http: HttpClient) {}
 
-  createReview(dto: Omit<ReviewCreateDto, 'userId'>): Observable<any> {
-    const payload: ReviewCreateDto = {
-      ...dto,
-      userId: 'seller-1' // Mocking user for current dev environment
-    };
-    return this.http.post<any>(this.apiUrl, payload);
+  createReview(dto: ReviewCreateDto): Observable<any> {
+    return this.http.post<any>(this.apiUrl, dto);
   }
 
   getMyReviewedProductIds(): Observable<number[]> {

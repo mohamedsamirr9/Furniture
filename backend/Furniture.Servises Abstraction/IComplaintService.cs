@@ -18,6 +18,7 @@ namespace Furniture.Servises_Abstraction
         Task<ComplaintReplyDto> ReplyAsync(int id, string actorUserId, string actorRole, ReplyComplaintDto dto);
         Task CloseAsync(int id, string userId, string role);
         Task<IEnumerable<ComplaintDto>> GetAllAsync(string? status);
+        Task DeleteAsync(int id, string actorUserId, string actorRole);
 
     }
 }
