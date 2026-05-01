@@ -76,4 +76,16 @@ public class RecommendationController : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
+    
+    [HttpGet("quiz-status")]
+    [Authorize(Roles = "buyer")]
+    public async Task<ActionResult<QuizStatusDto>> GetQuizStatus()
+    {
+        var isCompleted = await _recommendationService.HasCompletedQuizAsync(GetUserId());
+
+        return Ok(new QuizStatusDto
+        {
+            IsCompleted = isCompleted
+        });
+    }
 }

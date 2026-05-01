@@ -77,32 +77,32 @@ public class RecommendationService : IRecommendationService
         var spec = new UserPreferenceByUserIdSpecification(userId);
         var pref = await _unitOfWork.GetRepository<UserPreference, int>().GetByIdAsync(spec);
 
-        if (pref?.EmbeddingVector is null)
-            throw new Exception("Complete the quiz first.");
+        if (string.IsNullOrWhiteSpace(pref?.EmbeddingVector))
+            return new List<ProductRecommendationDto>();
 
         var payload = new
         {
             embedding = JsonSerializer.Deserialize<List<float>>(pref.EmbeddingVector),
-            top_k     = topK
+            top_k = topK
         };
 
         var response = await _httpClient.PostAsJsonAsync("/recommend", payload);
         response.EnsureSuccessStatusCode();
 
-        var result     = await response.Content.ReadFromJsonAsync<RecommendResponse>();
+        var result = await response.Content.ReadFromJsonAsync<RecommendResponse>();
         var productIds = result?.Recommendations.Select(r => r.ProductId).ToList() ?? new();
 
         if (!productIds.Any()) return new();
 
         var productSpec = new ProductsByIdsSpecification(productIds);
-        var products    = await _unitOfWork.GetRepository<Product, int>()
-                              .GetAllAsync(productSpec);
+        var products = await _unitOfWork.GetRepository<Product, int>()
+            .GetAllAsync(productSpec);
 
         return products.Select(p => new ProductRecommendationDto
         {
-            Id       = p.Id,
-            Name     = p.NameEn,
-            Price    = p.Price,
+            Id = p.Id,
+            Name = p.NameEn,
+            Price = p.Price,
             ImageUrl = p.Images.FirstOrDefault()?.ImageUrl
         }).ToList();
     }
@@ -110,17 +110,44 @@ public class RecommendationService : IRecommendationService
     public async Task UpdateUserEmbeddingAsync(
         string userId, int productId, string actionType)
     {
-        var spec    = new UserPreferenceByUserIdSpecification(userId);
-        var pref    = await _unitOfWork.GetRepository<UserPreference, int>().GetByIdAsync(spec);
+        var repo = _unitOfWork.GetRepository<UserPreference, int>();
+
+        var spec = new UserPreferenceByUserIdSpecification(userId);
+        var pref = await repo.GetByIdAsync(spec);
+
         var product = await _unitOfWork.GetRepository<Product, int>().GetByIdAsync(productId);
 
-        if (pref?.EmbeddingVector is null || product?.EmbeddingVector is null) return;
+        if (product?.EmbeddingVector is null)
+            return;
 
+        if (pref is null)
+        {
+            pref = new UserPreference
+            {
+                UserId = userId,
+                EmbeddingVector = product.EmbeddingVector,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            await repo.AddAsync(pref);
+            await _unitOfWork.SaveChangesAsync();
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(pref.EmbeddingVector))
+        {
+            pref.EmbeddingVector = product.EmbeddingVector;
+            pref.UpdatedAt = DateTime.UtcNow;
+
+            repo.Update(pref);
+            await _unitOfWork.SaveChangesAsync();
+            return;
+        }
         var payload = new
         {
-            user_embedding    = JsonSerializer.Deserialize<List<float>>(pref.EmbeddingVector),
+            user_embedding = JsonSerializer.Deserialize<List<float>>(pref.EmbeddingVector),
             product_embedding = JsonSerializer.Deserialize<List<float>>(product.EmbeddingVector),
-            action_type       = actionType
+            action_type = actionType
         };
 
         var response = await _httpClient.PostAsJsonAsync("/embed/update", payload);
@@ -130,7 +157,9 @@ public class RecommendationService : IRecommendationService
         if (result is null) return;
 
         pref.EmbeddingVector = JsonSerializer.Serialize(result.Embedding);
-        pref.UpdatedAt       = DateTime.UtcNow;
+        pref.UpdatedAt = DateTime.UtcNow;
+
+        repo.Update(pref);
         await _unitOfWork.SaveChangesAsync();
     }
 
@@ -161,5 +190,18 @@ public class RecommendationService : IRecommendationService
 
         if (!response.IsSuccessStatusCode)
             Console.WriteLine($"Failed to delete embedding for product {productId}");
+    }
+    
+    public async Task<bool> HasCompletedQuizAsync(string userId)
+    {
+        var repo = _unitOfWork.GetRepository<UserPreference, int>();
+        var spec = new UserPreferenceByUserIdSpecification(userId);
+        var pref = await repo.GetByIdAsync(spec);
+
+        return pref is not null
+               && !string.IsNullOrWhiteSpace(pref.Style)
+               && !string.IsNullOrWhiteSpace(pref.Color)
+               && !string.IsNullOrWhiteSpace(pref.RoomSize)
+               && !string.IsNullOrWhiteSpace(pref.Budget);
     }
 }
