@@ -179,6 +179,14 @@ namespace Furniture.web
             builder.Services.AddHttpClient("PaymobPayoutsAuth", client => client.Timeout = TimeSpan.FromSeconds(30));
             builder.Services.AddHttpClient("PythonService");
 
+            builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection(EmailOptions.SectionName));
+            builder.Services.AddHttpClient("Resend", client =>
+            {
+                client.BaseAddress = new Uri("https://api.resend.com/");
+                var timeoutSec = builder.Configuration.GetValue<int?>("Email:TimeoutSeconds") ?? 20;
+                client.Timeout = TimeSpan.FromSeconds(timeoutSec + 5);
+            });
+
             // Repositories & Services
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<JwtHelper>();
