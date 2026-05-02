@@ -1,6 +1,5 @@
 <div class="notification-wrapper position-relative" (click)="$event.stopPropagation()">
 
-  <!-- BELL BUTTON -->
   <button class="notification-btn" (click)="toggleDropdown()">
     <i class="bi bi-bell"></i>
     <span class="notification-badge" *ngIf="(unreadCount$ | async)! > 0">
@@ -8,9 +7,7 @@
     </span>
   </button>
 
-  <!-- DROPDOWN -->
   <div class="notification-dropdown" *ngIf="isOpen">
-
     <div class="notification-header">
       <span>Notifications</span>
     </div>
@@ -20,8 +17,8 @@
       <div
         *ngFor="let n of notifications"
         class="notification-item"
-        [class.unread]="!n.isRead"
-        [class.read]="n.isRead"
+        [class.notification-unread]="!n.isRead"
+        [class.notification-read]="n.isRead"
         (click)="onRead(n)">
 
         <div class="notif-icon">
@@ -36,7 +33,6 @@
 
       </div>
 
-      <!-- EMPTY STATE -->
       <div *ngIf="notifications.length === 0" class="empty">
         <div class="empty-icon">
           <i class="bi bi-bell-slash"></i>
@@ -45,7 +41,6 @@
       </div>
 
     </ng-container>
-
   </div>
 
 </div>

@@ -10,6 +10,7 @@ import { HomeRecommendationsComponent } from '../../components/home-recommendati
 import { QuizPromptComponent } from '../../components/quiz-prompt/quiz-prompt';
 import { RecommendationService } from '../../../../../core/services/recommendation.service';
 import { NgIf } from '@angular/common';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -30,19 +31,30 @@ import { NgIf } from '@angular/common';
 })
 export class Home implements OnInit {
   isLoggedIn = false;
+  isBuyer = false;
   quizCompleted = false;
   checked = false;
 
-  constructor(private recService: RecommendationService) {}
+  constructor(
+    private recService: RecommendationService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     const token = localStorage.getItem('token');
+
     if (!token) {
       this.checked = true;
       return;
     }
 
     this.isLoggedIn = true;
+    this.isBuyer = this.authService.getUserRole() === 'buyer';
+
+    if (!this.isBuyer) {
+      this.checked = true;
+      return;
+    }
 
     this.recService.getQuizStatus().subscribe({
       next: (res) => {

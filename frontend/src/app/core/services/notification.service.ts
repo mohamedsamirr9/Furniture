@@ -8,35 +8,49 @@ import { Notification } from '../models/notification.model';
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
   private hubConnection?: signalR.HubConnection;
-  private readonly storageKey = 'notifications_cache';
 
-  private initialNotifications = this.getNotificationsFromStorage();
-
-  private notificationsSubject = new BehaviorSubject<Notification[]>(this.initialNotifications);
+  private notificationsSubject = new BehaviorSubject<Notification[]>([]);
   notifications$ = this.notificationsSubject.asObservable();
 
-  private unreadCountSubject = new BehaviorSubject<number>(
-    this.initialNotifications.filter(n => !n.isRead).length
-  );
+  private unreadCountSubject = new BehaviorSubject<number>(0);
   unreadCount$ = this.unreadCountSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  private getNotificationsFromStorage(): Notification[] {
-    const data = localStorage.getItem(this.storageKey);
-    return data ? JSON.parse(data) : [];
+  private getStorageKey(): string | null {
+    const userData = localStorage.getItem('user');
+    if (!userData) return null;
+
+    const user = JSON.parse(userData);
+    return user?.id ? `notifications_cache_${user.id}` : null;
   }
 
-  private updateState(notifications: Notification[]): void {
-    this.notificationsSubject.next(notifications);
-    this.unreadCountSubject.next(notifications.filter(n => !n.isRead).length);
-    localStorage.setItem(this.storageKey, JSON.stringify(notifications));
-  }
-
-  startConnection(token: string): void {
-    if (this.hubConnection && this.hubConnection.state !== signalR.HubConnectionState.Disconnected) {
+  restoreFromStorage(): void {
+    const key = this.getStorageKey();
+    if (!key) {
+      this.clearNotificationsState();
       return;
     }
+
+    const data = localStorage.getItem(key);
+    const notifications: Notification[] = data ? JSON.parse(data) : [];
+    this.updateState(notifications, false);
+  }
+
+  private updateState(notifications: Notification[], persist = true): void {
+    this.notificationsSubject.next(notifications);
+    this.unreadCountSubject.next(notifications.filter(n => !n.isRead).length);
+
+    if (persist) {
+      const key = this.getStorageKey();
+      if (key) {
+        localStorage.setItem(key, JSON.stringify(notifications));
+      }
+    }
+  }
+
+  async startConnection(token: string): Promise<void> {
+    await this.stopConnection();
 
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(`${environment.apiUrl}/notificationHub`, {
@@ -46,19 +60,25 @@ export class NotificationService {
       .build();
 
     this.hubConnection.on('ReceiveNotification', (notification: Notification) => {
-      console.log('Realtime notification:', notification);
       const current = this.notificationsSubject.value;
       const updated = [notification, ...current.filter(n => n.id !== notification.id)];
       this.updateState(updated);
     });
 
-    this.hubConnection.start()
-      .then(() => console.log('SignalR connected'))
-      .catch(err => console.error('SignalR error:', err));
+    try {
+      await this.hubConnection.start();
+      console.log('SignalR connected');
+    } catch (err) {
+      console.error('SignalR connection error:', err);
+    }
   }
 
-  stopConnection(): void {
-    this.hubConnection?.stop();
+  async stopConnection(): Promise<void> {
+    if (this.hubConnection) {
+      this.hubConnection.off('ReceiveNotification');
+      await this.hubConnection.stop();
+      this.hubConnection = undefined;
+    }
   }
 
   getMyNotifications() {
@@ -72,7 +92,6 @@ export class NotificationService {
   loadNotifications(): void {
     this.getMyNotifications().subscribe({
       next: (notifications) => {
-        console.log('Notifications from API:', notifications);
         this.updateState(notifications);
       },
       error: (err) => {
@@ -90,7 +109,7 @@ export class NotificationService {
   }
 
   clearNotificationsState(): void {
-    this.updateState([]);
-    localStorage.removeItem(this.storageKey);
+    this.notificationsSubject.next([]);
+    this.unreadCountSubject.next(0);
   }
 }

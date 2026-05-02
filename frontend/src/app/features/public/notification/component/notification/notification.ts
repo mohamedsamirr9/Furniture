@@ -24,18 +24,11 @@ export class NotificationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.notificationService.startConnection(token);
-    }
     this.notificationService.loadNotifications();
   }
 
   toggleDropdown(): void {
     this.isOpen = !this.isOpen;
-    if (this.isOpen) {
-      this.notificationService.loadNotifications();
-    }
   }
 
   @HostListener('document:click')
@@ -44,19 +37,30 @@ export class NotificationComponent implements OnInit {
   }
 
   onRead(notification: Notification): void {
-    if (!notification.isRead) {
-      this.notificationService.markAsReadLocally(notification.id);
-
-      this.notificationService.markAsRead(notification.id).subscribe({
-        error: (err) => console.error('mark as read failed', err)
-      });
-    }
-
-    if (notification.customRequestId) {
-      this.isOpen = false;
-      setTimeout(() => {
+    const navigateToTarget = () => {
+      if (notification.customRequestId) {
+        this.isOpen = false;
         this.router.navigate(['/custom-requests', notification.customRequestId]);
-      }, 100);
+      }
+    };
+
+    if (notification.isRead) {
+      navigateToTarget();
+      return;
     }
+
+    this.notificationService.markAsReadLocally(notification.id);
+
+    this.notificationService.markAsRead(notification.id).subscribe({
+      next: () => {
+        this.notificationService.loadNotifications();
+        navigateToTarget();
+      },
+      error: (err) => {
+        console.error('mark as read failed', err);
+        this.notificationService.loadNotifications();
+        navigateToTarget();
+      }
+    });
   }
 }

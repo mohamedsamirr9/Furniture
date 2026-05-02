@@ -1,14 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
-import { BehaviorSubject, Observable, catchError, map, of, tap, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  catchError,
+  tap,
+  throwError
+} from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   AuthResponseDto,
   LoginDto,
   RegisterDto,
   UserDto,
-  RefreshTokenDto,
   UpdateProfileDto,
   ChangePasswordDto,
   BecomeSellerDto,
@@ -21,18 +26,34 @@ import { NotificationService } from './notification.service';
 })
 export class AuthService {
   private baseUrl = `${environment.apiUrl}/Account`;
-  
+
   private currentUserSubject = new BehaviorSubject<UserDto | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient, private notificationService: NotificationService) {
-  const savedUser = localStorage.getItem('user');
-  if (savedUser) {
-    this.currentUserSubject.next(JSON.parse(savedUser));
-    const token = localStorage.getItem('token');
-    if (token) this.notificationService.startConnection(token);
+  constructor(
+    private http: HttpClient,
+    private notificationService: NotificationService
+  ) {
+    this.initializeFromStorage();
   }
-}
+
+  private initializeFromStorage(): void {
+    const savedUser = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+
+    if (savedUser) {
+      this.currentUserSubject.next(JSON.parse(savedUser));
+      this.notificationService.restoreFromStorage();
+    } else {
+      this.notificationService.clearNotificationsState();
+    }
+
+    if (token) {
+      this.notificationService.startConnection(token).then(() => {
+        this.notificationService.loadNotifications();
+      });
+    }
+  }
 
   get token(): string | null {
     return localStorage.getItem('token');
@@ -49,7 +70,6 @@ export class AuthService {
     const decoded = this.decodeToken();
     if (!decoded) return null;
 
-    // Standard ASP.NET Core NameIdentifier claim key
     return (
       decoded['nameid'] ||
       decoded['ClaimTypes.NameIdentifier'] ||
@@ -70,7 +90,10 @@ export class AuthService {
 
   refreshToken(): Observable<AuthResponseDto> {
     const refreshToken = this.refreshTokenValue;
-    if (!refreshToken) return throwError(() => new Error('No refresh token available'));
+
+    if (!refreshToken) {
+      return throwError(() => new Error('No refresh token available'));
+    }
 
     return this.http.post<AuthResponseDto>(`${this.baseUrl}/refresh`, { token: refreshToken }).pipe(
       tap((response) => this.setSession(response)),
@@ -83,15 +106,16 @@ export class AuthService {
 
   logout(): void {
     const refreshToken = this.refreshTokenValue;
-    
-    // Clear state FIRST to prevent loops if revoke triggers 401
+
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     this.currentUserSubject.next(null);
-    this.notificationService.stopConnection();
 
-    // Only call revoke if we had a refresh token
+    this.notificationService.stopConnection().then(() => {
+      this.notificationService.clearNotificationsState();
+    });
+
     if (refreshToken) {
       this.http.post(`${this.baseUrl}/revoke?refreshToken=${refreshToken}`, {}).subscribe({
         error: (err: any) => console.error('Token revocation failed', err)
@@ -141,23 +165,6 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/reset-password`, data);
   }
 
-  private setSession(authResult: any): void {
-    // Handle both camelCase and PascalCase from API
-    const token = authResult.token || authResult.Token;
-    const refreshToken = authResult.refreshToken || authResult.RefreshToken;
-    const user = authResult.user || authResult.User;
-
-    if (token) {
-      localStorage.setItem('token', token);
-      this.notificationService.startConnection(token); 
-    }    
-    if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
-      this.currentUserSubject.next(user);
-    }
-  }
-
   isLoggedIn(): boolean {
     return this.isTokenValid();
   }
@@ -166,11 +173,12 @@ export class AuthService {
     try {
       const decoded: any = this.decodeToken();
       if (!decoded) return null;
-      // Standard ASP.NET Core Role claim key
-      const role = decoded['role'] || 
-                   decoded['ClaimTypes.Role'] || 
-                   decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-      
+
+      const role =
+        decoded['role'] ||
+        decoded['ClaimTypes.Role'] ||
+        decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+
       return role ? role.toLowerCase() : null;
     } catch (e) {
       console.error('Failed to decode token', e);
@@ -178,9 +186,37 @@ export class AuthService {
     }
   }
 
+  getAllUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/admin/users`);
+  }
+
+  private setSession(authResult: any): void {
+    const token = authResult.token || authResult.Token;
+    const refreshToken = authResult.refreshToken || authResult.RefreshToken;
+    const user = authResult.user || authResult.User;
+
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+      this.currentUserSubject.next(user);
+      this.notificationService.restoreFromStorage();
+    }
+
+    if (token) {
+      localStorage.setItem('token', token);
+      this.notificationService.startConnection(token).then(() => {
+        this.notificationService.loadNotifications();
+      });
+    }
+
+    if (refreshToken) {
+      localStorage.setItem('refreshToken', refreshToken);
+    }
+  }
+
   private decodeToken(): any | null {
     const token = this.token;
     if (!token) return null;
+
     try {
       return jwtDecode<any>(token);
     } catch {
@@ -193,13 +229,9 @@ export class AuthService {
     if (!decoded) return false;
 
     const exp: number | undefined = decoded['exp'];
-    if (!exp) return true; // if no exp claim, treat as present (avoid breaking)
+    if (!exp) return true;
 
     const nowSeconds = Math.floor(Date.now() / 1000);
     return exp > nowSeconds;
-  }
-
-  getAllUsers(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/admin/users`);
   }
 }
