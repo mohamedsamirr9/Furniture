@@ -5,13 +5,16 @@ import { Register } from './register/register';
 import { Role } from './role/role';
 import { Verify } from './verify/verify';
 import { Success } from './success/success';
-import { ForgotPassword } from './forgot-password/forgot-password'; 
+import { ForgotPassword } from './forgot-password/forgot-password';
+import { customerAuthFlowGuard } from '../../../core/guards/public-role.guard';
 
 export const AUTH_ROUTES: Routes = [
   {
     path: '',
     component: AuthLayout,
+    canActivate: [customerAuthFlowGuard],
     children: [
+      { path: 'signup', redirectTo: 'register', pathMatch: 'full' },
       { path: 'login', component: Login },
       { path: 'register', component: Register },
       { path: 'role', component: Role },

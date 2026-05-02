@@ -9,7 +9,7 @@
 
   <div class="notification-dropdown" *ngIf="isOpen">
     <div class="notification-header">
-      <span>Notifications</span>
+      <span>{{ 'NOTIFICATIONS.TITLE' | translate }}</span>
     </div>
 
     <ng-container *ngIf="(notifications$ | async) as notifications">
@@ -26,8 +26,12 @@
         </div>
 
         <div class="notif-content">
-          <strong>{{ n.title }}</strong>
-          <p>{{ n.message }}</p>
+          <strong>{{ notificationTitleKey(n.title) | translate }}</strong>
+          <ng-container *ngIf="notificationMessageI18n(n.message) as msgTr">
+            <p>{{ msgTr.key | translate : msgTr.params }}</p>
+          </ng-container>
+          <small>{{ (n.isRead ? 'NOTIFICATIONS.STATUS.READ' : 'NOTIFICATIONS.STATUS.UNREAD') | translate }}</small>
+          <br />
           <small>{{ n.createdAt | date:'short' }}</small>
         </div>
 
@@ -37,7 +41,7 @@
         <div class="empty-icon">
           <i class="bi bi-bell-slash"></i>
         </div>
-        <p>No notifications yet</p>
+        <p>{{ 'NOTIFICATIONS.EMPTY' | translate }}</p>
       </div>
 
     </ng-container>

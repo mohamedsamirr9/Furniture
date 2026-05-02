@@ -92,10 +92,6 @@ export class SellerProfileDisplayComponent implements OnChanges {
     this.saveError = '';
   }
 
-  openAddWork(): void {
-    // هنا تضيف اللوجيك بتاعك
-  }
-
   saveProfile(): void {
     if (!this.editMode || this.profileForm.invalid) {
       this.profileForm.markAllAsTouched();

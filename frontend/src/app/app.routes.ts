@@ -6,6 +6,7 @@ import { SellerLayout } from './layouts/seller-layout/seller-layout';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
+  { path: 'home', redirectTo: '', pathMatch: 'full' },
   {
     path: '',
     loadChildren: () => import('./features/public/public.routes').then((m) => m.PUBLIC_ROUTES),

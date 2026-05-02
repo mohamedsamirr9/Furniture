@@ -1,0 +1,8 @@
+<button
+  type="button"
+  class="lang-toggle-btn"
+  (click)="toggleLanguage()"
+  [attr.aria-label]="'NAV.TOGGLE_LANG' | translate"
+>
+  <span class="lang-toggle-label">{{ targetLangLabel }}</span>
+</button>

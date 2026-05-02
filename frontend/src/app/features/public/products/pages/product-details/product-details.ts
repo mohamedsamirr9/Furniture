@@ -9,6 +9,7 @@ import { Product } from '../../../../../core/models/product.model';
 import { Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { LocalizedPricePipe } from '../../../../../core/pipes/localized-price.pipe';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-product-details',
@@ -41,11 +42,14 @@ export class ProductDetails implements OnInit, OnDestroy {
     private wishlistService: WishlistService,
     private reviewService: ReviewService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.wishlistService.getWishlist().subscribe();
+    if (this.authService.isLoggedIn()) {
+      this.wishlistService.getWishlist().subscribe();
+    }
 
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');

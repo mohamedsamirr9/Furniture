@@ -3,10 +3,11 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
+import { LanguageToggleComponent } from '../../shared/components/language-toggle/language-toggle';
 
 @Component({
   selector: 'app-admin-layout',
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [CommonModule, RouterModule, TranslateModule, LanguageToggleComponent],
   templateUrl: './admin-layout.html',
   styleUrl: './admin-layout.css',
 })

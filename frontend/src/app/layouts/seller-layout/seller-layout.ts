@@ -4,10 +4,19 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
 import { ChatWidgetComponent } from '../../shared/components/chat-widget/chat-widget';
+import { NotificationComponent } from '../../features/public/notification/component/notification/notification';
+import { LanguageToggleComponent } from '../../shared/components/language-toggle/language-toggle';
 
 @Component({
   selector: 'app-seller-layout',
-  imports: [CommonModule, RouterModule, TranslateModule, ChatWidgetComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    TranslateModule,
+    ChatWidgetComponent,
+    NotificationComponent,
+    LanguageToggleComponent,
+  ],
   templateUrl: './seller-layout.html',
   styleUrl: './seller-layout.css',
 })

@@ -6,17 +6,16 @@ import { WishlistService } from '../../../core/services/wishlist.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { ChatWidgetComponent } from '../chat-widget/chat-widget';
-import { NotificationComponent } from '../../../features/public/notification/component/notification/notification';
+import { LanguageToggleComponent } from '../language-toggle/language-toggle';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterModule, CommonModule, TranslateModule, ChatWidgetComponent, NotificationComponent],
+  imports: [RouterModule, CommonModule, TranslateModule, ChatWidgetComponent, LanguageToggleComponent],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css'],
 })
 export class Navbar implements OnInit, OnDestroy {
-  currentLang: string = 'en';
   dropdownOpen = false;
 
   private outsideClickListener = (e: MouseEvent) => {
@@ -34,8 +33,6 @@ export class Navbar implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.currentLang = localStorage.getItem('lang') || 'en';
-
     if (this.authService.isLoggedIn()) {
       this.cartService.loadCart().subscribe();
     }
@@ -68,11 +65,5 @@ export class Navbar implements OnInit, OnDestroy {
 
   get isDarkPage(): boolean {
     return this.router.url !== '/';
-  }
-
-  toggleLanguage(): void {
-    this.currentLang = this.currentLang === 'en' ? 'ar' : 'en';
-    localStorage.setItem('lang', this.currentLang);
-    window.location.reload();
   }
 }

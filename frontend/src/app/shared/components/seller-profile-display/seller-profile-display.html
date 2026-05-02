@@ -170,14 +170,6 @@
         </div>
 
         <div class="portfolio-actions">
-          <button
-            type="button"
-            class="btn-add-work"
-            *ngIf="editMode"
-            (click)="openAddWork()"
-          >
-            {{ 'SELLER_PROFILE.ADD_WORK' | translate }}
-          </button>
           <a *ngIf="showRequestCustomCta" routerLink="/customer" class="btn-request">
             {{ 'SELLER_PROFILE.REQUEST_CUSTOM' | translate }}
           </a>

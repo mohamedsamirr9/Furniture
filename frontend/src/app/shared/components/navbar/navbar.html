@@ -46,14 +46,7 @@
         <span class="badge-dot" *ngIf="(cartService.cartCount$ | async) === 0">0</span>
       </a>
 
-      <a
-        class="nav-icon-link lang-toggle"
-        style="cursor: pointer"
-        (click)="toggleLanguage()"
-        [attr.aria-label]="'NAV.TOGGLE_LANG' | translate"
-      >
-        <span class="fs-6 fw-semibold">{{ currentLang === 'en' ? 'AR' : 'EN' }}</span>
-      </a>
+      <app-language-toggle />
 
       <!-- ── Profile Dropdown ── -->
       <ng-container *ngIf="authService.currentUser$ | async as user; else guest">
@@ -116,7 +109,6 @@
       </ng-template>
 
       @if (authService.isLoggedIn()) {
-        <app-notification></app-notification>
         <app-chat-widget></app-chat-widget>
       }
     </div>

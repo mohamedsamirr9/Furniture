@@ -5,6 +5,20 @@
     "CANCEL": "Cancel",
     "PRICE_CURRENCY": "EGP"
   },
+  "NOTIFICATIONS": {
+    "TITLE": "Notifications",
+    "EMPTY": "No notifications yet",
+    "NEW_CUSTOM_REQUEST_TITLE": "New custom request",
+    "CUSTOM_REQUEST_UPDATED_TITLE": "Custom request updated",
+    "NEW_CUSTOM_REQUEST_ADDED": "New custom request has been added",
+    "NEW_CUSTOM_REQUEST_ADDED_WITH_DESC": "New custom request has been added: {{description}}",
+    "CUSTOM_REQUEST_UPDATED_WITH_DESC": "A custom request has been updated: {{description}}",
+    "GENERIC_MESSAGE": "{{text}}",
+    "STATUS": {
+      "READ": "Read",
+      "UNREAD": "Unread"
+    }
+  },
   "NAV": {
     "HOME": "Home",
     "ABOUT_US": "About Us",
@@ -471,6 +485,9 @@
     "VIEW_MY_ORDERS": "View My Orders",
     "CONTINUE_SHOPPING": "Continue Shopping"
   },
+  "ORDER_CONFIRMATION": {
+    "MESSAGE": "Your request has been submitted successfully. We will review it and notify you once sellers start sending offers."
+  },
   "ADMIN": {
     "USERS_TITLE": "Users",
     "USERS_MGMT": "Users Management",
@@ -721,7 +738,7 @@
       "THE_BRIEF": "THE BRIEF",
       "SHARE_DETAILS": "Share the details",
       "SHARE_DETAILS_DESC": "The more specific your description, the closer we can get to your vision. Reference images help us match your taste in materials, tone, and silhouette.",
-      "BUDGET": "Budget ($)",
+      "BUDGET": "Budget (EGP)",
       "BUDGET_PLACEHOLDER": "Enter your maximum budget...",
       "DESC_LABEL": "Description & Special Requirements",
       "DESC_PLACEHOLDER": "Describe what you want (e.g. 3-seater sofa in blue velvet)...",

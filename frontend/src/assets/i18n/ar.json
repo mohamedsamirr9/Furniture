@@ -5,6 +5,20 @@
     "CANCEL": "إلغاء",
     "PRICE_CURRENCY": "جنيه"
   },
+  "NOTIFICATIONS": {
+    "TITLE": "الإشعارات",
+    "EMPTY": "لا توجد إشعارات حتى الآن",
+    "NEW_CUSTOM_REQUEST_TITLE": "طلب تصميم جديد",
+    "CUSTOM_REQUEST_UPDATED_TITLE": "تم تحديث طلب التصميم",
+    "NEW_CUSTOM_REQUEST_ADDED": "تم إضافة طلب تصميم جديد",
+    "NEW_CUSTOM_REQUEST_ADDED_WITH_DESC": "تم إضافة طلب تصميم جديد: {{description}}",
+    "CUSTOM_REQUEST_UPDATED_WITH_DESC": "تم تحديث طلب التصميم: {{description}}",
+    "GENERIC_MESSAGE": "{{text}}",
+    "STATUS": {
+      "READ": "مقروء",
+      "UNREAD": "غير مقروء"
+    }
+  },
   "NAV": {
     "HOME": "الرئيسية",
     "ABOUT_US": "معلومات عنا",
@@ -471,6 +485,9 @@
     "VIEW_MY_ORDERS": "عرض طلباتي",
     "CONTINUE_SHOPPING": "مواصلة التسوق"
   },
+  "ORDER_CONFIRMATION": {
+    "MESSAGE": "تم إرسال طلبك بنجاح. سنراجعه ونقوم بإشعارك بمجرد بدء البائعين في إرسال العروض."
+  },
   "ADMIN": {
     "USERS_TITLE": "المستخدمين",
     "USERS_MGMT": "إدارة المستخدمين",
@@ -721,7 +738,7 @@
       "THE_BRIEF": "الموجز",
       "SHARE_DETAILS": "شارك التفاصيل",
       "SHARE_DETAILS_DESC": "كلما كان وصفك أكثر تحديداً، اقتربنا أكثر من رؤيتك. الصور المرجعية تساعدنا في مطابقة ذوقك في المواد والألوان والتصميم.",
-      "BUDGET": "الميزانية ($)",
+      "BUDGET": "الميزانية (جنيه)",
       "BUDGET_PLACEHOLDER": "أدخل ميزانيتك القصوى...",
       "DESC_LABEL": "الوصف والمتطلبات الخاصة",
       "DESC_PLACEHOLDER": "صف ما تريد (مثل: كنبة 3 مقاعد مخمل أزرق)...",

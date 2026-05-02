@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Notification } from '../models/notification.model';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
   private hubConnection?: signalR.HubConnection;
+  private readonly baseUrl = `${environment.apiUrl}/notifications`;
 
   private notificationsSubject = new BehaviorSubject<Notification[]>([]);
   notifications$ = this.notificationsSubject.asObservable();
@@ -81,12 +83,12 @@ export class NotificationService {
     }
   }
 
-  getMyNotifications() {
-    return this.http.get<Notification[]>(`${environment.apiUrl}/api/notifications`);
+  getMyNotifications(): Observable<Notification[]> {
+    return this.http.get<Notification[]>(this.baseUrl);
   }
 
-  markAsRead(id: number) {
-    return this.http.patch(`${environment.apiUrl}/api/notifications/${id}/read`, {});
+  markAsRead(id: number): Observable<unknown> {
+    return this.http.patch(`${this.baseUrl}/${id}/read`, {});
   }
 
   loadNotifications(): void {

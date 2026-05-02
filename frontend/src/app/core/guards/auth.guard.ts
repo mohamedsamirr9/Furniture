@@ -24,9 +24,9 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   console.warn(`Access denied for role: ${userRole}. Expected: ${expectedRoles}`);
   const roleRedirects: Record<string, string> = {
-    buyer: '/home',
-    seller: '/seller/dashboard',
-    admin: '/admin/dashboard',
+    buyer: '/',
+    seller: '/seller',
+    admin: '/admin',
   };
   const redirectUrl = (userRole && roleRedirects[userRole]) || '/login';
   router.navigate([redirectUrl]);

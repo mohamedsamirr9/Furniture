@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
 import { PublicLayout } from '../../layouts/public-layout/public-layout/public-layout';
 import { Home } from './home/pages/home/home';
-import { Login } from './auth/login/login';
-import { Register } from './auth/register/register';
 import { ProductsList } from './products/pages/products-list/products-list';
 import { ProductDetails } from './products/pages/product-details/product-details';
 import { CartComponent } from './cart/pages/cart/cart';
@@ -13,8 +11,8 @@ import { MyOrdersComponent } from './orders/pages/my-orders/my-orders';
 import { OrderDetailsComponent } from './orders/pages/order-details/order-details';
 import { WishlistComponent } from './wishlist/wishlist/wishlist';
 import { SellerProfileComponent } from './seller-profile/pages/seller-profile/seller-profile';
-import { CustomRequestComponent } from '../private/customer/pages/custom-request/custom-request';
 import { authGuard } from '../../core/guards/auth.guard';
+import { marketplaceHomeGuard } from '../../core/guards/public-role.guard';
 import { CustomRequestDetailsComponent } from './notification/component/custom-request-details/custom-request-details';
 import { QuizComponent } from './recommendation-system/component/quiz/quiz';
 import { RecommendationsListComponent } from './recommendation-system/component/recommendations-list/recommendations-list';
@@ -25,7 +23,7 @@ export const PUBLIC_ROUTES: Routes = [
     path: '',
     component: PublicLayout,
     children: [
-      { path: '', component: Home },
+      { path: '', component: Home, canActivate: [marketplaceHomeGuard] },
       { path: 'products', component: ProductsList },
       { path: 'products/:id', component: ProductDetails },
       { path: 'cart', component: CartComponent, canActivate: [authGuard] },
