@@ -93,12 +93,14 @@ namespace Furniture.Services.Implementations
                 .Where(p => p.Order?.Payment != null && p.Order.Payment.Method == PaymentMethod.Card)
                 .ToList();
 
+            // Dashboard payout totals must be based on seller payout transfer status,
+            // not customer payment transaction status.
             var completedCardPayouts = cardPayouts
-                .Where(p => p.Order!.Payment!.Status == PaymentStatus.Completed)
+                .Where(p => p.Status == PayoutStatus.Completed)
                 .ToList();
 
             var pendingCardPayouts = cardPayouts
-                .Where(p => p.Order!.Payment!.Status != PaymentStatus.Completed)
+                .Where(p => p.Status != PayoutStatus.Completed && p.Status != PayoutStatus.Cancelled)
                 .ToList();
 
             var sellerOrdersSpec = new SellerOrdersSpecification(seller.UserId);
