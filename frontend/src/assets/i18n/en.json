@@ -1,4 +1,10 @@
 {
+  "COMMON": {
+    "LOADING": "Loading...",
+    "REFRESH": "Refresh",
+    "CANCEL": "Cancel",
+    "PRICE_CURRENCY": "EGP"
+  },
   "NAV": {
     "HOME": "Home",
     "ABOUT_US": "About Us",
@@ -21,7 +27,28 @@
     "SEARCH": "Search",
     "MY_PROFILE": "My Profile",
     "MY_ORDERS": "My Orders",
-    "SIGN_OUT": "Sign Out"
+    "SIGN_OUT": "Sign Out",
+    "SELLER_APPLICATION": "Seller application",
+    "SELLER_REQUESTS": "Seller requests"
+  },
+  "SELLER_REQUEST": {
+    "TITLE": "My seller application",
+    "SUBTITLE": "Track your request to sell on Furnora. We review every application carefully.",
+    "NONE": "You have not submitted a seller application yet.",
+    "NONE_HINT": "Complete the short form on your profile with your store name and national ID to get started.",
+    "APPLY_CTA": "Apply to become a seller",
+    "STORE": "Store name",
+    "STATUS_LABEL": "Status",
+    "CREATED": "Submitted",
+    "REVIEWED": "Reviewed",
+    "REJECTION_REASON": "Reason:",
+    "APPROVED_MESSAGE": "You are now a seller. Sign out and sign in again if your dashboard does not update.",
+    "STATUS_PENDING": "Pending",
+    "STATUS_APPROVED": "Approved",
+    "STATUS_REJECTED": "Rejected",
+    "LOAD_ERROR": "Could not load your application status.",
+    "VIEW_STATUS_LINK": "View seller application status",
+    "VIEW_STATUS_HINT": "See pending, approved, or rejected updates in one place."
   },
   "COMPLAINTS": {
     "SUPPORT": "SUPPORT",
@@ -32,31 +59,81 @@
     "LATEST_RESPONSE": "Latest response:",
     "VIEW_DETAILS": "View Details",
     "EMPTY": "No complaints found",
+    "EMPTY_ADMIN": "No complaints in the system.",
+    "LOADING_LIST": "Loading complaints...",
     "STATUS": {
-      "OPEN": "OPEN",
-      "IN_PROGRESS": "IN PROGRESS",
-      "RESOLVED": "RESOLVED",
-      "CLOSED": "CLOSED"
+      "OPEN": "Open",
+      "IN_PROGRESS": "In progress",
+      "RESOLVED": "Resolved",
+      "CLOSED": "Closed"
+    },
+    "MODAL": {
+      "TITLE": "Complaint details",
+      "LOADING": "Loading complaint details...",
+      "MESSAGE": "Message",
+      "CREATED": "Submitted",
+      "BUYER": "Customer",
+      "ORDER": "Order",
+      "SELLER": "Seller",
+      "ATTACHMENT": "Attachment",
+      "REPLIES": "Replies",
+      "NO_REPLIES": "No replies yet.",
+      "NEXT_STATUS": "Next status",
+      "UPDATE_STATUS": "Update status",
+      "UPDATING": "Updating...",
+      "REPLY": "Reply",
+      "REPLY_PLACEHOLDER": "Write a reply...",
+      "SEND": "Send",
+      "SENDING": "Sending...",
+      "ATTACHMENT_ALT": "Complaint attachment"
+    },
+    "NEW": {
+      "PAGE_TITLE": "Submit a complaint",
+      "PAGE_SUBTITLE": "Tell us what went wrong and we will look into it.",
+      "FORM_TITLE": "Complaint details",
+      "FORM_SUBTITLE": "Link this complaint to an order and describe the issue. You can attach a photo if it helps.",
+      "ORDER_LABEL": "Related order",
+      "SELECT_ORDER": "Select an order…",
+      "DESC_LABEL": "Description",
+      "DESC_PLACEHOLDER": "Describe the issue (product, delivery, quality, etc.)",
+      "ATTACHMENT_LABEL": "Attachment",
+      "OPTIONAL": "optional",
+      "UPLOAD_TEXT": "Click to upload an image",
+      "UPLOAD_HINT": "PNG, JPG or WebP — up to 10 MB",
+      "REMOVE_IMAGE": "Remove",
+      "UPLOADING_IMAGE": "Uploading image…",
+      "PREVIEW_ALT": "Complaint attachment preview",
+      "SUBMIT": "Submit complaint",
+      "CHARS": "{{current}} / {{max}}"
+    },
+    "SELLER": {
+      "TITLE": "Customer complaints",
+      "CARD_TITLE": "Complaints on your orders",
+      "EMPTY": "No complaints received yet."
+    },
+    "TABLE": {
+      "ID": "ID",
+      "CUSTOMER": "Customer",
+      "USER": "User",
+      "ORDER": "Order",
+      "DESCRIPTION": "Description",
+      "STATUS": "Status",
+      "DATE": "Date",
+      "RESPONSE": "Latest response",
+      "DETAILS": "Details",
+      "VIEW_DETAILS": "View details",
+      "UNKNOWN_USER": "Unknown"
+    },
+    "ERRORS": {
+      "LOAD_LIST": "Could not load complaints.",
+      "LOAD_DETAILS": "Could not load complaint details.",
+      "LOAD_ORDERS": "Could not load your orders.",
+      "UPLOAD_IMAGE": "Could not upload the image.",
+      "SUBMIT": "Could not submit your complaint.",
+      "FILL_ALL": "Please select an order and enter a description.",
+      "IMAGE_TYPE": "Only JPEG, PNG, and WebP images are allowed.",
+      "IMAGE_SIZE": "Image must be smaller than 10 MB."
     }
-  },
-  "MODAL": {
-    "TITLE": "Complaint Details",
-    "LOADING": "Loading complaint details...",
-    "MESSAGE": "MESSAGE",
-    "CREATED": "CREATED",
-    "BUYER": "BUYER",
-    "ORDER": "ORDER",
-    "SELLER": "SELLER",
-    "ATTACHMENT": "ATTACHMENT",
-    "REPLIES": "REPLIES",
-    "NO_REPLIES": "No replies yet.",
-    "NEXT_STATUS": "NEXT STATUS",
-    "UPDATE_STATUS": "Update Status",
-    "UPDATING": "Updating...",
-    "REPLY": "REPLY",
-    "REPLY_PLACEHOLDER": "Write a reply...",
-    "SEND": "Send",
-    "SENDING": "Sending..."
   },
   "BUTTONS": {
     "SAVE": "Save",
@@ -266,6 +343,7 @@
     "RESOLVED": "Resolved",
     "OPEN": "Open",
     "IN_PROGRESS": "In Progress",
+    "CLOSED": "Closed",
     "ACTIVE": "Active",
     "DELETED": "Deleted"
   },
@@ -351,7 +429,11 @@
     "SUBTOTAL": "Subtotal",
     "SHIPPING_ESTIMATE": "Shipping Estimate",
     "FREE": "Free",
-    "TOTAL": "Total"
+    "TOTAL": "Total",
+    "PAYMENT_METHOD": "Payment method",
+    "PAYMENT_CASH": "Cash on delivery",
+    "PAYMENT_CARD": "Visa / card",
+    "BLOCKED_SELLER": "Checkout is unavailable because one or more sellers are blocked."
   },
   "CITIES": {
     "Cairo": "Cairo",
@@ -435,7 +517,32 @@
     "NO_RULES": "No shipping rules found. Add one to get started.",
     "PRICE_REQUIRED": "Price is required.",
     "CITY_REQUIRED": "City is required.",
-    "CATEGORY_REQUIRED": "Category is required."
+    "CATEGORY_REQUIRED": "Category is required.",
+    "SELLER_REQUESTS_TITLE": "Seller requests management",
+    "SELLER_REQ_CARD_TITLE": "Seller applications",
+    "SELLER_TAB_PENDING": "Pending",
+    "SELLER_TAB_APPROVED": "Approved",
+    "SELLER_TAB_REJECTED": "Rejected",
+    "SELLER_REQ_STORE": "Store name",
+    "SELLER_REQ_EMAIL": "User email",
+    "SELLER_REQ_ID": "National ID",
+    "SELLER_REQ_CREATED": "Submitted",
+    "SELLER_REQ_STATUS": "Status",
+    "SELLER_REQ_DETAILS": "Details",
+    "SELLER_REQ_ACTIONS": "Actions",
+    "SELLER_REQ_COUNT_SUFFIX_PENDING": "pending",
+    "SELLER_REQ_COUNT_SUFFIX_APPROVED": "approved",
+    "SELLER_REQ_COUNT_SUFFIX_REJECTED": "rejected",
+    "SELLER_REQ_EMPTY_PENDING": "No pending seller requests.",
+    "SELLER_REQ_EMPTY_APPROVED": "No approved applications yet.",
+    "SELLER_REQ_EMPTY_REJECTED": "No rejected applications.",
+    "SELLER_REQ_APPROVE": "Approve",
+    "SELLER_REQ_REJECT": "Reject",
+    "SELLER_REQ_REJECT_TITLE": "Reject application",
+    "SELLER_REQ_REJECT_REASON": "Reason",
+    "SELLER_REQ_REJECT_CONFIRM": "Reject",
+    "SELLER_REQ_APPROVED_OK": "Application approved.",
+    "SELLER_REQ_REJECTED_OK": "Application rejected."
   },
   "VALIDATION": {
     "BUDGET_REQUIRED": "Budget is required.",
@@ -552,19 +659,6 @@
       "AMOUNT": "Amount",
       "DATE": "Date"
     },
-    "COMPLAINTS": {
-      "TITLE": "Customer Complaints",
-      "ID": "Complaint ID",
-      "CUSTOMER": "Customer",
-      "ORDER": "Order",
-      "DESC_LABEL": "Description",
-      "STATUS": "Status",
-      "DATE": "Date",
-      "RESPONSE": "Latest Response",
-      "DETAILS": "Details",
-      "VIEW_DETAILS": "View Details",
-      "EMPTY": "No complaints received yet."
-    },
     "SAVE_BUTTON": "Save Bank Details"
   },
   "HOME": {
@@ -643,23 +737,6 @@
       "EMPTY_TITLE": "Nothing here yet",
       "EMPTY": "You haven't made any custom requests yet.",
       "EMPTY_DESC": "You haven't made any custom requests yet. Send your first brief above and we'll get to work."
-    },
-    "COMPLAINTS": {
-      "TITLE": "My Complaints",
-      "SUBTITLE": "Submit and track your complaints",
-      "SUBMIT_TITLE": "Submit a Complaint",
-      "ORDER_LABEL": "Order",
-      "SELECT_ORDER": "Select an order...",
-      "DESC_LABEL": "Description",
-      "ID": "ID",
-      "CUSTOMER": "Customer",
-      "ORDER": "Order",
-      "STATUS": "Status",
-      "DATE": "Date",
-      "RESPONSE": "Response",
-      "DETAILS": "Details",
-      "EMPTY": "No complaints found",
-      "VIEW_DETAILS": "View Details"
     }
   },
   "AUTH_EXTRA": {
@@ -759,7 +836,7 @@
     "STORE_MAX": "Store name cannot exceed 200 characters.",
     "SUBMIT_REQUEST": "Submit Request",
     "SUBMITTING": "Submitting...",
-    "SUCCESS_BECOME_SELLER": "Request submitted! Now you are a seller."
+    "SUCCESS_BECOME_SELLER": "Your seller application is under review."
   },
   "SELLER_PROFILE": {
     "TITLE": "My Profile",

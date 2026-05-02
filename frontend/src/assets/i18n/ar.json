@@ -1,4 +1,10 @@
 {
+  "COMMON": {
+    "LOADING": "جاري التحميل...",
+    "REFRESH": "تحديث",
+    "CANCEL": "إلغاء",
+    "PRICE_CURRENCY": "جنيه"
+  },
   "NAV": {
     "HOME": "الرئيسية",
     "ABOUT_US": "معلومات عنا",
@@ -21,7 +27,28 @@
     "SEARCH": "بحث",
     "MY_PROFILE": "الملف الشخصي",
     "MY_ORDERS": "طلباتي",
-    "SIGN_OUT": "تسجيل الخروج"
+    "SIGN_OUT": "تسجيل الخروج",
+    "SELLER_APPLICATION": "طلب البيع",
+    "SELLER_REQUESTS": "طلبات البائعين"
+  },
+  "SELLER_REQUEST": {
+    "TITLE": "طلب البيع الخاص بي",
+    "SUBTITLE": "تابع حالة طلبك للبيع على فيرنورا. نراجع كل الطلبات بعناية.",
+    "NONE": "لم تقدّم طلب بيع بعد.",
+    "NONE_HINT": "أكمل النموذج المختصر في ملفك الشخصي باسم المتجر والهوية للبدء.",
+    "APPLY_CTA": "التقدم لتصبح بائعاً",
+    "STORE": "اسم المتجر",
+    "STATUS_LABEL": "الحالة",
+    "CREATED": "تاريخ الإرسال",
+    "REVIEWED": "تاريخ المراجعة",
+    "REJECTION_REASON": "السبب:",
+    "APPROVED_MESSAGE": "أصبحت الآن بائعاً. سجّل الخروج ثم الدخول مجدداً إذا لم تتحدّث لوحتك.",
+    "STATUS_PENDING": "قيد المراجعة",
+    "STATUS_APPROVED": "مقبول",
+    "STATUS_REJECTED": "مرفوض",
+    "LOAD_ERROR": "تعذّر تحميل حالة الطلب.",
+    "VIEW_STATUS_LINK": "حالة الطلب",
+    "VIEW_STATUS_HINT": "اطّلع على آخر التحديثات: قيد المراجعة أو مقبول أو مرفوض."
   },
   "BUTTONS": {
     "SAVE": "حفظ",
@@ -82,31 +109,81 @@
     "LATEST_RESPONSE": "آخر رد:",
     "VIEW_DETAILS": "عرض التفاصيل",
     "EMPTY": "لا توجد شكاوى",
+    "EMPTY_ADMIN": "لا توجد شكاوى في النظام.",
+    "LOADING_LIST": "جاري تحميل الشكاوى...",
     "STATUS": {
       "OPEN": "مفتوحة",
       "IN_PROGRESS": "قيد المعالجة",
       "RESOLVED": "تم الحل",
       "CLOSED": "مغلقة"
+    },
+    "MODAL": {
+      "TITLE": "تفاصيل الشكوى",
+      "LOADING": "جاري تحميل تفاصيل الشكوى...",
+      "MESSAGE": "الرسالة",
+      "CREATED": "تاريخ الإرسال",
+      "BUYER": "العميل",
+      "ORDER": "الطلب",
+      "SELLER": "البائع",
+      "ATTACHMENT": "المرفق",
+      "REPLIES": "الردود",
+      "NO_REPLIES": "لا توجد ردود بعد.",
+      "NEXT_STATUS": "الحالة التالية",
+      "UPDATE_STATUS": "تحديث الحالة",
+      "UPDATING": "جاري التحديث...",
+      "REPLY": "الرد",
+      "REPLY_PLACEHOLDER": "اكتب ردك...",
+      "SEND": "إرسال",
+      "SENDING": "جاري الإرسال...",
+      "ATTACHMENT_ALT": "مرفق الشكوى"
+    },
+    "NEW": {
+      "PAGE_TITLE": "تقديم شكوى",
+      "PAGE_SUBTITLE": "أخبرنا بما حدث وسنقوم بمراجعته.",
+      "FORM_TITLE": "تفاصيل الشكوى",
+      "FORM_SUBTITLE": "اربط الشكوى بطلبك وصف المشكلة. يمكنك إرفاق صورة إن كان ذلك مفيداً.",
+      "ORDER_LABEL": "الطلب المرتبط",
+      "SELECT_ORDER": "اختر طلباً…",
+      "DESC_LABEL": "الوصف",
+      "DESC_PLACEHOLDER": "صف المشكلة (المنتج، التسليم، الجودة، إلخ)",
+      "ATTACHMENT_LABEL": "مرفق",
+      "OPTIONAL": "اختياري",
+      "UPLOAD_TEXT": "انقر لرفع صورة",
+      "UPLOAD_HINT": "PNG أو JPG أو WebP — حتى 10 ميجابايت",
+      "REMOVE_IMAGE": "إزالة",
+      "UPLOADING_IMAGE": "جاري رفع الصورة…",
+      "PREVIEW_ALT": "معاينة مرفق الشكوى",
+      "SUBMIT": "إرسال الشكوى",
+      "CHARS": "{{current}} / {{max}}"
+    },
+    "SELLER": {
+      "TITLE": "شكاوى العملاء",
+      "CARD_TITLE": "الشكاوى المرتبطة بطلباتك",
+      "EMPTY": "لا توجد شكاوى مستلمة بعد."
+    },
+    "TABLE": {
+      "ID": "المعرف",
+      "CUSTOMER": "العميل",
+      "USER": "المستخدم",
+      "ORDER": "الطلب",
+      "DESCRIPTION": "الوصف",
+      "STATUS": "الحالة",
+      "DATE": "التاريخ",
+      "RESPONSE": "آخر رد",
+      "DETAILS": "التفاصيل",
+      "VIEW_DETAILS": "عرض التفاصيل",
+      "UNKNOWN_USER": "غير معروف"
+    },
+    "ERRORS": {
+      "LOAD_LIST": "تعذّر تحميل الشكاوى.",
+      "LOAD_DETAILS": "تعذّر تحميل تفاصيل الشكوى.",
+      "LOAD_ORDERS": "تعذّر تحميل طلباتك.",
+      "UPLOAD_IMAGE": "تعذّر رفع الصورة.",
+      "SUBMIT": "تعذّر إرسال الشكوى.",
+      "FILL_ALL": "يرجى اختيار طلب وإدخال وصف.",
+      "IMAGE_TYPE": "يُسمح فقط بصور JPEG أو PNG أو WebP.",
+      "IMAGE_SIZE": "يجب أن يكون حجم الصورة أقل من 10 ميجابايت."
     }
-  },
-  "MODAL": {
-    "TITLE": "تفاصيل الشكوى",
-    "LOADING": "جاري تحميل تفاصيل الشكوى...",
-    "MESSAGE": "الرسالة",
-    "CREATED": "تاريخ الإنشاء",
-    "BUYER": "المشتري",
-    "ORDER": "الطلب",
-    "SELLER": "البائع",
-    "ATTACHMENT": "المرفق",
-    "REPLIES": "الردود",
-    "NO_REPLIES": "لا توجد ردود بعد.",
-    "NEXT_STATUS": "الحالة التالية",
-    "UPDATE_STATUS": "تحديث الحالة",
-    "UPDATING": "جاري التحديث...",
-    "REPLY": "الرد",
-    "REPLY_PLACEHOLDER": "اكتب ردك...",
-    "SEND": "إرسال",
-    "SENDING": "جاري الإرسال..."
   },
   "ALERTS": {
     "LOADING": "جاري التحميل...",
@@ -266,6 +343,7 @@
     "RESOLVED": "تم الحل",
     "OPEN": "مفتوح",
     "IN_PROGRESS": "قيد التنفيذ",
+    "CLOSED": "مغلقة",
     "ACTIVE": "نشط",
     "DELETED": "محذوف"
   },
@@ -351,7 +429,11 @@
     "SUBTOTAL": "المجموع الفرعي",
     "SHIPPING_ESTIMATE": "تقدير الشحن",
     "FREE": "مجاني",
-    "TOTAL": "الإجمالي"
+    "TOTAL": "الإجمالي",
+    "PAYMENT_METHOD": "طريقة الدفع",
+    "PAYMENT_CASH": "الدفع عند الاستلام",
+    "PAYMENT_CARD": "فيزا / بطاقة",
+    "BLOCKED_SELLER": "لا يمكن إتمام الطلب لأن أحد البائعين أو أكثر محظور."
   },
   "CITIES": {
     "Cairo": "القاهرة",
@@ -435,7 +517,32 @@
     "NO_RULES": "لا توجد قواعد شحن. أضف واحدة للبدء.",
     "PRICE_REQUIRED": "السعر مطلوب.",
     "CITY_REQUIRED": "المدينة مطلوبة.",
-    "CATEGORY_REQUIRED": "الفئة مطلوبة."
+    "CATEGORY_REQUIRED": "الفئة مطلوبة.",
+    "SELLER_REQUESTS_TITLE": "إدارة طلبات البائعين",
+    "SELLER_REQ_CARD_TITLE": "طلبات البائعين",
+    "SELLER_TAB_PENDING": "قيد المراجعة",
+    "SELLER_TAB_APPROVED": "مقبولة",
+    "SELLER_TAB_REJECTED": "مرفوضة",
+    "SELLER_REQ_STORE": "اسم المتجر",
+    "SELLER_REQ_EMAIL": "البريد",
+    "SELLER_REQ_ID": "الهوية",
+    "SELLER_REQ_CREATED": "تاريخ الإرسال",
+    "SELLER_REQ_STATUS": "الحالة",
+    "SELLER_REQ_DETAILS": "التفاصيل",
+    "SELLER_REQ_ACTIONS": "إجراءات",
+    "SELLER_REQ_COUNT_SUFFIX_PENDING": "معلّقة",
+    "SELLER_REQ_COUNT_SUFFIX_APPROVED": "مقبولة",
+    "SELLER_REQ_COUNT_SUFFIX_REJECTED": "مرفوضة",
+    "SELLER_REQ_EMPTY_PENDING": "لا توجد طلبات قيد الانتظار.",
+    "SELLER_REQ_EMPTY_APPROVED": "لا توجد طلبات مقبولة بعد.",
+    "SELLER_REQ_EMPTY_REJECTED": "لا توجد طلبات مرفوضة.",
+    "SELLER_REQ_APPROVE": "قبول",
+    "SELLER_REQ_REJECT": "رفض",
+    "SELLER_REQ_REJECT_TITLE": "رفض الطلب",
+    "SELLER_REQ_REJECT_REASON": "السبب",
+    "SELLER_REQ_REJECT_CONFIRM": "تأكيد الرفض",
+    "SELLER_REQ_APPROVED_OK": "تم قبول الطلب.",
+    "SELLER_REQ_REJECTED_OK": "تم رفض الطلب."
   },
   "VALIDATION": {
     "BUDGET_REQUIRED": "الميزانية مطلوبة.",
@@ -552,19 +659,6 @@
       "AMOUNT": "المبلغ",
       "DATE": "التاريخ"
     },
-    "COMPLAINTS": {
-      "TITLE": "بلاغات الشكاوى",
-      "ID": "رقم الشكوى",
-      "CUSTOMER": "العميل",
-      "ORDER": "الطلب",
-      "DESC_LABEL": "الوصف",
-      "STATUS": "الحالة",
-      "DATE": "التاريخ",
-      "RESPONSE": "آخر رد",
-      "DETAILS": "التفاصيل",
-      "VIEW_DETAILS": "عرض التفاصيل",
-      "EMPTY": "لا توجد شكاوى مستلمة بعد."
-    },
     "SAVE_BUTTON": "حفظ تفاصيل البنك"
   },
   "HOME": {
@@ -643,23 +737,6 @@
       "EMPTY_TITLE": "لا يوجد شيء هنا بعد",
       "EMPTY": "لم تقم بتقديم أي طلبات مخصصة بعد.",
       "EMPTY_DESC": "لم تقم بأي طلبات مخصصة حتى الآن. أرسل موجزك الأول أعلاه وسنبدأ العمل."
-    },
-    "COMPLAINTS": {
-      "TITLE": "شكاواي",
-      "SUBTITLE": "إرسال وتتبع الشكاوى الخاصة بك",
-      "SUBMIT_TITLE": "تقديم شكوى",
-      "ORDER_LABEL": "الطلب",
-      "SELECT_ORDER": "اختر طلباً...",
-      "DESC_LABEL": "الوصف",
-      "ID": "المعرف",
-      "CUSTOMER": "العميل",
-      "ORDER": "الطلب",
-      "STATUS": "الحالة",
-      "DATE": "التاريخ",
-      "RESPONSE": "الرد",
-      "DETAILS": "التفاصيل",
-      "EMPTY": "لم يتم العثور على شكاوى",
-      "VIEW_DETAILS": "عرض التفاصيل"
     }
   },
   "AUTH_EXTRA": {
@@ -689,7 +766,7 @@
     "ORDERS": "الطلبات",
     "OFFERS": "العروض",
     "PAYMENT": "الأرباح والمالية",
-    "COMPLAINTS": "بلاغات الشكاوى",
+    "COMPLAINTS": "الشكاوى",
     "COLLAPSE": "طي القائمة",
     "SIGN_OUT": "تسجيل الخروج"
   },
@@ -759,7 +836,7 @@
     "STORE_MAX": "لا يمكن أن يتجاوز اسم المتجر 200 حرف.",
     "SUBMIT_REQUEST": "إرسال الطلب",
     "SUBMITTING": "جاري الإرسال...",
-    "SUCCESS_BECOME_SELLER": "تم إرسال الطلب! أنت الآن بائع."
+    "SUCCESS_BECOME_SELLER": "تم إرسال طلب البيع وهو قيد المراجعة."
   },
   "SELLER_PROFILE": {
     "TITLE": "ملفي الشخصي",

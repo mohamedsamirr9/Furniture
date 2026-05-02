@@ -67,12 +67,12 @@
               </div>
               <div class="item-info">
                 <h6 class="item-name">{{ item.productName }}</h6>
-                <p class="item-unit-price">{{ 'ORDER.UNIT_PRICE' | translate }}: ${{ item.unitPrice | number:'1.2-2' }}</p>
+                <p class="item-unit-price">{{ 'ORDER.UNIT_PRICE' | translate }}: {{ item.unitPrice | localizedPrice }}</p>
                 <span class="qty-chip">{{ 'ORDER.QTY' | translate }}: {{ item.quantity }}</span>
                 <span *ngIf="isSellerBlocked(item)" class="badge bg-danger ms-2">Blocked</span>
               </div>
               <div class="item-price-col">
-                <div class="item-total-price">${{ (item.unitPrice * item.quantity) | number:'1.2-2' }}</div>
+                <div class="item-total-price">{{ (item.unitPrice * item.quantity) | localizedPrice }}</div>
                 <div *ngIf="order.status?.toLowerCase() === 'delivered' || order.status?.toLowerCase() === 'completed'">
                   <button *ngIf="!reviewedProductIds.has(item.productId)"
                           class="btn-review mt-2"
@@ -140,16 +140,16 @@
           <div class="order-card-body">
             <div class="summary-row">
               <span>{{ 'CART.SUBTOTAL' | translate }}</span>
-              <span>${{ order.subTotal | number:'1.2-2' }}</span>
+              <span>{{ order.subTotal | localizedPrice }}</span>
             </div>
             <div class="summary-row">
               <span>{{ 'CART.SHIPPING' | translate }}</span>
-              <span>${{ order.shippingCost | number:'1.2-2' }}</span>
+              <span>{{ order.shippingCost | localizedPrice }}</span>
             </div>
             <hr class="summary-divider">
             <div class="total-row">
               <span class="total-label">{{ 'ORDER.TOTAL_PAID' | translate }}</span>
-              <span class="total-value">${{ order.totalPrice | number:'1.2-2' }}</span>
+              <span class="total-value">{{ order.totalPrice | localizedPrice }}</span>
             </div>
           </div>
         </div>

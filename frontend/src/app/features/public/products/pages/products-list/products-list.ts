@@ -9,13 +9,14 @@ import { ProductQueryParams } from '../../../../../core/models/product-query-par
 import { Product } from '../../../../../core/models/product.model';
 
 import { TranslateModule } from '@ngx-translate/core';
+import { LocalizedPricePipe } from '../../../../../core/pipes/localized-price.pipe';
 
 type SearchMode = 'text' | 'image';
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, TranslateModule],
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule, LocalizedPricePipe],
   templateUrl: './products-list.html',
   styleUrl: './products-list.css',
 })

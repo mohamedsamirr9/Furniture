@@ -10,10 +10,11 @@ import { Product } from '../../../../../core/models/product.model';
 import { Subscription } from 'rxjs';
 
 import { TranslateModule } from '@ngx-translate/core';
+import { LocalizedPricePipe } from '../../../../../core/pipes/localized-price.pipe';
 
 @Component({
   selector: 'app-product-details',
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [CommonModule, RouterModule, TranslateModule, LocalizedPricePipe],
   templateUrl: './product-details.html',
   styleUrl: './product-details.css',
 })

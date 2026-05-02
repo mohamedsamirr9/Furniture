@@ -32,11 +32,12 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { LocalizedPricePipe } from '../../../../../core/pipes/localized-price.pipe';
 
 @Component({
   selector: 'app-order-confirmed',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [CommonModule, RouterModule, TranslateModule, LocalizedPricePipe],
   templateUrl: './order-confirmed.html',
   styleUrls: ['./order-confirmed.css'],
   encapsulation: ViewEncapsulation.None

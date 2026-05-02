@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { LocalizedPricePipe } from '../../../../../core/pipes/localized-price.pipe';
 import { CartService } from '../../../../../core/services/cart.service';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { Observable } from 'rxjs';
@@ -11,7 +12,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [CommonModule, RouterModule, TranslateModule, LocalizedPricePipe],
   templateUrl: './cart.html',
   styleUrl: './cart.css',
   host: {

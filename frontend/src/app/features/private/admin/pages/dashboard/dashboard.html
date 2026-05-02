@@ -75,7 +75,13 @@
             <p class="item-sub">{{ complaint.description }}</p>
           </div>
           <span class="badge" [ngClass]="complaint.status === 'Open' ? 'badge-red' : 'badge-outline'">
-            {{ 'STATUS.' + (complaint.status | uppercase) | translate }}
+            <ng-container [ngSwitch]="complaint.status">
+              <span *ngSwitchCase="'Open'">{{ 'COMPLAINTS.STATUS.OPEN' | translate }}</span>
+              <span *ngSwitchCase="'InProgress'">{{ 'COMPLAINTS.STATUS.IN_PROGRESS' | translate }}</span>
+              <span *ngSwitchCase="'Resolved'">{{ 'COMPLAINTS.STATUS.RESOLVED' | translate }}</span>
+              <span *ngSwitchCase="'Closed'">{{ 'COMPLAINTS.STATUS.CLOSED' | translate }}</span>
+              <span *ngSwitchDefault>{{ complaint.status }}</span>
+            </ng-container>
           </span>
         </div>
       }

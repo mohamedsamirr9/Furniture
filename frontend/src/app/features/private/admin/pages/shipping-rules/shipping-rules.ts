@@ -5,11 +5,12 @@ import { ShippingRulesService } from '../../../../../core/services/shipping-rule
 import { CategoryService } from '../../../../../core/services/category.service';
 import { ShippingRule, ShippingRuleCreateUpdate } from '../../../../../core/models/shipping-rule.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LocalizedPricePipe } from '../../../../../core/pipes/localized-price.pipe';
 
 @Component({
   selector: 'app-shipping-rules',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, LocalizedPricePipe],
   templateUrl: './shipping-rules.html',
   styleUrl: './shipping-rules.css'
 })

@@ -81,6 +81,15 @@
               <span class="dropdown-item-icon"><i class="bi bi-person-circle"></i></span>
               {{ 'NAV.MY_PROFILE' | translate }}
             </a>
+            <a
+              *ngIf="authService.getUserRole() === 'buyer'"
+              class="dropdown-item dropdown-item--seller-request"
+              routerLink="/customer/seller-request"
+              (click)="closeDropdown()"
+            >
+              <span class="dropdown-item-icon"><i class="bi bi-shop-window"></i></span>
+              {{ 'NAV.SELLER_APPLICATION' | translate }}
+            </a>
             <a class="dropdown-item" routerLink="/orders" (click)="closeDropdown()">
               <span class="dropdown-item-icon"><i class="bi bi-box-seam"></i></span>
               {{ 'NAV.MY_ORDERS' | translate }}

@@ -6,11 +6,12 @@ import { RouterModule } from '@angular/router';
 
 
 import { TranslateModule } from '@ngx-translate/core';
+import { LocalizedPricePipe } from '../../../../../core/pipes/localized-price.pipe';
 
 @Component({
   selector: 'app-my-orders',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [CommonModule, RouterModule, TranslateModule, LocalizedPricePipe],
   templateUrl: './my-orders.html',
   styleUrls: ['./my-orders.css'],
    encapsulation: ViewEncapsulation.None

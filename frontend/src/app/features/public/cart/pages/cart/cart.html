@@ -29,7 +29,7 @@
 
           <div class="ct-item__info">
             <h6 class="ct-item__name">{{ item.productName }}</h6>
-            <p class="ct-item__price">${{ item.unitPrice | number:'1.2-2' }}</p>
+            <p class="ct-item__price">{{ item.unitPrice | localizedPrice }}</p>
             <span *ngIf="isItemBlocked(item)" class="badge bg-danger">Blocked</span>
           </div>
 
@@ -39,7 +39,7 @@
             <button class="ct-qty__btn" (click)="updateQuantity(item.productId, item.quantity, 1)" [disabled]="isLoading || isItemBlocked(item) || item.quantity === item.availableStock">+</button>
           </div>
 
-          <p class="ct-item__total">${{ (item.unitPrice * item.quantity) | number:'1.2-2' }}</p>
+          <p class="ct-item__total">{{ (item.unitPrice * item.quantity) | localizedPrice }}</p>
 
           <button class="ct-item__delete" (click)="removeItem(item.productId)" [disabled]="isLoading">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -66,7 +66,7 @@
 
         <div class="ct-summary__row">
           <span>{{ 'CART.SUBTOTAL' | translate }}</span>
-          <span class="ct-summary__val">${{ cart.totalPrice | number:'1.2-2' }}</span>
+          <span class="ct-summary__val">{{ cart.totalPrice | localizedPrice }}</span>
         </div>
 
         <div class="ct-summary__row">
@@ -78,7 +78,7 @@
 
         <div class="ct-summary__row ct-summary__row--total">
           <span>{{ 'CART.TOTAL' | translate }}</span>
-          <span>${{ cart.totalPrice | number:'1.2-2' }}</span>
+          <span>{{ cart.totalPrice | localizedPrice }}</span>
         </div>
 
         <button class="ct-checkout-btn" (click)="proceedToCheckout(cart)" [disabled]="isLoading || hasBlockedSeller(cart)">

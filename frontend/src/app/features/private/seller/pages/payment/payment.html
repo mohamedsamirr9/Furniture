@@ -48,7 +48,7 @@
       </svg>
     </div>
     <div class="summary-value" *ngIf="!isLoading; else loadingTotal">
-      ${{ netEarnings | number: '1.2-2' }}
+      {{ netEarnings | localizedPrice }}
     </div>
     <ng-template #loadingTotal>
       <div class="summary-value" style="opacity: 0.5">--</div>
@@ -70,7 +70,7 @@
       </svg>
     </div>
     <div class="summary-value" *ngIf="!isLoading; else loadingPending">
-      ${{ pendingAmount | number: '1.2-2' }}
+      {{ pendingAmount | localizedPrice }}
     </div>
     <ng-template #loadingPending>
       <div class="summary-value" style="opacity: 0.5">--</div>
@@ -92,7 +92,7 @@
       </svg>
     </div>
     <div class="summary-value" *ngIf="!isLoading; else loadingPaid">
-      ${{ paidAmount | number: '1.2-2' }}
+      {{ paidAmount | localizedPrice }}
     </div>
     <ng-template #loadingPaid>
       <div class="summary-value" style="opacity: 0.5">--</div>
@@ -130,7 +130,7 @@
       </svg>
     </div>
     <div class="summary-value" *ngIf="!isLoading; else loadingCash">
-      ${{ totalCashAmount | number: '1.2-2' }}
+      {{ totalCashAmount | localizedPrice }}
     </div>
     <ng-template #loadingCash>
       <div class="summary-value" style="opacity: 0.5">--</div>
@@ -141,15 +141,15 @@
 <div class="summary-row mt-3">
   <div class="summary-card light">
     <span class="summary-label">{{ 'SELLER.PAYMENTS.PENDING_COMMISSION' | translate }}</span>
-    <div class="summary-value">{{ pendingCommission | number: '1.2-2' }} EGP</div>
+    <div class="summary-value">{{ pendingCommission | localizedPrice }}</div>
   </div>
   <div class="summary-card light">
     <span class="summary-label">{{ 'SELLER.PAYMENTS.MAX_LIMIT' | translate }}</span>
-    <div class="summary-value">{{ maxLimit | number: '1.0-0' }} EGP</div>
+    <div class="summary-value">{{ maxLimit | localizedPrice:'1.0-0' }}</div>
   </div>
   <div class="summary-card light">
     <span class="summary-label">{{ 'SELLER.PAYMENTS.REMAINING_LIMIT' | translate }}</span>
-    <div class="summary-value">{{ remainingLimit | number: '1.2-2' }} EGP</div>
+    <div class="summary-value">{{ remainingLimit | localizedPrice }}</div>
     <span class="badge" [ngClass]="isBlocked ? 'badge-red' : 'badge-green'">
       {{ isBlocked ? ('SELLER.PAYMENTS.BLOCKED' | translate) : ('SELLER.PAYMENTS.ACTIVE' | translate) }}
     </span>
@@ -336,7 +336,7 @@
           <span class="payout-date">{{ p.date | date: 'MMM d, y' }}</span>
         </div>
         <div class="payout-right">
-          <span class="payout-amount">${{ p.amount | number: '1.2-2' }}</span>
+          <span class="payout-amount">{{ p.amount | localizedPrice }}</span>
           <span
             class="payout-status badge"
             [ngClass]="{
@@ -393,7 +393,7 @@
               </span>
             </td>
             <td>
-              <strong>${{ order.amount | number: '1.2-2' }}</strong>
+              <strong>{{ order.amount | localizedPrice }}</strong>
             </td>
             <td>
               <strong>{{ order.date | date: 'MMM d, y' }}</strong>

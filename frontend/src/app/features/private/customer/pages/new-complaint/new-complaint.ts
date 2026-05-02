@@ -47,7 +47,7 @@ export class NewComplaint implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Failed to load orders';
+        this.error = 'COMPLAINTS.ERRORS.LOAD_ORDERS';
         this.loading = false;
         console.error('Error loading orders:', err);
       },
@@ -56,7 +56,7 @@ export class NewComplaint implements OnInit {
 
   onSubmit() {
     if (!this.formData.orderId || !this.formData.description) {
-      this.error = 'Please fill all fields';
+      this.error = 'COMPLAINTS.ERRORS.FILL_ALL';
       return;
     }
 
@@ -75,7 +75,7 @@ export class NewComplaint implements OnInit {
         .subscribe({
           next: (res) => this.submitComplaint(res.secure_url),
           error: (err: any) => {
-            this.error = 'Failed to upload complaint image';
+            this.error = 'COMPLAINTS.ERRORS.UPLOAD_IMAGE';
             this.submitting = false;
             console.error('Error uploading complaint image:', err);
           },
@@ -93,13 +93,13 @@ export class NewComplaint implements OnInit {
 
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
     if (!allowedTypes.includes(file.type.toLowerCase())) {
-      this.error = 'Only JPEG, PNG, and WebP images are allowed';
+      this.error = 'COMPLAINTS.ERRORS.IMAGE_TYPE';
       return;
     }
 
     const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) {
-      this.error = 'Image size must be less than 10MB';
+      this.error = 'COMPLAINTS.ERRORS.IMAGE_SIZE';
       return;
     }
 
@@ -126,7 +126,7 @@ export class NewComplaint implements OnInit {
         this.router.navigate(['/customer/complaints']);
       },
       error: (err: any) => {
-        this.error = 'Failed to submit complaint';
+        this.error = 'COMPLAINTS.ERRORS.SUBMIT';
         this.submitting = false;
         console.error('Error submitting complaint:', err);
       },

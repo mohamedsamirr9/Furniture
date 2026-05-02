@@ -5,6 +5,7 @@ import { SubmitSuccess } from './pages/submit-success/submit-success';
 import { Complaints } from './pages/complaints/complaints';
 import { NewComplaint } from './pages/new-complaint/new-complaint';
 import { ProfileComponent } from './pages/profile/profile';
+import { MySellerRequestComponent } from './pages/my-seller-request/my-seller-request';
 
 export const CUSTOMER_ROUTES: Routes = [
   { path: '', component: CustomRequestComponent },
@@ -13,4 +14,5 @@ export const CUSTOMER_ROUTES: Routes = [
   { path: 'complaints', component: Complaints },
   { path: 'new-complaint', component: NewComplaint },
   { path: 'profile', component: ProfileComponent },
+  { path: 'seller-request', component: MySellerRequestComponent },
 ];
