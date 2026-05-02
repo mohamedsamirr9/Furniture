@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CustomRequestService } from '../../../../../core/services/custom-request.service';
 import { OfferService } from '../../../../../core/services/offer.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { LocalizedPricePipe } from '../../../../../core/pipes/localized-price.pipe';
 
 @Component({
   selector: 'app-offers',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, LocalizedPricePipe],
   templateUrl: './offers.html',
   styleUrl: './offers.css',
 })

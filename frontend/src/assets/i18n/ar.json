@@ -2,7 +2,8 @@
   "COMMON": {
     "LOADING": "جاري التحميل...",
     "REFRESH": "تحديث",
-    "CANCEL": "إلغاء"
+    "CANCEL": "إلغاء",
+    "PRICE_CURRENCY": "جنيه"
   },
   "NAV": {
     "HOME": "الرئيسية",
@@ -428,7 +429,11 @@
     "SUBTOTAL": "المجموع الفرعي",
     "SHIPPING_ESTIMATE": "تقدير الشحن",
     "FREE": "مجاني",
-    "TOTAL": "الإجمالي"
+    "TOTAL": "الإجمالي",
+    "PAYMENT_METHOD": "طريقة الدفع",
+    "PAYMENT_CASH": "الدفع عند الاستلام",
+    "PAYMENT_CARD": "فيزا / بطاقة",
+    "BLOCKED_SELLER": "لا يمكن إتمام الطلب لأن أحد البائعين أو أكثر محظور."
   },
   "CITIES": {
     "Cairo": "القاهرة",

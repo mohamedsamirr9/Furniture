@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { LocalizedPricePipe } from '../../../../core/pipes/localized-price.pipe';
 import { WishlistService } from '../../../../core/services/wishlist.service';
 import { CartService } from '../../../../core/services/cart.service';
 import { Subscription } from 'rxjs';
@@ -9,7 +10,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-wishlist',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [CommonModule, RouterModule, TranslateModule, LocalizedPricePipe],
   templateUrl: './wishlist.html',
   styleUrl: './wishlist.css',
   host: {

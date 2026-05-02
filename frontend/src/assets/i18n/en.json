@@ -2,7 +2,8 @@
   "COMMON": {
     "LOADING": "Loading...",
     "REFRESH": "Refresh",
-    "CANCEL": "Cancel"
+    "CANCEL": "Cancel",
+    "PRICE_CURRENCY": "EGP"
   },
   "NAV": {
     "HOME": "Home",
@@ -428,7 +429,11 @@
     "SUBTOTAL": "Subtotal",
     "SHIPPING_ESTIMATE": "Shipping Estimate",
     "FREE": "Free",
-    "TOTAL": "Total"
+    "TOTAL": "Total",
+    "PAYMENT_METHOD": "Payment method",
+    "PAYMENT_CASH": "Cash on delivery",
+    "PAYMENT_CARD": "Visa / card",
+    "BLOCKED_SELLER": "Checkout is unavailable because one or more sellers are blocked."
   },
   "CITIES": {
     "Cairo": "Cairo",

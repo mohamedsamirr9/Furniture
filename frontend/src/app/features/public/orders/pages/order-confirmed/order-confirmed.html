@@ -25,7 +25,7 @@
     </div>
     <div class="confirmed-cell-right">
       <span class="confirmed-label">{{ 'CONFIRMED.TOTAL_PROCESSED' | translate }}</span>
-      <span class="confirmed-total">${{ totalProcessed | number:'1.2-2' }}</span>
+      <span class="confirmed-total">{{ totalProcessed | localizedPrice }}</span>
     </div>
   </div>
 </div>

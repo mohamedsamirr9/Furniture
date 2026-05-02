@@ -6,11 +6,12 @@ import { Subject, takeUntil } from 'rxjs';
 import { SellerEarningsService } from '../../../../../core/services/seller-earnings.service';
 import { SellerService } from '../../../../../core/services/seller.service';
 import { RecentPayout, SellerPaymentDashboard } from '../../../../../core/models/payment.model';
+import { LocalizedPricePipe } from '../../../../../core/pipes/localized-price.pipe';
 
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, LocalizedPricePipe],
   templateUrl: './payment.html',
   styleUrl: './payment.css',
 })

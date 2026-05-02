@@ -4,11 +4,12 @@ import { OrderService } from '../../../../../core/services/order.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Order } from '../../../../../core/models/order.model';
 import { OrderDetailsModalComponent } from '../../../../../shared/components/order-details-modal/order-details-modal';
+import { LocalizedPricePipe } from '../../../../../core/pipes/localized-price.pipe';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, TranslateModule, OrderDetailsModalComponent],
+  imports: [CommonModule, TranslateModule, OrderDetailsModalComponent, LocalizedPricePipe],
   templateUrl: './orders.html',
   styleUrl: './orders.css',
 })

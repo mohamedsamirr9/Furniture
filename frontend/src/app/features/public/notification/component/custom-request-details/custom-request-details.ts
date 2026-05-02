@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CustomRequestService } from '../../../../../core/services/custom-request.service';
-import { NgIf, DatePipe, CurrencyPipe } from '@angular/common';
+import { NgIf } from '@angular/common';
+import { LocalizedPricePipe } from '../../../../../core/pipes/localized-price.pipe';
 
 @Component({
   selector: 'app-custom-request-details',
   templateUrl: './custom-request-details.html',
   styleUrls: ['./custom-request-details.css'],
-  imports: [NgIf, DatePipe, CurrencyPipe]
+  imports: [NgIf, LocalizedPricePipe],
 })
 export class CustomRequestDetailsComponent implements OnInit {
   request: any = null;

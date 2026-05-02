@@ -32,7 +32,7 @@
           <span class="badge-green">{{ 'CITIES.' + rule.city | translate }}</span>
         </td>
         <td>{{ rule.categoryName }}</td>
-        <td><strong>{{ rule.price | currency:'EGP ':'symbol':'1.2-2' }}</strong></td>
+        <td><strong>{{ rule.price | localizedPrice }}</strong></td>
         <td class="actions">
           <span class="edit-btn" (click)="openEditModal(rule)">
             <i class="bi bi-pencil"></i>
@@ -88,7 +88,7 @@
 
       <!-- Price -->
       <div class="form-group">
-        <label for="price">{{ 'ADMIN.PRICE' | translate }} (EGP) *</label>
+        <label for="price">{{ 'ADMIN.PRICE' | translate }} ({{ 'COMMON.PRICE_CURRENCY' | translate }}) *</label>
         <input id="price" type="number" formControlName="price" step="0.01" min="0" />
         <small class="error-text" *ngIf="ruleForm.get('price')?.touched && ruleForm.get('price')?.invalid">
           {{ 'ADMIN.PRICE_REQUIRED' | translate }}

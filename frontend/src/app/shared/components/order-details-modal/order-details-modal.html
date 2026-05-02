@@ -36,7 +36,7 @@
         </div>
         <div>
           <strong>{{ 'ADMIN.TOTAL' | translate }}</strong>
-          <div>{{ order.totalPrice | currency }}</div>
+          <div>{{ order.totalPrice | localizedPrice }}</div>
         </div>
       </div>
 
@@ -57,8 +57,8 @@
             <div class="item-name">{{ line.productName || ('ADMIN.NA' | translate) }}</div>
             <div class="item-sub">
               {{ 'ORDER.QTY' | translate }}: {{ line.quantity }}
-              · {{ 'ORDER.UNIT_PRICE' | translate }}: {{ line.unitPrice | currency }}
-              · {{ lineTotal(line) | currency }}
+              · {{ 'ORDER.UNIT_PRICE' | translate }}: {{ line.unitPrice | localizedPrice }}
+              · {{ lineTotal(line) | localizedPrice }}
             </div>
             <span *ngIf="isSellerBlocked(line)" class="badge bg-danger mt-1">{{ 'ORDER.BLOCKED' | translate }}</span>
           </div>

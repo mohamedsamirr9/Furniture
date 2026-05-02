@@ -54,7 +54,7 @@
         </div>
 
         <div class="wl-card__footer">
-          <span class="wl-card__price">${{ product.productPrice }}</span>
+          <span class="wl-card__price">{{ product.productPrice | localizedPrice }}</span>
           <button class="wl-card__btn" [routerLink]="['/products', product.productId]">
             {{ 'BUTTONS.VIEW' | translate }}
           </button>

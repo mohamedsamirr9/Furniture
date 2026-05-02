@@ -159,10 +159,10 @@
           {{ 'STATUS.' + (request.status | uppercase) | translate }}
         </span>
         <span class="crp-card__budget" *ngIf="!request.acceptedPrice">
-          ${{ request.budget }}
+          {{ request.budget | localizedPrice }}
         </span>
         <span class="crp-card__accepted" *ngIf="request.acceptedPrice">
-          ${{ request.acceptedPrice }}
+          {{ request.acceptedPrice | localizedPrice }}
         </span>
         <button *ngIf="request.status === 'Open' || request.status === 'Accepted'"
           class="crp-card__btn" (click)="viewOffer(request.id)">
