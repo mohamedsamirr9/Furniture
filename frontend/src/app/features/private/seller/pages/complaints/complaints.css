@@ -16,6 +16,9 @@
   margin: 0 -40px 32px -40px;
 }
 
+.error-msg { color: #991b1b; font-size: 14px; margin: 0 0 16px; }
+.loading-msg { color: #7a6a5a; font-size: 14px; margin: 0 0 16px; }
+
 .table-card {
   background: #ffffff;
   border: 1px solid #ede5d8;

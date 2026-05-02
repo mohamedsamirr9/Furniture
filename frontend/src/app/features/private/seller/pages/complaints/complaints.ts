@@ -38,7 +38,7 @@ export class Complaints implements OnInit {
         this.loading = false;
       },
       error: (err: any) => {
-        this.error = 'Failed to load complaints';
+        this.error = 'COMPLAINTS.ERRORS.LOAD_LIST';
         this.loading = false;
         console.error('Error loading complaints:', err);
       },
@@ -51,11 +51,6 @@ export class Complaints implements OnInit {
     if (status === 'Resolved') return 'badge-gray';
     if (status === 'Closed') return 'badge-green';
     return '';
-  }
-
-  getStatusDisplay(status: string): string {
-    if (status === 'InProgress') return 'In Progress';
-    return status;
   }
 
   submitReply(message: string) {
@@ -87,7 +82,7 @@ export class Complaints implements OnInit {
       },
       error: (err) => {
         console.error('Error loading complaint details:', err);
-        this.detailsError = 'Failed to load complaint details';
+        this.detailsError = 'COMPLAINTS.ERRORS.LOAD_DETAILS';
         this.detailsLoading = false;
       },
     });

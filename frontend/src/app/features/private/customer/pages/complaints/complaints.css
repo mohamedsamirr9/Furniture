@@ -224,3 +224,26 @@
 .empty-state p {
   font-size: 15px;
 }
+
+.page-msg {
+  font-size: 14px;
+  margin: 0 0 16px;
+}
+
+.page-msg--muted {
+  color: #7a6a5a;
+}
+
+.page-msg--error {
+  color: #991b1b;
+}
+
+.complaint-reply__label {
+  font-weight: 600;
+  margin-inline-end: 6px;
+}
+
+.complaint-reply__by {
+  color: #6b5a4e;
+  font-size: 13px;
+}
