@@ -355,3 +355,31 @@
   background: #eed2bc;
   transform: scale(1.08) rotate(-8deg);
 }
+
+/* Seller application — matches warm Furnora palette */
+.dropdown-item--seller-request {
+  margin-top: 4px;
+  margin-bottom: 2px;
+  border: 1px solid rgba(212, 196, 168, 0.55);
+  background: linear-gradient(135deg, rgba(253, 250, 245, 0.95), rgba(240, 235, 224, 0.55));
+  font-weight: 600;
+}
+
+.dropdown-item--seller-request .dropdown-item-icon {
+  background: linear-gradient(135deg, #c8a882, #8b6f4e);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(139, 111, 78, 0.35);
+}
+
+.dropdown-item--seller-request:hover {
+  background: linear-gradient(135deg, #faf6ef, #ebe3d4);
+  border-color: #c8b89a;
+}
+
+.dropdown-item--seller-request:hover .dropdown-item-icon {
+  background: linear-gradient(135deg, #b69878, #7a5c38);
+}
+
+.profile-dropdown.open .dropdown-item--seller-request {
+  animation-delay: 0.09s;
+}

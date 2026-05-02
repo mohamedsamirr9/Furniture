@@ -1,0 +1,164 @@
+<div class="page-header">
+  <div class="page-header__row">
+    <h1>{{ 'ADMIN.SELLER_REQUESTS_TITLE' | translate }}</h1>
+    <button type="button" class="refresh-btn" (click)="load()" [disabled]="loading" [attr.aria-busy]="loading">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      <i *ngIf="!loading" class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+      <span>{{ 'COMMON.REFRESH' | translate }}</span>
+    </button>
+  </div>
+  <hr />
+</div>
+
+<div *ngIf="toast" class="admin-toast" [class.admin-toast--error]="toast.type === 'error'" [class.admin-toast--ok]="toast.type === 'success'">
+  {{ toast.text }}
+</div>
+
+<div class="table-card" *ngIf="loadError">
+  <p class="error-msg">{{ loadError }}</p>
+</div>
+
+<div class="table-card" *ngIf="!loadError">
+  <div class="card-head-row">
+    <h2 class="card-title">{{ 'ADMIN.SELLER_REQ_CARD_TITLE' | translate }}</h2>
+    <span class="pending-count" *ngIf="!loading">
+      {{ requests.length }} {{ countSuffixKey() | translate }}
+    </span>
+  </div>
+
+  <ul class="nav nav-tabs seller-requests-tabs" role="tablist">
+    <li class="nav-item" *ngFor="let tab of tabs" role="presentation">
+      <button
+        type="button"
+        class="nav-link"
+        [class.active]="activeTab === tab"
+        [attr.aria-selected]="activeTab === tab"
+        (click)="selectTab(tab)"
+      >
+        {{ tabLabelKey(tab) | translate }}
+      </button>
+    </li>
+  </ul>
+
+  <table class="table" *ngIf="!loading">
+    <thead>
+      <tr>
+        <th>{{ 'ADMIN.SELLER_REQ_STORE' | translate }}</th>
+        <th>{{ 'ADMIN.SELLER_REQ_EMAIL' | translate }}</th>
+        <th>{{ 'ADMIN.SELLER_REQ_ID' | translate }}</th>
+        <th>{{ 'ADMIN.SELLER_REQ_CREATED' | translate }}</th>
+        <th>{{ 'ADMIN.SELLER_REQ_STATUS' | translate }}</th>
+        <th [class.th-actions]="activeTab === 'Pending'">{{ 'ADMIN.SELLER_REQ_DETAILS' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="requests.length === 0">
+        <td colspan="6" class="empty-msg">{{ emptyMessageKey() | translate }}</td>
+      </tr>
+      <tr *ngFor="let r of requests">
+        <td><strong>{{ r.storeName }}</strong></td>
+        <td>{{ r.userEmail || '—' }}</td>
+        <td>
+          <div class="id-cell">
+            <img
+              *ngIf="r.nationalIdImageUrl"
+              [src]="imageUrl(r.nationalIdImageUrl)"
+              alt=""
+              class="id-thumb"
+            />
+            <span *ngIf="!r.nationalIdImageUrl" class="muted">—</span>
+          </div>
+        </td>
+        <td>{{ r.createdAt | date : 'medium' }}</td>
+        <td>
+          <span class="status-badge" [ngClass]="statusBadgeClass(r.status)">{{ statusLabelKey(r.status) | translate }}</span>
+        </td>
+        <td class="td-details" [class.td-actions]="activeTab === 'Pending'">
+          <ng-container *ngIf="activeTab === 'Pending'">
+            <div class="action-group">
+              <button
+                type="button"
+                class="action-btn action-btn--approve"
+                (click)="approve(r.id)"
+                [disabled]="actionId !== null"
+              >
+                <span *ngIf="actionId === r.id" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span *ngIf="actionId !== r.id">{{ 'ADMIN.SELLER_REQ_APPROVE' | translate }}</span>
+              </button>
+              <button
+                type="button"
+                class="action-btn action-btn--reject"
+                (click)="openReject(r.id)"
+                [disabled]="actionId !== null"
+              >
+                {{ 'ADMIN.SELLER_REQ_REJECT' | translate }}
+              </button>
+            </div>
+          </ng-container>
+          <span *ngIf="activeTab === 'Approved'" class="muted">—</span>
+          <span *ngIf="activeTab === 'Rejected'" class="rejection-text">{{ r.rejectionReason?.trim() || '—' }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="skeleton-block" *ngIf="loading">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{ 'ADMIN.SELLER_REQ_STORE' | translate }}</th>
+          <th>{{ 'ADMIN.SELLER_REQ_EMAIL' | translate }}</th>
+          <th>{{ 'ADMIN.SELLER_REQ_ID' | translate }}</th>
+          <th>{{ 'ADMIN.SELLER_REQ_CREATED' | translate }}</th>
+          <th>{{ 'ADMIN.SELLER_REQ_STATUS' | translate }}</th>
+          <th [class.th-actions]="activeTab === 'Pending'">{{ 'ADMIN.SELLER_REQ_DETAILS' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let _ of [1, 2, 3, 4, 5]" class="table-row--skeleton">
+          <td><div class="skeleton skeleton-text"></div></td>
+          <td><div class="skeleton skeleton-text"></div></td>
+          <td><div class="skeleton skeleton-thumb"></div></td>
+          <td><div class="skeleton skeleton-text skeleton-text--short"></div></td>
+          <td><div class="skeleton skeleton-badge"></div></td>
+          <td><div class="skeleton skeleton-actions"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="rejectModalOpen" (click)="closeRejectModal()"></div>
+<div class="admin-modal" *ngIf="rejectModalOpen" role="dialog" aria-modal="true" aria-labelledby="reject-modal-title">
+  <div class="admin-modal__dialog" (click)="$event.stopPropagation()">
+    <div class="admin-modal__header">
+      <h2 id="reject-modal-title" class="admin-modal__title">{{ 'ADMIN.SELLER_REQ_REJECT_TITLE' | translate }}</h2>
+      <button type="button" class="admin-modal__close" (click)="closeRejectModal()" aria-label="Close">&times;</button>
+    </div>
+    <div class="admin-modal__body">
+      <label class="modal-label" for="reject-reason">{{ 'ADMIN.SELLER_REQ_REJECT_REASON' | translate }}</label>
+      <textarea
+        id="reject-reason"
+        class="modal-textarea"
+        rows="4"
+        [(ngModel)]="rejectReason"
+        name="reason"
+        [disabled]="rejectSubmitting"
+      ></textarea>
+    </div>
+    <div class="admin-modal__footer">
+      <button type="button" class="action-btn action-btn--muted" (click)="closeRejectModal()" [disabled]="rejectSubmitting">
+        {{ 'COMMON.CANCEL' | translate }}
+      </button>
+      <button
+        type="button"
+        class="action-btn action-btn--danger"
+        (click)="submitReject()"
+        [disabled]="rejectSubmitting || !rejectReason.trim()"
+      >
+        <span *ngIf="rejectSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+        {{ 'ADMIN.SELLER_REQ_REJECT_CONFIRM' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

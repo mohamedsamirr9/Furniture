@@ -1,4 +1,9 @@
 {
+  "COMMON": {
+    "LOADING": "Loading...",
+    "REFRESH": "Refresh",
+    "CANCEL": "Cancel"
+  },
   "NAV": {
     "HOME": "Home",
     "ABOUT_US": "About Us",
@@ -21,7 +26,28 @@
     "SEARCH": "Search",
     "MY_PROFILE": "My Profile",
     "MY_ORDERS": "My Orders",
-    "SIGN_OUT": "Sign Out"
+    "SIGN_OUT": "Sign Out",
+    "SELLER_APPLICATION": "Seller application",
+    "SELLER_REQUESTS": "Seller requests"
+  },
+  "SELLER_REQUEST": {
+    "TITLE": "My seller application",
+    "SUBTITLE": "Track your request to sell on Furnora. We review every application carefully.",
+    "NONE": "You have not submitted a seller application yet.",
+    "NONE_HINT": "Complete the short form on your profile with your store name and national ID to get started.",
+    "APPLY_CTA": "Apply to become a seller",
+    "STORE": "Store name",
+    "STATUS_LABEL": "Status",
+    "CREATED": "Submitted",
+    "REVIEWED": "Reviewed",
+    "REJECTION_REASON": "Reason:",
+    "APPROVED_MESSAGE": "You are now a seller. Sign out and sign in again if your dashboard does not update.",
+    "STATUS_PENDING": "Pending",
+    "STATUS_APPROVED": "Approved",
+    "STATUS_REJECTED": "Rejected",
+    "LOAD_ERROR": "Could not load your application status.",
+    "VIEW_STATUS_LINK": "View seller application status",
+    "VIEW_STATUS_HINT": "See pending, approved, or rejected updates in one place."
   },
   "COMPLAINTS": {
     "SUPPORT": "SUPPORT",
@@ -435,7 +461,32 @@
     "NO_RULES": "No shipping rules found. Add one to get started.",
     "PRICE_REQUIRED": "Price is required.",
     "CITY_REQUIRED": "City is required.",
-    "CATEGORY_REQUIRED": "Category is required."
+    "CATEGORY_REQUIRED": "Category is required.",
+    "SELLER_REQUESTS_TITLE": "Seller requests management",
+    "SELLER_REQ_CARD_TITLE": "Seller applications",
+    "SELLER_TAB_PENDING": "Pending",
+    "SELLER_TAB_APPROVED": "Approved",
+    "SELLER_TAB_REJECTED": "Rejected",
+    "SELLER_REQ_STORE": "Store name",
+    "SELLER_REQ_EMAIL": "User email",
+    "SELLER_REQ_ID": "National ID",
+    "SELLER_REQ_CREATED": "Submitted",
+    "SELLER_REQ_STATUS": "Status",
+    "SELLER_REQ_DETAILS": "Details",
+    "SELLER_REQ_ACTIONS": "Actions",
+    "SELLER_REQ_COUNT_SUFFIX_PENDING": "pending",
+    "SELLER_REQ_COUNT_SUFFIX_APPROVED": "approved",
+    "SELLER_REQ_COUNT_SUFFIX_REJECTED": "rejected",
+    "SELLER_REQ_EMPTY_PENDING": "No pending seller requests.",
+    "SELLER_REQ_EMPTY_APPROVED": "No approved applications yet.",
+    "SELLER_REQ_EMPTY_REJECTED": "No rejected applications.",
+    "SELLER_REQ_APPROVE": "Approve",
+    "SELLER_REQ_REJECT": "Reject",
+    "SELLER_REQ_REJECT_TITLE": "Reject application",
+    "SELLER_REQ_REJECT_REASON": "Reason",
+    "SELLER_REQ_REJECT_CONFIRM": "Reject",
+    "SELLER_REQ_APPROVED_OK": "Application approved.",
+    "SELLER_REQ_REJECTED_OK": "Application rejected."
   },
   "VALIDATION": {
     "BUDGET_REQUIRED": "Budget is required.",
@@ -759,7 +810,7 @@
     "STORE_MAX": "Store name cannot exceed 200 characters.",
     "SUBMIT_REQUEST": "Submit Request",
     "SUBMITTING": "Submitting...",
-    "SUCCESS_BECOME_SELLER": "Request submitted! Now you are a seller."
+    "SUCCESS_BECOME_SELLER": "Your seller application is under review."
   },
   "SELLER_PROFILE": {
     "TITLE": "My Profile",

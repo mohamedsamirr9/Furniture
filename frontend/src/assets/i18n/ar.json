@@ -1,4 +1,9 @@
 {
+  "COMMON": {
+    "LOADING": "جاري التحميل...",
+    "REFRESH": "تحديث",
+    "CANCEL": "إلغاء"
+  },
   "NAV": {
     "HOME": "الرئيسية",
     "ABOUT_US": "معلومات عنا",
@@ -21,7 +26,28 @@
     "SEARCH": "بحث",
     "MY_PROFILE": "الملف الشخصي",
     "MY_ORDERS": "طلباتي",
-    "SIGN_OUT": "تسجيل الخروج"
+    "SIGN_OUT": "تسجيل الخروج",
+    "SELLER_APPLICATION": "طلب البيع",
+    "SELLER_REQUESTS": "طلبات البائعين"
+  },
+  "SELLER_REQUEST": {
+    "TITLE": "طلب البيع الخاص بي",
+    "SUBTITLE": "تابع حالة طلبك للبيع على فيرنورا. نراجع كل الطلبات بعناية.",
+    "NONE": "لم تقدّم طلب بيع بعد.",
+    "NONE_HINT": "أكمل النموذج المختصر في ملفك الشخصي باسم المتجر والهوية للبدء.",
+    "APPLY_CTA": "التقدم لتصبح بائعاً",
+    "STORE": "اسم المتجر",
+    "STATUS_LABEL": "الحالة",
+    "CREATED": "تاريخ الإرسال",
+    "REVIEWED": "تاريخ المراجعة",
+    "REJECTION_REASON": "السبب:",
+    "APPROVED_MESSAGE": "أصبحت الآن بائعاً. سجّل الخروج ثم الدخول مجدداً إذا لم تتحدّث لوحتك.",
+    "STATUS_PENDING": "قيد المراجعة",
+    "STATUS_APPROVED": "مقبول",
+    "STATUS_REJECTED": "مرفوض",
+    "LOAD_ERROR": "تعذّر تحميل حالة الطلب.",
+    "VIEW_STATUS_LINK": "حالة الطلب",
+    "VIEW_STATUS_HINT": "اطّلع على آخر التحديثات: قيد المراجعة أو مقبول أو مرفوض."
   },
   "BUTTONS": {
     "SAVE": "حفظ",
@@ -435,7 +461,32 @@
     "NO_RULES": "لا توجد قواعد شحن. أضف واحدة للبدء.",
     "PRICE_REQUIRED": "السعر مطلوب.",
     "CITY_REQUIRED": "المدينة مطلوبة.",
-    "CATEGORY_REQUIRED": "الفئة مطلوبة."
+    "CATEGORY_REQUIRED": "الفئة مطلوبة.",
+    "SELLER_REQUESTS_TITLE": "إدارة طلبات البائعين",
+    "SELLER_REQ_CARD_TITLE": "طلبات البائعين",
+    "SELLER_TAB_PENDING": "قيد المراجعة",
+    "SELLER_TAB_APPROVED": "مقبولة",
+    "SELLER_TAB_REJECTED": "مرفوضة",
+    "SELLER_REQ_STORE": "اسم المتجر",
+    "SELLER_REQ_EMAIL": "البريد",
+    "SELLER_REQ_ID": "الهوية",
+    "SELLER_REQ_CREATED": "تاريخ الإرسال",
+    "SELLER_REQ_STATUS": "الحالة",
+    "SELLER_REQ_DETAILS": "التفاصيل",
+    "SELLER_REQ_ACTIONS": "إجراءات",
+    "SELLER_REQ_COUNT_SUFFIX_PENDING": "معلّقة",
+    "SELLER_REQ_COUNT_SUFFIX_APPROVED": "مقبولة",
+    "SELLER_REQ_COUNT_SUFFIX_REJECTED": "مرفوضة",
+    "SELLER_REQ_EMPTY_PENDING": "لا توجد طلبات قيد الانتظار.",
+    "SELLER_REQ_EMPTY_APPROVED": "لا توجد طلبات مقبولة بعد.",
+    "SELLER_REQ_EMPTY_REJECTED": "لا توجد طلبات مرفوضة.",
+    "SELLER_REQ_APPROVE": "قبول",
+    "SELLER_REQ_REJECT": "رفض",
+    "SELLER_REQ_REJECT_TITLE": "رفض الطلب",
+    "SELLER_REQ_REJECT_REASON": "السبب",
+    "SELLER_REQ_REJECT_CONFIRM": "تأكيد الرفض",
+    "SELLER_REQ_APPROVED_OK": "تم قبول الطلب.",
+    "SELLER_REQ_REJECTED_OK": "تم رفض الطلب."
   },
   "VALIDATION": {
     "BUDGET_REQUIRED": "الميزانية مطلوبة.",
@@ -759,7 +810,7 @@
     "STORE_MAX": "لا يمكن أن يتجاوز اسم المتجر 200 حرف.",
     "SUBMIT_REQUEST": "إرسال الطلب",
     "SUBMITTING": "جاري الإرسال...",
-    "SUCCESS_BECOME_SELLER": "تم إرسال الطلب! أنت الآن بائع."
+    "SUCCESS_BECOME_SELLER": "تم إرسال طلب البيع وهو قيد المراجعة."
   },
   "SELLER_PROFILE": {
     "TITLE": "ملفي الشخصي",

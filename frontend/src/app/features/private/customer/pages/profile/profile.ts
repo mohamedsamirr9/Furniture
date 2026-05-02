@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { UserDto } from '../../../../../core/models/auth.model';
+import { getApiErrorMessage, isPendingSellerRequestErrorMessage } from '../../../../../core/utils/api-error.util';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, RouterModule],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
@@ -44,7 +45,6 @@ export class ProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder, 
     private authService: AuthService,
-    private router: Router,
     private translate: TranslateService
   ) {
     this.personalForm = this.fb.group({
@@ -71,6 +71,10 @@ export class ProfileComponent implements OnInit {
     const password = control.get('newPassword')?.value;
     const confirm = control.get('confirmPassword')?.value;
     return password === confirm ? null : { passwordMismatch: true };
+  }
+
+  get userRole(): string | null {
+    return this.authService.getUserRole();
   }
 
   ngOnInit(): void {
@@ -185,16 +189,13 @@ export class ProfileComponent implements OnInit {
       next: () => {
         this.isLoadingBecomeSeller = false;
         this.successBecomeSeller = true;
-        
-        // As per requirements: Logout and redirect to login so the user gets a new JWT with 'Seller' role
-        setTimeout(() => {
-          this.authService.logout();
-          this.router.navigate(['/login'], { queryParams: { message: 'role_updated' } });
-        }, 2000);
       },
-      error: (err: any) => {
+      error: (err: unknown) => {
         this.isLoadingBecomeSeller = false;
-        this.errorBecomeSeller = err.error?.message || 'Failed to submit request.';
+        const msg = getApiErrorMessage(err, 'Failed to submit request.');
+        this.errorBecomeSeller = isPendingSellerRequestErrorMessage(msg)
+          ? 'You already have a pending application'
+          : msg;
       }
     });
   }

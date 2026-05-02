@@ -230,29 +230,27 @@ namespace Furniture.Services
                 throw new Exception("user not found");
             if (user.Role == Roles.seller)
                 throw new Exception("Already a seller");
+
+            var requestRepo = _unitOfWork.GetRepository<SellerRequest, int>();
+            var pending = await requestRepo.GetByIdAsync(new PendingSellerRequestForUserSpecification(UserId));
+            if (pending is not null)
+                throw new Exception("You already have a pending seller application");
+
+            string? nationalIdUrl = null;
             if (!string.IsNullOrEmpty(dto.NationalIdImageBase64))
-                user.NationalIdImage = ImageHelper.SaveImage(dto.NationalIdImageBase64);
+                nationalIdUrl = ImageHelper.SaveImage(dto.NationalIdImageBase64);
 
-            user.Role = Roles.seller;
-            user.IsVerified = false;
-            await _userManager.UpdateAsync(user);
-
-            var profileRepo = _unitOfWork.GetRepository<SellerProfile, int>();
-            var existingProfile = await profileRepo.GetByIdAsync(new SellerProfileByUserIdSpecification(UserId));
-            if (existingProfile is null)
+            var sellerRequest = new SellerRequest
             {
-                var sellerProfile = new SellerProfile
-                {
-                    UserId = UserId,
-                    StoreName = dto.StoreName,
-                    StoreDescription = null,
-                    CommissionRate = 6m,
-                    IsVerified = false,
-                    CreatedAt = DateTime.UtcNow
-                };
-                await profileRepo.AddAsync(sellerProfile);
-                await _unitOfWork.SaveChangesAsync();
-            }
+                UserId = UserId,
+                StoreName = dto.StoreName,
+                NationalIdImageUrl = nationalIdUrl,
+                Status = SellerRequestStatus.Pending,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await requestRepo.AddAsync(sellerRequest);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task ChangePasswordAync(string UserId, ChangePasswordDto dto)

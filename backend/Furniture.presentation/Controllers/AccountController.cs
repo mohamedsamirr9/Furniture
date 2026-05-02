@@ -113,8 +113,8 @@ namespace Furniture.web
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             await _accountService.BecomeSellerAsync(userId!, dto);
-return Ok(new { message = "Now you are a seller" });  
-      }
+            return Ok(new { message = "Seller application submitted. Pending admin approval." });
+        }
 
         [Authorize]
         [HttpPost("change-password")]
