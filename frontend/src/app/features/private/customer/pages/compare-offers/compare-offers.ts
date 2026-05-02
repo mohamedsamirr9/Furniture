@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { OfferService } from '../../../../../core/services/offer.service';
 import { ChatSignalRService } from '../../../../../core/services/chat-signalr.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LocalizedPricePipe } from '../../../../../core/pipes/localized-price.pipe';
 
 @Component({
   selector: 'app-compare-offers',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, LocalizedPricePipe],
   templateUrl: './compare-offers.html',
   styleUrl: './compare-offers.css',
 })

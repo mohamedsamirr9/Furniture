@@ -54,7 +54,7 @@
       <div class="offer-rows">
         <div class="offer-row">
           <span>{{ 'COMPARE_OFFERS.PRICE' | translate }}</span>
-          <span class="price-value">${{ offer.price }}</span>
+          <span class="price-value">{{ offer.price | localizedPrice }}</span>
         </div>
         <div class="offer-row">
           <span>{{ 'COMPARE_OFFERS.DELIVERY_TIME' | translate }}</span>

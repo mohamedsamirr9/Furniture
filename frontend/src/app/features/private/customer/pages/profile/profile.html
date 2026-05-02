@@ -92,8 +92,8 @@
     </form>
   </div>
 
-  <!-- Become Seller -->
-  <div class="profile-card">
+  <!-- Become Seller (buyers only) -->
+  <div class="profile-card" *ngIf="userRole === 'buyer'">
     <div class="card-header">
       <div class="card-icon">
         <i class="bi bi-shop"></i>
@@ -103,6 +103,14 @@
         <p class="card-subtitle">{{ 'PROFILE.START_SELLING' | translate }}</p>
       </div>
     </div>
+    <a routerLink="/customer/seller-request" class="seller-request-nav-link">
+      <span class="seller-request-nav-link__icon" aria-hidden="true"><i class="bi bi-clipboard-check"></i></span>
+      <span class="seller-request-nav-link__body">
+        <span class="seller-request-nav-link__label">{{ 'SELLER_REQUEST.VIEW_STATUS_LINK' | translate }}</span>
+        <span class="seller-request-nav-link__hint">{{ 'SELLER_REQUEST.VIEW_STATUS_HINT' | translate }}</span>
+      </span>
+      <i class="bi bi-chevron-right seller-request-nav-link__chev" aria-hidden="true"></i>
+    </a>
     <div *ngIf="successBecomeSeller" class="alert alert-success">{{ 'PROFILE.SUCCESS_BECOME_SELLER' | translate }}</div>
     <div *ngIf="errorBecomeSeller" class="alert alert-danger">{{ errorBecomeSeller }}</div>
     <form [formGroup]="becomeSellerForm" (ngSubmit)="submitBecomeSeller($event)">

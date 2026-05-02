@@ -3,42 +3,49 @@
   <hr />
 </div>
 
+<p class="error-msg" *ngIf="error">{{ error | translate }}</p>
+<p class="loading-msg" *ngIf="loading">{{ 'COMPLAINTS.LOADING_LIST' | translate }}</p>
+
 <div class="table-card" *ngIf="!loading && !error">
   <h2 class="card-title">{{ 'ADMIN.ALL_COMPLAINTS' | translate }}</h2>
   <table class="table">
     <thead>
       <tr>
-        <th>{{ 'ADMIN.ID' | translate }}</th>
-        <th>{{ 'ADMIN.USER' | translate }}</th>
-        <th>{{ 'ADMIN.DESCRIPTION' | translate }}</th>
-        <th>{{ 'ADMIN.DATE' | translate }}</th>
-        <th>{{ 'ADMIN.STATUS' | translate }}</th>
-        <th>Response</th>
-        <th>Details</th>
+        <th>{{ 'COMPLAINTS.TABLE.ID' | translate }}</th>
+        <th>{{ 'COMPLAINTS.TABLE.USER' | translate }}</th>
+        <th>{{ 'COMPLAINTS.TABLE.DESCRIPTION' | translate }}</th>
+        <th>{{ 'COMPLAINTS.TABLE.DATE' | translate }}</th>
+        <th>{{ 'COMPLAINTS.TABLE.STATUS' | translate }}</th>
+        <th>{{ 'COMPLAINTS.TABLE.RESPONSE' | translate }}</th>
+        <th>{{ 'COMPLAINTS.TABLE.DETAILS' | translate }}</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let complaint of complaints">
         <td>#{{ complaint.id }}</td>
         <td>{{ complaint.userName || complaint.userId }}</td>
-        <td>
-          {{ complaint.description }}   
-        </td>
-        <td>{{ complaint.createdAt | date:'mediumDate' }}</td>
+        <td>{{ complaint.description }}</td>
+        <td>{{ complaint.createdAt | date : 'mediumDate' }}</td>
         <td>
           <span class="badge" [ngClass]="getStatusClass(complaint.status)">
-            {{ getStatusDisplay(complaint.status) }}
+            <ng-container [ngSwitch]="complaint.status">
+              <span *ngSwitchCase="'Open'">{{ 'COMPLAINTS.STATUS.OPEN' | translate }}</span>
+              <span *ngSwitchCase="'InProgress'">{{ 'COMPLAINTS.STATUS.IN_PROGRESS' | translate }}</span>
+              <span *ngSwitchCase="'Resolved'">{{ 'COMPLAINTS.STATUS.RESOLVED' | translate }}</span>
+              <span *ngSwitchCase="'Closed'">{{ 'COMPLAINTS.STATUS.CLOSED' | translate }}</span>
+              <span *ngSwitchDefault>{{ complaint.status }}</span>
+            </ng-container>
           </span>
         </td>
         <td>
           <div class="latest-reply" *ngIf="complaint.latestReplyMessage">
             <p class="reply-msg">{{ complaint.latestReplyMessage }}</p>
-            <small>{{ complaint.latestReplyBy }} • {{ complaint.latestReplyAt | date:'short' }}</small>
+            <small>{{ complaint.latestReplyBy }} • {{ complaint.latestReplyAt | date : 'short' }}</small>
           </div>
         </td>
         <td>
           <button type="button" class="action-btn view-details-btn" (click)="openComplaintDetails(complaint.id)">
-            View Details
+            {{ 'COMPLAINTS.TABLE.VIEW_DETAILS' | translate }}
           </button>
         </td>
       </tr>
@@ -47,7 +54,7 @@
 </div>
 
 <div class="empty-state" *ngIf="!loading && !error && complaints.length === 0">
-  <p>No complaints found</p>
+  <p>{{ 'COMPLAINTS.EMPTY_ADMIN' | translate }}</p>
 </div>
 
 <app-complaint-details-modal

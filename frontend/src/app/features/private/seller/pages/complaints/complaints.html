@@ -1,45 +1,55 @@
 <div class="page-header">
-  <h1>{{ 'SELLER.COMPLAINTS.TITLE' | translate }}</h1>
+  <h1>{{ 'COMPLAINTS.SELLER.TITLE' | translate }}</h1>
 </div>
 <hr class="divider" />
 
+<p class="error-msg" *ngIf="error">{{ error | translate }}</p>
+<p class="loading-msg" *ngIf="loading">{{ 'COMPLAINTS.LOADING_LIST' | translate }}</p>
+
 <div class="table-card" *ngIf="!loading && !error">
-  <h2 class="card-title">{{ 'SELLER.COMPLAINTS.TITLE' | translate }}</h2>
+  <h2 class="card-title">{{ 'COMPLAINTS.SELLER.CARD_TITLE' | translate }}</h2>
   <table class="table">
     <thead>
       <tr>
-        <th>{{ 'SELLER.COMPLAINTS.ID' | translate }}</th>
-        <th>{{ 'SELLER.COMPLAINTS.CUSTOMER' | translate }}</th>
-        <th>{{ 'SELLER.COMPLAINTS.ORDER' | translate }}</th>
-        <th>{{ 'SELLER.COMPLAINTS.DESC_LABEL' | translate }}</th>
-        <th>{{ 'SELLER.COMPLAINTS.STATUS' | translate }}</th>
-        <th>{{ 'SELLER.COMPLAINTS.DATE' | translate }}</th>
-        <th>{{ 'SELLER.COMPLAINTS.RESPONSE' | translate }}</th>
-        <th>{{ 'SELLER.COMPLAINTS.DETAILS' | translate }}</th>
+        <th>{{ 'COMPLAINTS.TABLE.ID' | translate }}</th>
+        <th>{{ 'COMPLAINTS.TABLE.CUSTOMER' | translate }}</th>
+        <th>{{ 'COMPLAINTS.TABLE.ORDER' | translate }}</th>
+        <th>{{ 'COMPLAINTS.TABLE.DESCRIPTION' | translate }}</th>
+        <th>{{ 'COMPLAINTS.TABLE.STATUS' | translate }}</th>
+        <th>{{ 'COMPLAINTS.TABLE.DATE' | translate }}</th>
+        <th>{{ 'COMPLAINTS.TABLE.RESPONSE' | translate }}</th>
+        <th>{{ 'COMPLAINTS.TABLE.DETAILS' | translate }}</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let complaint of complaints">
         <td>#{{ complaint.id }}</td>
-        <td>{{ complaint.userName || 'Unknown' }}</td>
+        <td>{{ complaint.userName || ('COMPLAINTS.TABLE.UNKNOWN_USER' | translate) }}</td>
         <td>ORD-{{ complaint.orderId }}</td>
         <td>
           <strong>{{ complaint.description }}</strong>
-      
         </td>
         <td>
-          <span class="badge" [ngClass]="getStatusClass(complaint.status)">{{ getStatusDisplay(complaint.status) }}</span>
+          <span class="badge" [ngClass]="getStatusClass(complaint.status)">
+            <ng-container [ngSwitch]="complaint.status">
+              <span *ngSwitchCase="'Open'">{{ 'COMPLAINTS.STATUS.OPEN' | translate }}</span>
+              <span *ngSwitchCase="'InProgress'">{{ 'COMPLAINTS.STATUS.IN_PROGRESS' | translate }}</span>
+              <span *ngSwitchCase="'Resolved'">{{ 'COMPLAINTS.STATUS.RESOLVED' | translate }}</span>
+              <span *ngSwitchCase="'Closed'">{{ 'COMPLAINTS.STATUS.CLOSED' | translate }}</span>
+              <span *ngSwitchDefault>{{ complaint.status }}</span>
+            </ng-container>
+          </span>
         </td>
-        <td>{{ complaint.createdAt | date:'mediumDate' }}</td>
+        <td>{{ complaint.createdAt | date : 'mediumDate' }}</td>
         <td>
           <div class="latest-reply" *ngIf="complaint.latestReplyMessage">
             <p class="reply-msg">{{ complaint.latestReplyMessage }}</p>
-            <small>{{ complaint.latestReplyBy }} • {{ complaint.latestReplyAt | date:'short' }}</small>
+            <small>{{ complaint.latestReplyBy }} • {{ complaint.latestReplyAt | date : 'short' }}</small>
           </div>
         </td>
         <td>
           <button type="button" class="action-btn view-details-btn" (click)="openComplaintDetails(complaint.id)">
-            {{ 'SELLER.COMPLAINTS.VIEW_DETAILS' | translate }}
+            {{ 'COMPLAINTS.TABLE.VIEW_DETAILS' | translate }}
           </button>
         </td>
       </tr>
@@ -48,7 +58,7 @@
 </div>
 
 <div class="empty-state" *ngIf="!loading && !error && complaints.length === 0">
-  <p>{{ 'SELLER.COMPLAINTS.EMPTY' | translate }}</p>
+  <p>{{ 'COMPLAINTS.SELLER.EMPTY' | translate }}</p>
 </div>
 
 <app-complaint-details-modal

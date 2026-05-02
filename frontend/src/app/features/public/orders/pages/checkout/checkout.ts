@@ -12,11 +12,12 @@ import { of, BehaviorSubject, Subject } from 'rxjs';
 import { switchMap, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { TranslateModule } from '@ngx-translate/core';
+import { LocalizedPricePipe } from '../../../../../core/pipes/localized-price.pipe';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, TranslateModule, LocalizedPricePipe],
   templateUrl: './checkout.html',
   styleUrls: ['./checkout.css'],
   encapsulation: ViewEncapsulation.None

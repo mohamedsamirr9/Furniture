@@ -7,10 +7,11 @@ import { CategoryService } from '../../../../../core/services/category.service';
 import { ProductCreateUpdateDto } from '../../../../../core/models/product-create-update-dto.model';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LocalizedPricePipe } from '../../../../../core/pipes/localized-price.pipe';
 
 @Component({
   selector: 'app-products',
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, LocalizedPricePipe],
   templateUrl: './products.html',
   styleUrl: './products.css',
 })

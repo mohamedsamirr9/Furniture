@@ -46,6 +46,9 @@ namespace Furniture.Domain.Models
 
         public ICollection<Favourite> Favourites { get; set; } = new List<Favourite>();
         public SellerProfile? SellerProfile { get; set; }
+
+        public ICollection<SellerRequest> SellerRequests { get; set; } = new List<SellerRequest>();
+
         public ICollection<Conversation> ConversationsAsSeller { get; set; } = new List<Conversation>();
         public ICollection<Conversation> ConversationsAsCustomer { get; set; } = new List<Conversation>();
 

@@ -60,7 +60,7 @@
                       {{ order.description || ('ORDER.CUSTOM_TITLE' | translate) }}
                     </div>
                   </td>
-                  <td class="px-4 py-4 fw-bold text-dark fs-6">${{ order.totalPrice | number:'1.2-2' }}</td>
+                  <td class="px-4 py-4 fw-bold text-dark fs-6">{{ order.totalPrice | localizedPrice }}</td>
                   <td class="px-4 py-4">
                     <span class="badge rounded-pill fw-medium px-3 py-2" [ngClass]="getStatusClass(getDisplayStatus(order) || '')">
                       {{ 'STATUS.' + (getDisplayStatus(order) | uppercase) | translate }}
@@ -95,7 +95,7 @@
             </div>
             <div class="flex-grow-1 overflow-hidden">
               <div class="text-muted small mb-1">{{ (order.orderDate || order.createdAt) | date:'mediumDate' }}</div>
-              <div class="fw-bold text-dark fs-5">${{ order.totalPrice | number:'1.2-2' }}</div>
+              <div class="fw-bold text-dark fs-5">{{ order.totalPrice | localizedPrice }}</div>
               <div *ngIf="order.isCustom" class="text-truncate small text-muted w-100" style="font-style: italic;">
                 {{ order.description }}
               </div>

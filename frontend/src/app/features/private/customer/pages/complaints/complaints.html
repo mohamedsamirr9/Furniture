@@ -17,6 +17,9 @@
     </button>
   </div>
 
+  <p class="page-msg page-msg--muted" *ngIf="loading">{{ 'COMPLAINTS.LOADING_LIST' | translate }}</p>
+  <p class="page-msg page-msg--error" *ngIf="error">{{ error | translate }}</p>
+
   <div class="complaints-list" *ngIf="!loading && !error">
     <div class="complaint-card" *ngFor="let complaint of complaints">
       <div class="card-left">
@@ -52,7 +55,15 @@
             </p>
           </div>
           <p class="complaint-reply" *ngIf="complaint.latestReplyMessage">
-            {{ 'COMPLAINTS.LATEST_RESPONSE' | translate }} {{ complaint.latestReplyMessage }} ({{ complaint.latestReplyBy }})
+            <span class="complaint-reply__label">{{ 'COMPLAINTS.LATEST_RESPONSE' | translate }}</span>
+            {{ complaint.latestReplyMessage }}
+            <span class="complaint-reply__by">
+              ({{
+                complaint.latestReplyBy
+                  ? complaint.latestReplyBy
+                  : ('COMPLAINTS.TABLE.UNKNOWN_USER' | translate)
+              }})
+            </span>
           </p>
         </div>
       </div>

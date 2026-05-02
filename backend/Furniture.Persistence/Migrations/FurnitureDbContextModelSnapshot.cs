@@ -952,6 +952,54 @@ namespace Furniture.Persistence.Migrations
                     b.ToTable("SellerProfiles", (string)null);
                 });
 
+            modelBuilder.Entity("Furniture.Domain.Models.SellerRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("NationalIdImageUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("RejectionReason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime?>("ReviewedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReviewedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StoreName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReviewedById");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SellerRequests", (string)null);
+                });
+
             modelBuilder.Entity("Furniture.Domain.Models.ShippingRule", b =>
                 {
                     b.Property<int>("Id")
@@ -1498,6 +1546,24 @@ namespace Furniture.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Furniture.Domain.Models.SellerRequest", b =>
+                {
+                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "ReviewedBy")
+                        .WithMany()
+                        .HasForeignKey("ReviewedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Furniture.Domain.Models.ApplicationUser", "User")
+                        .WithMany("SellerRequests")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ReviewedBy");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Furniture.Domain.Models.ShippingRule", b =>
                 {
                     b.HasOne("Furniture.Domain.Models.Category", "Category")
@@ -1599,6 +1665,8 @@ namespace Furniture.Persistence.Migrations
                     b.Navigation("Reviews");
 
                     b.Navigation("SellerProfile");
+
+                    b.Navigation("SellerRequests");
                 });
 
             modelBuilder.Entity("Furniture.Domain.Models.Cart", b =>

@@ -43,7 +43,7 @@
             <option *ngFor="let next of getValidTransitions(order.status)" [value]="next">{{ 'STATUS.' + (next | uppercase) | translate }}</option>
           </select>
         </td>
-        <td><strong>{{ (order.totalPrice || order.total) | currency }}</strong></td>
+        <td><strong>{{ (order.totalPrice || order.total) | localizedPrice }}</strong></td>
         <td>
           <button
             type="button"

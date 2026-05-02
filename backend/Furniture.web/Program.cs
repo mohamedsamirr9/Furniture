@@ -192,6 +192,7 @@ namespace Furniture.web
             builder.Services.AddScoped<JwtHelper>();
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<ISellerRequestService, SellerRequestService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();

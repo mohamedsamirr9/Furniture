@@ -27,7 +27,7 @@
           {{ product.name }}
         </td>
         <td>{{ product.stockQuantity }}</td>
-        <td><strong>{{ product.price | currency }}</strong></td>
+        <td><strong>{{ product.price | localizedPrice }}</strong></td>
         <td>
           <span [ngClass]="product.stockQuantity > 0 ? 'badge-green' : 'alert-error'" style="padding: 4px 8px; border-radius: 4px; font-size: 0.85em;">
             {{ product.stockQuantity > 0 ? ('DASHBOARD.AVAILABLE' | translate) : ('DASHBOARD.OUT_OF_STOCK' | translate) }}

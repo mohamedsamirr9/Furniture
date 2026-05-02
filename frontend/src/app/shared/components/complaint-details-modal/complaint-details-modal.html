@@ -6,14 +6,20 @@
     </div>
 
     <div class="modal-body" *ngIf="loading">{{ 'COMPLAINTS.MODAL.LOADING' | translate }}</div>
-    <div class="modal-body error-text" *ngIf="!loading && error">{{ error }}</div>
+    <div class="modal-body error-text" *ngIf="!loading && error">{{ error | translate }}</div>
 
     <div class="modal-body" *ngIf="!loading && !error && complaint">
       <div class="detail-top">
         <span class="complaint-id">#{{ complaint.id }}</span>
         <span class="badge" [ngClass]="getStatusClass(complaint.status)">
           <span class="badge-dot"></span>
-          {{ getStatusDisplay(complaint.status) }}
+          <ng-container [ngSwitch]="complaint.status">
+            <span *ngSwitchCase="'Open'">{{ 'COMPLAINTS.STATUS.OPEN' | translate }}</span>
+            <span *ngSwitchCase="'InProgress'">{{ 'COMPLAINTS.STATUS.IN_PROGRESS' | translate }}</span>
+            <span *ngSwitchCase="'Resolved'">{{ 'COMPLAINTS.STATUS.RESOLVED' | translate }}</span>
+            <span *ngSwitchCase="'Closed'">{{ 'COMPLAINTS.STATUS.CLOSED' | translate }}</span>
+            <span *ngSwitchDefault>{{ complaint.status }}</span>
+          </ng-container>
         </span>
       </div>
 
@@ -58,7 +64,7 @@
 
       <div class="image-section" *ngIf="complaint.imageUrl">
         <span class="section-label">{{ 'COMPLAINTS.MODAL.ATTACHMENT' | translate }}</span>
-        <img [src]="complaint.imageUrl" alt="Complaint attachment" class="detail-image" />
+        <img [src]="complaint.imageUrl" [attr.alt]="'COMPLAINTS.MODAL.ATTACHMENT_ALT' | translate" class="detail-image" />
       </div>
 
       <div class="replies-section">
@@ -79,7 +85,15 @@
         <div class="status-actions" *ngIf="canUpdateStatus && nextStatus">
           <span class="section-label">{{ 'COMPLAINTS.MODAL.NEXT_STATUS' | translate }}</span>
           <div class="action-row">
-            <span class="next-status-chip">{{ getStatusDisplay(nextStatus) }}</span>
+            <span class="next-status-chip">
+              <ng-container [ngSwitch]="nextStatus">
+                <span *ngSwitchCase="'Open'">{{ 'COMPLAINTS.STATUS.OPEN' | translate }}</span>
+                <span *ngSwitchCase="'InProgress'">{{ 'COMPLAINTS.STATUS.IN_PROGRESS' | translate }}</span>
+                <span *ngSwitchCase="'Resolved'">{{ 'COMPLAINTS.STATUS.RESOLVED' | translate }}</span>
+                <span *ngSwitchCase="'Closed'">{{ 'COMPLAINTS.STATUS.CLOSED' | translate }}</span>
+                <span *ngSwitchDefault>{{ nextStatus }}</span>
+              </ng-container>
+            </span>
             <button type="button" class="action-btn" [disabled]="isStatusUpdating" (click)="onSubmitStatus()">
               {{ isStatusUpdating ? ('COMPLAINTS.MODAL.UPDATING' | translate) : ('COMPLAINTS.MODAL.UPDATE_STATUS' | translate) }}
             </button>

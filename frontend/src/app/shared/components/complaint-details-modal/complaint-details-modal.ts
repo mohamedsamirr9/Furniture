@@ -32,11 +32,6 @@ export class ComplaintDetailsModalComponent {
     return '';
   }
 
-  getStatusDisplay(status?: string): string {
-    if (status === 'InProgress') return 'In Progress';
-    return status ?? '';
-  }
-
   get canReply(): boolean {
     return this.role === 'seller' || this.role === 'admin';
   }

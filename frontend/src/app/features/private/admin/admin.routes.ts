@@ -6,6 +6,7 @@ import { Complaints } from './pages/complaints/complaints';
 import { Users } from './pages/users/users';
 import { Categories } from './pages/categories/categories';
 import { ShippingRules } from './pages/shipping-rules/shipping-rules';
+import { SellerRequests } from './pages/seller-requests/seller-requests';
 
 export const ADMIN_ROUTES: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -15,5 +16,6 @@ export const ADMIN_ROUTES: Routes = [
   { path: 'orders', component: Orders},
   { path: 'complaints', component: Complaints },
   { path: 'users', component: Users },
+  { path: 'seller-requests', component: SellerRequests },
   { path: 'shipping-rules', component: ShippingRules },
 ];

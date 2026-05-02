@@ -7,7 +7,7 @@
 
     <div class="detail-card">
       <p><strong>Description:</strong> {{ request.description }}</p>
-      <p><strong>Budget:</strong> {{ request.budget | currency:'EGP' }}</p>
+      <p><strong>Budget:</strong> {{ request.budget | localizedPrice }}</p>
       <p><strong>Status:</strong> <span class="status">{{ request.status }}</span></p>
       <img *ngIf="request.imageUrl" [src]="request.imageUrl" alt="Request Image" />
     </div>

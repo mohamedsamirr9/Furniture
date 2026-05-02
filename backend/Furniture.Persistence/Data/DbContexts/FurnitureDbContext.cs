@@ -546,6 +546,38 @@ namespace Furniture.Persistence.Data.DbContexts
                         .OnDelete(DeleteBehavior.Cascade);
             });
 
+            modelBuilder.Entity<SellerRequest>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.StoreName)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.NationalIdImageUrl)
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.Status)
+                    .IsRequired();
+
+                entity.Property(e => e.RejectionReason)
+                    .HasMaxLength(1000);
+
+                entity.Property(e => e.CreatedAt)
+                    .HasDefaultValueSql("GETUTCDATE()");
+
+                entity.HasOne(e => e.User)
+                    .WithMany(u => u.SellerRequests)
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.ReviewedBy)
+                    .WithMany()
+                    .HasForeignKey(e => e.ReviewedById)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired(false);
+            });
+
 
         }
         //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
@@ -575,6 +607,8 @@ namespace Furniture.Persistence.Data.DbContexts
         public DbSet<Message> Messages { get; set; }
         public DbSet<CommissionTransaction> CommissionTransactions { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+
+        public DbSet<SellerRequest> SellerRequests { get; set; } = null!;
 
 
     }

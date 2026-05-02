@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { Order } from '../../../core/models/order.model';
+import { LocalizedPricePipe } from '../../../core/pipes/localized-price.pipe';
 
 @Component({
   selector: 'app-order-details-modal',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, LocalizedPricePipe],
   templateUrl: './order-details-modal.html',
   styleUrl: './order-details-modal.css',
 })

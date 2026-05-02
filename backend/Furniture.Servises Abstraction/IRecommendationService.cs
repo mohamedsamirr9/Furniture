@@ -10,5 +10,7 @@ public interface IRecommendationService
     Task UpdateUserEmbeddingAsync(string userId, int productId, string actionType);
     Task IndexAllProductsAsync(bool onlyMissing = false);
     Task DeleteProductEmbeddingAsync(int productId);
+    Task<bool> HasCompletedQuizAsync(string userId);
+
 }
 

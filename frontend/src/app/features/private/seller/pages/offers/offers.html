@@ -21,7 +21,7 @@
   <h3 class="request-title">{{ 'SELLER.REQUEST_ID' | translate }}{{ request.id }} {{ 'SELLER.BY' | translate }} {{ request.buyerName }}</h3>
   <p class="request-desc">{{ request.description }}</p>
   <p class="request-meta">
-    {{ 'SELLER.BUDGET' | translate }}: ${{ request.budget }} &nbsp;&nbsp;
+    {{ 'SELLER.BUDGET' | translate }}: {{ request.budget | localizedPrice }} &nbsp;&nbsp;
     {{ 'SELLER.STATUS' | translate }}: {{ request.status }}
   </p>
 
@@ -81,7 +81,7 @@
 <div class="request-card" *ngFor="let offer of myOffers">
   <h3 class="request-title">{{ 'SELLER.OFFER_LABEL' | translate }} #{{ offer.id }}</h3>
   <p class="request-meta">
-    {{ 'SELLER.PRICE' | translate }}: ${{ offer.price }} &nbsp;&nbsp;
+    {{ 'SELLER.PRICE' | translate }}: {{ offer.price | localizedPrice }} &nbsp;&nbsp;
     {{ 'SELLER.DELIVERY_DAYS' | translate }}: {{ offer.deliveryDays }} &nbsp;&nbsp;
   </p>
   <div class="offer-row" style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
@@ -127,11 +127,11 @@
       </div>
       <div class="detail-row">
         <strong>{{ 'SELLER.BUDGET' | translate }}:</strong> 
-        <span class="price-text">${{ selectedRequestDetail.budget }}</span>
+        <span class="price-text">{{ selectedRequestDetail.budget | localizedPrice }}</span>
       </div>
       <div class="detail-row" *ngIf="selectedRequestDetail.acceptedPrice">
         <strong>{{ 'SELLER.ACCEPTED_PRICE' | translate }}:</strong> 
-        <span class="price-text" style="color: #28a745;">${{ selectedRequestDetail.acceptedPrice }}</span>
+        <span class="price-text" style="color: #28a745;">{{ selectedRequestDetail.acceptedPrice | localizedPrice }}</span>
       </div>
 
       <div class="image-section" *ngIf="selectedRequestDetail.imageUrl">
